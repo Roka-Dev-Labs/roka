@@ -1,0 +1,56 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Rust — source and build (private; only binaries are distributed)
+src/
+Cargo.toml
+Cargo.lock
+target/
+
+# Node
+node_modules/
+
+# Environment & secrets
+*.env
+.env*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.cursor/
+.vscode/
+*.swp
+
+# Infrastructure / devops (never commit)
+devops/
+scripts/
+
+# Private backend (never commit)
+backend/
+api/
+vercel-frontend.json
+rust-toolchain.toml
+
+# Local test logs (LogHub samples)
+Testing/
+*.log
+
+# Build artifacts & logs
+*.gz
+real_logs.txt
+test_*.txt
+Anthropic-Cybersecurity-Skills/
+
+# Private product website (lives in private repo — local backup only)
+.private-product/
+project/
+vercel.json
+
+# Staging copies of other public repos (push separately)
+public-repos/
+.vercel

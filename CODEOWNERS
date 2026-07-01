@@ -1,0 +1,16 @@
+# Code Owners
+
+# Default code owner for the entire repository
+* @MukhanKd
+
+# Backend code
+/backend/* @MukhanKd
+
+# Frontend code
+/project/* @MukhanKd
+
+# Installer scripts
+/scripts/* @MukhanKd
+
+# GitHub workflows
+.github/workflows/* @MukhanKd
