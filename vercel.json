@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "project/**",
+      "src": "*.html",
       "use": "@vercel/static"
     }
   ],
@@ -29,22 +29,6 @@
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
         { "key": "X-Content-Type-Options", "value": "nosniff" }
       ]
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "install.roka-prune.com"
-        }
-      ],
-      "dest": "/project/install.sh"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/project/$1"
     }
   ]
 }
