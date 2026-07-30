@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Keys - Roka</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <script src="/js/config.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #ffffff;
+            --text: #0a0a0a;
+            --text-muted: #666666;
+            --border: #e5e5e5;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.1);
+            --surface: #f5f5f5;
+        }
+
+        html.dark {
+            --bg: #0a0a0a;
+            --text: #ededed;
+            --text-muted: #888888;
+            --border: #262626;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.15);
+            --surface: #171717;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        .nav-links a.active {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            color: var(--text);
+            border-color: var(--text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .api-keys-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .api-key-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .api-key-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .api-key-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .api-key-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 4px;
+            padding: 0.375rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .btn-small:hover {
+            color: var(--text);
+            border-color: var(--text);
+        }
+
+        .btn-small.danger {
+            color: #ef4444;
+            border-color: #ef4444;
+        }
+
+        .btn-small.danger:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .api-key-value {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            background: var(--bg);
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            margin-bottom: 0.5rem;
+            word-break: break-all;
+        }
+
+        .api-key-meta {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--border);
+        }
+
+        .modal-header {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.875rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .new-key-display {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            border: 1px solid var(--border);
+        }
+
+        .new-key-display code {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+            word-break: break-all;
+        }
+
+        .new-key-display p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        @keyframes logoSpin {
+            0% { transform: rotate(0deg) scale(1); opacity: 0; }
+            50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
+            100% { transform: rotate(360deg) scale(1); opacity: 1; }
+        }
+
+        .logo-animate {
+            animation: logoSpin 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="/index.html" class="nav-logo">
+            <img src="/favicon-32x32.png" alt="" class="logo-animate" width="28" height="28">
+            Roka
+        </a>
+        <div class="nav-links">
+            <a href="/dashboard.html">Dashboard</a>
+            <a href="/dashboard/api-keys.html" class="active">API Keys</a>
+            <a href="/dashboard/upgrade.html">Upgrade</a>
+            <button id="themeToggle" type="button" class="btn-secondary" aria-label="Toggle theme">
+                <span id="themeLabel">Light</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>API Keys</h1>
+            <button id="createKeyBtn" class="btn-primary">Generate New Key</button>
+        </div>
+
+        <div id="apiKeysList" class="api-keys-list">
+            <div class="empty-state">
+                <h3>No API keys yet</h3>
+                <p>Generate your first API key to start using Roka</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="createKeyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Generate New API Key</div>
+            <div class="form-group">
+                <label for="keyName">Key Name</label>
+                <input type="text" id="keyName" placeholder="e.g., Production, Development">
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" id="cancelCreateBtn">Cancel</button>
+                <button class="btn-primary" id="confirmCreateBtn">Generate</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const html = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        const themeLabel = document.getElementById('themeLabel');
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                html.classList.add('dark');
+            } else {
+                html.classList.remove('dark');
+            }
+            themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
+            localStorage.setItem('roka-theme', theme);
+        }
+
+        const savedTheme = localStorage.getItem('roka-theme') || 'light';
+        applyTheme(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const newTheme = html.classList.contains('dark') ? 'light' : 'dark';
+            applyTheme(newTheme);
+        });
+
+        const API_BASE = window.ROKA_API_BASE || 'https://api.roka-prune.com';
+        let accessToken = localStorage.getItem('roka_access_token');
+
+        function t(str) {
+            return document.createTextNode(String(str ?? ''));
+        }
+
+        async function loadApiKeys() {
+            if (!accessToken) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api-keys`, {
+                    headers: { 'Authorization': `Bearer ${accessToken}` }
+                });
+
+                if (!response.ok) {
+                    window.location.href = '/login.html';
+                    return;
+                }
+
+                const keys = await response.json();
+                renderApiKeys(Array.isArray(keys) ? keys : []);
+            } catch (_) {
+            }
+        }
+
+        function renderApiKeys(keys) {
+            const container = document.getElementById('apiKeysList');
+            container.innerHTML = '';
+
+            if (keys.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'empty-state';
+                const h3 = document.createElement('h3');
+                h3.appendChild(t('No API keys yet'));
+                const p = document.createElement('p');
+                p.appendChild(t('Generate your first API key to start using Roka'));
+                empty.appendChild(h3);
+                empty.appendChild(p);
+                container.appendChild(empty);
+                return;
+            }
+
+            for (const key of keys) {
+                const card = document.createElement('div');
+                card.className = 'api-key-card';
+
+                const header = document.createElement('div');
+                header.className = 'api-key-header';
+
+                const name = document.createElement('div');
+                name.className = 'api-key-name';
+                name.appendChild(t(key.name));
+                header.appendChild(name);
+
+                const actions = document.createElement('div');
+                actions.className = 'api-key-actions';
+
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'btn-small';
+                copyBtn.appendChild(t('Copy'));
+                copyBtn.addEventListener('click', () => copyKey(key.key));
+
+                const delBtn = document.createElement('button');
+                delBtn.className = 'btn-small danger';
+                delBtn.appendChild(t('Delete'));
+                delBtn.addEventListener('click', () => deleteKey(key.id));
+
+                actions.appendChild(copyBtn);
+                actions.appendChild(delBtn);
+                header.appendChild(actions);
+                card.appendChild(header);
+
+                const keyVal = document.createElement('div');
+                keyVal.className = 'api-key-value';
+                keyVal.appendChild(t(key.key));
+                card.appendChild(keyVal);
+
+                const meta = document.createElement('div');
+                meta.className = 'api-key-meta';
+                const created = document.createElement('span');
+                created.appendChild(t(`Created: ${new Date(key.created_at).toLocaleDateString()}`));
+                const lastUsed = document.createElement('span');
+                lastUsed.appendChild(t(`Last used: ${key.last_used_at ? new Date(key.last_used_at).toLocaleDateString() : 'Never'}`));
+                meta.appendChild(created);
+                meta.appendChild(lastUsed);
+                card.appendChild(meta);
+
+                container.appendChild(card);
+            }
+        }
+
+        async function createApiKey(name) {
+            try {
+                const response = await fetch(`${API_BASE}/api-keys`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name })
+                });
+
+                if (!response.ok) throw new Error('Failed to create API key');
+
+                const key = await response.json();
+                showNewKey(key.key);
+                loadApiKeys();
+            } catch (_) {
+                alert('Failed to create API key. Please try again.');
+            }
+        }
+
+        async function deleteKey(keyId) {
+            if (!confirm('Delete this API key? This cannot be undone.')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api-keys/${encodeURIComponent(keyId)}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${accessToken}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to delete API key');
+                loadApiKeys();
+            } catch (_) {
+                alert('Failed to delete API key. Please try again.');
+            }
+        }
+
+        function copyKey(key) {
+            navigator.clipboard.writeText(key).then(() => {
+                alert('API key copied to clipboard');
+            });
+        }
+
+        function showNewKey(key) {
+            const modal = document.getElementById('createKeyModal');
+            const content = modal.querySelector('.modal-content');
+            content.innerHTML = '';
+
+            const header = document.createElement('div');
+            header.className = 'modal-header';
+            header.appendChild(t('API Key Generated'));
+            content.appendChild(header);
+
+            const display = document.createElement('div');
+            display.className = 'new-key-display';
+            const code = document.createElement('code');
+            code.appendChild(t(key));
+            const note = document.createElement('p');
+            const strong = document.createElement('strong');
+            strong.appendChild(t('Save this key now!'));
+            note.appendChild(strong);
+            note.appendChild(t(' You won\'t be able to see it again.'));
+            display.appendChild(code);
+            display.appendChild(note);
+            content.appendChild(display);
+
+            const modalActions = document.createElement('div');
+            modalActions.className = 'modal-actions';
+
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'btn-primary';
+            copyBtn.appendChild(t('Copy Key'));
+            copyBtn.addEventListener('click', () => copyKey(key));
+
+            const doneBtn = document.createElement('button');
+            doneBtn.className = 'btn-secondary';
+            doneBtn.appendChild(t('Done'));
+            doneBtn.addEventListener('click', closeModal);
+
+            modalActions.appendChild(copyBtn);
+            modalActions.appendChild(doneBtn);
+            content.appendChild(modalActions);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('createKeyModal');
+            modal.classList.remove('open');
+            document.getElementById('keyName').value = '';
+            
+            const content = modal.querySelector('.modal-content');
+            content.innerHTML = `
+                <div class="modal-header">Generate New API Key</div>
+                <div class="form-group">
+                    <label for="keyName">Key Name</label>
+                    <input type="text" id="keyName" placeholder="e.g., Production, Development">
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-secondary" id="cancelCreateBtn">Cancel</button>
+                    <button class="btn-primary" id="confirmCreateBtn">Generate</button>
+                </div>
+            `;
+            
+            document.getElementById('cancelCreateBtn').addEventListener('click', closeModal);
+            document.getElementById('confirmCreateBtn').addEventListener('click', handleCreateKey);
+        }
+
+        function handleCreateKey() {
+            const name = document.getElementById('keyName').value.trim();
+            if (!name) {
+                alert('Please enter a key name');
+                return;
+            }
+            createApiKey(name);
+        }
+
+        document.getElementById('createKeyBtn').addEventListener('click', () => {
+            document.getElementById('createKeyModal').classList.add('open');
+        });
+
+        document.getElementById('cancelCreateBtn').addEventListener('click', closeModal);
+        document.getElementById('confirmCreateBtn').addEventListener('click', handleCreateKey);
+
+        loadApiKeys();
+    </script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Roka</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <script src="/js/config.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #ffffff;
+            --text: #0a0a0a;
+            --text-muted: #666666;
+            --border: #e5e5e5;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.1);
+            --surface: #f5f5f5;
+        }
+
+        html.dark {
+            --bg: #0a0a0a;
+            --text: #ededed;
+            --text-muted: #888888;
+            --border: #262626;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.15);
+            --surface: #171717;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .card h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.875rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .toggle-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+        }
+
+        .toggle-link a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .toggle-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes logoSpin {
+            0% { transform: rotate(0deg) scale(1); opacity: 0; }
+            50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
+            100% { transform: rotate(360deg) scale(1); opacity: 1; }
+        }
+
+        .logo-animate {
+            animation: logoSpin 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <img src="/favicon-32x32.png" alt="" class="logo-animate" width="28" height="28">
+            Roka
+        </div>
+
+        <div class="card">
+            <h1 id="formTitle">Login</h1>
+            <p id="formSubtitle">Welcome back to Roka</p>
+
+            <div id="error" class="error hidden"></div>
+
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required placeholder="you@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary" id="submitBtn">Login</button>
+            </form>
+
+            <div class="toggle-link">
+                <span id="toggleText">Don't have an account? </span>
+                <a href="#" id="toggleLink">Sign up</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.ROKA_API_BASE || 'https://api.roka-prune.com';
+        let isLoginMode = true;
+
+        const formTitle = document.getElementById('formTitle');
+        const formSubtitle = document.getElementById('formSubtitle');
+        const submitBtn = document.getElementById('submitBtn');
+        const toggleText = document.getElementById('toggleText');
+        const toggleLink = document.getElementById('toggleLink');
+        const errorDiv = document.getElementById('error');
+
+        function toggleMode() {
+            isLoginMode = !isLoginMode;
+            
+            if (isLoginMode) {
+                formTitle.textContent = 'Login';
+                formSubtitle.textContent = 'Welcome back to Roka';
+                submitBtn.textContent = 'Login';
+                toggleText.textContent = "Don't have an account? ";
+                toggleLink.textContent = 'Sign up';
+            } else {
+                formTitle.textContent = 'Sign up';
+                formSubtitle.textContent = 'Create your Roka account';
+                submitBtn.textContent = 'Sign up';
+                toggleText.textContent = 'Already have an account? ';
+                toggleLink.textContent = 'Login';
+            }
+            
+            errorDiv.classList.add('hidden');
+        }
+
+        toggleLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleMode();
+        });
+
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            submitBtn.disabled = true;
+            errorDiv.classList.add('hidden');
+
+            try {
+                const endpoint = isLoginMode ? '/auth/login' : '/auth/signup';
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const raw = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(raw);
+                } catch {
+                    throw new Error(raw.trim() || `Server error (${response.status})`);
+                }
+
+                if (!response.ok) {
+                    throw new Error(data.detail || data.error || 'Authentication failed');
+                }
+
+                localStorage.setItem('roka_access_token', data.access_token);
+                window.location.href = '/dashboard.html';
+
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                errorDiv.classList.remove('hidden');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

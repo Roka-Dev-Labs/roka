@@ -48,8 +48,6 @@ Anthropic-Cybersecurity-Skills/
 
 # Private product website (lives in private repo — local backup only)
 .private-product/
-project/
-vercel.json
 
 # Staging copies of other public repos (push separately)
 public-repos/

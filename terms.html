@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <title>Terms of Use — Roka</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #09090b; --bg-card: #141416;
+            --border: rgba(255,255,255,0.08); --border-strong: rgba(255,255,255,0.14);
+            --text: #fafafa; --text-muted: #a1a1aa; --text-faint: #52525b;
+            --logo-filter: invert(1);
+        }
+        [data-theme="light"] {
+            --bg: #fafafa; --bg-card: #ffffff;
+            --border: rgba(0,0,0,0.08); --border-strong: rgba(0,0,0,0.12);
+            --text: #09090b; --text-muted: #52525b; --text-faint: #a1a1aa;
+            --logo-filter: none;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; letter-spacing: -0.02em; min-height: 100vh; }
+        nav { border-bottom: 1px solid var(--border); padding: 0 20px; height: 56px; display: flex; align-items: center; justify-content: space-between; max-width: 768px; margin: 0 auto; width: 100%; }
+        .nav-inner { max-width: 768px; margin: 0 auto; width: 100%; padding: 0 20px; height: 56px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+        header { padding: 0 20px; border-bottom: 1px solid var(--border); }
+        header .inner { max-width: 768px; margin: 0 auto; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+        main { max-width: 768px; margin: 0 auto; padding: 60px 20px 80px; }
+        h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.04em; margin-bottom: 8px; }
+        .meta { font-size: 0.8rem; color: var(--text-faint); margin-bottom: 48px; }
+        h2 { font-size: 1rem; font-weight: 600; margin: 36px 0 10px; }
+        p, li { font-size: 0.9rem; line-height: 1.75; color: var(--text-muted); }
+        ul { padding-left: 20px; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+        a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+        footer-bar { display: block; border-top: 1px solid var(--border); padding: 24px 20px; text-align: center; font-size: 0.75rem; color: var(--text-faint); }
+    </style>
+</head>
+<body>
+<header>
+    <div class="inner">
+        <a href="index.html" style="display:flex;align-items:center;text-decoration:none">
+            <img src="logo.png" alt="Roka" style="height:26px;width:auto;filter:var(--logo-filter)">
+        </a>
+        <a href="index.html" style="font-size:0.8rem;color:var(--text-muted);text-decoration:none;opacity:0.7">← Back to home</a>
+    </div>
+</header>
+
+<main>
+    <h1>Terms of Use</h1>
+    <p class="meta">Last updated: June 26, 2026</p>
+
+    <h2>1. Acceptance of Terms</h2>
+    <p>By accessing or using Roka ("the Service"), you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use the Service.</p>
+
+    <h2>2. Description of Service</h2>
+    <p>Roka is a context-pruning middleware that compresses log files and developer context before passing them to AI coding agents. The Service is provided as-is during early access and may change without notice.</p>
+
+    <h2>3. Use of the Service</h2>
+    <p>You agree to use the Service only for lawful purposes. You may not:</p>
+    <ul>
+        <li>Use the Service to process data you do not have rights to</li>
+        <li>Attempt to reverse-engineer or extract proprietary algorithms</li>
+        <li>Resell or sublicense access to the Service without written consent</li>
+        <li>Use the Service in a way that disrupts its availability to others</li>
+    </ul>
+
+    <h2>4. Open Source Components</h2>
+    <p>Portions of Roka are open source and licensed under the MIT License. Open-source repositories live under <a href="https://github.com/Roka-Dev-Labs" target="_blank" rel="noopener">github.com/Roka-Dev-Labs</a> — including the <a href="https://github.com/Roka-Dev-Labs/roka" target="_blank" rel="noopener">CLI</a> and <a href="https://github.com/Roka-Dev-Labs/roka-mcp" target="_blank" rel="noopener">MCP integration</a>. Proprietary hosted services are governed by these terms.</p>
+
+    <h2>5. Intellectual Property</h2>
+    <p>All trademarks, logos, and service names displayed on the Service are the property of Roka Labs. Nothing in these Terms grants you any right to use these marks.</p>
+
+    <h2>6. Disclaimer of Warranties</h2>
+    <p>The Service is provided "as is" without warranties of any kind, express or implied, including but not limited to fitness for a particular purpose or non-infringement.</p>
+
+    <h2>7. Limitation of Liability</h2>
+    <p>To the maximum extent permitted by law, Roka Labs shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the Service.</p>
+
+    <h2>8. Changes to Terms</h2>
+    <p>We reserve the right to modify these Terms at any time. Continued use of the Service after changes constitutes acceptance of the revised Terms.</p>
+
+    <h2>9. Contact</h2>
+    <p>For questions about these Terms, contact us at <a href="mailto:mukhamedjankydyrli@gmail.com">mukhamedjankydyrli@gmail.com</a>.</p>
+</main>
+
+<footer-bar>© 2026 Roka Labs. All rights reserved. · <a href="privacy.html" style="color:var(--text-faint)">Privacy Policy</a></footer-bar>
+</body>
+</html>

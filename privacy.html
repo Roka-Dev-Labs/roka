@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <title>Privacy Policy — Roka</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #09090b; --bg-card: #141416;
+            --border: rgba(255,255,255,0.08); --border-strong: rgba(255,255,255,0.14);
+            --text: #fafafa; --text-muted: #a1a1aa; --text-faint: #52525b;
+            --logo-filter: invert(1);
+        }
+        [data-theme="light"] {
+            --bg: #fafafa; --bg-card: #ffffff;
+            --border: rgba(0,0,0,0.08); --border-strong: rgba(0,0,0,0.12);
+            --text: #09090b; --text-muted: #52525b; --text-faint: #a1a1aa;
+            --logo-filter: none;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; letter-spacing: -0.02em; min-height: 100vh; }
+        header { padding: 0 20px; border-bottom: 1px solid var(--border); }
+        header .inner { max-width: 768px; margin: 0 auto; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+        main { max-width: 768px; margin: 0 auto; padding: 60px 20px 80px; }
+        h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.04em; margin-bottom: 8px; }
+        .meta { font-size: 0.8rem; color: var(--text-faint); margin-bottom: 48px; }
+        h2 { font-size: 1rem; font-weight: 600; margin: 36px 0 10px; }
+        p, li { font-size: 0.9rem; line-height: 1.75; color: var(--text-muted); }
+        ul { padding-left: 20px; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+        a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+        footer-bar { display: block; border-top: 1px solid var(--border); padding: 24px 20px; text-align: center; font-size: 0.75rem; color: var(--text-faint); }
+    </style>
+</head>
+<body>
+<header>
+    <div class="inner">
+        <a href="index.html" style="display:flex;align-items:center;text-decoration:none">
+            <img src="logo.png" alt="Roka" style="height:26px;width:auto;filter:var(--logo-filter)">
+        </a>
+        <a href="index.html" style="font-size:0.8rem;color:var(--text-muted);text-decoration:none;opacity:0.7">← Back to home</a>
+    </div>
+</header>
+
+<main>
+    <h1>Privacy Policy</h1>
+    <p class="meta">Last updated: June 26, 2026</p>
+
+    <h2>1. Overview</h2>
+    <p>Roka Labs ("we", "us", or "our") is committed to protecting your privacy. This policy explains what data we collect, how we use it, and your rights regarding that data.</p>
+
+    <h2>2. Data We Collect</h2>
+    <p>When you use Roka, we may collect:</p>
+    <ul>
+        <li><strong style="color:var(--text)">Account data</strong> — email address and authentication credentials when you sign up</li>
+        <li><strong style="color:var(--text)">Usage data</strong> — API call counts, token savings metrics, and feature usage (no log content is stored)</li>
+        <li><strong style="color:var(--text)">Technical data</strong> — IP address, browser type, and request metadata for security and reliability</li>
+    </ul>
+
+    <h2>3. What We Do Not Collect</h2>
+    <p>Roka processes your log files in-memory to perform pruning. <strong style="color:var(--text)">We do not store, read, or transmit the contents of your log files or source code.</strong> Pruning happens locally or transiently and no content is retained on our servers.</p>
+
+    <h2>4. How We Use Your Data</h2>
+    <ul>
+        <li>To provide and improve the Service</li>
+        <li>To send transactional emails (account setup, billing receipts)</li>
+        <li>To detect abuse and maintain security</li>
+        <li>To generate anonymised aggregate statistics about token savings</li>
+    </ul>
+
+    <h2>5. Data Sharing</h2>
+    <p>We do not sell your data. We may share minimal data with trusted infrastructure providers (hosting, payments) solely to operate the Service. These providers are contractually bound to protect your data.</p>
+
+    <h2>6. Data Retention</h2>
+    <p>Account data is retained while your account is active. You may request deletion at any time by emailing <a href="mailto:mukhamedjankydyrli@gmail.com">mukhamedjankydyrli@gmail.com</a>. We will action deletion requests within 30 days.</p>
+
+    <h2>7. Cookies</h2>
+    <p>We use a single session cookie for authentication. We do not use tracking or advertising cookies.</p>
+
+    <h2>8. Your Rights</h2>
+    <p>You have the right to access, correct, or delete your personal data. To exercise these rights, contact <a href="mailto:mukhamedjankydyrli@gmail.com">mukhamedjankydyrli@gmail.com</a>.</p>
+
+    <h2>9. Changes to This Policy</h2>
+    <p>We may update this policy periodically. We will notify active users of material changes by email.</p>
+
+    <h2>10. Contact</h2>
+    <p>Questions? Reach us at <a href="mailto:mukhamedjankydyrli@gmail.com">mukhamedjankydyrli@gmail.com</a>.</p>
+</main>
+
+<footer-bar>© 2026 Roka Labs. All rights reserved. · <a href="terms.html" style="color:var(--text-faint)">Terms of Use</a></footer-bar>
+</body>
+</html>

@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <title>Install Roka - Prune your logs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #09090b;
+            --bg-elevated: #111113;
+            --bg-card: #141416;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.14);
+            --text: #fafafa;
+            --text-muted: #a1a1aa;
+            --text-faint: #52525b;
+            --accent: #e4e4e7;
+            --accent-glow: rgba(255, 255, 255, 0.06);
+            --btn-primary-bg: #fafafa;
+            --btn-primary-text: #09090b;
+            --btn-secondary-bg: transparent;
+            --btn-secondary-text: #fafafa;
+            --success: #34d399;
+            --danger: #f87171;
+            --grid-dot: rgba(255, 255, 255, 0.05);
+            --terminal-shadow: rgba(0, 0, 0, 0.55);
+        }
+
+        [data-theme="light"] {
+            --bg: #fafafa;
+            --bg-elevated: #f4f4f5;
+            --bg-card: #ffffff;
+            --border: rgba(0, 0, 0, 0.08);
+            --border-strong: rgba(0, 0, 0, 0.12);
+            --text: #09090b;
+            --text-muted: #52525b;
+            --text-faint: #a1a1aa;
+            --accent: #18181b;
+            --accent-glow: rgba(0, 0, 0, 0.04);
+            --btn-primary-bg: #09090b;
+            --btn-primary-text: #fafafa;
+            --btn-secondary-text: #09090b;
+            --grid-dot: rgba(0, 0, 0, 0.045);
+            --terminal-shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, sans-serif;
+            letter-spacing: -0.02em;
+            transition: background 0.35s ease, color 0.35s ease;
+            position: relative;
+        }
+
+        /* ---------- Ambient background ---------- */
+        .bg-grid,
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .bg-grid {
+            background-image: radial-gradient(circle at 1px 1px, var(--grid-dot) 1.4px, transparent 0);
+            background-size: 26px 26px;
+            mask-image: linear-gradient(to bottom, black, black 70%, transparent 100%);
+        }
+        .bg-glow {
+            background: radial-gradient(ellipse 900px 480px at 50% -10%, var(--accent-glow), transparent 70%);
+        }
+
+        .mono { font-family: 'Geist Mono', monospace; }
+
+        .surface {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            transition: background 0.35s ease, border-color 0.35s ease;
+        }
+
+        .text-muted { color: var(--text-muted); }
+        .text-faint { color: var(--text-faint); }
+
+        .btn-primary {
+            background: var(--btn-primary-bg);
+            color: var(--btn-primary-text);
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .btn-secondary {
+            background: var(--btn-secondary-bg);
+            color: var(--btn-secondary-text);
+            border: 1px solid var(--border-strong);
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+        .btn-secondary:hover {
+            background: var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+        a, button { -webkit-tap-highlight-color: transparent; }
+        button { touch-action: manipulation; }
+        a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+            outline: 2px solid var(--success);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-elevated);
+            border: 2px solid var(--border-strong);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Geist Mono', monospace;
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--text);
+            flex-shrink: 0;
+        }
+
+        .code-block {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Geist Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 4px 12px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-muted);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover {
+            color: var(--text);
+            border-color: var(--border-strong);
+        }
+
+        /* ---------- Terminal components ---------- */
+        .terminal-window {
+            background: var(--bg);
+            border: 1px solid var(--border-strong);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 24px 60px -24px var(--terminal-shadow);
+            position: relative;
+        }
+        .terminal-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+        }
+        .terminal-dots { display: flex; gap: 6px; flex-shrink: 0; }
+        .terminal-dots span {
+            width: 10px; height: 10px; border-radius: 50%;
+            display: block;
+        }
+        .terminal-dots span:nth-child(1) { background: #f8717199; }
+        .terminal-dots span:nth-child(2) { background: #fbbf2499; }
+        .terminal-dots span:nth-child(3) { background: #34d39999; }
+        .terminal-title {
+            flex: 1;
+            text-align: center;
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .rec-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--danger);
+            flex-shrink: 0;
+            animation: pulse-dot 1.6s ease-in-out infinite;
+        }
+        @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+        .terminal-toggle {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 6px;
+            width: 30px; height: 30px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 11px;
+            flex-shrink: 0;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .terminal-toggle:hover { color: var(--text); border-color: var(--border-strong); }
+        .terminal-toggle:disabled { opacity: .4; cursor: default; }
+
+        .terminal-body {
+            padding: 20px;
+            font-family: 'Geist Mono', monospace;
+            font-size: clamp(11px, 2.6vw, 13px);
+            line-height: 1.7;
+            position: relative;
+            overflow: hidden;
+        }
+        .scanline {
+            position: absolute;
+            left: 0; right: 0; height: 45%;
+            top: -45%;
+            background: linear-gradient(to bottom, transparent, var(--accent-glow), transparent);
+            pointer-events: none;
+            animation: scan 7s linear infinite;
+        }
+        @keyframes scan { from { top: -45%; } to { top: 100%; } }
+
+        .log-line {
+            color: var(--text-faint);
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 2.1em;
+            overflow: hidden;
+            padding-left: 10px;
+            margin-bottom: 1px;
+            border-left: 2px solid transparent;
+            transition: max-height .4s ease, opacity .35s ease, padding .35s ease, margin .35s ease, border-color .3s ease, background .3s ease;
+        }
+        .log-line.is-pruned { text-decoration: line-through; color: var(--danger); opacity: .55; }
+        .log-line.is-collapsed { max-height: 0; opacity: 0; margin: 0; padding: 0; border: 0; }
+        .log-line.is-kept { color: var(--text); border-left-color: var(--success); background: rgba(52, 211, 153, .07); }
+
+        .cmd-line { margin-top: 14px; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+        .cmd-line .prompt { color: var(--success); margin-right: 6px; }
+        .caret {
+            display: inline-block;
+            width: 7px; height: 1em;
+            background: var(--text);
+            vertical-align: -0.15em;
+            animation: blink 1s steps(1) infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .summary-line {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            color: var(--success);
+            font-variant-numeric: tabular-nums;
+            min-height: 1.6em;
+        }
+        .summary-line .muted { color: var(--text-muted); font-weight: 400; }
+
+        .terminal-mini .terminal-body { padding: 16px; min-height: 0; }
+        .mini-output {
+            color: var(--success);
+            margin-top: 10px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            opacity: 0;
+            transition: opacity .3s ease;
+        }
+        .mini-replay {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 6px;
+            font-size: 10px;
+            padding: 4px 9px;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: border-color .2s, color .2s;
+        }
+        .mini-replay:hover { color: var(--text); border-color: var(--border-strong); }
+
+        @media (prefers-reduced-motion: reduce) {
+            .rec-dot, .scanline, .caret { animation: none !important; }
+            html { scroll-behavior: auto; }
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen">
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--bg)]/80 backdrop-blur-xl">
+        <div class="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-2.5 font-semibold text-base">
+                <img src="/favicon-32x32.png" alt="" class="w-7 h-7" width="28" height="28">
+                Roka
+            </a>
+            <div class="flex items-center gap-3">
+                <a href="/" class="hidden sm:inline text-sm text-muted hover:text-[var(--text)] transition-colors">&larr; Back</a>
+                <button id="themeToggle" type="button" class="btn-secondary rounded-lg px-3 py-1.5 text-xs font-medium" aria-label="Toggle theme">
+                    <span id="themeLabel">Light</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-5 py-16 relative">
+
+        <!-- Hero -->
+        <div class="text-center mb-10">
+            <p class="mono text-[11px] uppercase tracking-[0.22em] text-muted mb-4">Local &middot; free &middot; open source</p>
+            <h1 class="text-4xl sm:text-6xl font-bold tracking-tight mb-5">Prune your logs.</h1>
+            <p class="text-muted text-lg max-w-2xl mx-auto mb-6">The context layer for AI debugging. Point Roka at any log file and get back only the lines that matter — collapsed, ranked, and packed to your token budget.</p>
+            <div class="flex flex-wrap justify-center gap-4 text-sm text-muted">
+                <span class="flex items-center gap-2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--success)]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    Open source
+                </span>
+                <span class="flex items-center gap-2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--success)]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    Works offline
+                </span>
+            </div>
+        </div>
+
+        <!-- Live demo: the actual pruning behavior, animated -->
+        <section class="mb-12" aria-label="Live demonstration of Roka pruning a log file">
+            <div class="terminal-window max-w-2xl mx-auto" id="heroTerminal">
+                <div class="terminal-bar">
+                    <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                    <div class="terminal-title"><span class="rec-dot" aria-hidden="true"></span> bash &mdash; deploy.log</div>
+                    <button class="terminal-toggle" id="heroToggle" type="button" aria-label="Pause animation" aria-pressed="false">&#10074;&#10074;</button>
+                </div>
+                <div class="scanline" aria-hidden="true"></div>
+                <div class="terminal-body">
+                    <div id="logStream"></div>
+                    <div class="cmd-line"><span class="prompt">$</span><span id="cmdTyped"></span><span class="caret" id="heroCaret"></span></div>
+                    <div class="summary-line" id="summaryLine" aria-live="polite"></div>
+                </div>
+            </div>
+            <p class="text-center text-muted text-xs mt-4 max-w-md mx-auto mono">10-line excerpt of a 12,847-line file &mdash; Roka prunes the same way at full scale.</p>
+        </section>
+
+        <!-- Installation Steps -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-semibold mb-8 text-center">Get started in 3 steps</h2>
+            <ol class="space-y-10 list-none max-w-2xl mx-auto">
+                <!-- Step 1 -->
+                <li class="flex gap-4">
+                    <div class="step-number" aria-hidden="true">1</div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-lg font-semibold mb-2">Run the installer</h3>
+                        <p class="text-muted text-sm mb-4">Roka detects your OS and architecture automatically.</p>
+                        <div class="terminal-window terminal-mini" id="stepOneTerminal" data-cmd="curl -fsSL https://install.roka-prune.com | bash" data-output="  ➜  Detecting operating system...&#10;  ✓  OS: darwin&#10;  ➜  Detecting processor architecture...&#10;  ✓  Architecture: arm64&#10;  ➜  Fetching latest release from GitHub...&#10;  ✓  Latest version: v1.0.0&#10;  ➜  Downloading binary...&#10;  ✓  Download complete&#10;  ✓  Installed (no sudo required)&#10;  ✓  Installation complete!">
+                            <div class="terminal-bar">
+                                <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                                <div class="terminal-title">terminal</div>
+                                <button class="mini-replay" type="button">Replay</button>
+                                <button class="copy-btn" style="position:static; flex-shrink:0;" data-copy="curl -fsSL https://install.roka-prune.com | bash">copy</button>
+                            </div>
+                            <div class="terminal-body">
+                                <div class="cmd-line"><span class="prompt">$</span><span class="mini-cmd"></span><span class="caret"></span></div>
+                                <pre class="mini-output mono"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Step 2 -->
+                <li class="flex gap-4">
+                    <div class="step-number" aria-hidden="true">2</div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-lg font-semibold mb-2">Verify installation</h3>
+                        <p class="text-muted text-sm mb-4">Check the version to confirm Roka is on your PATH.</p>
+                        <div class="terminal-window terminal-mini" data-cmd="roka --version" data-output="roka 1.4.2 (darwin/arm64)">
+                            <div class="terminal-bar">
+                                <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                                <div class="terminal-title">terminal</div>
+                                <button class="mini-replay" type="button">Replay</button>
+                                <button class="copy-btn" style="position:static; flex-shrink:0;" data-copy="roka --version">copy</button>
+                            </div>
+                            <div class="terminal-body">
+                                <div class="cmd-line"><span class="prompt">$</span><span class="mini-cmd"></span><span class="caret"></span></div>
+                                <pre class="mini-output mono"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Step 3 -->
+                <li class="flex gap-4">
+                    <div class="step-number" aria-hidden="true">3</div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-lg font-semibold mb-2">Prune your first log</h3>
+                        <p class="text-muted text-sm mb-4">Pipe any log file into Roka with a query and token budget.</p>
+                        <div class="terminal-window terminal-mini" data-cmd='cat your-log.log | roka prune --query "what broke" --budget 8000' data-output="&#x2713; kept 12 of 4,209 lines &middot; 2,140 tokens">
+                            <div class="terminal-bar">
+                                <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                                <div class="terminal-title">terminal</div>
+                                <button class="mini-replay" type="button">Replay</button>
+                                <button class="copy-btn" style="position:static; flex-shrink:0;" data-copy='cat your-log.log | roka prune --query "what broke" --budget 8000'>copy</button>
+                            </div>
+                            <div class="terminal-body">
+                                <div class="cmd-line"><span class="prompt">$</span><span class="mini-cmd"></span><span class="caret"></span></div>
+                                <pre class="mini-output mono"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ol>
+
+            <!-- Optional: MCP agent integration -->
+            <div class="mt-12 surface rounded-xl p-6 max-w-2xl mx-auto">
+                <h3 class="text-lg font-semibold mb-2">Optional — connect to your AI agent (Pro MCP)</h3>
+                <p class="text-muted text-sm mb-4">One command registers Roka as an MCP server in Claude Code, Cursor, Codex, or Copilot. Your agent can then call <span class="mono text-xs">prune_file</span> and <span class="mono text-xs">prune_logs</span> directly.</p>
+                <div class="code-block relative mb-3">
+                    <button class="copy-btn" data-copy="export ROKA_API_KEY=rk_live_... && npx roka-mcp connect --agent claude-code">copy</button>
+                    <code>export ROKA_API_KEY=rk_live_... && npx roka-mcp connect --agent claude-code</code>
+                </div>
+                <p class="text-muted text-xs">Also: <span class="mono">cursor</span> · <span class="mono">codex</span> · <span class="mono">copilot</span> — restart IDE after connect. Watch: <span class="mono">npx roka-mcp watch ./logs/dev.log --on-crash</span></p>
+            </div>
+        </div>
+
+        <!-- Help & Docs -->
+        <div class="mt-16 pt-8 border-t border-[var(--border)] text-center">
+            <div class="flex flex-wrap justify-center gap-6 text-sm">
+                <a href="https://github.com/Roka-Dev-Labs/roka/issues" target="_blank" rel="noopener" class="text-muted hover:text-[var(--text)] transition-colors">CLI issues</a>
+                <a href="https://github.com/Roka-Dev-Labs/roka-mcp" target="_blank" rel="noopener" class="text-muted hover:text-[var(--text)] transition-colors">MCP on GitHub</a>
+                <a href="https://github.com/Roka-Dev-Labs" target="_blank" rel="noopener" class="text-muted hover:text-[var(--text)] transition-colors">All repos</a>
+                <a href="/" class="text-base text-muted hover:text-[var(--text)] transition-colors">&larr; Back</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ---------- Theme toggle ----------
+        const html = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        const themeLabel = document.getElementById('themeLabel');
+
+        function applyTheme(theme) {
+            html.dataset.theme = theme;
+            themeLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
+            try { localStorage.setItem('roka-theme', theme); } catch (e) {}
+        }
+
+        let savedTheme = null;
+        try { savedTheme = localStorage.getItem('roka-theme'); } catch (e) {}
+        if (savedTheme) applyTheme(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            applyTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
+        });
+
+        // ---------- Shared helpers ----------
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+        async function typeInto(el, text, speed = 26) {
+            el.textContent = '';
+            for (let i = 1; i <= text.length; i++) {
+                el.textContent = text.slice(0, i);
+                await sleep(speed);
+            }
+        }
+
+        // ---------- Copy buttons ----------
+        document.querySelectorAll('.copy-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const text = btn.dataset.copy;
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.textContent = 'copied';
+                    setTimeout(() => { btn.textContent = 'copy'; }, 1500);
+                });
+            });
+        });
+
+        // ---------- Hero pruning demo ----------
+        const heroLines = [
+            { text: '2026-06-24 07:00:02 INFO   [startup] application started', keep: false },
+            { text: '2026-06-24 07:00:05 WARN   [db_pool] connection pool 85%, retry 50ms', keep: false },
+            { text: '2026-06-24 07:00:05 WARN   [db_pool] connection pool 85%, retry 50ms', keep: false },
+            { text: '2026-06-24 07:00:06 WARN   [db_pool] connection pool 85%, retry 50ms', keep: false },
+            { text: '... 844 more identical retries ...', keep: false },
+            { text: '2026-06-24 07:00:08 INFO   [auth] login attempt 192.168.1.50', keep: true },
+            { text: '2026-06-24 07:00:10 INFO   [auth] login attempt 10.0.0.12', keep: true },
+            { text: '2026-06-24 07:00:42 CRITICAL out of memory killer invoked', keep: true },
+            { text: '2026-06-24 07:00:43 WARN   [db_pool] connection pool 85%, retry 50ms', keep: false },
+            { text: '2026-06-24 07:00:45 INFO   [health] GET /health 200 1ms', keep: false }
+        ];
+        const heroCmd = 'cat deploy.log | roka prune --query "why did deploy fail" --budget 8000';
+        const heroSummary = '&#x2713; kept 3 of 12,847 lines &middot; <span class="muted">124,480 &rarr; 7,842 tokens (&minus;94%) &middot; 312ms</span>';
+
+        const logStream = document.getElementById('logStream');
+        const cmdTyped = document.getElementById('cmdTyped');
+        const summaryLine = document.getElementById('summaryLine');
+        const heroToggle = document.getElementById('heroToggle');
+
+        function renderHeroLines() {
+            logStream.innerHTML = '';
+            heroLines.forEach((line) => {
+                const div = document.createElement('div');
+                div.className = 'log-line';
+                div.dataset.keep = String(line.keep);
+                div.textContent = line.text;
+                logStream.appendChild(div);
+            });
+        }
+        renderHeroLines();
+
+        function heroStaticEndState() {
+            Array.from(logStream.children).forEach((line) => {
+                line.className = 'log-line';
+                if (line.dataset.keep === 'true') {
+                    line.classList.add('is-kept');
+                } else {
+                    line.classList.add('is-pruned', 'is-collapsed');
+                }
+            });
+            cmdTyped.textContent = heroCmd;
+            summaryLine.innerHTML = heroSummary;
+        }
+
+        async function heroCycle() {
+            Array.from(logStream.children).forEach((line) => { line.className = 'log-line'; });
+            cmdTyped.textContent = '';
+            summaryLine.innerHTML = '';
+            await sleep(500);
+            await typeInto(cmdTyped, heroCmd, 24);
+            await sleep(450);
+            const lines = Array.from(logStream.children);
+            for (const line of lines) {
+                line.classList.add(line.dataset.keep === 'true' ? 'is-kept' : 'is-pruned');
+                await sleep(85);
+            }
+            await sleep(350);
+            for (const line of lines) {
+                if (line.dataset.keep !== 'true') line.classList.add('is-collapsed');
+            }
+            await sleep(250);
+            summaryLine.innerHTML = heroSummary;
+            await sleep(4200);
+        }
+
+        let heroPlaying = false;
+
+        async function heroLoop() {
+            while (heroPlaying) {
+                await heroCycle();
+                if (!heroPlaying) break;
+            }
+        }
+
+        if (reduceMotion) {
+            heroStaticEndState();
+            heroToggle.textContent = '\u25B6';
+            heroToggle.setAttribute('aria-label', 'Play animation once');
+            heroToggle.setAttribute('aria-pressed', 'false');
+            heroToggle.addEventListener('click', async () => {
+                heroToggle.disabled = true;
+                await heroCycle();
+                heroStaticEndState();
+                heroToggle.disabled = false;
+            });
+        } else {
+            heroPlaying = true;
+            heroToggle.textContent = '\u275A\u275A';
+            heroToggle.setAttribute('aria-label', 'Pause animation');
+            heroToggle.addEventListener('click', () => {
+                heroPlaying = !heroPlaying;
+                heroToggle.textContent = heroPlaying ? '\u275A\u275A' : '\u25B6';
+                heroToggle.setAttribute('aria-label', heroPlaying ? 'Pause animation' : 'Play animation');
+                heroToggle.setAttribute('aria-pressed', String(!heroPlaying));
+                if (heroPlaying) heroLoop();
+            });
+            heroLoop();
+        }
+
+        // ---------- Mini terminal demos (install steps) ----------
+        function setupMiniTerminal(root) {
+            const cmdEl = root.querySelector('.mini-cmd');
+            const outEl = root.querySelector('.mini-output');
+            const caretEl = root.querySelector('.caret');
+            let played = false;
+
+            async function play() {
+                const cmd = root.dataset.cmd;
+                const output = root.dataset.output || '';
+                cmdEl.textContent = '';
+                outEl.textContent = '';
+                outEl.style.opacity = 0;
+                if (caretEl) caretEl.style.display = '';
+
+                if (reduceMotion) {
+                    cmdEl.textContent = cmd;
+                    outEl.textContent = output;
+                    outEl.style.opacity = 1;
+                    return;
+                }
+
+                await typeInto(cmdEl, cmd, 20);
+                await sleep(300);
+                if (output) {
+                    outEl.textContent = output;
+                    outEl.style.opacity = 1;
+                }
+            }
+
+            root.addEventListener('replay', play);
+
+            const replayBtn = root.querySelector('.mini-replay');
+            if (replayBtn) replayBtn.addEventListener('click', play);
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting && !played) {
+                        played = true;
+                        play();
+                    }
+                });
+            }, { threshold: 0.4 });
+            observer.observe(root);
+        }
+        document.querySelectorAll('.terminal-mini').forEach(setupMiniTerminal);
+    </script>
+</body>
+</html>

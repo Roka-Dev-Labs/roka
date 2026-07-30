@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Roka</title>
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #111111;
+            --text-muted: #666666;
+            --text-faint: #999999;
+            --border: #e5e5e5;
+            --border-strong: #d4d4d4;
+            --accent-glow: rgba(0, 0, 0, 0.05);
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        html.dark {
+            --bg: #0a0a0a;
+            --text: #f5f5f5;
+            --text-muted: #a3a3a3;
+            --text-faint: #737373;
+            --border: #262626;
+            --border-strong: #404040;
+            --accent-glow: rgba(255, 255, 255, 0.05);
+            --success: #22c55e;
+            --danger: #f87171;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .surface {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .nav {
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-right: 1.5rem;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .nav a:hover {
+            color: var(--text);
+        }
+
+        .nav a.active {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .back-link:hover {
+            color: var(--text);
+        }
+
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .logo-animate {
+            animation: logoSpin 3s ease-in-out;
+        }
+
+        @keyframes logoSpin {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(-10deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="/index.html" style="display: flex; align-items: center; gap: 0.625rem; font-weight: 600; font-size: 1rem; text-decoration: none; color: var(--text);">
+            <img src="/favicon-32x32.png" alt="" class="logo-animate" width="28" height="28">
+            Roka
+        </a>
+        <button id="themeToggle" type="button" style="background: transparent; border: 1px solid var(--border); color: var(--text-muted); border-radius: 6px; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.875rem;"><span id="themeLabel">Light</span></button>
+    </nav>
+
+    <canvas id="particles"></canvas>
+
+    <div class="container">
+        <a href="/index.html" class="back-link">← Back</a>
+
+        <h1>About</h1>
+        <p>We are Roka. We're a lean team building the context infrastructure layer for AI-driven engineering and operations.</p>
+
+        <div class="surface">
+            <p>Our first product is Roka Prune — an intelligent context-pruning middleware for LLMs and AI agents.</p>
+
+            <p>The biggest bottleneck in AI today isn't the models—it's the context. When you feed raw development logs, system telemetry, or traces into an LLM, you are mostly burning money on noise. 90% of a standard log is repetitive fluff, but somewhere in those 50,000 lines sits a critical Out-of-Memory error or a silent database deadlock.</p>
+
+            <p>Until now, developers had to manually write brittle regex rules, hardcode exclusions, or spend hours tweaking prompts just to tell the model what actually matters. We think that is the wrong model. Engineers shouldn't have to babysit their logs or manually rank which error is more important.</p>
+
+            <p>Roka solves this natively. Our middleware automatically parses, collapses, and ranks logs based on actual semantic relevance and statistical anomalies—packing the absolute maximum signal into your token budget before the model ever sees it. No manual setup, no "which log is more important" decision-making. It just works out of the box.</p>
+
+            <p>We are building the future of how AI understands systems. If you want to help us prune the noise and build the context layer for the next decade of AI engineering, we'd love to hear from you.</p>
+        </div>
+    </div>
+
+    <script>
+        const html = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        const themeLabel = document.getElementById('themeLabel');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        
+        if (savedTheme === 'dark') {
+            html.classList.add('dark');
+            themeLabel.textContent = 'Dark';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            const newTheme = html.classList.contains('dark') ? 'dark' : 'light';
+            localStorage.setItem('theme', newTheme);
+            themeLabel.textContent = newTheme === 'dark' ? 'Dark' : 'Light';
+        });
+
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const particleCount = 80;
+        const connectionDistance = 150;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 2 + 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+
+            draw() {
+                const isDark = html.classList.contains('dark');
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.3)';
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function drawConnections() {
+            const isDark = html.classList.contains('dark');
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < connectionDistance) {
+                        const opacity = (1 - distance / connectionDistance) * 0.3;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = isDark ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            drawConnections();
+            requestAnimationFrame(animate);
+        }
+
+        resizeCanvas();
+        initParticles();
+        animate();
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initParticles();
+        });
+    </script>
+</body>
+</html>

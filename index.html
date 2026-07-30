@@ -1,0 +1,3350 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <title>Roka: Prune your logs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/config.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #09090b;
+            --bg-elevated: #111113;
+            --bg-card: #141416;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.14);
+            --text: #fafafa;
+            --text-muted: #a1a1aa;
+            --text-faint: #52525b;
+            --accent: #e4e4e7;
+            --accent-glow: rgba(255, 255, 255, 0.06);
+            --hero-glow: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(255,255,255,0.07), transparent 70%);
+            --btn-primary-bg: #fafafa;
+            --btn-primary-text: #09090b;
+            --btn-secondary-bg: transparent;
+            --btn-secondary-text: #fafafa;
+            --success: #e4e4e7;
+            --term-ok: #34d399;
+            --danger: #f87171;
+            --scan-line: rgba(255, 255, 255, 0.03);
+            --grid-line: rgba(255, 255, 255, 0.045);
+            --term-border: rgba(255, 255, 255, 0.18);
+            --term-green: #34d399;
+            --logo-filter: invert(1);
+        }
+
+        [data-theme="light"] {
+            --bg: #fafafa;
+            --bg-elevated: #f4f4f5;
+            --bg-card: #ffffff;
+            --border: rgba(0, 0, 0, 0.08);
+            --border-strong: rgba(0, 0, 0, 0.12);
+            --text: #09090b;
+            --text-muted: #52525b;
+            --text-faint: #a1a1aa;
+            --accent: #18181b;
+            --accent-glow: rgba(0, 0, 0, 0.04);
+            --hero-glow: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,0,0,0.04), transparent 70%);
+            --btn-primary-bg: #09090b;
+            --btn-primary-text: #fafafa;
+            --btn-secondary-text: #09090b;
+            --scan-line: rgba(0, 0, 0, 0.03);
+            --success: #18181b;
+            --grid-line: rgba(0, 0, 0, 0.05);
+            --term-border: rgba(0, 0, 0, 0.6);
+            --term-green: #059669;
+            --term-ok: #059669;
+            --logo-filter: none;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, sans-serif;
+            letter-spacing: -0.02em;
+            transition: background 0.35s ease, color 0.35s ease;
+        }
+
+        .mono { font-family: 'Geist Mono', monospace; }
+
+        .surface {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            transition: background 0.35s ease, border-color 0.35s ease;
+        }
+
+        .text-muted { color: var(--text-muted); }
+        .text-faint { color: var(--text-faint); }
+
+        .btn-primary {
+            background: var(--btn-primary-bg);
+            color: var(--btn-primary-text);
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .btn-secondary {
+            background: var(--btn-secondary-bg);
+            color: var(--btn-secondary-text);
+            border: 1px solid var(--border-strong);
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+        .btn-secondary:hover {
+            background: var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+        #themeToggle:hover {
+            color: var(--text) !important;
+        }
+
+        /* Hero dynamic roka */
+        .hero-stage {
+            position: relative;
+            min-height: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 4.5rem 1.25rem 4.5rem;
+        }
+
+        /* Subtle grid texture behind the hero (fades out toward edges) */
+        .hero-stage::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+            background-size: 46px 46px;
+            -webkit-mask-image: radial-gradient(ellipse 65% 60% at 50% 38%, #000 25%, transparent 78%);
+            mask-image: radial-gradient(ellipse 65% 60% at 50% 38%, #000 25%, transparent 78%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero-glow {
+            position: absolute;
+            inset: 0;
+            background: var(--hero-glow);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .prune-stream {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .prune-line {
+            position: absolute;
+            left: -10%;
+            font-family: 'Geist Mono', monospace;
+            font-size: 10px;
+            color: var(--text-faint);
+            white-space: nowrap;
+            opacity: 0;
+            animation: prune-drift linear infinite;
+        }
+
+        @keyframes prune-drift {
+            0% { transform: translateX(0) translateY(0); opacity: 0; }
+            8% { opacity: 0.35; }
+            70% { opacity: 0.12; }
+            100% { transform: translateX(120vw) translateY(-40px); opacity: 0; }
+        }
+
+        .roka-word {
+            position: relative;
+            display: flex;
+            gap: 0.02em;
+            font-size: clamp(4.5rem, 14vw, 9rem);
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.06em;
+            z-index: 2;
+        }
+
+        .roka-letter {
+            display: inline-block;
+            position: relative;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            will-change: transform, opacity, filter;
+        }
+
+        .roka-letter::after {
+            content: attr(data-char);
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            filter: blur(6px);
+            transform: translateY(8px);
+            color: var(--text-faint);
+            pointer-events: none;
+        }
+
+        .roka-letter.pruning {
+            animation: letter-prune 0.55s ease forwards;
+        }
+
+        @keyframes letter-prune {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; filter: blur(0); }
+            40% { transform: scale(0.6) rotate(-8deg) translateY(6px); opacity: 0.35; filter: blur(2px); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; filter: blur(0); }
+        }
+
+        .roka-letter.wave {
+            animation: letter-wave 3s ease-in-out infinite;
+        }
+
+        @keyframes letter-wave {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        /* ASCII art ROKA canvas */
+        .roka-canvas-wrap {
+            position: relative;
+            z-index: 2;
+            cursor: default;
+            transform-style: preserve-3d;
+            transition: transform 0.12s ease-out;
+            width: min(756px, 100%);
+        }
+        .roka-canvas-wrap canvas {
+            display: block;
+        }
+
+        /* Browser mock frames */
+        .browser-frame {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--term-border);
+            box-shadow: 0 24px 80px -20px rgba(0,0,0,0.45);
+        }
+
+        [data-theme="light"] .browser-frame {
+            box-shadow: 0 24px 80px -20px rgba(0,0,0,0.12);
+        }
+
+        .browser-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 14px;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .browser-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border-strong);
+        }
+
+        .browser-url {
+            flex: 1;
+            margin-left: 8px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: var(--bg);
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: 'Geist Mono', monospace;
+        }
+
+        .mock-terminal {
+            padding: 16px;
+            font-size: 11px;
+            line-height: 1.65;
+            font-family: 'Geist Mono', monospace;
+            min-height: 220px;
+        }
+
+        .log-warn { color: #fbbf24; }
+        .log-critical { color: var(--danger); }
+        .log-info { color: var(--text-muted); }
+        .log-collapsed { color: var(--term-ok); }
+        .log-dim { opacity: 0.35; }
+
+        /* Semantic colors inside static mock terminals */
+        .mock-terminal .term-err { color: var(--danger); font-weight: 600; }
+        .mock-terminal .term-crit { color: var(--danger); font-weight: 700; }
+        .mock-terminal .term-warn { color: #fbbf24; }
+        .mock-terminal .term-ok { color: var(--term-green); }
+        .mock-terminal .term-info { color: var(--text-muted); }
+        .mock-terminal .term-dim { color: var(--text-faint); }
+
+        .feature-card:hover {
+            border-color: var(--border-strong);
+            transform: translateY(-2px);
+        }
+
+        .feature-card {
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        /* Prune lab controls */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--border);
+            height: 3px;
+            border-radius: 2px;
+            width: 100%;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text);
+            cursor: pointer;
+        }
+
+        .lab-input {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 8px;
+            transition: border-color 0.2s;
+        }
+        .lab-input:focus {
+            outline: none;
+            border-color: var(--border-strong);
+        }
+
+        .custom-checkbox {
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border: 1px solid var(--border-strong);
+            border-radius: 3px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+        }
+        .custom-checkbox:checked {
+            background: var(--text);
+            border-color: var(--text);
+        }
+
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+
+        @keyframes scan {
+            0%, 100% { opacity: 0.35; }
+            50% { opacity: 0.85; }
+        }
+        .loading-text { animation: scan 1.4s infinite ease-in-out; }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        /* FAQ Accordion Animation */
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        }
+        .faq-content.open {
+            max-height: 1000px;
+            padding-bottom: 1.25rem;
+        }
+
+        /* Logo Animation */
+        @keyframes logoSpin {
+            0% { transform: rotate(0deg) scale(0.5); opacity: 0; }
+            50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
+            100% { transform: rotate(360deg) scale(1); opacity: 1; }
+        }
+        .logo-animate {
+            animation: logoSpin 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* Mobile Sidebar */
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg);
+            border-right: 1px solid var(--border);
+            z-index: 100;
+            transition: left 0.3s ease;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .mobile-sidebar.open {
+            left: 0;
+        }
+        .mobile-sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .mobile-sidebar-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .mobile-sidebar a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 1.125rem;
+            transition: color 0.2s;
+        }
+        .mobile-sidebar a:hover {
+            color: var(--text);
+        }
+        @media (min-width: 640px) {
+            .mobile-sidebar, .mobile-sidebar-overlay {
+                display: none;
+            }
+        }
+
+        /* Fixed Instagram Icon */
+        .instagram-fixed {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+        .instagram-fixed:hover {
+            color: var(--text);
+        }
+
+        /* Hero tagline collapse */
+        .hero-tagline-wrap {
+            position: relative;
+            min-height: 2rem;
+            z-index: 10;
+            margin-bottom: 2rem;
+        }
+        .hero-tagline {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+            font-weight: 300;
+            letter-spacing: -0.025em;
+            color: var(--text-muted);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        @media (min-width: 640px) {
+            .hero-tagline { font-size: 1.25rem; line-height: 1.75rem; }
+        }
+        .hero-noise-burst {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            pointer-events: none;
+            overflow: hidden;
+            max-height: 5rem;
+        }
+        .hero-noise-line {
+            font-family: 'Geist Mono', monospace;
+            font-size: 9px;
+            color: var(--text-faint);
+            white-space: nowrap;
+            opacity: 0;
+            animation: noise-in 0.08s ease forwards;
+        }
+        @keyframes noise-in {
+            to { opacity: 0.55; }
+        }
+        .hero-noise-burst.collapsing .hero-noise-line {
+            animation: noise-collapse 0.45s ease forwards;
+        }
+        @keyframes noise-collapse {
+            0% { opacity: 0.55; transform: scale(1); filter: blur(0); }
+            100% { opacity: 0; transform: scale(0.6) translateY(-12px); filter: blur(3px); }
+        }
+        .hero-tagline.revealed {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .hero-tagline:not(.revealed) {
+            opacity: 0;
+            transform: scale(0.92);
+        }
+
+        /* MCP section */
+        .eyebrow {
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+        }
+        .pro-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-family: 'Geist Mono', monospace;
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--success);
+            border: 1px solid var(--border-strong);
+        }
+        .compress-badge {
+            display: inline-flex;
+            align-items: center;
+            font-family: 'Geist Mono', monospace;
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(248, 113, 113, 0.12);
+            color: var(--danger);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            white-space: nowrap;
+        }
+        .mcp-demo-output {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Interactive MCP terminal preview */
+        .terminal-preview-label {
+            font-family: 'Geist Mono', monospace;
+            font-size: 10px;
+            color: var(--text-faint);
+            letter-spacing: 0.05em;
+        }
+        .terminal-preview {
+            font-family: 'Geist Mono', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            min-height: 180px;
+        }
+        .terminal-preview .tp-line { min-height: 1.7em; }
+        .terminal-preview .tp-cursor {
+            display: inline-block;
+            width: 7px;
+            height: 14px;
+            background: var(--text-muted);
+            animation: tp-blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+        @keyframes tp-blink { 50% { opacity: 0; } }
+        .terminal-preview .tp-success { color: var(--term-ok); }
+        .terminal-preview .tp-dim { color: var(--text-faint); }
+        .terminal-preview .tp-danger { color: var(--danger); }
+        .terminal-preview .tp-warn { color: #fbbf24; }
+
+        /* Motion showcase loops */
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1rem;
+        }
+        @media (min-width: 640px) {
+            .showcase-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        .showcase-card {
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg-card);
+            border: 1px solid var(--term-border);
+        }
+        .showcase-label {
+            padding: 10px 14px;
+            font-size: 11px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-elevated);
+        }
+        .showcase-stage {
+            position: relative;
+            height: 160px;
+            padding: 12px;
+            font-family: 'Geist Mono', monospace;
+            font-size: 10px;
+            line-height: 1.5;
+            overflow: hidden;
+            background: var(--bg);
+        }
+        .showcase-static {
+            display: none;
+            padding: 12px;
+            font-family: 'Geist Mono', monospace;
+            font-size: 10px;
+            line-height: 1.5;
+            color: var(--text-muted);
+            background: var(--bg);
+            min-height: 160px;
+        }
+        .sc-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sc-warn { color: #fbbf24; }
+        .sc-error { color: var(--danger); }
+        .sc-success { color: var(--term-ok); }
+        .sc-dim { color: var(--text-faint); opacity: 0.4; }
+
+        /* Loop 1: collapse */
+        .sc-collapse-wall .sc-line { opacity: 0.5; }
+        .showcase-card.playing .sc-collapse-wall .sc-line {
+            animation: sc-fade-out 0.3s ease forwards;
+            animation-delay: calc(var(--i, 0) * 0.04s);
+        }
+        .showcase-card.playing .sc-collapse-result {
+            animation: sc-snap-in 0.25s ease 0.6s forwards;
+            opacity: 0;
+        }
+        @keyframes sc-fade-out {
+            0% { opacity: 0.5; max-height: 1.5em; }
+            60% { opacity: 0.2; transform: scale(0.98); }
+            100% { opacity: 0; max-height: 0; margin: 0; }
+        }
+        @keyframes sc-snap-in {
+            from { opacity: 0; transform: scale(1.08); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Loop 2: crash flow */
+        .sc-crash-flow .sc-step {
+            position: absolute;
+            inset: 12px;
+            opacity: 0;
+        }
+        .showcase-card.playing .sc-crash-flow .sc-step:nth-child(1) { animation: sc-step 2.4s ease 0s infinite; }
+        .showcase-card.playing .sc-crash-flow .sc-step:nth-child(2) { animation: sc-step 2.4s ease 0.8s infinite; }
+        .showcase-card.playing .sc-crash-flow .sc-step:nth-child(3) { animation: sc-step 2.4s ease 1.6s infinite; }
+        @keyframes sc-step {
+            0%, 8% { opacity: 0; transform: translateY(4px); }
+            12%, 38% { opacity: 1; transform: translateY(0); }
+            42%, 100% { opacity: 0; transform: translateY(-4px); }
+        }
+
+        /* Loop 3: install typing indicator */
+        .sc-install .sc-cmd {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid var(--text-muted);
+            animation: sc-type-cmd 2.4s steps(38) infinite, sc-cursor 0.8s step-end infinite;
+            max-width: 0;
+        }
+        .showcase-card.playing .sc-install .sc-cmd {
+            animation: sc-type-cmd 2.4s steps(38) 0s infinite, sc-cursor 0.8s step-end infinite;
+        }
+        @keyframes sc-type-cmd {
+            0%, 5% { max-width: 0; }
+            45%, 90% { max-width: 100%; }
+            100% { max-width: 100%; }
+        }
+        @keyframes sc-cursor { 50% { border-color: transparent; } }
+        .sc-install-out { opacity: 0; }
+        .showcase-card.playing .sc-install-out {
+            animation: sc-install-reveal 2.4s ease infinite;
+        }
+        @keyframes sc-install-reveal {
+            0%, 40% { opacity: 0; }
+            50%, 90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Loop 4: query rerank */
+        .sc-query-input {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        .sc-rank-line {
+            opacity: 0.3;
+            transition: opacity 0.2s;
+        }
+        .showcase-card.playing .sc-rank-line:nth-child(2) { animation: sc-rank 2.8s ease infinite; }
+        .showcase-card.playing .sc-rank-line:nth-child(3) { animation: sc-rank 2.8s ease 0.3s infinite; }
+        .showcase-card.playing .sc-rank-line:nth-child(4) { animation: sc-rank 2.8s ease 0.6s infinite; }
+        @keyframes sc-rank {
+            0%, 15% { opacity: 0.3; color: var(--text-muted); }
+            25%, 55% { opacity: 1; color: var(--term-ok); }
+            65%, 100% { opacity: 0.3; color: var(--text-muted); }
+        }
+
+        /* ── Orbit scene ─────────────────────────────────── */
+        .orbit-scene {
+            position: relative;
+            width: 360px; height: 360px;
+            margin: 0 auto;
+        }
+        .orbit-dashed {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px dashed var(--border-strong);
+            pointer-events: none;
+        }
+        .orbit-center {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 96px; height: 96px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--border-strong);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 2px;
+            z-index: 10;
+            box-shadow: 0 0 40px rgba(255,255,255,0.08);
+        }
+        .orbit-item {
+            position: absolute;
+            top: 50%; left: 50%;
+            margin: -28px 0 0 -28px;
+            width: 56px; height: 56px;
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: default;
+            transition: transform 0.2s ease;
+        }
+        .orbit-item:hover { z-index: 20; }
+        /* Per-item orbit keyframes — angle θ, radius 140px */
+        @keyframes orb0   { from{transform:rotate(0deg)   translateY(-140px) rotate(0deg)  } to{transform:rotate(360deg) translateY(-140px) rotate(-360deg)  }}
+        @keyframes orb60  { from{transform:rotate(60deg)  translateY(-140px) rotate(-60deg) } to{transform:rotate(420deg) translateY(-140px) rotate(-420deg) }}
+        @keyframes orb120 { from{transform:rotate(120deg) translateY(-140px) rotate(-120deg)} to{transform:rotate(480deg) translateY(-140px) rotate(-480deg)}}
+        @keyframes orb180 { from{transform:rotate(180deg) translateY(-140px) rotate(-180deg)} to{transform:rotate(540deg) translateY(-140px) rotate(-540deg)}}
+        @keyframes orb240 { from{transform:rotate(240deg) translateY(-140px) rotate(-240deg)} to{transform:rotate(600deg) translateY(-140px) rotate(-600deg)}}
+        @keyframes orb300 { from{transform:rotate(300deg) translateY(-140px) rotate(-300deg)} to{transform:rotate(660deg) translateY(-140px) rotate(-660deg)}}
+        .orb-0 { animation: orb0   18s linear infinite; }
+        .orb-1 { animation: orb60  18s linear infinite; }
+        .orb-2 { animation: orb120 18s linear infinite; }
+        .orb-3 { animation: orb180 18s linear infinite; }
+        .orb-4 { animation: orb240 18s linear infinite; }
+        .orb-5 { animation: orb300 18s linear infinite; }
+        .orbit-tooltip {
+            position: absolute;
+            bottom: -22px;
+            left: 50%; transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 10px;
+            color: var(--text-faint);
+            font-family: 'Geist Mono', monospace;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .orbit-item:hover .orbit-tooltip { opacity: 1; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .orb-0,.orb-1,.orb-2,.orb-3,.orb-4,.orb-5 { animation: none !important; }
+            .orb-0 { transform: rotate(0deg)   translateY(-140px) rotate(0deg); }
+            .orb-1 { transform: rotate(60deg)  translateY(-140px) rotate(-60deg); }
+            .orb-2 { transform: rotate(120deg) translateY(-140px) rotate(-120deg); }
+            .orb-3 { transform: rotate(180deg) translateY(-140px) rotate(-180deg); }
+            .orb-4 { transform: rotate(240deg) translateY(-140px) rotate(-240deg); }
+            .orb-5 { transform: rotate(300deg) translateY(-140px) rotate(-300deg); }
+        }
+        /* ── End orbit ───────────────────────────────────── */
+
+        @media (prefers-reduced-motion: reduce) {
+            .hero-noise-burst { display: none !important; }
+            .hero-tagline { opacity: 1 !important; transform: none !important; }
+            .roka-letter.wave { animation: none !important; }
+            .prune-line { animation: none !important; display: none; }
+            .showcase-stage { display: none; }
+            .showcase-static { display: block; }
+            .showcase-card.playing .sc-crash-flow .sc-step,
+            .showcase-card.playing .sc-install .sc-cmd,
+            .showcase-card.playing .sc-install-out,
+            .showcase-card.playing .sc-rank-line,
+            .showcase-card.playing .sc-collapse-wall .sc-line,
+            .showcase-card.playing .sc-collapse-result { animation: none !important; }
+            .sc-crash-flow .sc-step:last-child,
+            .sc-collapse-result,
+            .sc-install-out { opacity: 1 !important; }
+            .terminal-preview .tp-cursor { display: none; }
+            .story-viz canvas { display: none; }
+            .story-viz-fallback { display: block !important; }
+            .story-viz-label { display: none; }
+        }
+
+        /* ── Agent panel ── */
+        .hero-headline {
+            font-size: clamp(1.75rem, 5vw, 2.75rem);
+            font-weight: 600;
+            letter-spacing: -0.04em;
+            text-align: center;
+            z-index: 10;
+            max-width: 28rem;
+            line-height: 1.15;
+        }
+        .hero-sub {
+            font-size: 0.9375rem;
+            color: var(--text-muted);
+            text-align: center;
+            z-index: 10;
+            max-width: 26rem;
+            margin-top: 0.75rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+        .hero-live-stat {
+            font-family: 'Geist Mono', monospace;
+            font-size: 10px;
+            color: var(--text-faint);
+            z-index: 10;
+            margin-top: 1rem;
+            letter-spacing: 0.04em;
+        }
+        .hero-live-stat span { color: var(--success); }
+
+        /* Privacy trust strip */
+        .privacy-trust-strip {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem 1rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255,255,255,0.04);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: 'Geist Mono', monospace;
+            letter-spacing: 0.02em;
+        }
+        .trust-sep {
+            color: var(--text-faint);
+            font-size: 11px;
+        }
+        @media (max-width: 640px) {
+            .trust-sep { display: none; }
+        }
+
+        .roka-letter.scrambling {
+            animation: none !important;
+            color: transparent;
+        }
+        .roka-letter.scrambling::before {
+            content: attr(data-scramble);
+            position: absolute;
+            inset: 0;
+            color: var(--text-faint);
+            font-family: 'Geist Mono', monospace;
+            font-size: 0.22em;
+            letter-spacing: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.7;
+        }
+        .roka-letter.resolved::before { display: none; }
+        .roka-word.resolved .roka-letter {
+            animation: letter-resolve 0.4s ease forwards;
+        }
+        @keyframes letter-resolve {
+            from { filter: blur(4px); opacity: 0.4; }
+            to { filter: blur(0); opacity: 1; }
+        }
+
+        .agent-panel {
+            z-index: 10;
+            width: 100%;
+            max-width: 42rem;
+            text-align: left;
+        }
+        .agent-panel-top {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .agent-label {
+            font-family: 'Geist Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            color: var(--text-faint);
+        }
+        .agent-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+            border: 1px solid var(--border);
+            border-bottom: none;
+            border-radius: 10px 10px 0 0;
+            background: var(--bg-card);
+            margin-bottom: 0;
+        }
+        .agent-tab {
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            padding: 0.65rem 1rem;
+            color: var(--text-faint);
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: color 0.2s, border-color 0.2s;
+            margin-bottom: -1px;
+        }
+        .agent-tab:hover { color: var(--text-muted); }
+        .agent-tab.active {
+            color: var(--text);
+            border-bottom-color: var(--text);
+        }
+        .cmd-block {
+            display: none;
+            padding: 1rem 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+        }
+        .cmd-block.active { display: block; }
+        .cmd-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            padding: 0.5rem 0;
+        }
+        .cmd-row + .cmd-row { border-top: 1px solid var(--border); }
+        .cmd-copy {
+            flex-shrink: 0;
+            padding: 4px 8px;
+            font-size: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: transparent;
+            color: var(--text-faint);
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s;
+        }
+        .cmd-copy:hover { color: var(--text); border-color: var(--border-strong); }
+
+        .demo-wrap {
+            margin-top: 1.25rem;
+        }
+        .demo-label {
+            font-family: 'Geist Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            color: var(--text-faint);
+            margin-bottom: 0.5rem;
+        }
+        .demo-box {
+            background: var(--bg-card);
+            border: 1px solid var(--term-border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .demo-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+        }
+        .demo-url {
+            flex: 1;
+            text-align: center;
+            font-family: 'Geist Mono', monospace;
+            font-size: 10px;
+            color: var(--text-faint);
+        }
+        .demo-body {
+            padding: 1rem 1.25rem;
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            line-height: 1.75;
+            min-height: 200px;
+        }
+        .demo-body .nd-line { min-height: 1.75em; }
+        .demo-body .nd-dim { color: var(--text-faint); }
+        .demo-body .nd-ok { color: var(--term-ok); }
+        .demo-body .nd-err { color: var(--danger); }
+        .demo-body .nd-warn { color: #fbbf24; }
+        .demo-body .nd-badge {
+            display: inline-block;
+            margin-top: 0.35rem;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            background: rgba(248, 113, 113, 0.12);
+            color: var(--danger);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+        }
+
+        /* ── Story rows ── */
+        .story-section { padding: 4rem 1.25rem; }
+        .story-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            align-items: center;
+            max-width: 72rem;
+            margin: 0 auto 5rem;
+        }
+        @media (min-width: 900px) {
+            .story-row { grid-template-columns: 1fr 1.15fr; gap: 3rem; }
+            .story-row.reverse { direction: rtl; }
+            .story-row.reverse > * { direction: ltr; }
+        }
+        .story-copy h3 {
+            font-size: clamp(1.35rem, 3vw, 1.75rem);
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+        }
+        .story-copy p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+        }
+        .story-viz {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--term-border);
+            background: var(--bg-card);
+            aspect-ratio: 16 / 10;
+            min-height: 220px;
+        }
+        .story-viz canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .story-viz-fallback {
+            display: none;
+            padding: 1.25rem;
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            line-height: 1.6;
+            color: var(--text-muted);
+            min-height: 220px;
+        }
+        .story-viz-label {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            right: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: none;
+        }
+        .story-viz-badge {
+            font-family: 'Geist Mono', monospace;
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border);
+        }
+        .story-viz-badge.error { color: var(--danger); border-color: rgba(248,113,113,0.35); }
+        .story-viz-badge.ok { color: var(--term-ok); border-color: rgba(52,211,153,0.35); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--bg)]/80 backdrop-blur-xl">
+        <div class="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
+            <button id="mobileMenuToggle" class="flex items-center gap-2.5 font-semibold text-base sm:hidden">
+                <img src="/favicon-32x32.png" alt="" class="w-7 h-7 logo-animate" width="28" height="28">
+                Roka
+            </button>
+            <a href="#" class="hidden sm:flex items-center gap-2.5 font-semibold text-base">
+                <img src="/favicon-32x32.png" alt="" class="w-7 h-7 logo-animate" width="28" height="28">
+                Roka
+            </a>
+            <div class="hidden sm:flex items-center gap-6 text-sm text-muted">
+                <a href="#story" class="hover:text-[var(--text)] transition">Showcase</a>
+                <a href="/testing.html" class="hover:text-[var(--text)] transition">Testing</a>
+                <a href="#mcp" class="hover:text-[var(--text)] transition">MCP</a>
+                <a href="#features" class="hover:text-[var(--text)] transition">Features</a>
+                <a href="#pricing" class="hover:text-[var(--text)] transition">Pricing</a>
+                <a href="/about.html" class="hover:text-[var(--text)] transition">About</a>
+            </div>
+            <div class="flex items-center gap-2">
+                <button id="themeToggle" type="button"
+                    class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer"
+                    style="color:var(--text-muted);background:none;border:1px solid var(--border-strong);font-family:'Inter',system-ui,sans-serif"
+                    aria-label="Toggle theme">
+                    <svg id="themeIcon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style="flex-shrink:0">
+                        <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.25"/>
+                        <path id="themeIconFill" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
+                    </svg>
+                    <span id="themeLabel">Light</span>
+                </button>
+                <a href="/install.html" class="btn-primary rounded-lg px-3 py-1.5 text-xs font-medium">Install</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Sidebar -->
+    <div id="mobileSidebarOverlay" class="mobile-sidebar-overlay"></div>
+    <div id="mobileSidebar" class="mobile-sidebar">
+        <a href="/about.html" class="mobile-sidebar-link">About</a>
+        <a href="#story" class="mobile-sidebar-link">Showcase</a>
+        <a href="/testing.html" class="mobile-sidebar-link">Testing</a>
+        <a href="#mcp" class="mobile-sidebar-link">MCP</a>
+        <a href="#features" class="mobile-sidebar-link">Features</a>
+        <a href="#pricing" class="mobile-sidebar-link">Pricing</a>
+        <a href="/install.html" class="mobile-sidebar-link">Install</a>
+        <div class="mt-auto pt-4 border-t border-[var(--border)]">
+            <a href="https://www.instagram.com/roka.app/" target="_blank" rel="noopener noreferrer" class="mobile-sidebar-link flex items-center gap-2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+                Instagram
+            </a>
+        </div>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero-stage">
+        <div class="hero-glow"></div>
+        <div class="prune-stream" id="pruneStream" aria-hidden="true"></div>
+
+        <div class="roka-canvas-wrap mb-5" id="rokaWord" aria-label="roka" style="perspective:900px">
+            <canvas id="rokaCanvas"></canvas>
+        </div>
+
+        <h1 class="hero-headline">Prune any log using one command.</h1>
+        <p class="hero-sub">Designed for AI agents. Collapse noise, rank relevance, pack to budget — before Claude ever sees it.</p>
+
+        <!-- CLI + MCP callout chips -->
+        <div class="flex flex-wrap items-center justify-center gap-3 mb-6 z-10">
+            <span class="inline-flex items-center gap-1.5 text-xs font-medium rounded-full px-3 py-1.5 mono" style="background:rgba(255,255,255,0.06);color:var(--success);border:1px solid var(--border-strong)">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                $0 forever · no signup · works offline · your machine, your logs
+            </span>
+            <a href="#mcp" class="inline-flex items-center gap-1.5 text-xs font-medium rounded-full px-3 py-1.5" style="background:rgba(255,255,255,0.06);color:var(--text-muted);border:1px solid var(--border-strong);transition:all 0.2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text-muted)'">
+                Claude Code &amp; Cursor users — one command auto-debugs crashes →
+            </a>
+        </div>
+
+        <!-- Agent panel -->
+        <div class="agent-panel px-5 reveal visible">
+            <div class="agent-panel-top">
+                <span class="agent-label">WORKS WITH YOUR AGENT</span>
+            </div>
+            <div class="agent-tabs" role="tablist">
+                <button type="button" class="agent-tab active" data-agent="claude" role="tab">Claude Code</button>
+                <button type="button" class="agent-tab" data-agent="cursor" role="tab">Cursor</button>
+                <button type="button" class="agent-tab" data-agent="codex" role="tab">Codex</button>
+                <button type="button" class="agent-tab" data-agent="copilot" role="tab">Copilot</button>
+            </div>
+            <div class="cmd-block active" data-agent-panel="claude">
+                <div class="cmd-row">
+                    <code>$ npx roka-mcp connect --agent claude-code</code>
+                    <button type="button" class="cmd-copy" data-copy="npx roka-mcp connect --agent claude-code">copy</button>
+                </div>
+                <div class="cmd-row">
+                    <code class="text-faint"># or pipe a log directly</code>
+                </div>
+                <div class="cmd-row">
+                    <code>$ cat deploy.log | roka prune --query "what broke" --budget 8000</code>
+                    <button type="button" class="cmd-copy" data-copy='cat deploy.log | roka prune --query "what broke" --budget 8000'>copy</button>
+                </div>
+            </div>
+            <div class="cmd-block" data-agent-panel="cursor">
+                <div class="cmd-row">
+                    <code>$ npx roka-mcp connect --agent cursor</code>
+                    <button type="button" class="cmd-copy" data-copy="npx roka-mcp connect --agent cursor">copy</button>
+                </div>
+                <div class="cmd-row">
+                    <code>$ npx roka-mcp watch ./logs/dev.log --on-crash</code>
+                    <button type="button" class="cmd-copy" data-copy="npx roka-mcp watch ./logs/dev.log --on-crash">copy</button>
+                </div>
+            </div>
+            <div class="cmd-block" data-agent-panel="codex">
+                <div class="cmd-row">
+                    <code>$ npx roka-mcp connect --agent codex</code>
+                    <button type="button" class="cmd-copy" data-copy="npx roka-mcp connect --agent codex">copy</button>
+                </div>
+            </div>
+            <div class="cmd-block" data-agent-panel="copilot">
+                <div class="cmd-row">
+                    <code>$ npx roka-mcp connect --agent copilot</code>
+                    <button type="button" class="cmd-copy" data-copy="npx roka-mcp connect --agent copilot">copy</button>
+                </div>
+            </div>
+
+            <div class="demo-wrap">
+                <div class="demo-label">BEFORE / AFTER — REAL CRASH LOG</div>
+                <div class="demo-box">
+                    <div class="demo-bar">
+                        <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+                        <div class="demo-url">deploy.log</div>
+                    </div>
+                    <div class="demo-body" id="demoBody" aria-live="polite">
+                        <div class="nd-line nd-dim" id="nd1"></div>
+                        <div class="nd-line" id="nd2"></div>
+                        <div class="nd-line nd-ok" id="nd3"></div>
+                        <div class="nd-line nd-ok" id="nd4"></div>
+                        <div class="nd-line nd-err" id="nd5"></div>
+                        <div class="nd-line nd-warn" id="nd6"></div>
+                        <div class="nd-line nd-ok" id="nd7"></div>
+                        <div class="nd-line" id="nd8"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-3 z-10 mt-8 px-5">
+            <a href="/install.html" class="btn-primary rounded-full px-6 py-2.5 text-sm font-medium">Install Free CLI</a>
+            <a href="#story" class="btn-secondary rounded-full px-6 py-2.5 text-sm font-medium">See it work →</a>
+        </div>
+        <p class="hero-live-stat z-10" id="heroLiveStat">// <span>48,204</span> lines ingested · <span>−94%</span> noise removed · <span>312ms</span></p>
+    </section>
+
+    <!-- Privacy trust strip -->
+    <div class="privacy-trust-strip">
+        <span class="trust-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--success);flex-shrink:0"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+            Logs never leave your machine (Free CLI)
+        </span>
+        <span class="trust-sep">·</span>
+        <span class="trust-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--success);flex-shrink:0"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            No indexing, no training on your data
+        </span>
+        <span class="trust-sep">·</span>
+        <span class="trust-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--success);flex-shrink:0"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            Pro/API: processed in-flight, deleted after 24h
+        </span>
+        <span class="trust-sep">·</span>
+        <span class="trust-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--success);flex-shrink:0"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            Open-source core on GitHub
+        </span>
+    </div>
+
+    <!-- Motion story -->
+    <section id="story" class="story-section reveal">
+        <div class="story-row">
+            <div class="story-copy">
+                <div class="eyebrow mb-3">Log compaction</div>
+                <h3>500 identical errors. One line in context.</h3>
+                <p>Roka fingerprints repetitive patterns across your entire log file — UUIDs, timestamps, and stack frames collapse into provenance headers. The agent sees what happened, not 500 copies of it.</p>
+            </div>
+            <div class="story-viz" data-viz="error500">
+                <canvas id="canvasError500" aria-label="Animation: 500 ERROR lines collapsing to one line"></canvas>
+                <div class="story-viz-fallback" id="fallbackError500">
+                    <div class="nd-err">ERROR [worker] connection refused</div>
+                    <div class="nd-dim mt-1">× 500 identical lines …</div>
+                    <div class="nd-ok mt-3">[500x | lines 240–740] ERROR [worker] connection refused</div>
+                    <div class="nd-badge mt-2">Compressed: ERROR ×500 → 1 line</div>
+                </div>
+                <div class="story-viz-label">
+                    <span class="story-viz-badge error" id="vizBadgeError">ERROR ×500</span>
+                    <span class="story-viz-badge ok" id="vizBadgeOk" style="opacity:0">→ 1 line</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="story-row reverse">
+            <div class="story-copy">
+                <div class="eyebrow mb-3">Crash → context</div>
+                <h3>Your dev server crashes. Your agent already knows.</h3>
+                <p>roka-mcp watches dev.log in real time. On crash it prunes 12,400 lines down to 1.1K tokens and hands Claude Code exactly the slice it needs — no copy-paste, no blown context window.</p>
+            </div>
+            <div class="story-viz" data-viz="crash">
+                <canvas id="canvasCrash" aria-label="Animation: crash detected, prune, handoff to agent"></canvas>
+                <div class="story-viz-fallback">
+                    <div class="nd-err mt-1">🔴 ERROR [worker] connection refused</div>
+                    <div class="nd-ok mt-1">pruning 12,400 lines → 1.1K tokens</div>
+                    <div class="nd-ok mt-1">✓ handed to Claude Code</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="story-row">
+            <div class="story-copy">
+                <div class="eyebrow mb-3">Natural language</div>
+                <h3>Ask in plain English. Get ranked output.</h3>
+                <p>Type what you care about — "what broke during last night's deploy?" — and Roka re-ranks chunks against intent, not just keywords. Semantic re-ranking surfaces the fatal error first.</p>
+            </div>
+            <div class="story-viz" data-viz="query">
+                <canvas id="canvasQuery" aria-label="Animation: natural language query re-ranking log output"></canvas>
+                <div class="story-viz-fallback">
+                    <div>"what broke during last night's deploy?"</div>
+                    <div class="nd-ok mt-2">ERROR [Database] FATAL: Connection reset ↑ #1</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Comparison table -->
+    <section id="vs-upload" class="max-w-6xl mx-auto px-5 py-20 reveal">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl sm:text-5xl font-bold tracking-tight mb-3">same logs. smarter context.</h2>
+            <p class="text-muted text-sm">Why Roka beats just uploading to Claude directly.</p>
+        </div>
+        <div class="max-w-3xl mx-auto surface rounded-2xl overflow-hidden">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-[var(--border)]">
+                        <th class="text-left p-4 text-xs text-faint uppercase tracking-wider w-1/2">Feature</th>
+                        <th class="text-center p-4 font-bold text-[var(--text)]">
+                            <span class="mono text-base">roka</span>
+                        </th>
+                        <th class="text-center p-4 text-xs text-muted font-normal">Upload to Claude</th>
+                        <th class="text-center p-4 text-xs text-muted font-normal">Semantic Search</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
+                        <td class="p-4 text-muted">No file size limit</td>
+                        <td class="p-4 text-center text-[var(--success)]">✓</td>
+                        <td class="p-4 text-center text-[var(--text-faint)]">— <span class="text-xs">(100MB max)</span></td>
+                        <td class="p-4 text-center text-[var(--success)]">✓</td>
+                    </tr>
+                    <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
+                        <td class="p-4 text-muted">Logs never leave your machine</td>
+                        <td class="p-4 text-center text-[var(--success)]">✓</td>
+                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
+                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
+                    </tr>
+                    <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
+                        <td class="p-4 text-muted">90% token reduction</td>
+                        <td class="p-4 text-center text-[var(--success)]">✓</td>
+                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
+                        <td class="p-4 text-center text-[var(--text-faint)]">— <span class="text-xs">(partial)</span></td>
+                    </tr>
+                    <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
+                        <td class="p-4 text-muted">312ms processing</td>
+                        <td class="p-4 text-center text-[var(--success)]">✓</td>
+                        <td class="p-4 text-center text-[var(--text-faint)]">— <span class="text-xs">(10s+)</span></td>
+                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
+                    </tr>
+                    <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
+                        <td class="p-4 text-muted">Critical error always preserved</td>
+                        <td class="p-4 text-center text-[var(--success)]">✓</td>
+                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
+                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
+                    </tr>
+                    <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
+                        <td class="p-4 text-muted">Collapses repeated log patterns</td>
+                        <td class="p-4 text-center text-[var(--success)]">✓</td>
+                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
+                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
+                    </tr>
+                    <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
+                        <td class="p-4 text-muted">Works offline</td>
+                        <td class="p-4 text-center text-[var(--success)]">✓</td>
+                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
+                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
+                    </tr>
+                    <tr class="hover:bg-[var(--accent-glow)] transition-colors">
+                        <td class="p-4 text-muted">Price</td>
+                        <td class="p-4 text-center font-semibold text-[var(--text)]">Free / $20 Pro</td>
+                        <td class="p-4 text-center text-[var(--text-muted)]">Pay per token</td>
+                        <td class="p-4 text-center text-[var(--text-muted)]">Complex setup</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Works with your AI agent -->
+    <section id="agents" class="max-w-6xl mx-auto px-5 py-20 reveal">
+        <div class="text-center mb-14">
+            <span class="eyebrow">Universal context layer</span>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-3 mb-3">Roka connects to any AI agent</h2>
+            <p class="text-muted text-sm max-w-xl mx-auto">One command. Same pruning pipeline, any IDE or chat interface.</p>
+        </div>
+
+        <!-- Orbit scene -->
+        <div class="orbit-scene">
+            <!-- dashed orbit ring -->
+            <div class="orbit-dashed"></div>
+
+            <!-- center badge -->
+            <div class="orbit-center">
+                <img src="/logo-roka.png" alt="Roka" width="38" height="38" style="border-radius:8px">
+                <span class="mono text-xs font-bold mt-1" style="color:var(--success)">roka</span>
+            </div>
+
+            <!-- Claude Code — 0° -->
+            <div class="orbit-item orb-0" title="Claude Code">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:#cc5200;padding:10px">
+                    <img src="/logo-claude.png" alt="Claude" width="36" height="36" style="object-fit:contain;filter:brightness(10)">
+                </div>
+                <span class="orbit-tooltip">Claude Code</span>
+            </div>
+
+            <!-- Cursor — 60° -->
+            <div class="orbit-item orb-1" title="Cursor">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:#fff;padding:8px">
+                    <img src="/logo-cursor.png" alt="Cursor" width="40" height="40" style="object-fit:contain">
+                </div>
+                <span class="orbit-tooltip">Cursor</span>
+            </div>
+
+            <!-- ChatGPT — 120° -->
+            <div class="orbit-item orb-2" title="ChatGPT">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:#fff;padding:10px">
+                    <img src="/logo-chatgpt.png" alt="ChatGPT" width="36" height="36" style="object-fit:contain">
+                </div>
+                <span class="orbit-tooltip">ChatGPT</span>
+            </div>
+
+            <!-- GitHub Copilot — 180° -->
+            <div class="orbit-item orb-3" title="GitHub Copilot">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:#fff;padding:10px">
+                    <img src="/logo-copilot.png" alt="GitHub Copilot" width="36" height="36" style="object-fit:contain">
+                </div>
+                <span class="orbit-tooltip">GitHub Copilot</span>
+            </div>
+
+            <!-- Gemini — 240° -->
+            <div class="orbit-item orb-4" title="Google Gemini">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:#fff;padding:8px">
+                    <img src="/logo-gemini.png" alt="Gemini" width="40" height="40" style="object-fit:contain">
+                </div>
+                <span class="orbit-tooltip">Google Gemini</span>
+            </div>
+
+            <!-- Roka (self) — 300° : показывает что roka сам тоже агент/CLI -->
+            <div class="orbit-item orb-5" title="Any LLM via stdout">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:var(--bg-elevated);border:1.5px solid var(--border-strong)">
+                    <svg width="24" height="24" viewBox="0 0 40 40" fill="none" stroke="var(--text-muted)" stroke-width="2.2">
+                        <polyline points="8,14 15,21 8,28" stroke-linecap="round" stroke-linejoin="round"/>
+                        <line x1="19" y1="27" x2="33" y2="27" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <span class="orbit-tooltip">Any LLM / stdout</span>
+            </div>
+        </div>
+
+        <!-- Command -->
+        <div class="text-center mt-12">
+            <p class="text-xs text-faint mb-3">Hover the icons to see agent names · one command to connect:</p>
+            <div class="inline-block bg-[var(--bg)] border border-[var(--border-strong)] rounded-lg px-6 py-3 mono text-sm">
+                npx roka-mcp connect --agent <span style="color:var(--success)">&lt;claude-code&nbsp;|&nbsp;cursor&nbsp;|&nbsp;codex&nbsp;|&nbsp;…&gt;</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Niche MCP Servers -->
+    <section id="mcp" class="max-w-6xl mx-auto px-5 py-16 reveal">
+        <div class="text-center mb-10">
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <span class="eyebrow">If you use Claude Code or Cursor — read this</span>
+                <span class="pro-badge">Pro</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-4 max-w-3xl mx-auto">Your dev server crashes. Your agent already has the fix in context.</h2>
+            <p class="text-muted text-sm max-w-2xl mx-auto leading-relaxed">Roka runs as an MCP server next to your local dev server, watching logs in real time. The moment something crashes, it runs the same prune pipeline — collapse repetition, preserve the exception, rank, pack to budget — and hands Claude Code or Cursor exactly the slice of context needed to debug. No copy-pasting stack traces. No blowing the context window on thousands of lines of noise.</p>
+            <div class="flex flex-wrap justify-center gap-6 mt-6 text-xs text-muted">
+                <span class="flex items-center gap-1.5"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--success)]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Works with Claude Code</span>
+                <span class="flex items-center gap-1.5"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--success)]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Works with Cursor</span>
+                <span class="flex items-center gap-1.5"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--success)]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>One command to connect</span>
+                <span class="flex items-center gap-1.5"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--success)]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Auto-prunes on crash</span>
+            </div>
+        </div>
+
+        <!-- ERROR ×500 compression proof -->
+        <div class="browser-frame surface max-w-3xl mx-auto mb-8">
+            <div class="browser-bar">
+                <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+                <div class="browser-url">crash detected · roka-mcp pruning</div>
+            </div>
+            <div class="mock-terminal bg-[var(--bg)]">
+                <div class="text-faint mb-3 text-xs">// before: 12,400 lines of connection errors</div>
+                <div class="log-critical">ERROR [worker] connection refused</div>
+                <div class="log-critical">ERROR [worker] connection refused</div>
+                <div class="log-critical">ERROR [worker] connection refused</div>
+                <div class="text-faint mb-4">… 497 more identical lines …</div>
+                <div class="text-faint mb-2 text-xs border-t border-[var(--border)] pt-3">// after: pruned output</div>
+                <div class="mcp-demo-output">
+                    <div class="log-collapsed">[500x | lines 240–740] ERROR [worker] connection refused</div>
+                    <span class="compress-badge">Compressed: ERROR ×500 → 1 line</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a href="#mcp-install" class="btn-primary rounded-full px-6 py-2.5 text-sm font-medium">One-click MCP install</a>
+            <p class="text-xs text-faint mt-3 mono">Pro feature · <a href="#pricing" class="hover:text-[var(--text-muted)] transition underline underline-offset-2">see pricing</a></p>
+        </div>
+    </section>
+
+    <!-- One-click MCP integration preview -->
+    <section id="mcp-install" class="max-w-6xl mx-auto px-5 py-16 reveal">
+        <div class="text-center mb-10">
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">One-click integration</h2>
+            <p class="text-muted text-sm max-w-xl mx-auto">Connect Roka to your agent in one command. Watches your logs. Prunes on crash. Hands context to your IDE.</p>
+        </div>
+
+        <div class="browser-frame surface max-w-2xl mx-auto">
+            <div class="browser-bar">
+                <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+                <div class="browser-url">terminal</div>
+            </div>
+            <div class="p-4 bg-[var(--bg)]">
+                <div class="terminal-preview-label mb-3">Interactive preview — type a command and watch it run (not a live terminal)</div>
+                <div class="terminal-preview" id="mcpTerminalPreview" aria-live="polite">
+                    <div class="tp-line" id="tpLine1"><span class="tp-cursor"></span></div>
+                    <div class="tp-line tp-success" id="tpLine2"></div>
+                    <div class="tp-line tp-success" id="tpLine3"></div>
+                    <div class="tp-line tp-success" id="tpLine4"></div>
+                    <div class="tp-line" id="tpLine5"></div>
+                    <div class="tp-line tp-danger" id="tpLine6"></div>
+                    <div class="tp-line tp-success" id="tpLine7"></div>
+                    <div class="tp-line tp-success" id="tpLine8"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Motion showcase -->
+    <section id="showcase" class="max-w-6xl mx-auto px-5 py-16 reveal">
+        <div class="text-center mb-10">
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">See it happen</h2>
+            <p class="text-muted text-sm max-w-xl mx-auto">Four moments that define Roka — noise to signal, crash to fix, install to debug.</p>
+        </div>
+
+        <div class="showcase-grid">
+            <!-- Loop 1: collapse -->
+            <div class="showcase-card" data-showcase="collapse">
+                <div class="showcase-label">Log compaction</div>
+                <div class="showcase-stage">
+                    <div class="sc-collapse-wall">
+                        <div class="sc-line sc-warn" style="--i:0">WARN [db_pool] Connection pool 85%, retry 50ms</div>
+                        <div class="sc-line sc-warn" style="--i:1">WARN [db_pool] Connection pool 85%, retry 50ms</div>
+                        <div class="sc-line sc-warn" style="--i:2">WARN [db_pool] Connection pool 85%, retry 50ms</div>
+                        <div class="sc-line sc-warn" style="--i:3">WARN [db_pool] Connection pool 85%, retry 50ms</div>
+                        <div class="sc-line sc-warn" style="--i:4">WARN [db_pool] Connection pool 85%, retry 50ms</div>
+                        <div class="sc-line sc-warn" style="--i:5">WARN [db_pool] Connection pool 85%, retry 50ms</div>
+                        <div class="sc-line sc-dim" style="--i:6">… 841 more …</div>
+                    </div>
+                    <div class="sc-collapse-result sc-success">[847x] WARN [db_pool] Connection pool 85%, retry 50ms</div>
+                </div>
+                <div class="showcase-static">
+                    <div class="sc-success">[847x] WARN [db_pool] Connection pool 85%, retry 50ms</div>
+                    <div class="sc-dim mt-2">847 repetitive lines → 1 ranked chunk</div>
+                </div>
+            </div>
+
+            <!-- Loop 2: crash flow -->
+            <div class="showcase-card" data-showcase="crash">
+                <div class="showcase-label">Crash → prune → handoff</div>
+                <div class="showcase-stage sc-crash-flow">
+                    <div class="sc-step sc-error">🔴 ERROR [worker] connection refused</div>
+                    <div class="sc-step sc-success">pruning 12,400 lines → 1.1K tokens</div>
+                    <div class="sc-step sc-success">✓ handed to Claude Code</div>
+                </div>
+                <div class="showcase-static">
+                    <div class="sc-error">🔴 crash detected</div>
+                    <div class="sc-success mt-1">pruning 12,400 lines → 1.1K tokens</div>
+                    <div class="sc-success mt-1">✓ handed to Claude Code</div>
+                </div>
+            </div>
+
+            <!-- Loop 3: MCP install -->
+            <div class="showcase-card" data-showcase="install">
+                <div class="showcase-label">One-click MCP install</div>
+                <div class="showcase-stage sc-install">
+                    <div class="sc-line sc-cmd">$ npx roka-mcp connect --agent claude-code</div>
+                    <div class="sc-install-out mt-2">
+                        <div class="sc-success">✓ detected Claude Code config</div>
+                        <div class="sc-success">✓ installed MCP server</div>
+                        <div class="sc-success">✓ watching ./logs/dev.log</div>
+                    </div>
+                </div>
+                <div class="showcase-static">
+                    <div>$ npx roka-mcp connect --agent claude-code</div>
+                    <div class="sc-success mt-2">✓ roka-mcp ready on stdio</div>
+                </div>
+            </div>
+
+            <!-- Loop 4: NL query -->
+            <div class="showcase-card" data-showcase="query">
+                <div class="showcase-label">Natural language query</div>
+                <div class="showcase-stage">
+                    <div class="sc-query-input">"what broke during last night's deploy?"</div>
+                    <div class="sc-rank-line sc-dim">INFO [startup] Application started</div>
+                    <div class="sc-rank-line">ERROR [Database] FATAL: Connection reset</div>
+                    <div class="sc-rank-line sc-dim">INFO [Cache] Cache miss key: session_123</div>
+                </div>
+                <div class="showcase-static">
+                    <div class="sc-query-input mb-2">"what broke during last night's deploy?"</div>
+                    <div class="sc-success">ERROR [Database] FATAL: Connection reset ↑ ranked #1</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="max-w-6xl mx-auto px-5 py-16 reveal">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Built for real context, not toy demos</h2>
+            <p class="text-muted text-sm max-w-2xl mx-auto">Roka is a pruning middleware: ingest logs, code, or prose, detect structure, score relevance to your query, and deliver exactly what fits the budget.</p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="feature-card surface rounded-xl p-5">
+                <div class="mono text-xs text-faint mb-2">01</div>
+                <h3 class="font-semibold mb-2">Log compaction</h3>
+                <p class="text-sm text-muted leading-relaxed">Fingerprints repetitive lines (UUIDs, IPs, timestamps → placeholders) and collapses patterns above a threshold into summary chunks with provenance.</p>
+            </div>
+            <div class="feature-card surface rounded-xl p-5">
+                <div class="mono text-xs text-faint mb-2">02</div>
+                <h3 class="font-semibold mb-2">Critical preservation</h3>
+                <p class="text-sm text-muted leading-relaxed">Panics, exceptions, OOM, auth failures, and stack traces are never collapsed — always packed first regardless of score.</p>
+            </div>
+            <div class="feature-card surface rounded-xl p-5">
+                <div class="mono text-xs text-faint mb-2">03</div>
+                <h3 class="font-semibold mb-2">BM25 + semantic rank</h3>
+                <p class="text-sm text-muted leading-relaxed">Fast lexical scoring with BM25Okapi, then optional sentence-transformer re-ranking so chunks match your query intent.</p>
+            </div>
+            <div class="feature-card surface rounded-xl p-5">
+                <div class="mono text-xs text-faint mb-2">04</div>
+                <h3 class="font-semibold mb-2">Token budget packer</h3>
+                <p class="text-sm text-muted leading-relaxed">Greedy packing with exact tiktoken counts (cl100k_base). Source diversity cap prevents one file from hogging the budget.</p>
+            </div>
+            <div class="feature-card surface rounded-xl p-5">
+                <div class="mono text-xs text-faint mb-2">05</div>
+                <h3 class="font-semibold mb-2">Multi-format input</h3>
+                <p class="text-sm text-muted leading-relaxed">Auto-detects logs, code, or prose. Code can be minified (docstrings/comments stripped) and chunked by function/class scope.</p>
+            </div>
+            <div class="feature-card surface rounded-xl p-5">
+                <div class="mono text-xs text-faint mb-2">06</div>
+                <h3 class="font-semibold mb-2">API & CLI</h3>
+                <p class="text-sm text-muted leading-relaxed">Pipe stdin, point at a file, or POST to <span class="mono text-xs">/api/prune</span>. Same pipeline everywhere — stdout is always the pruned context.</p>
+            </div>
+            <div class="feature-card surface rounded-xl p-5">
+                <div class="mono text-xs text-faint mb-2">07</div>
+                <h3 class="font-semibold mb-2">Natural language queries</h3>
+                <p class="text-sm text-muted leading-relaxed">Ask in plain English what you care about — Roka ranks chunks against intent, not just keywords.</p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-3 mt-8">
+            <a href="https://github.com/Roka-Dev-Labs/roka" class="btn-secondary rounded-full px-6 py-2.5 text-sm font-medium" rel="noopener">CLI on GitHub</a>
+            <a href="https://github.com/Roka-Dev-Labs/roka-mcp" class="btn-secondary rounded-full px-6 py-2.5 text-sm font-medium" rel="noopener">MCP on GitHub</a>
+            <a href="https://github.com/Roka-Dev-Labs" class="btn-secondary rounded-full px-6 py-2.5 text-sm font-medium" rel="noopener">All repos</a>
+        </div>
+    </section>
+
+    <!-- Use Cases -->
+    <section id="use-cases" class="max-w-6xl mx-auto px-5 py-16 reveal">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Use Cases</h2>
+            <p class="text-muted text-sm max-w-2xl mx-auto">Beyond logs — Roka optimizes context for incident investigation, RAG pipelines, and code review at scale.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="surface rounded-xl p-6">
+                <h3 class="font-semibold text-lg mb-3">Incident Investigation</h3>
+                <p class="text-sm text-muted mb-4">Compress incident dumps and error traces into AI-ready summaries.</p>
+                <ul class="space-y-2 text-sm text-muted">
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Collapse redundant stack traces and log repetition</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Preserve critical error context and panic messages</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Feed compressed incident timeline to Claude for root cause analysis</li>
+                </ul>
+            </div>
+            <div class="surface rounded-xl p-6">
+                <h3 class="font-semibold text-lg mb-3">RAG & Knowledge Base Optimization</h3>
+                <p class="text-sm text-muted mb-4">Prune your document corpus before ingesting into retrieval pipelines.</p>
+                <ul class="space-y-2 text-sm text-muted">
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Strip boilerplate, comments, and redundant sections from code files</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Collapse similar documents and de-duplicate content</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Pack only high-relevance chunks into your vector index</li>
+                </ul>
+            </div>
+            <div class="surface rounded-xl p-6">
+                <h3 class="font-semibold text-lg mb-3">Code Review at Scale</h3>
+                <p class="text-sm text-muted mb-4">Review massive pull requests by compressing diff context.</p>
+                <ul class="space-y-2 text-sm text-muted">
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Strip whitespace and reformatting noise from diffs</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Collapse repetitive changes across similar files</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Summarize only the critical logic changes for faster review</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Real Before/After Log Example -->
+    <section id="before-after" class="max-w-6xl mx-auto px-5 py-16 reveal">
+        <div class="text-center mb-10">
+            <span class="eyebrow">Real example — sanitized production log</span>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-3 mb-3">What Roka actually does to your logs</h2>
+            <p class="text-muted text-sm max-w-xl mx-auto">Query: <span class="mono text-xs">"why is my auth broken?"</span></p>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            <!-- Before -->
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs text-faint uppercase tracking-wider">Before — 4,847 lines · 214K tokens</span>
+                    <span class="text-xs px-2 py-0.5 rounded" style="background:rgba(248,113,113,0.1);color:var(--danger)">$0.86 / call</span>
+                </div>
+                <div class="surface rounded-xl overflow-hidden">
+                    <div class="browser-bar">
+                        <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+                        <div class="browser-url">auth-service.log</div>
+                    </div>
+                    <pre class="mock-terminal bg-[var(--bg)] text-xs overflow-auto" style="max-height:280px"><code><span class="term-info">2026-06-20 09:00:01 INFO  [startup] auth-service v2.3.1 starting</span>
+<span class="term-ok">2026-06-20 09:00:02 INFO  [db] connected to postgres://prod-db:5432</span>
+<span class="term-ok">2026-06-20 09:00:02 INFO  [cache] redis connected at 10.0.0.8:6379</span>
+<span class="term-ok">2026-06-20 09:00:05 INFO  [health] GET /health 200 1ms</span>
+<span class="term-ok">2026-06-20 09:00:06 INFO  [health] GET /health 200 1ms</span>
+<span class="term-ok">2026-06-20 09:00:07 INFO  [health] GET /health 200 1ms</span>
+<span class="term-dim">... 840 more identical health checks ...</span>
+<span class="term-info">2026-06-20 09:14:32 INFO  [auth] login attempt user_id=48821 ip=203.0.113.5</span>
+<span class="term-info">2026-06-20 09:14:32 INFO  [auth] login attempt user_id=48822 ip=203.0.113.6</span>
+<span class="term-dim">... 2,400 more login attempts ...</span>
+<span class="term-err">2026-06-20 09:22:17 ERROR [jwt] token validation failed: signature mismatch</span>
+<span class="term-err">2026-06-20 09:22:17 ERROR [jwt] token validation failed: signature mismatch</span>
+<span class="term-err">2026-06-20 09:22:17 ERROR [jwt] token validation failed: signature mismatch</span>
+<span class="term-dim">... 1,200 more identical jwt errors ...</span>
+<span class="term-warn">2026-06-20 09:22:19 WARN  [auth] rate limit hit user_id=48821</span>
+<span class="term-ok">2026-06-20 09:22:20 INFO  [health] GET /health 200 1ms</span>
+<span class="term-dim">... 300 more health checks ...</span>
+<span class="term-crit">2026-06-20 09:23:05 CRITICAL [config] JWT_SECRET env var changed at 09:21:44 — token reissue required</span>
+<span class="term-err">2026-06-20 09:23:06 ERROR [auth] all sessions invalidated — forced re-login for 3,241 users</span></code></pre>
+                </div>
+            </div>
+            <!-- After -->
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs text-faint uppercase tracking-wider">After Roka — 7 lines · 1.2K tokens</span>
+                    <span class="text-xs px-2 py-0.5 rounded" style="background:rgba(52,211,153,0.12);color:var(--term-green);border:1px solid rgba(52,211,153,0.3)">$0.005 / call</span>
+                </div>
+                <div class="surface rounded-xl overflow-hidden">
+                    <div class="browser-bar">
+                        <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+                        <div class="browser-url">auth-service.log — pruned · 99.4% reduction</div>
+                    </div>
+                    <pre class="mock-terminal bg-[var(--bg)] text-xs overflow-auto" style="max-height:280px"><code><span class="term-dim">[841x collapsed] INFO  [health] GET /health 200 1ms</span>
+<span class="term-dim">[2400x collapsed] INFO  [auth] login attempt</span>
+<span class="term-err">2026-06-20 09:22:17 ERROR [jwt] token validation failed: signature mismatch</span>
+<span class="term-err">[1200x collapsed] ERROR [jwt] token validation failed: signature mismatch</span>
+<span class="term-dim">[300x collapsed] INFO  [health] GET /health 200 1ms</span>
+<span class="term-crit">2026-06-20 09:23:05 CRITICAL [config] JWT_SECRET env var changed at 09:21:44 — token reissue required</span>
+<span class="term-err">2026-06-20 09:23:06 ERROR [auth] all sessions invalidated — forced re-login for 3,241 users</span></code></pre>
+                </div>
+                <p class="text-xs text-muted mt-3 text-center">Claude now sees the root cause immediately: <span class="mono text-xs">JWT_SECRET</span> changed mid-session.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator -->
+    <section id="roi" class="max-w-6xl mx-auto px-5 py-16 reveal">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">ROI Calculator</h2>
+            <p class="text-muted text-sm max-w-2xl mx-auto">See how much you could save with Roka.</p>
+        </div>
+
+        <div class="surface rounded-xl p-8 max-w-3xl mx-auto">
+            <!-- Inputs row -->
+            <div class="grid sm:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <label class="text-xs text-faint uppercase tracking-wider mb-4 block">Logs fed to AI per day</label>
+                    <input type="range" id="roiSlider" min="10" max="1000" value="100" step="10" class="w-full">
+                    <div class="flex justify-between mt-2 text-xs text-muted">
+                        <span>10 MB</span>
+                        <span id="roiValue" class="font-semibold text-[var(--text)]">100 MB</span>
+                        <span>1000 MB</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs text-faint uppercase tracking-wider mb-4 block">AI model</label>
+                    <div class="flex flex-col gap-2">
+                        <label class="flex items-center gap-2 text-sm text-muted cursor-pointer">
+                            <input type="radio" name="roiModel" value="sonnet" checked class="accent-[var(--success)]">
+                            Claude Sonnet ($3 / MTok input)
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-muted cursor-pointer">
+                            <input type="radio" name="roiModel" value="opus" class="accent-[var(--success)]">
+                            Claude Opus ($15 / MTok input)
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-muted cursor-pointer">
+                            <input type="radio" name="roiModel" value="gpt4o" class="accent-[var(--success)]">
+                            GPT-4o ($2.50 / MTok input)
+                        </label>
+                    </div>
+                    <div class="mt-4">
+                        <label class="text-xs text-faint uppercase tracking-wider mb-2 block">Engineer hourly rate</label>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm text-muted">$</span>
+                            <input type="number" id="roiRate" value="75" min="20" max="300" step="5" class="w-20 bg-[var(--bg)] border border-[var(--border)] rounded px-2 py-1 text-sm text-[var(--text)] mono">
+                            <span class="text-sm text-muted">/hr</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results row -->
+            <div class="border-t border-[var(--border)] pt-6 grid sm:grid-cols-3 gap-6 text-center">
+                <div>
+                    <div class="text-xs text-muted uppercase tracking-wider mb-2">Token savings</div>
+                    <div class="text-3xl font-bold text-[var(--text)]">$<span id="roiTokenSavings">24</span></div>
+                    <div class="text-xs text-faint">/month</div>
+                </div>
+                <div>
+                    <div class="text-xs text-muted uppercase tracking-wider mb-2">Engineer time saved</div>
+                    <div class="text-3xl font-bold text-[var(--text)]">$<span id="roiTimeSavings">180</span></div>
+                    <div class="text-xs text-faint">/month (~2.4 hrs)</div>
+                </div>
+                <div class="sm:border-l border-[var(--border)] sm:pl-6">
+                    <div class="text-xs text-muted uppercase tracking-wider mb-2">Total savings</div>
+                    <div class="text-3xl font-bold" style="color:var(--success)">$<span id="roiTotal">204</span></div>
+                    <div class="text-xs text-faint">/month vs no Roka</div>
+                </div>
+            </div>
+            <p class="text-xs text-faint text-center mt-4">Assumes 1 MB ≈ 750K tokens, Roka reduces input by ~90%, debugging session = 30 min saved per incident, ~5 incidents/month.</p>
+        </div>
+    </section>
+
+    <!-- Interactive Try It -->
+    <section id="try" class="max-w-6xl mx-auto px-5 py-16 reveal">
+        <div class="text-center mb-10">
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Try it now</h2>
+            <p class="text-muted text-sm">Paste a log dump, set your query and budget, and run the live pipeline.</p>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-4">
+            <div class="lg:col-span-7 flex flex-col gap-4">
+                <div class="surface rounded-xl p-5">
+                    <label class="text-xs text-faint uppercase tracking-wider mb-2 block">Query / intent</label>
+                    <input type="text" id="queryInput" class="lab-input w-full px-3 py-2 text-sm" placeholder="e.g. what broke during last night's deploy?">
+                    <div class="flex justify-between mt-4 mb-2">
+                        <span class="text-xs text-faint">Token budget</span>
+                        <span class="text-xs font-medium mono" id="budgetValue">8,000</span>
+                    </div>
+                    <input type="range" id="tokenBudget" min="100" max="32000" value="8000" step="100">
+                    <div class="flex gap-4 mt-4 text-xs text-muted">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="useSemanticCheckbox" class="custom-checkbox" checked>
+                            Semantic reranking
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="useMinificationCheckbox" class="custom-checkbox">
+                            Minify code
+                        </label>
+                    </div>
+                </div>
+
+                <div class="surface rounded-xl p-5 flex flex-col">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs text-faint uppercase tracking-wider">Raw context</span>
+                        <span class="text-xs text-faint mono" id="charCounter">0 chars</span>
+                    </div>
+                    <textarea id="inputText" class="lab-input w-full p-3 text-xs mono resize-none min-h-[280px]" placeholder="Paste logs, code, or prose…"></textarea>
+                    <div class="flex gap-2 mt-3">
+                        <button id="dropZone" type="button" class="btn-secondary flex-1 rounded-lg py-2 text-xs">Attach file</button>
+                        <input type="file" id="fileInput" hidden accept=".txt,.log,.py,.js,.ts,.md,.json">
+                        <button id="loadSampleBtn" type="button" class="btn-secondary rounded-lg py-2 px-3 text-xs">Load Sample</button>
+                        <button id="pruneButton" type="button" class="btn-primary rounded-lg px-6 py-2 text-xs font-medium">
+                            <span id="buttonText">Prune</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 flex flex-col gap-4">
+                <div class="surface rounded-xl p-5">
+                    <div class="text-xs text-faint uppercase tracking-wider mb-3">Telemetry</div>
+                    <div class="grid grid-cols-3 gap-2 text-center mb-4">
+                        <div class="rounded-lg p-3 bg-[var(--bg)] border border-[var(--border)]">
+                            <div class="text-[10px] text-faint mb-1">Input</div>
+                            <div class="text-sm font-semibold mono" id="statInput">—</div>
+                        </div>
+                        <div class="rounded-lg p-3 bg-[var(--bg)] border border-[var(--border)]">
+                            <div class="text-[10px] text-faint mb-1">Output</div>
+                            <div class="text-sm font-semibold mono" id="statOutput">—</div>
+                        </div>
+                        <div class="rounded-lg p-3 bg-[var(--bg)] border border-[var(--border)]">
+                            <div class="text-[10px] text-faint mb-1">Saved</div>
+                            <div class="text-sm font-semibold mono text-[var(--term-green)]" id="statCompression">—</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-muted">
+                        <div>Chunks: <span id="statChunks" class="text-[var(--text)]">—</span></div>
+                        <div>Latency: <span id="statLatency" class="text-[var(--text)]">—</span></div>
+                        <div>Lines: <span id="statLines" class="text-[var(--text)]">—</span></div>
+                        <div>Critical: <span id="statCritical" class="text-[var(--text)]">—</span></div>
+                    </div>
+                </div>
+
+                <div class="surface rounded-xl p-5 flex-1 flex flex-col min-h-[320px]">
+                    <div class="text-xs text-faint uppercase tracking-wider mb-2">Pruned output</div>
+                    <div id="outputArea" class="lab-input flex-1 p-3 text-xs mono overflow-y-auto whitespace-pre-wrap min-h-[240px] text-muted">
+                        // Run prune to see optimized context…
+                    </div>
+                    <button id="copyButton" type="button" class="btn-secondary w-full mt-3 rounded-lg py-2 text-xs" disabled>Copy output</button>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4 text-xs text-faint mono" id="statusConsole">// ready</div>
+    </section>
+
+    <!-- Integrate -->
+    <section id="integrate" class="max-w-6xl mx-auto px-5 py-16 reveal">
+        <div class="grid lg:grid-cols-2 gap-8 items-start">
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-4">Integrate anywhere</h2>
+                <p class="text-muted text-sm leading-relaxed mb-6">Drop Roka into your agent pipeline, CI debug step, or observability stack. One POST with your raw context and query — get back pruned text plus compression stats.</p>
+                <ul class="space-y-3 text-sm text-muted">
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Pipe logs through CLI before sending to Claude</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Pre-process RAG chunks at ingestion time</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Shrink incident dumps in on-call workflows</li>
+                </ul>
+            </div>
+            <div class="browser-frame surface">
+                <div class="browser-bar">
+                    <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+                    <div class="browser-url">POST /api/prune</div>
+                </div>
+                <pre class="mock-terminal bg-[var(--bg)] text-xs overflow-x-auto"><code>curl -X POST https://api.roka-prune.com/api/prune \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "&lt;raw logs or code&gt;",
+    "query": "why did auth fail",
+    "token_budget": 8000,
+    "use_semantic": true,
+    "use_minification": false
+  }'</code></pre>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Pricing -->
+    <section id="pricing" class="max-w-6xl mx-auto px-5 py-16 reveal">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Pricing</h2>
+            <p class="text-muted text-sm max-w-2xl mx-auto">Start free, upgrade when logs get serious. No credit card for the CLI.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 mb-16">
+            <!-- Free Tier -->
+            <div class="surface rounded-xl p-6 flex flex-col">
+                <div class="mb-4">
+                    <h3 class="font-semibold text-lg mb-1">Free Tier</h3>
+                    <p class="text-xs text-muted">For developers exploring Roka</p>
+                </div>
+                <div class="mb-6">
+                    <span class="text-3xl font-bold">$0</span><span class="text-sm text-muted">/month</span>
+                </div>
+                <ul class="space-y-3 text-sm text-muted mb-6 flex-1">
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Local CLI tool (no cloud required)</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Up to 50K tokens/month</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Basic deduplication & fingerprinting</li>
+                </ul>
+                <div class="flex gap-2 justify-end">
+                    <a href="#try" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium">Get Started</a>
+                    <a href="https://github.com/Roka-Dev-Labs" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium" rel="noopener">View on GitHub</a>
+                </div>
+            </div>
+
+            <!-- Pro Tier -->
+            <div class="surface rounded-xl p-6 flex flex-col border-2 border-[var(--border-strong)]">
+                <div class="mb-4">
+                    <h3 class="font-semibold text-lg mb-1">Pro Tier</h3>
+                    <p class="text-xs text-muted">For developers & small teams serious about speed</p>
+                </div>
+                <div class="mb-6">
+                    <span class="text-3xl font-bold">$20</span><span class="text-sm text-muted">/month (or $14/month annual)</span>
+                </div>
+                <ul class="space-y-3 text-sm text-muted mb-6 flex-1">
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Web UI + REST API</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> 500K tokens/month</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Semantic re-ranking + critical preservation</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> One-click agent integration (MCP)</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Natural language query understanding</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> MCP servers for Claude Code, Cursor &amp; Codex — auto-prune on crash</li>
+                </ul>
+                <div class="flex gap-2 justify-end">
+                    <a href="/login.html" class="btn-primary rounded-lg py-2 px-4 text-xs font-medium">Start 7-Day Free Trial</a>
+                    <a href="/login.html" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium">Pay Now</a>
+                </div>
+            </div>
+
+            <!-- Enterprise -->
+            <div class="surface rounded-xl p-6 flex flex-col">
+                <div class="mb-4">
+                    <h3 class="font-semibold text-lg mb-1">Enterprise</h3>
+                    <p class="text-xs text-muted">For teams & companies at scale</p>
+                </div>
+                <div class="mb-6">
+                    <span class="text-3xl font-bold">Custom</span><span class="text-sm text-muted"> pricing</span>
+                </div>
+                <ul class="space-y-3 text-sm text-muted mb-6 flex-1">
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Unlimited tokens</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Custom integrations (Splunk, DataDog, GitHub)</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Slack channel integration</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> SSO & audit logs</li>
+                </ul>
+                <div class="flex justify-end">
+                    <a href="mailto:mukhamedjankydyrli@gmail.com" class="btn-primary rounded-lg py-2 px-4 text-xs font-medium">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Free vs Pro clarity callout -->
+        <div class="max-w-3xl mx-auto mb-12 rounded-xl overflow-hidden" style="border:1px solid var(--border-strong)">
+            <div class="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[var(--border)]">
+                <div class="p-5 flex gap-4 items-start" style="background:var(--bg-card)">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(255,255,255,0.06)">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="color:var(--text-muted)"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold mb-1">Free — structural patterns</p>
+                        <p class="text-xs" style="color:var(--text-muted)">Deduplication, fingerprinting, and token-budget packing. Handles the repetition problem. Works entirely offline, no account needed.</p>
+                    </div>
+                </div>
+                <div class="p-5 flex gap-4 items-start" style="background:var(--bg-card)">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(255,255,255,0.08)">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="color:var(--success)"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26A7 7 0 0 0 12 2m0 2a5 5 0 0 1 5 5 5 5 0 0 1-2.5 4.33V16h-5v-2.67A5 5 0 0 1 7 9a5 5 0 0 1 5-5m-1 13h2v2h-2v-2z"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold mb-1">Pro — understands intent</p>
+                        <p class="text-xs" style="color:var(--text-muted)">Semantic re-ranking surfaces what matters to <em>your</em> query. Ask "why did auth break?" — Pro ranks the relevant slice first. Plus MCP servers for real-time crash detection.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Section -->
+        <div class="max-w-4xl mx-auto mt-16">
+            <h3 class="text-2xl font-semibold tracking-tight mb-4 text-center">Install Roka CLI</h3>
+            <p class="text-center text-muted mb-8">One command. That's it.</p>
+            
+            <div class="surface rounded-xl p-8 max-w-2xl mx-auto">
+                <div class="bg-[var(--bg)] rounded-lg p-4 mb-6 border border-[var(--border)]">
+                    <code class="text-sm mono text-[var(--text)]">curl -fsSL https://install.roka-prune.com | bash</code>
+                </div>
+                
+                <div class="text-center text-sm text-muted mb-6">
+                    Auto-detects your OS and architecture
+                </div>
+
+                <div class="space-y-4 text-sm">
+                    <div class="flex gap-3 items-start">
+                        <span class="text-[var(--success)] font-bold">→</span>
+                        <div>
+                            <span class="font-medium">Auto-detects</span> your OS and architecture
+                        </div>
+                    </div>
+                    <div class="flex gap-3 items-start">
+                        <span class="text-[var(--success)] font-bold">→</span>
+                        <div>
+                            <span class="font-medium">Downloads</span> the latest binary from GitHub
+                        </div>
+                    </div>
+                    <div class="flex gap-3 items-start">
+                        <span class="text-[var(--success)] font-bold">→</span>
+                        <div>
+                            <span class="font-medium">Installs</span> to /usr/local/bin (or ~/.local/bin)
+                        </div>
+                    </div>
+                    <div class="flex gap-3 items-start">
+                        <span class="text-[var(--success)] font-bold">→</span>
+                        <div>
+                            <span class="font-medium">Verifies</span> checksum for security
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Trial Details -->
+        <div class="max-w-3xl mx-auto mt-12">
+            <div class="surface rounded-xl p-6">
+                <h3 class="text-lg font-semibold mb-4">What happens after I start a free trial?</h3>
+                <p class="text-sm text-muted mb-4">7-day free trial gives you full access to Pro features:</p>
+                <ul class="space-y-2 text-sm text-muted mb-4">
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Web UI with interactive demo</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> REST API for integration</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> 500K token budget (replenishes daily)</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Full email support</li>
+                </ul>
+                <p class="text-sm text-muted">No credit card required. After 7 days, you can:</p>
+                <ul class="space-y-2 text-sm text-muted">
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Continue free tier (50K/month)</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Upgrade to Pro (auto-billing starts)</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Cancel anytime (no lock-in)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Feature Comparison Table -->
+        <div class="max-w-3xl mx-auto mt-12">
+            <h3 class="text-xl font-semibold tracking-tight mb-6 text-center">Feature Comparison</h3>
+            <div class="surface rounded-xl overflow-hidden">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-[var(--border)]">
+                            <th class="text-left p-3 text-xs text-faint uppercase tracking-wider">Feature</th>
+                            <th class="text-center p-3 text-xs text-faint uppercase tracking-wider">Free</th>
+                            <th class="text-center p-3 text-xs text-faint uppercase tracking-wider">Pro</th>
+                            <th class="text-center p-3 text-xs text-faint uppercase tracking-wider">Enterprise</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-[var(--border)]">
+                            <td class="p-3 text-muted">Cost</td>
+                            <td class="p-3 text-center text-[var(--text)]">Free</td>
+                            <td class="p-3 text-center text-[var(--text)]">$20</td>
+                            <td class="p-3 text-center text-[var(--text)]">Custom</td>
+                        </tr>
+                        <tr class="border-b border-[var(--border)]">
+                            <td class="p-3 text-muted">Tokens</td>
+                            <td class="p-3 text-center text-[var(--text)]">50K</td>
+                            <td class="p-3 text-center text-[var(--text)]">500K</td>
+                            <td class="p-3 text-center text-[var(--text)]">∞</td>
+                        </tr>
+                        <tr class="border-b border-[var(--border)]">
+                            <td class="p-3 text-muted">API</td>
+                            <td class="p-3 text-center text-[var(--text)]">CLI</td>
+                            <td class="p-3 text-center text-[var(--text)]">REST</td>
+                            <td class="p-3 text-center text-[var(--text)]">Full</td>
+                        </tr>
+                        <tr class="border-b border-[var(--border)]">
+                            <td class="p-3 text-muted">Semantic</td>
+                            <td class="p-3 text-center text-[var(--text-muted)]">—</td>
+                            <td class="p-3 text-center text-[var(--success)]">✓</td>
+                            <td class="p-3 text-center text-[var(--success)]">✓</td>
+                        </tr>
+                        <tr class="border-b border-[var(--border)]">
+                            <td class="p-3 text-muted">Natural language queries</td>
+                            <td class="p-3 text-center text-[var(--text-muted)]">—</td>
+                            <td class="p-3 text-center text-[var(--success)]">✓</td>
+                            <td class="p-3 text-center text-[var(--success)]">✓</td>
+                        </tr>
+                        <tr class="border-b border-[var(--border)]">
+                            <td class="p-3 text-muted">One-click MCP integration</td>
+                            <td class="p-3 text-center text-[var(--text-muted)]">—</td>
+                            <td class="p-3 text-center text-[var(--success)]">✓</td>
+                            <td class="p-3 text-center text-[var(--success)]">✓</td>
+                        </tr>
+                        <tr class="border-b border-[var(--border)]">
+                            <td class="p-3 text-muted">Real-time crash-log MCP server</td>
+                            <td class="p-3 text-center text-[var(--text-muted)]">—</td>
+                            <td class="p-3 text-center text-[var(--success)]">✓</td>
+                            <td class="p-3 text-center text-[var(--success)]">✓</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="max-w-3xl mx-auto pt-12">
+            <h3 class="text-xl font-semibold tracking-tight mb-6 text-center">FAQ</h3>
+            <div class="space-y-3" id="faqAccordion">
+                <div class="surface rounded-lg overflow-hidden">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                        <h4 class="font-medium text-sm">Why Roka instead of just uploading to Claude?</h4>
+                        <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
+                    </button>
+                    <div class="faq-content px-5">
+                        <p class="text-sm text-muted">Three reasons:<br><br>1. File size: Claude limits files to ~100MB. Roka handles unlimited size.<br><br>2. Cost: A 500K token log file costs ~$2 in Claude API. Roka processes it locally for free, then sends only the 50K tokens that matter. 10x cheaper at scale.<br><br>3. Speed: Roka processes in 312ms. Upload + Claude = 10+ seconds.<br><br>Plus: Roka runs locally (your logs stay on your machine). Claude needs an upload every time.</p>
+                    </div>
+                </div>
+                <div class="surface rounded-lg overflow-hidden">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                        <h4 class="font-medium text-sm">Why is Roka better than semantic search (RAG)?</h4>
+                        <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
+                    </button>
+                    <div class="faq-content px-5">
+                        <p class="text-sm text-muted">Semantic search finds relevant chunks. Roka does that PLUS:<br><br>- Critical preservation: Never collapses PANIC, OOM, auth errors, or stack traces. These always make it through.<br><br>- Pattern fingerprinting: Treats 1,000 identical "Connection pool warning" messages as one, not spam.<br><br>- Dependency awareness: Understands your code's architecture, so it ranks errors in the critical path higher.<br><br>Result: Claude gets 70% less data, 100% more useful data.</p>
+                    </div>
+                </div>
+                <div class="surface rounded-lg overflow-hidden">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                        <h4 class="font-medium text-sm">What's the difference between Free and Pro?</h4>
+                        <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
+                    </button>
+                    <div class="faq-content px-5">
+                        <p class="text-sm text-muted">Free: Local CLI tool, 50K tokens/month, basic deduplication.<br><br>Pro: Web UI + API, 500K tokens/month, semantic ranking, critical preservation, priority support. $20/month.<br><br>Most developers use Free for occasional debugging. Teams and on-call engineers use Pro.</p>
+                    </div>
+                </div>
+                <div class="surface rounded-lg overflow-hidden">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                        <h4 class="font-medium text-sm">Does Roka work offline?</h4>
+                        <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
+                    </button>
+                    <div class="faq-content px-5">
+                        <p class="text-sm text-muted">Yes. The CLI tool (Free tier) works entirely offline. Pro tier requires internet for API calls.</p>
+                    </div>
+                </div>
+                <div class="surface rounded-lg overflow-hidden">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                        <h4 class="font-medium text-sm">Do you store or analyze my logs?</h4>
+                        <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
+                    </button>
+                    <div class="faq-content px-5">
+                        <p class="text-sm text-muted">No. Local CLI: logs stay on your machine. Pro/API: we process them in-flight and delete after 24 hours. We don't index, train on, or store your data.<br><br>Your logs are yours.</p>
+                    </div>
+                </div>
+                <div class="surface rounded-lg overflow-hidden">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                        <h4 class="font-medium text-sm">How long does processing take?</h4>
+                        <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
+                    </button>
+                    <div class="faq-content px-5">
+                        <p class="text-sm text-muted">Average: 312ms for 50K token dumps.<br><br>Larger files scale linearly. A 500K dump typically takes 3-5 seconds including semantic re-ranking.</p>
+                    </div>
+                </div>
+                <div class="surface rounded-lg overflow-hidden">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                        <h4 class="font-medium text-sm">Can I use Roka with tools other than Claude?</h4>
+                        <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
+                    </button>
+                    <div class="faq-content px-5">
+                        <p class="text-sm text-muted">Right now: Claude and GPT (via API).<br><br>Soon: Gemini, Llama, other models.<br><br>We're building Roka as a context layer, not a Claude-only tool. Ping us if you need a specific integration.</p>
+                    </div>
+                </div>
+                <div class="surface rounded-lg overflow-hidden">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                        <h4 class="font-medium text-sm">Is there a limit to how many logs I can process?</h4>
+                        <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
+                    </button>
+                    <div class="faq-content px-5">
+                        <p class="text-sm text-muted">Free: 50K tokens/month.<br><br>Pro: 500K tokens/month.<br><br>Enterprise: Unlimited. Custom SLAs.</p>
+                    </div>
+                </div>
+                <div class="surface rounded-lg overflow-hidden">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                        <h4 class="font-medium text-sm">Can I use Roka in production workflows?</h4>
+                        <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
+                    </button>
+                    <div class="faq-content px-5">
+                        <p class="text-sm text-muted">Yes. The API is production-ready. Many teams use Roka in their incident response pipelines (logs → Roka → Claude → Slack alert).</p>
+                    </div>
+                </div>
+                <div class="surface rounded-lg overflow-hidden">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                        <h4 class="font-medium text-sm">What about security / compliance?</h4>
+                        <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
+                    </button>
+                    <div class="faq-content px-5">
+                        <p class="text-sm text-muted">Local CLI: Your machine, your data.<br><br>Pro/Cloud: SOC 2 Type 2 in progress. Happy to discuss security requirements.<br><br>Enterprise: Custom security audits, SSO, audit logs, data residency options.</p>
+                    </div>
+                </div>
+
+                <div class="surface rounded-lg overflow-hidden">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                        <h4 class="font-medium text-sm">What's the catch? How many free users actually upgrade?</h4>
+                        <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
+                    </button>
+                    <div class="faq-content px-5">
+                        <p class="text-sm text-muted">Honest answer: about 8–12% of active free users upgrade to Pro within 30 days. Most free users are individual developers who hit the 50K token/month ceiling during an incident and decide Pro is worth $20.<br><br>The "catch" is that the free tier is intentionally generous for occasional use. If you're running Roka daily in CI pipelines or on-call workflows, you'll hit the limit and need Pro. That's by design — not bait and switch.</p>
+                    </div>
+                </div>
+
+                <div class="surface rounded-lg overflow-hidden">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                        <h4 class="font-medium text-sm">How does Roka handle very large logs — 500 MB or more?</h4>
+                        <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
+                    </button>
+                    <div class="faq-content px-5">
+                        <p class="text-sm text-muted">Roka streams the file in chunks so memory usage stays flat regardless of file size. Benchmarks on a 2021 M1 MacBook Pro:<br><br>• 50K tokens → ~312ms<br>• 500K tokens → ~3–5s (with semantic re-ranking)<br>• 5M tokens → ~25–40s (BM25 only, semantic disabled)<br><br>For very large files we recommend using --no-semantic for speed, or splitting by time window first. There is no hard size limit.</p>
+                    </div>
+                </div>
+
+                <div class="surface rounded-lg overflow-hidden">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                        <h4 class="font-medium text-sm">Does semantic ranking use Roka's models or my AI provider's?</h4>
+                        <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
+                    </button>
+                    <div class="faq-content px-5">
+                        <p class="text-sm text-muted">Roka's own models, running locally on your machine. Semantic re-ranking uses sentence-transformers (open weights, ~80MB) bundled into the binary — no API calls, no data leaves your machine during pruning.<br><br>Your logs are never sent to OpenAI, Anthropic, or any third party as part of the pruning step. Only the pruned output goes to your AI provider — and only when you explicitly pipe it there.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fixed Instagram Icon -->
+    <a href="https://www.instagram.com/roka.app/" target="_blank" rel="noopener noreferrer" class="instagram-fixed">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+        </svg>
+    </a>
+
+  <footer class="border-t border-[var(--border)] pt-16 pb-10 px-5">
+        <div class="max-w-6xl mx-auto">
+            <!-- Top grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-10 pb-12">
+                <!-- Brand column -->
+                <div class="col-span-2 sm:col-span-3 lg:col-span-1 flex flex-col gap-4">
+                    <div class="flex items-center gap-2">
+                        <img src="logo.png" alt="Roka" height="28" style="height:28px;width:auto;object-fit:contain;filter:var(--logo-filter)">
+                    </div>
+                    <p class="text-xs leading-relaxed" style="color:var(--text-muted); max-width:180px">
+                        Prune your logs. Ship faster. Context-aware middleware for AI coding agents.
+                    </p>
+                    <!-- Social icons -->
+                    <div class="flex items-center gap-3 mt-1">
+                        <a href="https://github.com/Roka-Dev-Labs" target="_blank" rel="noopener" aria-label="GitHub"
+                           class="w-7 h-7 rounded flex items-center justify-center transition-opacity hover:opacity-70"
+                           style="border:1px solid var(--border-strong)">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color:var(--text-muted)">
+                                <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
+                            </svg>
+                        </a>
+                        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X / Twitter"
+                           class="w-7 h-7 rounded flex items-center justify-center transition-opacity hover:opacity-70"
+                           style="border:1px solid var(--border-strong)">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="color:var(--text-muted)">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.74l7.73-8.835L1.254 2.25H8.08l4.264 5.633 5.9-5.633zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </a>
+                        <a href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"
+                           class="w-7 h-7 rounded flex items-center justify-center transition-opacity hover:opacity-70"
+                           style="border:1px solid var(--border-strong)">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--text-muted)">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Product -->
+                <div class="flex flex-col gap-3">
+                    <span class="text-[10px] font-semibold tracking-widest uppercase" style="color:var(--text-faint)">Product</span>
+                    <nav class="flex flex-col gap-2.5">
+                        <a href="#features" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Product</a>
+                        <a href="#pricing" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Pricing</a>
+                        <a href="https://github.com/Roka-Dev-Labs/roka/releases" target="_blank" rel="noopener" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Changelog</a>
+                        <a href="#mcp" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Integrations</a>
+                        <a href="https://github.com/Roka-Dev-Labs" target="_blank" rel="noopener" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Open Source</a>
+                    </nav>
+                </div>
+
+                <!-- Resources -->
+                <div class="flex flex-col gap-3">
+                    <span class="text-[10px] font-semibold tracking-widest uppercase" style="color:var(--text-faint)">Resources</span>
+                    <nav class="flex flex-col gap-2.5">
+                        <a href="install.html" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Docs</a>
+                        <a href="https://github.com/Roka-Dev-Labs/roka" target="_blank" rel="noopener" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">CLI repo</a>
+                        <a href="testing.html" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Testing</a>
+                        <a href="about.html" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">About</a>
+                    </nav>
+                </div>
+
+                <!-- Get Started -->
+                <div class="flex flex-col gap-3">
+                    <span class="text-[10px] font-semibold tracking-widest uppercase" style="color:var(--text-faint)">Get Started</span>
+                    <nav class="flex flex-col gap-2.5">
+                        <a href="#pricing" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Early Access</a>
+                        <a href="login.html" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Sign In</a>
+                        <a href="mailto:mukhamedjankydyrli@gmail.com" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Contact</a>
+                    </nav>
+                </div>
+
+                <!-- Legal -->
+                <div class="flex flex-col gap-3">
+                    <span class="text-[10px] font-semibold tracking-widest uppercase" style="color:var(--text-faint)">Legal</span>
+                    <nav class="flex flex-col gap-2.5">
+                        <a href="terms.html" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Terms of Use</a>
+                        <a href="privacy.html" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Privacy Policy</a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Bottom bar -->
+            <div class="border-t pt-6 flex flex-col sm:flex-row justify-between items-center gap-3" style="border-color:var(--border)">
+                <span class="text-xs" style="color:var(--text-faint)">© 2026 Roka Labs. All rights reserved.</span>
+                <span class="mono text-[10px]" style="color:var(--text-faint)">BM25 · semantic rank · tiktoken · provenance headers</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ── Theme ──────────────────────────────────────────────
+        const html = document.documentElement;
+        const themeToggle    = document.getElementById('themeToggle');
+        const themeLabel     = document.getElementById('themeLabel');
+        const themeIconFill  = document.getElementById('themeIconFill');
+
+        function applyTheme(theme) {
+            html.dataset.theme = theme;
+            themeLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
+            // dark mode → left half filled (switch to light); light mode → right half filled (switch to dark)
+            themeIconFill.setAttribute('d', theme === 'dark'
+                ? 'M6 1 A5 5 0 0 0 6 11 Z'
+                : 'M6 1 A5 5 0 0 1 6 11 Z');
+            themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+            localStorage.setItem('roka-theme', theme);
+        }
+
+        const savedTheme = localStorage.getItem('roka-theme');
+        if (savedTheme) applyTheme(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            applyTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
+        });
+
+        // ── Hero: prune stream + letter animation ──────────────
+        const LOG_SNIPPETS = [
+            'WARN pool retry 50ms', 'INFO login 192.168.x', 'DEBUG heartbeat ok',
+            'TRACE span_id=abc…', 'WARN pool retry 51ms', 'INFO session start',
+            'ERROR timeout 30s', 'WARN pool retry 52ms', 'DEBUG cache hit',
+            'INFO request /api/v1', 'WARN pool retry 53ms', 'TRACE db query 2ms',
+        ];
+
+        const stream = document.getElementById('pruneStream');
+        for (let i = 0; i < 28; i++) {
+            const el = document.createElement('div');
+            el.className = 'prune-line';
+            el.textContent = LOG_SNIPPETS[i % LOG_SNIPPETS.length];
+            el.style.top = `${8 + (i * 3.2) % 88}%`;
+            el.style.animationDuration = `${7 + (i % 5) * 1.8}s`;
+            el.style.animationDelay = `${i * 0.35}s`;
+            stream.appendChild(el);
+        }
+
+        // ── ASCII Art ROKA canvas ──────────────────────────────
+        (function () {
+            const canvas = document.getElementById('rokaCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            // Pixel bitmaps: 8 rows × 7 cols per letter
+            const MAPS = {
+                R: [[1,1,1,1,1,0,0],[1,0,0,0,0,1,0],[1,0,0,0,0,1,0],[1,1,1,1,1,0,0],[1,0,1,0,0,0,0],[1,0,0,1,0,0,0],[1,0,0,0,1,0,0],[1,0,0,0,0,1,0]],
+                O: [[0,1,1,1,1,1,0],[1,0,0,0,0,0,1],[1,0,0,0,0,0,1],[1,0,0,0,0,0,1],[1,0,0,0,0,0,1],[1,0,0,0,0,0,1],[1,0,0,0,0,0,1],[0,1,1,1,1,1,0]],
+                K: [[1,0,0,0,0,1,0],[1,0,0,0,1,0,0],[1,0,0,1,0,0,0],[1,0,1,0,0,0,0],[1,1,0,0,0,0,0],[1,0,1,0,0,0,0],[1,0,0,1,0,0,0],[1,0,0,0,1,0,0]],
+                A: [[0,0,1,1,1,0,0],[0,1,0,0,0,1,0],[1,0,0,0,0,0,1],[1,0,0,0,0,0,1],[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,0,0,0,0,1],[1,0,0,0,0,0,1]],
+            };
+
+            const LW = 7, LH = 8, GAP = 2, PAD_X = 4, PAD_Y = 2;
+            const WORD = ['R','O','K','A'];
+            const COLS = PAD_X*2 + WORD.length*LW + (WORD.length-1)*GAP; // 42
+            const ROWS = PAD_Y*2 + LH;                                     // 12
+
+            // Mark which grid cells belong to a letter
+            const letterSet = new Set();
+            WORD.forEach((letter, li) => {
+                const sc = PAD_X + li*(LW+GAP);
+                MAPS[letter].forEach((row, ri) => {
+                    row.forEach((bit, ci) => {
+                        if (bit) letterSet.add((PAD_Y+ri)*COLS + (sc+ci));
+                    });
+                });
+            });
+
+            const CHARS_LIT  = '0123456789abcdef×!|>-ERW#'.split('');
+            const CHARS_DARK = '0123456789.,:;-_|×!'.split('');
+
+            // Per-cell state — background cells start fully invisible
+            const cells = Array.from({length: ROWS*COLS}, (_, i) => {
+                const isLet = letterSet.has(i);
+                return {
+                    isLet,
+                    char: CHARS_LIT[Math.floor(Math.random()*CHARS_LIT.length)],
+                    opacity: 0,
+                    target:  0,
+                    lastChange: -Math.random()*800,
+                    interval: 80+Math.random()*140,
+                };
+            });
+
+            let CW = 15, CH = 22;
+            const DPR = () => Math.min(window.devicePixelRatio || 1, 2);
+
+            function resize() {
+                const wrap  = document.getElementById('rokaWord');
+                const avail = wrap ? Math.min(COLS*18, wrap.clientWidth || COLS*18) : COLS*18;
+                CW = Math.max(9, Math.floor(avail / COLS));
+                CH = Math.round(CW * 22 / 15);
+                const r = DPR();
+                canvas.width  = COLS * CW * r;
+                canvas.height = ROWS * CH * r;
+                canvas.style.width  = (COLS * CW) + 'px';
+                canvas.style.height = (ROWS * CH) + 'px';
+                ctx.setTransform(1,0,0,1,0,0);
+                ctx.scale(r, r);
+            }
+
+            resize();
+            window.addEventListener('resize', resize);
+
+            // Cycle timings (ms)
+            const NOISE_DUR = 900, PRUNE_DUR = 1800, HOLD_DUR = 5300;
+            const CYCLE = NOISE_DUR + PRUNE_DUR + HOLD_DUR;
+            let cycleStart = 0;
+
+            function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+            function draw(ts) {
+                if (!cycleStart) cycleStart = ts;
+                const elapsed = (ts - cycleStart) % CYCLE;
+
+                // Background cells always invisible — only ROKA letter cells light up
+                const maxOp = document.documentElement.getAttribute('data-theme') === 'light' ? 1.0 : 0.92;
+                if (elapsed < NOISE_DUR) {
+                    const t = ease(elapsed / NOISE_DUR);
+                    cells.forEach(c => { c.target = c.isLet ? t * maxOp : 0; });
+                } else {
+                    cells.forEach(c => { c.target = c.isLet ? maxOp : 0; });
+                }
+
+                ctx.clearRect(0, 0, COLS*CW, ROWS*CH);
+
+                const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+                const rgb = isDark ? '250,250,250' : '15,15,18';
+                const fs  = Math.round(CH * (isDark ? 0.68 : 0.80));
+                ctx.font = `${isDark ? '400' : '700'} ${fs}px "Geist Mono",monospace`;
+                ctx.textAlign    = 'center';
+                ctx.textBaseline = 'middle';
+
+
+                cells.forEach((c, i) => {
+                    const row = Math.floor(i/COLS), col = i%COLS;
+                    const x = col*CW + CW/2, y = row*CH + CH/2;
+
+                    c.opacity += (c.target - c.opacity) * 0.07;
+
+                    if (c.isLet || c.opacity > 0.03) {
+                        if (ts - c.lastChange > c.interval) {
+                            const pool = c.isLet ? CHARS_LIT : CHARS_DARK;
+                            c.char = pool[Math.floor(Math.random()*pool.length)];
+                            c.lastChange = ts;
+                        }
+                    }
+
+                    if (c.opacity < 0.004) return;
+
+                    if (c.isLet && c.opacity > 0.3) {
+                        ctx.shadowColor = isDark
+                            ? `rgba(255,255,255,${(c.opacity - 0.3) * 0.4})`
+                            : `rgba(0,0,0,${(c.opacity - 0.3) * 0.55})`;
+                        ctx.shadowBlur = isDark ? 10 : 8;
+                    } else {
+                        ctx.shadowBlur = 0;
+                    }
+
+                    ctx.fillStyle = `rgba(${rgb},${Math.min(1, c.opacity)})`;
+                    ctx.fillText(c.char, x, y);
+                });
+
+                ctx.shadowBlur = 0;
+                requestAnimationFrame(draw);
+            }
+
+            // Start once fonts are ready for crisp rendering
+            document.fonts.ready.then(() => requestAnimationFrame(draw));
+
+            // 3-D parallax tilt on canvas wrapper
+            const rokaWord = document.getElementById('rokaWord');
+            document.addEventListener('mousemove', (e) => {
+                if (!rokaWord) return;
+                const cx = window.innerWidth / 2;
+                const cy = window.innerHeight / 3;
+                const dx = (e.clientX - cx) / cx;
+                const dy = (e.clientY - cy) / cy;
+                rokaWord.style.transform = `rotateX(${dy * 4}deg) rotateY(${dx * 4}deg)`;
+            });
+            document.addEventListener('mouseleave', () => {
+                if (rokaWord) rokaWord.style.transform = '';
+            });
+        })();
+
+        // ── Scroll reveal ──────────────────────────────────────
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.08 });
+        reveals.forEach((el) => observer.observe(el));
+
+        // ── Prune API (existing functionality) ─────────────────
+        const API_BASE = window.ROKA_API_BASE || 'https://api.roka-prune.com';
+        const API_PRUNE = `${API_BASE}/api/prune`;
+
+        const els = {
+            queryInput: document.getElementById('queryInput'),
+            tokenBudget: document.getElementById('tokenBudget'),
+            budgetValue: document.getElementById('budgetValue'),
+            useSemanticCheckbox: document.getElementById('useSemanticCheckbox'),
+            useMinificationCheckbox: document.getElementById('useMinificationCheckbox'),
+            inputText: document.getElementById('inputText'),
+            charCounter: document.getElementById('charCounter'),
+            dropZone: document.getElementById('dropZone'),
+            fileInput: document.getElementById('fileInput'),
+            loadSampleBtn: document.getElementById('loadSampleBtn'),
+            pruneButton: document.getElementById('pruneButton'),
+            buttonText: document.getElementById('buttonText'),
+            outputArea: document.getElementById('outputArea'),
+            copyButton: document.getElementById('copyButton'),
+            statInput: document.getElementById('statInput'),
+            statOutput: document.getElementById('statOutput'),
+            statCompression: document.getElementById('statCompression'),
+            statChunks: document.getElementById('statChunks'),
+            statLatency: document.getElementById('statLatency'),
+            statLines: document.getElementById('statLines'),
+            statCritical: document.getElementById('statCritical'),
+            statusConsole: document.getElementById('statusConsole'),
+        };
+
+        let currentPrunedText = '';
+        let apiOnline = false;
+
+        async function readJsonResponse(response) {
+            const text = await response.text();
+            const contentType = response.headers.get('content-type') || '';
+
+            if (!contentType.includes('application/json')) {
+                const hint = text.startsWith('The page') || text.startsWith('<!DOCTYPE')
+                    ? 'API returned HTML instead of JSON — routing may be misconfigured on the server.'
+                    : text.slice(0, 200) || `HTTP ${response.status}`;
+                throw new Error(hint);
+            }
+
+            try {
+                return JSON.parse(text);
+            } catch {
+                throw new Error(`Invalid JSON response: ${text.slice(0, 120)}`);
+            }
+        }
+
+        async function checkApiHealth() {
+            try {
+                const res = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(4000) });
+                if (!res.ok) {
+                    apiOnline = false;
+                    logConsole(`api error: HTTP ${res.status}`);
+                    return;
+                }
+                const data = await readJsonResponse(res);
+                apiOnline = data.status === 'healthy';
+                logConsole(apiOnline ? 'api online' : 'api error: unexpected response');
+            } catch (err) {
+                apiOnline = false;
+                logConsole(`api offline — ${err.message}`);
+            }
+        }
+
+        checkApiHealth();
+
+        els.tokenBudget.addEventListener('input', (e) => {
+            els.budgetValue.textContent = parseInt(e.target.value, 10).toLocaleString();
+        });
+        els.inputText.addEventListener('input', (e) => {
+            els.charCounter.textContent = `${e.target.value.length.toLocaleString()} chars`;
+        });
+
+        els.dropZone.addEventListener('click', () => els.fileInput.click());
+        els.fileInput.addEventListener('change', (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                els.inputText.value = ev.target?.result || '';
+                els.charCounter.textContent = `${els.inputText.value.length.toLocaleString()} chars`;
+                logConsole(`loaded ${file.name}`);
+            };
+            reader.readAsText(file);
+        });
+
+        async function handlePrune() {
+            const query = els.queryInput.value.trim();
+            const text = els.inputText.value.trim();
+            const budget = parseInt(els.tokenBudget.value, 10);
+
+            if (!query || !text) {
+                logConsole('query or context empty');
+                return;
+            }
+
+            setLoading(true);
+            try {
+                const response = await fetch(API_PRUNE, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text,
+                        query,
+                        budget: budget,
+                        use_semantic: els.useSemanticCheckbox.checked,
+                        use_minification: els.useMinificationCheckbox.checked,
+                    }),
+                });
+
+                if (!response.ok) {
+                    const detail = await response.text();
+                    logConsole(`error: HTTP ${response.status}`);
+                    els.outputArea.textContent = `// Server returned ${response.status}\n${detail.slice(0, 500)}`;
+                    return;
+                }
+
+                const data = await readJsonResponse(response);
+                
+                currentPrunedText = data.output;
+                els.outputArea.textContent = currentPrunedText;
+                els.copyButton.disabled = false;
+
+                els.statInput.textContent = data.input_tokens.toLocaleString();
+                els.statOutput.textContent = data.output_tokens.toLocaleString();
+                els.statCompression.textContent = data.reduction;
+                els.statLatency.textContent = `${data.latency_ms}ms`;
+
+                logConsole('prune complete');
+            } catch (err) {
+                if (err.name === 'TypeError' && err.message === 'Failed to fetch') {
+                    logConsole('error: backend unreachable');
+                    els.outputArea.textContent = [
+                        '// Cannot reach the API.',
+                        '// Check https://api.roka-prune.com/health or try again later.',
+                    ].join('\n');
+                } else {
+                    logConsole(`error: ${err.message}`);
+                    els.outputArea.textContent = `// ${err.message}`;
+                }
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        els.pruneButton.addEventListener('click', handlePrune);
+        els.loadSampleBtn.addEventListener('click', () => {
+            const sampleLog = `2026-06-21 06:10:00 INFO [Database] Connection pool established
+2026-06-21 06:10:05 INFO [Auth] User logged in from 192.168.1.50
+2026-06-21 06:10:05 INFO [Auth] User logged in from 192.168.1.50
+2026-06-21 06:10:05 INFO [Auth] User logged in from 192.168.1.50
+2026-06-21 06:10:10 INFO [Worker-0] Processing task #12345
+2026-06-21 06:10:15 INFO [Worker-0] Processing task #12346
+2026-06-21 06:10:20 INFO [Worker-0] Processing task #12347
+2026-06-21 06:11:00 ERROR [Database] FATAL: Connection reset by peer - OOM Killer triggered!
+2026-06-21 06:11:05 INFO [System] Attempting database reconnection...
+2026-06-21 06:11:10 WARN [System] Reconnection failed, retry in 5s
+2026-06-21 06:11:15 INFO [Auth] User logged in from 10.0.0.12
+2026-06-21 06:11:20 INFO [Cache] Cache miss for key: user_session_12345`;
+            const sampleQuery = "what broke during last night's deploy?";
+            
+            els.inputText.value = sampleLog;
+            els.queryInput.value = sampleQuery;
+            els.charCounter.textContent = `${sampleLog.length} chars`;
+            logConsole('sample loaded');
+        });
+        els.copyButton.addEventListener('click', () => {
+            if (!currentPrunedText) return;
+            navigator.clipboard.writeText(currentPrunedText).then(() => logConsole('copied'));
+        });
+
+        function setLoading(loading) {
+            els.pruneButton.disabled = loading;
+            els.buttonText.textContent = loading ? 'Pruning…' : 'Prune';
+            if (loading) {
+                els.outputArea.innerHTML = '<span class="loading-text">// compressing context…</span>';
+            }
+        }
+
+        function logConsole(msg) {
+            els.statusConsole.textContent = `// ${msg}`;
+        }
+
+        // ── FAQ Accordion ──────────────────────────────────────
+        const faqToggles = document.querySelectorAll('.faq-toggle');
+        faqToggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const content = toggle.nextElementSibling;
+                const icon = toggle.querySelector('.faq-icon');
+                
+                content.classList.toggle('open');
+                icon.textContent = content.classList.contains('open') ? '−' : '+';
+                icon.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+            });
+        });
+
+        // ── Demo Animation ──────────────────────────────────────
+        let demoCurrentStage = 1;
+        const demoTotalStages = 6;
+        const demoStageDurations = [5000, 5000, 5000, 15000, 15000, 15000];
+        let demoTimeout = null;
+
+        function showDemoStage(stage) {
+            const stages = document.querySelectorAll('#demoAnimation .stage');
+            stages.forEach(s => s.classList.remove('active'));
+            const targetStage = document.getElementById('demoStage' + stage);
+            if (targetStage) {
+                targetStage.classList.add('active');
+            }
+        }
+
+        function advanceDemoStage() {
+            if (demoCurrentStage < demoTotalStages) {
+                demoCurrentStage++;
+                showDemoStage(demoCurrentStage);
+                scheduleDemoNext();
+            } else {
+                // Auto-loop: restart from stage 1 after a short delay
+                demoTimeout = setTimeout(() => {
+                    demoCurrentStage = 1;
+                    showDemoStage(1);
+                    scheduleDemoNext();
+                }, 3000);
+            }
+        }
+
+        function scheduleDemoNext() {
+            const duration = demoStageDurations[demoCurrentStage - 1];
+            demoTimeout = setTimeout(advanceDemoStage, duration);
+        }
+
+        function restartDemoAnimation() {
+            if (demoTimeout) {
+                clearTimeout(demoTimeout);
+            }
+            demoCurrentStage = 1;
+            showDemoStage(1);
+            scheduleDemoNext();
+        }
+
+        // Start demo animation when demo section is visible
+        const demoObserver = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+                if (e.isIntersecting && demoCurrentStage === 1) {
+                    scheduleDemoNext();
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const demoAnimation = document.getElementById('demoAnimation');
+        if (demoAnimation) {
+            demoObserver.observe(demoAnimation);
+        }
+
+        // ── ROI Calculator ──────────────────────────────────────
+        const roiSlider = document.getElementById('roiSlider');
+        const roiValue = document.getElementById('roiValue');
+        const roiTokenSavings = document.getElementById('roiTokenSavings');
+        const roiTimeSavings = document.getElementById('roiTimeSavings');
+        const roiTotal = document.getElementById('roiTotal');
+        const roiRate = document.getElementById('roiRate');
+
+        const modelPrices = { sonnet: 3, opus: 15, gpt4o: 2.5 };
+
+        function updateROI() {
+            const mb = parseInt(roiSlider.value, 10);
+            const selectedModel = document.querySelector('input[name="roiModel"]:checked').value;
+            const hourlyRate = parseFloat(roiRate.value) || 75;
+
+            const tokensPerMB = 750000;
+            const rokaReduction = 0.90;
+            const daysPerMonth = 30;
+            const costPerMTok = modelPrices[selectedModel];
+
+            const monthlyTokensSaved = mb * daysPerMonth * tokensPerMB * rokaReduction;
+            const tokenSavings = Math.round(monthlyTokensSaved / 1_000_000 * costPerMTok);
+
+            const incidentsPerMonth = 5;
+            const minsPerIncident = 30;
+            const timeSavings = Math.round(incidentsPerMonth * (minsPerIncident / 60) * hourlyRate);
+
+            const total = tokenSavings + timeSavings;
+
+            roiValue.textContent = `${mb} MB`;
+            roiTokenSavings.textContent = tokenSavings.toLocaleString();
+            roiTimeSavings.textContent = timeSavings.toLocaleString();
+            roiTotal.textContent = total.toLocaleString();
+        }
+
+        roiSlider.addEventListener('input', updateROI);
+        roiRate.addEventListener('input', updateROI);
+        document.querySelectorAll('input[name="roiModel"]').forEach(r => r.addEventListener('change', updateROI));
+        updateROI();
+
+        // ── Mobile Sidebar ──────────────────────────────────────
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileSidebar = document.getElementById('mobileSidebar');
+        const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
+        const mobileSidebarLinks = document.querySelectorAll('.mobile-sidebar-link');
+
+        function toggleMobileSidebar() {
+            mobileSidebar.classList.toggle('open');
+            mobileSidebarOverlay.classList.toggle('open');
+        }
+
+        function closeMobileSidebar() {
+            mobileSidebar.classList.remove('open');
+            mobileSidebarOverlay.classList.remove('open');
+        }
+
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', toggleMobileSidebar);
+        }
+
+        if (mobileSidebarOverlay) {
+            mobileSidebarOverlay.addEventListener('click', closeMobileSidebar);
+        }
+
+        mobileSidebarLinks.forEach(link => {
+            link.addEventListener('click', closeMobileSidebar);
+        });
+
+        // ── Hero animations (handled by canvas above) ──
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Agent tabs
+        document.querySelectorAll('.agent-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const agent = tab.dataset.agent;
+                document.querySelectorAll('.agent-tab').forEach(t => t.classList.toggle('active', t === tab));
+                document.querySelectorAll('.cmd-block').forEach(p => p.classList.toggle('active', p.dataset.agentPanel === agent));
+            });
+        });
+        document.querySelectorAll('.cmd-copy').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const text = btn.dataset.copy || '';
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.textContent = 'copied';
+                    setTimeout(() => { btn.textContent = 'copy'; }, 1500);
+                });
+            });
+        });
+
+        // o
+        const DEMO_STEPS = [
+            { id: 'nd1', text: '$ cat deploy.log | roka prune --query "what broke" --budget 8000', speed: 22 },
+            { id: 'nd2', text: 'scanning 48,204 lines …', delay: 500, cls: 'nd-dim' },
+            { id: 'nd3', text: '✓ detected 500× ERROR [worker] connection refused', delay: 400, cls: 'nd-ok' },
+            { id: 'nd4', text: '✓ collapsed repetitive patterns', delay: 300, cls: 'nd-ok' },
+            { id: 'nd5', text: '✓ BM25 rank → semantic re-rank', delay: 300, cls: 'nd-ok' },
+            { id: 'nd6', text: 'pattern collapsed · 500 lines → 1', delay: 500, cls: 'nd-warn' },
+            { id: 'nd7', text: '[500x | lines 240–740] ERROR [worker] connection refused', delay: 400, cls: 'nd-err', badge: true },
+            { id: 'nd8', text: 'ready for Claude Code · 312ms', delay: 400, cls: 'nd-ok' },
+        ];
+
+        function runDemo() {
+            DEMO_STEPS.forEach(({ id }) => { const el = document.getElementById(id); if (el) el.innerHTML = ''; });
+            let i = 0;
+            function next() {
+                if (i >= DEMO_STEPS.length) {
+                    setTimeout(runDemo, 4000);
+                    return;
+                }
+                const step = DEMO_STEPS[i];
+                const el = document.getElementById(step.id);
+                const wait = step.delay || 0;
+                setTimeout(() => {
+                    if (!el) { i++; next(); return; }
+                    if (step.speed) {
+                        typeText(el, step.text, step.speed, () => { i++; next(); });
+                    } else {
+                        el.textContent = step.text;
+                        if (step.cls) el.className = 'nd-line ' + step.cls;
+                        if (step.badge) {
+                            const b = document.createElement('span');
+                            b.className = 'nd-badge';
+                            b.textContent = 'Compressed: ERROR ×500 → 1 line';
+                            el.appendChild(document.createElement('br'));
+                            el.appendChild(b);
+                        }
+                        i++;
+                        next();
+                    }
+                }, wait);
+            }
+            next();
+        }
+
+        const demoBody = document.getElementById('demoBody');
+        if (demoBody) {
+            if (prefersReducedMotion) {
+                DEMO_STEPS.forEach(({ id, text, cls }) => {
+                    const el = document.getElementById(id);
+                    if (el) { el.textContent = text; if (cls) el.className = 'nd-line ' + cls; }
+                });
+            } else {
+                setTimeout(runDemo, 800);
+            }
+        }
+
+        // Live stat ticker
+        const heroLiveStat = document.getElementById('heroLiveStat');
+        if (heroLiveStat && !prefersReducedMotion) {
+            let n = 48204;
+            setInterval(() => {
+                n += Math.floor(Math.random() * 40) - 10;
+                const span = heroLiveStat.querySelector('span');
+                if (span) span.textContent = n.toLocaleString();
+            }, 2200);
+        }
+
+        // ── Canvas animations ──
+        function setupCanvas(canvas) {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            const ctx = canvas.getContext('2d');
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            return { ctx, w: rect.width, h: rect.height };
+        }
+
+        function getThemeColors() {
+            const dark = document.documentElement.dataset.theme !== 'light';
+            return {
+                bg: dark ? '#141416' : '#ffffff',
+                faint: dark ? '#52525b' : '#a1a1aa',
+                text: dark ? '#a1a1aa' : '#52525b',
+                err: '#f87171',
+                ok: dark ? '#34d399' : '#059669',
+                warn: '#fbbf24',
+            };
+        }
+
+        function initError500Canvas() {
+            const canvas = document.getElementById('canvasError500');
+            const badgeErr = document.getElementById('vizBadgeError');
+            const badgeOk = document.getElementById('vizBadgeOk');
+            if (!canvas || prefersReducedMotion) return;
+
+            let playing = false;
+            let start = 0;
+            const DURATION = 4200;
+
+            function draw(ts) {
+                if (!playing) return;
+                if (!start) start = ts;
+                const t = (ts - start) % DURATION;
+                const { ctx, w, h } = setupCanvas(canvas);
+                const c = getThemeColors();
+                ctx.fillStyle = c.bg;
+                ctx.fillRect(0, 0, w, h);
+                ctx.font = '10px Geist Mono, monospace';
+
+                const lineText = 'ERROR [worker] connection refused';
+                const phase = t / DURATION;
+
+                if (phase < 0.55) {
+                    const count = Math.min(500, Math.floor(phase * 900));
+                    const scroll = phase * 120;
+                    if (badgeErr) badgeErr.style.opacity = '1';
+                    if (badgeOk) badgeOk.style.opacity = '0';
+                    for (let i = 0; i < 18; i++) {
+                        const y = 20 + i * 14 - scroll % 14;
+                        const alpha = 0.15 + (i / 18) * 0.55;
+                        ctx.fillStyle = `rgba(248,113,113,${alpha})`;
+                        ctx.fillText(lineText, 14, y);
+                    }
+                    ctx.fillStyle = c.faint;
+                    ctx.fillText(`${count}× identical · scrolling …`, 14, h - 16);
+                } else if (phase < 0.72) {
+                    const p = (phase - 0.55) / 0.17;
+                    const lines = 18;
+                    for (let i = 0; i < lines; i++) {
+                        const y = 20 + i * 14;
+                        const cy = h / 2;
+                        const ny = y + (cy - y) * p;
+                        const alpha = 0.6 * (1 - p);
+                        ctx.fillStyle = `rgba(248,113,113,${alpha})`;
+                        ctx.fillText(lineText, 14 + (1 - p) * 20, ny);
+                    }
+                    ctx.fillStyle = c.warn;
+                    ctx.fillText('roka pruning …', 14, h - 16);
+                } else {
+                    if (badgeErr) badgeErr.style.opacity = '0.5';
+                    if (badgeOk) badgeOk.style.opacity = '1';
+                    const snap = Math.min(1, (phase - 0.72) / 0.08);
+                    ctx.fillStyle = c.ok;
+                    ctx.globalAlpha = snap;
+                    ctx.fillText('[500x | lines 240–740] ' + lineText, 14, h / 2);
+                    ctx.globalAlpha = 1;
+                    ctx.fillStyle = c.faint;
+                    ctx.fillText('−99.8% repetition · 1 line in context', 14, h - 16);
+                }
+                requestAnimationFrame(draw);
+            }
+
+            const obs = new IntersectionObserver((entries) => {
+                playing = entries[0].isIntersecting;
+                if (playing) { start = 0; requestAnimationFrame(draw); }
+            }, { threshold: 0.2 });
+            obs.observe(canvas.parentElement);
+            window.addEventListener('resize', () => { start = 0; });
+        }
+
+        function initCrashCanvas() {
+            const canvas = document.getElementById('canvasCrash');
+            if (!canvas || prefersReducedMotion) return;
+            let playing = false;
+            let start = 0;
+            const STEPS = ['🔴 crash detected', 'pruning 12,400 → 1.1K tokens', '✓ handed to Claude Code'];
+            const COLORS = ['err', 'ok', 'ok'];
+
+            function draw(ts) {
+                if (!playing) return;
+                if (!start) start = ts;
+                const t = ((ts - start) % 4800) / 4800;
+                const { ctx, w, h } = setupCanvas(canvas);
+                const c = getThemeColors();
+                ctx.fillStyle = c.bg;
+                ctx.fillRect(0, 0, w, h);
+                ctx.font = '11px Geist Mono, monospace';
+                const stepIdx = Math.min(3, Math.floor(t * 4));
+                const colorMap = { faint: c.faint, err: c.err, warn: c.warn, ok: c.ok };
+                for (let i = 0; i <= stepIdx; i++) {
+                    ctx.fillStyle = colorMap[COLORS[i]];
+                    ctx.globalAlpha = i === stepIdx ? 1 : 0.35;
+                    ctx.fillText(STEPS[i], 16, 36 + i * 28);
+                }
+                ctx.globalAlpha = 1;
+                requestAnimationFrame(draw);
+            }
+            const obs = new IntersectionObserver((e) => {
+                playing = e[0].isIntersecting;
+                if (playing) { start = 0; requestAnimationFrame(draw); }
+            }, { threshold: 0.2 });
+            obs.observe(canvas.parentElement);
+        }
+
+        function initQueryCanvas() {
+            const canvas = document.getElementById('canvasQuery');
+            if (!canvas || prefersReducedMotion) return;
+            let playing = false;
+            let start = 0;
+            const query = '"what broke during last night\'s deploy?"';
+            const lines = [
+                { t: 'INFO [startup] Application started', rank: false },
+                { t: 'ERROR [Database] FATAL: Connection reset', rank: true },
+                { t: 'INFO [Cache] Cache miss key: session_123', rank: false },
+            ];
+
+            function draw(ts) {
+                if (!playing) return;
+                if (!start) start = ts;
+                const t = ((ts - start) % 5000) / 5000;
+                const { ctx, w, h } = setupCanvas(canvas);
+                const c = getThemeColors();
+                ctx.fillStyle = c.bg;
+                ctx.fillRect(0, 0, w, h);
+                ctx.font = '10px Geist Mono, monospace';
+                ctx.fillStyle = c.text;
+                const typed = Math.min(query.length, Math.floor(Math.min(t, 0.25) / 0.25 * query.length));
+                ctx.fillText(query.slice(0, typed), 14, 28);
+                if (t > 0.3) {
+                    lines.forEach((line, i) => {
+                        const highlight = line.rank && t > 0.45 && t < 0.85;
+                        ctx.fillStyle = highlight ? c.ok : c.faint;
+                        ctx.globalAlpha = t > 0.35 + i * 0.05 ? 1 : 0;
+                        ctx.fillText(line.t + (highlight ? '  ↑ #1' : ''), 14, 52 + i * 22);
+                    });
+                }
+                ctx.globalAlpha = 1;
+                requestAnimationFrame(draw);
+            }
+            const obs = new IntersectionObserver((e) => {
+                playing = e[0].isIntersecting;
+                if (playing) { start = 0; requestAnimationFrame(draw); }
+            }, { threshold: 0.2 });
+            obs.observe(canvas.parentElement);
+        }
+
+        initError500Canvas();
+        initCrashCanvas();
+        initQueryCanvas();
+
+        //MCP
+        const MCP_ACT1 = [
+            { el: 'tpLine1', text: '$ npx roka-mcp connect --agent claude-code', speed: 28 },
+            { el: 'tpLine2', text: '✓ detected Claude Code config', delay: 400 },
+            { el: 'tpLine3', text: '✓ installed MCP server', delay: 300 },
+            { el: 'tpLine4', text: '✓ watching ./logs/dev.log', delay: 300 },
+            { el: 'tpLine5', text: 'roka-mcp ready on stdio', delay: 500 },
+        ];
+        const MCP_ACT2 = [
+            { el: 'tpLine6', text: '🔴 ERROR [worker] connection refused (×500)', delay: 800 },
+            { el: 'tpLine7', text: 'pruning 12,400 lines → 1.1K tokens …', delay: 600 },
+            { el: 'tpLine8', text: '✓ handed to Claude Code', delay: 500 },
+        ];
+
+        function typeText(el, text, speed, cb) {
+            if (!el) { cb?.(); return; }
+            el.innerHTML = '';
+            let i = 0;
+            const cursor = document.createElement('span');
+            cursor.className = 'tp-cursor';
+            function tick() {
+                if (i < text.length) {
+                    el.textContent = text.slice(0, i + 1);
+                    el.appendChild(cursor);
+                    i++;
+                    setTimeout(tick, speed);
+                } else {
+                    el.removeChild(cursor);
+                    cb?.();
+                }
+            }
+            tick();
+        }
+
+        function clearTerminalLines(ids) {
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = '';
+            });
+        }
+
+        function runMcpTerminalLoop() {
+            if (prefersReducedMotion) {
+                MCP_ACT1.forEach(({ el, text }) => {
+                    const node = document.getElementById(el);
+                    if (node) node.textContent = text;
+                });
+                MCP_ACT2.forEach(({ el, text }) => {
+                    const node = document.getElementById(el);
+                    if (node) node.textContent = text;
+                });
+                return;
+            }
+
+            clearTerminalLines(['tpLine1','tpLine2','tpLine3','tpLine4','tpLine5','tpLine6','tpLine7','tpLine8']);
+
+            let step = 0;
+            function nextAct1() {
+                if (step >= MCP_ACT1.length) {
+                    setTimeout(runAct2, 1200);
+                    return;
+                }
+                const { el, text, speed, delay } = MCP_ACT1[step];
+                const node = document.getElementById(el);
+                const wait = delay || 0;
+                setTimeout(() => {
+                    if (speed) {
+                        typeText(node, text, speed, () => { step++; nextAct1(); });
+                    } else {
+                        if (node) node.textContent = text;
+                        step++;
+                        nextAct1();
+                    }
+                }, wait);
+            }
+
+            function runAct2() {
+                let s2 = 0;
+                function nextAct2() {
+                    if (s2 >= MCP_ACT2.length) {
+                        setTimeout(() => {
+                            clearTerminalLines(['tpLine6','tpLine7','tpLine8']);
+                            step = 0;
+                            clearTerminalLines(['tpLine1','tpLine2','tpLine3','tpLine4','tpLine5']);
+                            nextAct1();
+                        }, 3000);
+                        return;
+                    }
+                    const { el, text, delay } = MCP_ACT2[s2];
+                    const node = document.getElementById(el);
+                    setTimeout(() => {
+                        if (node) node.textContent = text;
+                        s2++;
+                        nextAct2();
+                    }, delay || 0);
+                }
+                nextAct2();
+            }
+
+            nextAct1();
+        }
+
+        const mcpTerminalPreview = document.getElementById('mcpTerminalPreview');
+        if (mcpTerminalPreview) {
+            const mcpTermObserver = new IntersectionObserver((entries) => {
+                entries.forEach((e) => {
+                    if (e.isIntersecting) {
+                        runMcpTerminalLoop();
+                        mcpTermObserver.disconnect();
+                    }
+                });
+            }, { threshold: 0.3 });
+            mcpTermObserver.observe(mcpTerminalPreview);
+        }
+
+        // motion
+        const showcaseCards = document.querySelectorAll('.showcase-card');
+        const showcaseObserver = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('playing');
+                } else if (!prefersReducedMotion) {
+                    e.target.classList.remove('playing');
+                }
+            });
+        }, { threshold: 0.25, rootMargin: '50px' });
+        showcaseCards.forEach((card) => showcaseObserver.observe(card));
+
+        // ре триггер
+        if (!prefersReducedMotion) {
+            showcaseCards.forEach((card) => {
+                if (card.dataset.showcase !== 'collapse') return;
+                setInterval(() => {
+                    if (!card.classList.contains('playing')) return;
+                    const wall = card.querySelector('.sc-collapse-wall');
+                    const result = card.querySelector('.sc-collapse-result');
+                    if (!wall || !result) return;
+                    wall.querySelectorAll('.sc-line').forEach((l) => {
+                        l.style.opacity = '0.5';
+                        l.style.animation = 'none';
+                        l.style.maxHeight = '';
+                        void l.offsetWidth;
+                        l.style.animation = '';
+                    });
+                    result.style.opacity = '0';
+                    result.style.animation = 'none';
+                    void result.offsetWidth;
+                    result.style.animation = '';
+                }, 3200);
+            });
+        }
+    </script>
+</body>
+</html>
