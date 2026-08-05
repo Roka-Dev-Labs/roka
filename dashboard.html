@@ -16,7 +16,7 @@
     <link rel="manifest" href="/site.webmanifest" />
 
     <script src="/js/config.js"></script>
-    <link href="https://api.fontshare.com/v2/css?f[]=plein@300&f[]=quilon@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <style>
         * {
             margin: 0;
@@ -25,27 +25,17 @@
         }
 
         :root {
-            --bg: #ffffff;
-            --text: #0a0a0a;
-            --text-muted: #666666;
-            --border: #e5e5e5;
-            --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.1);
-            --surface: #f5f5f5;
-        }
-
-        html.dark {
-            --bg: #0a0a0a;
-            --text: #ededed;
-            --text-muted: #888888;
-            --border: #262626;
-            --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.15);
-            --surface: #171717;
+            --bg: #09090b;
+            --text: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #3884ff;
+            --accent-glow: rgba(56, 132, 255, 0.18);
+            --surface: rgba(255, 255, 255, 0.03);
         }
 
         body {
-            font-family: 'Quilon', system-ui, sans-serif;
+            font-family: var(--font-sans);
             font-weight: 400;
             letter-spacing: -0.01em;
             background: var(--bg);
@@ -53,7 +43,7 @@
             min-height: 100vh;
         }
 
-        h1, h2, h3, h4, h5, h6 { font-family: 'Plein', system-ui, sans-serif; }
+        h1, h2, h3, h4, h5, h6 { font-family: var(--font-sans); font-weight: 600; letter-spacing: -0.02em; }
 
         .nav {
             display: flex;
@@ -84,7 +74,7 @@
             color: var(--text-muted);
             text-decoration: none;
             font-size: 0.875rem;
-            transition: color 0.2s;
+            transition: var(--transition-fast);
         }
 
         .nav-links a:hover {
@@ -97,19 +87,21 @@
         }
 
         .btn-secondary {
-            background: transparent;
+            background: var(--surface);
             border: 1px solid var(--border);
             color: var(--text-muted);
-            border-radius: 6px;
+            border-radius: 8px;
             padding: 0.5rem 1rem;
             cursor: pointer;
-            font-size: 0.875rem;
-            transition: all 0.2s;
+            font-family: var(--font-mono);
+            font-size: 0.8125rem;
+            transition: var(--transition-fast);
         }
 
         .btn-secondary:hover {
             color: var(--text);
-            border-color: var(--text);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.14);
         }
 
         .container {
@@ -137,8 +129,11 @@
             display: inline-block;
             padding: 0.25rem 0.75rem;
             border-radius: 9999px;
+            font-family: var(--font-mono);
             font-size: 0.75rem;
             font-weight: 500;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
             background: var(--accent);
             color: white;
         }
@@ -166,10 +161,20 @@
         }
 
         .stat-card {
+            position: relative;
             background: var(--surface);
             border-radius: 12px;
             padding: 1.5rem;
             border: 1px solid var(--border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: var(--transition-base);
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.14);
+            box-shadow: 0 0 60px -20px var(--glow-blue, rgba(56, 132, 255, 0.45));
         }
 
         .stat-card h3 {
@@ -237,21 +242,23 @@
         }
 
         .btn-primary {
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 6px;
+            background: #ffffff;
+            color: #09090b;
+            border: 1px solid #ffffff;
+            border-radius: 8px;
             padding: 0.75rem 1.5rem;
             cursor: pointer;
-            font-size: 0.875rem;
+            font-family: var(--font-mono);
+            font-size: 0.8125rem;
             font-weight: 500;
-            transition: all 0.2s;
+            transition: var(--transition-fast);
             text-decoration: none;
             display: inline-block;
         }
 
         .btn-primary:hover {
-            opacity: 0.9;
+            background: rgba(255, 255, 255, 0.88);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15), 0 8px 24px -8px var(--glow-blue, rgba(56, 132, 255, 0.45));
         }
 
         .hidden {
@@ -285,9 +292,6 @@
             <a href="/dashboard.html" class="active">Dashboard</a>
             <a href="/dashboard/api-keys.html">API Keys</a>
             <a href="/dashboard/upgrade.html">Upgrade</a>
-            <button id="themeToggle" type="button" class="btn-secondary" aria-label="Toggle theme">
-                <span id="themeLabel">Light</span>
-            </button>
             <button id="logoutBtn" class="btn-secondary">Logout</button>
         </div>
     </nav>
@@ -334,28 +338,6 @@
     </div>
 
     <script>
-        const html = document.documentElement;
-        const themeToggle = document.getElementById('themeToggle');
-        const themeLabel = document.getElementById('themeLabel');
-
-        function applyTheme(theme) {
-            if (theme === 'dark') {
-                html.classList.add('dark');
-            } else {
-                html.classList.remove('dark');
-            }
-            themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
-            localStorage.setItem('roka-theme', theme);
-        }
-
-        const savedTheme = localStorage.getItem('roka-theme') || 'light';
-        applyTheme(savedTheme);
-
-        themeToggle.addEventListener('click', () => {
-            const newTheme = html.classList.contains('dark') ? 'light' : 'dark';
-            applyTheme(newTheme);
-        });
-
         const API_BASE = window.ROKA_API_BASE || 'https://api.roka-prune.com';
         let accessToken = localStorage.getItem('roka_access_token');
 

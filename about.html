@@ -14,31 +14,17 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="Roka" />
     <link rel="manifest" href="/site.webmanifest" />
-    <link href="https://api.fontshare.com/v2/css?f[]=plein@300&f[]=quilon@400&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="style.css">
+
     <style>
         :root {
-            --bg: #ffffff;
-            --text: #111111;
-            --text-muted: #666666;
-            --text-faint: #999999;
-            --border: #e5e5e5;
-            --border-strong: #d4d4d4;
-            --accent-glow: rgba(0, 0, 0, 0.05);
-            --success: #10b981;
-            --danger: #ef4444;
-        }
-
-        html.dark {
-            --bg: #0a0a0a;
-            --text: #f5f5f5;
-            --text-muted: #a3a3a3;
-            --text-faint: #737373;
-            --border: #262626;
-            --border-strong: #404040;
-            --accent-glow: rgba(255, 255, 255, 0.05);
-            --success: #22c55e;
-            --danger: #f87171;
+            --bg: #09090b;
+            --text: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --text-faint: rgba(255, 255, 255, 0.38);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.14);
+            --accent-glow: rgba(56, 132, 255, 0.18);
         }
 
         * {
@@ -48,17 +34,16 @@
         }
 
         body {
-            font-family: 'Quilon', system-ui, sans-serif;
+            font-family: var(--font-sans);
             font-size: 1.125rem;
             font-weight: 400;
             letter-spacing: -0.01em;
             background: var(--bg);
             color: var(--text);
             line-height: 1.65;
-            transition: background 0.3s, color 0.3s;
         }
 
-        h1, h2, h3, h4, h5, h6 { font-family: 'Plein', system-ui, sans-serif; font-weight: 400; letter-spacing: -0.03em; }
+        h1, h2, h3, h4, h5, h6 { font-family: var(--font-sans); font-weight: 600; letter-spacing: -0.02em; }
 
         .container {
             max-width: 800px;
@@ -86,10 +71,19 @@
         }
 
         .surface {
-            background: var(--bg);
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 2rem;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: var(--transition-base);
+        }
+
+        .surface:hover {
+            border-color: var(--border-strong);
+            box-shadow: 0 0 60px -20px var(--glow-blue);
         }
 
         .nav {
@@ -106,7 +100,7 @@
             text-decoration: none;
             margin-right: 1.5rem;
             font-size: 0.875rem;
-            transition: color 0.2s;
+            transition: var(--transition-fast);
         }
 
         .nav a:hover {
@@ -160,7 +154,6 @@
             <img src="/favicon-32x32.png" alt="" class="logo-animate" width="28" height="28">
             Roka
         </a>
-        <button id="themeToggle" type="button" style="background: transparent; border: 1px solid var(--border); color: var(--text-muted); border-radius: 6px; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.875rem;"><span id="themeLabel">Light</span></button>
     </nav>
 
     <canvas id="particles"></canvas>
@@ -185,23 +178,6 @@
     </div>
 
     <script>
-        const html = document.documentElement;
-        const themeToggle = document.getElementById('themeToggle');
-        const themeLabel = document.getElementById('themeLabel');
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        
-        if (savedTheme === 'dark') {
-            html.classList.add('dark');
-            themeLabel.textContent = 'Dark';
-        }
-
-        themeToggle.addEventListener('click', () => {
-            html.classList.toggle('dark');
-            const newTheme = html.classList.contains('dark') ? 'dark' : 'light';
-            localStorage.setItem('theme', newTheme);
-            themeLabel.textContent = newTheme === 'dark' ? 'Dark' : 'Light';
-        });
-
         const canvas = document.getElementById('particles');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -231,10 +207,9 @@
             }
 
             draw() {
-                const isDark = html.classList.contains('dark');
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.3)';
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
                 ctx.fill();
             }
         }
@@ -247,7 +222,6 @@
         }
 
         function drawConnections() {
-            const isDark = html.classList.contains('dark');
             for (let i = 0; i < particles.length; i++) {
                 for (let j = i + 1; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x;
@@ -259,7 +233,7 @@
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = isDark ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`;
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
                         ctx.lineWidth = 1;
                         ctx.stroke();
                     }
