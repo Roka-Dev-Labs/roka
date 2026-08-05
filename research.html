@@ -104,6 +104,12 @@
         h2 { margin-top: 3.5rem; margin-bottom: 1rem; }
         h3 { margin-top: 2.25rem; margin-bottom: 0.75rem; }
 
+        .inline-code {
+            font-family: var(--font-mono);
+            font-size: 1em;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
         .mono, code, pre, kbd, samp, .eyebrow, .bench-bar-value, .bench-axis-y, .bench-axis-x {
             font-family: var(--font-mono);
             font-weight: 400;
@@ -151,7 +157,7 @@
         .prose ul li::marker { color: var(--text-faint); }
         .prose h2 { font-size: 1.55rem; }
         .prose h3 { font-size: 1.15rem; color: var(--text); }
-        .prose code { font-size: 0.86em; padding: 1px 5px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 3px; color: var(--text); }
+        .prose code { font-size: 1em; padding: 2px 6px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 3px; color: var(--text); font-weight: 500; }
 
         /* Table of contents */
         .toc a {
@@ -742,7 +748,7 @@
                             <tr>
                                 <th></th>
                                 <th class="text-right">Without Roka<br><span class="mono" style="text-transform:none;letter-spacing:0;color:var(--text-faint);font-size:10px">naive tail -c 4000</span></th>
-                                <th class="text-right">With Roka<br><span class="mono" style="text-transform:none;letter-spacing:0;color:var(--text-faint);font-size:10px">prune_file</span></th>
+                                <th class="text-right">With Roka<br><span class="mono" style="text-transform:none;letter-spacing:0;color:var(--text-faint);font-size:0.95em;font-weight:500">prune_file</span></th>
                             </tr>
                         </thead>
                         <tbody>

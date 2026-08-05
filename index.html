@@ -121,6 +121,12 @@
         }
 
         .mono { font-family: var(--font-mono); font-weight: 400; }
+        .inline-code {
+            font-family: var(--font-mono);
+            font-size: 1em;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
 
         /* Terminal / code / agent UI — same mono stack as trynia.ai */
         .mock-terminal,
@@ -1161,7 +1167,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            font-size: 13.5px;
+            font-size: 14px;
             font-weight: 500;
             color: var(--text);
             transition: color 0.35s ease;
@@ -1513,7 +1519,7 @@
 
             <!-- Terminal mode: CLI installer -->
             <div class="mode-panel active" data-mode-panel="terminal">
-                <p class="text-xs text-muted mb-3">Install the local <span class="mono text-[11px]" style="color:var(--text)">roka</span> CLI — detects OS and architecture automatically.</p>
+                <p class="text-xs text-muted mb-3">Install the local <span class="mono inline-code" style="color:var(--text)">roka</span> CLI — detects OS and architecture automatically.</p>
                 <button type="button" class="cmd-btn active" data-copy="curl -fsSL https://install.roka-prune.com | bash" aria-label="Copy command">
                     <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>curl -fsSL https://install.roka-prune.com | bash</span>
                     <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
@@ -1942,7 +1948,7 @@
             <div class="feature-card surface rounded-xl p-5">
                 <div class="mono text-xs text-faint mb-2">06</div>
                 <h3 class="font-semibold mb-2">API & CLI</h3>
-                <p class="text-sm text-muted leading-relaxed">Pipe stdin, point at a file, or POST to <span class="mono text-xs">/api/prune</span>. Same pipeline everywhere — stdout is always the pruned context.</p>
+                <p class="text-sm text-muted leading-relaxed">Pipe stdin, point at a file, or POST to <span class="mono inline-code">/api/prune</span>. Same pipeline everywhere — stdout is always the pruned context.</p>
             </div>
             <div class="feature-card surface rounded-xl p-5">
                 <div class="mono text-xs text-faint mb-2">07</div>
@@ -2003,7 +2009,7 @@
             <span class="eyebrow">Real benchmark — LogHub corpus</span>
             <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-3 mb-3">Tested on real production logs, not a cherry-picked demo</h2>
             <p class="text-muted text-sm max-w-2xl mx-auto">
-                We ran the exact <span class="mono text-xs">prune_file</span> / <span class="mono text-xs">prune_logs</span> tools shipped in Roka's MCP server against
+                We ran the exact <span class="mono inline-code">prune_file</span> / <span class="mono inline-code">prune_logs</span> tools shipped in Roka's MCP server against
                 <a href="https://github.com/logpai/loghub" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-[var(--text)]">LogHub</a> —
                 the standard academic corpus used in log-parsing research. 15 real systems, one 4,000-character budget, zero per-file tuning.
             </p>
@@ -2123,16 +2129,16 @@
                 <span class="eyebrow">Methodology</span>
                 <ul class="text-sm text-muted mt-4 space-y-3">
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Corpus: <span class="text-[var(--text)]">LogHub</span> — 15 real system/production log sources, ~2,000 raw lines each (30,001 lines / 4.15M characters total).</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Same tool, same rules, no per-file tuning: MCP <span class="mono text-xs">prune_file</span>, default 4,000-character budget.</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Rule: collapse consecutive duplicate lines, force-keep lines matching <span class="mono text-xs">ERROR|FATAL|CRITICAL|Exception|Traceback|panic</span>.</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Same tool, same rules, no per-file tuning: MCP <span class="mono inline-code">prune_file</span>, default 4,000-character budget.</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Rule: collapse consecutive duplicate lines, force-keep lines matching <span class="mono inline-code">ERROR|FATAL|CRITICAL|Exception|Traceback|panic</span>.</li>
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Verified by hand: for every source that contained a real error, at least one verbatim error line survived into the final output.</li>
                 </ul>
                 <div class="border-t border-[var(--border)] my-5"></div>
                 <span class="eyebrow">Live test — Without Roka vs. With Roka</span>
                 <p class="text-xs text-muted mt-3 leading-relaxed">
-                    Same file, same 4,000-character budget, two strategies. <span class="mono text-[11px] text-[var(--text)]">Testing/Thunderbird_2k.log</span>
+                    Same file, same 4,000-character budget, two strategies. <span class="mono inline-code" style="color:var(--text)">Testing/Thunderbird_2k.log</span>
                     — 2,000 lines, 323,193 characters. The real failure —
-                    <span class="mono text-[11px] text-[var(--text)]">sshd: Bind to port 22 ... Address already in use</span>
+                    <span class="mono inline-code" style="color:var(--text)">sshd: Bind to port 22 ... Address already in use</span>
                     — sits 62% into the file, squarely "lost in the middle."
                 </p>
                 <div class="mt-4 rounded-lg overflow-hidden border border-[var(--border)]">
@@ -2141,7 +2147,7 @@
                             <tr class="text-faint" style="background:var(--bg-elevated)">
                                 <th class="text-left font-normal px-3 py-2"></th>
                                 <th class="text-right font-normal px-3 py-2">Without Roka<br><span class="text-[10px]">naive tail -c 4000</span></th>
-                                <th class="text-right font-normal px-3 py-2">With Roka<br><span class="mono text-[10px]">prune_file</span></th>
+                                <th class="text-right font-normal px-3 py-2">With Roka<br><span class="mono inline-code">prune_file</span></th>
                             </tr>
                         </thead>
                         <tbody class="text-muted">
@@ -2169,8 +2175,8 @@
                     </table>
                 </div>
                 <p class="text-xs text-muted mt-3 leading-relaxed">
-                    Same budget, same token cost — but the naive tail only carries <span class="mono text-[11px]">ntpd: synchronized</span> and
-                    <span class="mono text-[11px]">gmetad: data_thread()</span> monitoring noise. Verified live via the MCP <span class="mono text-[11px]">prune_file</span> tool, not simulated.
+                    Same budget, same token cost — but the naive tail only carries <span class="mono inline-code">ntpd: synchronized</span> and
+                    <span class="mono inline-code">gmetad: data_thread()</span> monitoring noise. Verified live via the MCP <span class="mono inline-code">prune_file</span> tool, not simulated.
                 </p>
             </div>
         </div>
@@ -2643,7 +2649,7 @@
             <!-- Bottom bar -->
             <div class="border-t pt-6 flex flex-col sm:flex-row justify-between items-center gap-3" style="border-color:var(--border)">
                 <span class="text-xs" style="color:var(--text-faint)">© 2026 Roka Labs. All rights reserved.</span>
-                <span class="mono text-[10px]" style="color:var(--text-faint)">BM25 · semantic rank · tiktoken · provenance headers</span>
+                <span class="mono inline-code" style="color:var(--text-faint)">BM25 · semantic rank · tiktoken · provenance headers</span>
             </div>
         </div>
     </footer>

@@ -124,6 +124,12 @@
         }
 
         .mono { font-family: var(--font-mono); }
+        .inline-code {
+            font-family: var(--font-mono);
+            font-size: 1em;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
 
         .surface {
             background: var(--bg-card);
@@ -225,7 +231,7 @@
         .cmd-copy:hover { color: var(--text); background: var(--accent-glow); }
         .cmd-copy.copied { color: var(--success); border-color: var(--success); }
 
-        /* Terminal / AI Agent panel — same language as homepage */
+        /* Install / MCP panels */
         .agent-panel {
             width: 100%;
             max-width: 42rem;
@@ -246,34 +252,6 @@
             letter-spacing: 0.14em;
             color: var(--text-faint);
         }
-        .mode-tabs {
-            display: inline-flex;
-            gap: 2px;
-            padding: 3px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--bg-elevated);
-        }
-        .mode-tab {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            font-weight: 500;
-            padding: 0.4rem 0.75rem;
-            color: var(--text-faint);
-            background: none;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: color 0.15s ease, background-color 0.15s ease;
-        }
-        .mode-tab svg { flex-shrink: 0; }
-        .mode-tab:hover { color: var(--text-muted); }
-        .mode-tab.active { color: var(--bg); background: var(--text); }
-        .mode-panel { display: none; }
-        .mode-panel.active { display: block; }
         .agent-tabs {
             display: inline-flex;
             flex-wrap: wrap;
@@ -328,7 +306,7 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             font-family: var(--font-mono);
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
             color: var(--text);
         }
@@ -351,8 +329,9 @@
             display: flex;
             gap: 0.65rem;
             align-items: flex-start;
-            font-size: 0.875rem;
+            font-size: 0.95rem;
             color: var(--text-muted);
+            line-height: 1.55;
         }
         .mcp-feature-list li span.tick {
             color: var(--success);
@@ -562,108 +541,67 @@
             <p class="text-center text-muted text-xs mt-4 max-w-md mx-auto mono">10-line excerpt of a 12,847-line file &mdash; Roka prunes the same way at full scale.</p>
         </section>
 
-        <!-- Install: Terminal | AI Agent (same pills as homepage) -->
+        <!-- Install CLI -->
         <section class="mb-16" id="install" aria-labelledby="install-heading">
             <h2 id="install-heading" class="text-2xl font-semibold mb-3 text-center">Install Roka</h2>
-            <p class="text-muted text-sm text-center mb-8 max-w-xl mx-auto">Pick Terminal for the local CLI, or AI Agent to wire Roka into Claude Code, Cursor, Codex, or Copilot in one command.</p>
+            <p class="text-muted text-sm text-center mb-8 max-w-xl mx-auto">One command installs the local CLI. Detects your OS and architecture automatically — no sudo required.</p>
 
             <div class="agent-panel surface rounded-xl p-5 sm:p-6">
                 <div class="agent-panel-top">
                     <span class="agent-label">INSTALL ROKA</span>
-                    <div class="mode-tabs" role="tablist" id="modeTabs">
-                        <button type="button" class="mode-tab active" data-mode="terminal" role="tab" aria-selected="true">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-                            Terminal
-                        </button>
-                        <button type="button" class="mode-tab" data-mode="agent" role="tab" aria-selected="false">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16.01"/><line x1="16" y1="16" x2="16" y2="16.01"/></svg>
-                            AI Agent
-                        </button>
-                    </div>
                 </div>
 
-                <!-- Terminal mode: CLI installer -->
-                <div class="mode-panel active" data-mode-panel="terminal">
-                    <p class="text-muted text-xs mb-3">Detects OS + architecture and installs the <span class="mono text-[11px]" style="color:var(--text)">roka</span> binary. No sudo required.</p>
-                    <button type="button" class="cmd-btn active" data-copy="curl -fsSL https://install.roka-prune.com | bash" aria-label="Copy install command">
-                        <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>curl -fsSL https://install.roka-prune.com | bash</span>
-                        <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
-                    </button>
+                <p class="text-muted text-sm mb-3">Installs the <span class="mono inline-code" style="color:var(--text)">roka</span> binary on your PATH.</p>
+                <button type="button" class="cmd-btn active" data-copy="curl -fsSL https://install.roka-prune.com | bash" aria-label="Copy install command">
+                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>curl -fsSL https://install.roka-prune.com | bash</span>
+                    <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
+                </button>
 
-                    <div class="mt-5 space-y-4">
-                        <div class="terminal-window terminal-mini" data-cmd="curl -fsSL https://install.roka-prune.com | bash" data-output="  ➜  Detecting operating system...&#10;  ✓  OS: darwin&#10;  ➜  Detecting processor architecture...&#10;  ✓  Architecture: arm64&#10;  ➜  Fetching latest release from GitHub...&#10;  ✓  Latest version: v1.0.0&#10;  ➜  Downloading binary...&#10;  ✓  Download complete&#10;  ✓  Installed (no sudo required)&#10;  ✓  Installation complete!">
-                            <div class="terminal-bar">
-                                <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-                                <div class="terminal-title">terminal</div>
-                                <button class="mini-replay" type="button">Replay</button>
-                                <button class="cmd-copy" type="button" data-copy="curl -fsSL https://install.roka-prune.com | bash" aria-label="Copy command">
-                                    <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                                </button>
-                            </div>
-                            <div class="terminal-body">
-                                <div class="cmd-line"><span class="prompt">$</span><span class="mini-cmd"></span><span class="caret"></span></div>
-                                <pre class="mini-output mono"></pre>
-                            </div>
+                <div class="mt-5 space-y-4">
+                    <div class="terminal-window terminal-mini" data-cmd="curl -fsSL https://install.roka-prune.com | bash" data-output="  ➜  Detecting operating system...&#10;  ✓  OS: darwin&#10;  ➜  Detecting processor architecture...&#10;  ✓  Architecture: arm64&#10;  ➜  Fetching latest release from GitHub...&#10;  ✓  Latest version: v1.0.0&#10;  ➜  Downloading binary...&#10;  ✓  Download complete&#10;  ✓  Installed (no sudo required)&#10;  ✓  Installation complete!">
+                        <div class="terminal-bar">
+                            <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                            <div class="terminal-title">terminal</div>
+                            <button class="mini-replay" type="button">Replay</button>
+                            <button class="cmd-copy" type="button" data-copy="curl -fsSL https://install.roka-prune.com | bash" aria-label="Copy command">
+                                <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            </button>
                         </div>
-
-                        <div class="terminal-window terminal-mini" data-cmd="roka --version" data-output="roka 1.4.2 (darwin/arm64)">
-                            <div class="terminal-bar">
-                                <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-                                <div class="terminal-title">verify</div>
-                                <button class="mini-replay" type="button">Replay</button>
-                                <button class="cmd-copy" type="button" data-copy="roka --version" aria-label="Copy command">
-                                    <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                                </button>
-                            </div>
-                            <div class="terminal-body">
-                                <div class="cmd-line"><span class="prompt">$</span><span class="mini-cmd"></span><span class="caret"></span></div>
-                                <pre class="mini-output mono"></pre>
-                            </div>
-                        </div>
-
-                        <div class="terminal-window terminal-mini" data-cmd='cat your-log.log | roka prune --query "what broke" --budget 8000' data-output="&#x2713; kept 12 of 4,209 lines &middot; 2,140 tokens">
-                            <div class="terminal-bar">
-                                <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-                                <div class="terminal-title">prune</div>
-                                <button class="mini-replay" type="button">Replay</button>
-                                <button class="cmd-copy" type="button" data-copy='cat your-log.log | roka prune --query "what broke" --budget 8000' aria-label="Copy command">
-                                    <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                                </button>
-                            </div>
-                            <div class="terminal-body">
-                                <div class="cmd-line"><span class="prompt">$</span><span class="mini-cmd"></span><span class="caret"></span></div>
-                                <pre class="mini-output mono"></pre>
-                            </div>
+                        <div class="terminal-body">
+                            <div class="cmd-line"><span class="prompt">$</span><span class="mini-cmd"></span><span class="caret"></span></div>
+                            <pre class="mini-output mono"></pre>
                         </div>
                     </div>
-                </div>
 
-                <!-- AI Agent mode: connect MCP -->
-                <div class="mode-panel" data-mode-panel="agent">
-                    <p class="text-muted text-xs mb-3">One command registers Roka as an MCP server. Your agent can then call <span class="mono text-[11px]" style="color:var(--text)">prune_file</span> and <span class="mono text-[11px]" style="color:var(--text)">prune_logs</span> directly.</p>
-                    <div class="agent-tabs" role="tablist" id="installAgentTabs">
-                        <button type="button" class="agent-tab active" data-agent="claude" role="tab">Claude Code</button>
-                        <button type="button" class="agent-tab" data-agent="cursor" role="tab">Cursor</button>
-                        <button type="button" class="agent-tab" data-agent="codex" role="tab">Codex</button>
-                        <button type="button" class="agent-tab" data-agent="copilot" role="tab">Copilot</button>
+                    <div class="terminal-window terminal-mini" data-cmd="roka --version" data-output="roka 1.4.2 (darwin/arm64)">
+                        <div class="terminal-bar">
+                            <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                            <div class="terminal-title">verify</div>
+                            <button class="mini-replay" type="button">Replay</button>
+                            <button class="cmd-copy" type="button" data-copy="roka --version" aria-label="Copy command">
+                                <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            </button>
+                        </div>
+                        <div class="terminal-body">
+                            <div class="cmd-line"><span class="prompt">$</span><span class="mini-cmd"></span><span class="caret"></span></div>
+                            <pre class="mini-output mono"></pre>
+                        </div>
                     </div>
-                    <button type="button" class="cmd-btn active" data-agent-panel="claude" data-copy="npx roka-mcp connect --agent claude-code" aria-label="Copy command">
-                        <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent claude-code</span>
-                        <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
-                    </button>
-                    <button type="button" class="cmd-btn" data-agent-panel="cursor" data-copy="npx roka-mcp connect --agent cursor" aria-label="Copy command">
-                        <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent cursor</span>
-                        <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
-                    </button>
-                    <button type="button" class="cmd-btn" data-agent-panel="codex" data-copy="npx roka-mcp connect --agent codex" aria-label="Copy command">
-                        <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent codex</span>
-                        <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
-                    </button>
-                    <button type="button" class="cmd-btn" data-agent-panel="copilot" data-copy="npx roka-mcp connect --agent copilot" aria-label="Copy command">
-                        <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent copilot</span>
-                        <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
-                    </button>
-                    <p class="text-faint text-xs mt-3">Restart your IDE after connect. Pro API key (optional): <span class="mono">--api-key rk_live_...</span> or <span class="mono">ROKA_API_KEY</span>.</p>
+
+                    <div class="terminal-window terminal-mini" data-cmd='cat your-log.log | roka prune --query "what broke" --budget 8000' data-output="&#x2713; kept 12 of 4,209 lines &middot; 2,140 tokens">
+                        <div class="terminal-bar">
+                            <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                            <div class="terminal-title">prune</div>
+                            <button class="mini-replay" type="button">Replay</button>
+                            <button class="cmd-copy" type="button" data-copy='cat your-log.log | roka prune --query "what broke" --budget 8000' aria-label="Copy command">
+                                <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2 2v1"/></svg>
+                            </button>
+                        </div>
+                        <div class="terminal-body">
+                            <div class="cmd-line"><span class="prompt">$</span><span class="mini-cmd"></span><span class="caret"></span></div>
+                            <pre class="mini-output mono"></pre>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -700,14 +638,14 @@
                 </button>
                 <button type="button" class="cmd-btn" data-mcp-panel="copilot" data-copy="npx roka-mcp connect --agent copilot" aria-label="Copy command">
                     <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent copilot</span>
-                    <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
+                    <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2 2v1"/></svg></span>
                 </button>
 
                 <ul class="mcp-feature-list list-none p-0">
                     <li><span class="tick">→</span><span>Writes the MCP config for your agent automatically (Claude Code, Cursor, Codex, Copilot).</span></li>
-                    <li><span class="tick">→</span><span>Exposes <span class="mono text-[11px]" style="color:var(--text)">prune_file</span>, <span class="mono text-[11px]" style="color:var(--text)">prune_logs</span>, and <span class="mono text-[11px]" style="color:var(--text)">prune_tail</span> as tools.</span></li>
-                    <li><span class="tick">→</span><span>Optional Pro key: <span class="mono text-[11px]" style="color:var(--text)">npx roka-mcp connect --agent cursor --api-key rk_live_...</span></span></li>
-                    <li><span class="tick">→</span><span>Watch mode: <span class="mono text-[11px]" style="color:var(--text)">npx roka-mcp watch ./logs/dev.log --on-crash</span></span></li>
+                    <li><span class="tick">→</span><span>Exposes <span class="mono inline-code" style="color:var(--text)">prune_file</span>, <span class="mono inline-code" style="color:var(--text)">prune_logs</span>, and <span class="mono inline-code" style="color:var(--text)">prune_tail</span> as tools.</span></li>
+                    <li><span class="tick">→</span><span>Optional Pro key: <span class="mono inline-code" style="color:var(--text)">npx roka-mcp connect --agent cursor --api-key rk_live_...</span></span></li>
+                    <li><span class="tick">→</span><span>Watch mode: <span class="mono inline-code" style="color:var(--text)">npx roka-mcp watch ./logs/dev.log --on-crash</span></span></li>
                 </ul>
             </div>
         </section>
@@ -797,32 +735,6 @@
 
         document.querySelectorAll('.cmd-btn').forEach((btn) => {
             btn.addEventListener('click', () => flashCopied(btn));
-        });
-
-        // ---------- Terminal / AI Agent mode switch ----------
-        document.querySelectorAll('.mode-tab').forEach((tab) => {
-            tab.addEventListener('click', () => {
-                const mode = tab.dataset.mode;
-                document.querySelectorAll('.mode-tab').forEach((t) => {
-                    const on = t === tab;
-                    t.classList.toggle('active', on);
-                    t.setAttribute('aria-selected', String(on));
-                });
-                document.querySelectorAll('.mode-panel').forEach((p) => {
-                    p.classList.toggle('active', p.dataset.modePanel === mode);
-                });
-            });
-        });
-
-        // Install panel agent tabs
-        document.querySelectorAll('#installAgentTabs .agent-tab').forEach((tab) => {
-            tab.addEventListener('click', () => {
-                const agent = tab.dataset.agent;
-                document.querySelectorAll('#installAgentTabs .agent-tab').forEach((t) => t.classList.toggle('active', t === tab));
-                document.querySelectorAll('.mode-panel[data-mode-panel="agent"] .cmd-btn[data-agent-panel]').forEach((p) => {
-                    p.classList.toggle('active', p.dataset.agentPanel === agent);
-                });
-            });
         });
 
         // MCP section agent tabs
