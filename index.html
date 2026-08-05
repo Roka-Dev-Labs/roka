@@ -1451,32 +1451,14 @@
             position: relative;
             max-width: 56rem;
             margin: 0 auto;
-            border: 1px solid #27272a;
-            background: #0a0a0a;
+            border: 1px solid var(--border-strong);
+            background: var(--bg-card);
             padding: 4.5rem 1.5rem 3.25rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-        }
-        [data-theme="light"] .cta-terminal {
-            background: #111111;
-            border-color: #27272a;
-        }
-        .cta-terminal-legend {
-            position: absolute;
-            top: 0;
-            left: 1rem;
-            transform: translateY(-50%);
-            padding: 0 0.55rem;
-            background: #0a0a0a;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            letter-spacing: 0.04em;
-            color: #71717a;
-        }
-        [data-theme="light"] .cta-terminal-legend {
-            background: #111111;
+            transition: background 0.35s ease, border-color 0.35s ease;
         }
         .cta-terminal-title {
             font-family: var(--font-mono);
@@ -1484,10 +1466,11 @@
             font-weight: 500;
             letter-spacing: 0.06em;
             text-transform: uppercase;
-            color: #fafafa;
+            color: var(--text);
             margin: 0 0 1.75rem;
             line-height: 1.45;
             max-width: 36rem;
+            transition: color 0.35s ease;
         }
         .cta-terminal-btn {
             display: inline-flex;
@@ -1497,15 +1480,15 @@
             font-size: 13px;
             font-weight: 500;
             letter-spacing: 0.02em;
-            color: #09090b;
-            background: #fafafa;
-            border: 1px solid #fafafa;
+            color: var(--btn-primary-text);
+            background: var(--btn-primary-bg);
+            border: 1px solid var(--btn-primary-bg);
             border-radius: 2px;
             padding: 0.7rem 1.35rem;
             text-decoration: none;
             margin-left: auto;
             margin-right: auto;
-            transition: opacity 0.15s ease, transform 0.15s ease;
+            transition: opacity 0.15s ease, transform 0.15s ease, background 0.35s ease, color 0.35s ease, border-color 0.35s ease;
         }
         .cta-terminal-btn:hover {
             opacity: 0.92;
@@ -1529,7 +1512,7 @@
             -webkit-tap-highlight-color: transparent;
         }
         .cta-terminal-kev-btn:focus-visible {
-            outline: 2px solid #a1a1aa;
+            outline: 2px solid var(--text-faint);
             outline-offset: 3px;
         }
         .cta-terminal-kev img {
@@ -1538,7 +1521,7 @@
             border-radius: 9999px;
             object-fit: cover;
             object-position: center 12%;
-            border: 1px solid #3f3f46;
+            border: 1px solid var(--border-strong);
             flex-shrink: 0;
             transition: width 0.35s cubic-bezier(.34,1.4,.64,1),
                         height 0.35s cubic-bezier(.34,1.4,.64,1),
@@ -1548,13 +1531,14 @@
         .cta-terminal-kev-btn.is-big img {
             width: 120px;
             height: 120px;
-            border-color: #71717a;
+            border-color: var(--text-faint);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
         }
         .cta-terminal-kev span {
             font-family: var(--font-mono);
             font-size: 12px;
-            color: #6b7280;
+            color: var(--text-faint);
+            transition: color 0.35s ease;
         }
     </style>
 </head>
@@ -2675,8 +2659,7 @@
     <!-- Terminal CTA -->
     <section class="max-w-6xl mx-auto px-5 py-20 reveal" aria-labelledby="cta-heading">
         <div class="cta-terminal">
-            <span class="cta-terminal-legend">Get Started</span>
-            <h2 id="cta-heading" class="cta-terminal-title">Try Roka now (pssst: it's free).</h2>
+            <h2 id="cta-heading" class="cta-terminal-title">Try Roka now (it's free).</h2>
             <a href="/install.html" class="cta-terminal-btn">Start now</a>
             <div class="cta-terminal-kev">
                 <button type="button" class="cta-terminal-kev-btn" id="kevAvatarBtn" aria-label="Enlarge Kev" aria-pressed="false" title="Kev approves">
