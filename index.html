@@ -800,8 +800,7 @@
             .sc-collapse-result,
             .sc-install-out { opacity: 1 !important; }
             .terminal-preview .tp-cursor { display: none; }
-            .story-viz canvas { display: none; }
-            .story-viz-fallback { display: block !important; }
+            .mt-cursor { display: none; }
             .story-viz-label { display: none; }
         }
 
@@ -959,16 +958,22 @@
         .cmd-row + .cmd-row { border-top: 1px solid var(--border); }
         .cmd-copy {
             flex-shrink: 0;
-            padding: 4px 8px;
-            font-size: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            padding: 0;
             border: 1px solid var(--border);
-            border-radius: 4px;
+            border-radius: 6px;
             background: transparent;
             color: var(--text-faint);
             cursor: pointer;
-            transition: color 0.15s, border-color 0.15s;
+            transition: color 0.15s, border-color 0.15s, background 0.15s;
         }
-        .cmd-copy:hover { color: var(--text); border-color: var(--border-strong); }
+        .cmd-copy .copy-icon { width: 14px; height: 14px; display: block; }
+        .cmd-copy:hover { color: var(--text); border-color: var(--border-strong); background: var(--bg-elevated); }
+        .cmd-copy.copied { color: var(--term-green); border-color: var(--term-green); }
 
         .demo-wrap {
             margin-top: 1.25rem;
@@ -1060,20 +1065,6 @@
             aspect-ratio: 16 / 10;
             min-height: 220px;
         }
-        .story-viz canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-        .story-viz-fallback {
-            display: none;
-            padding: 1.25rem;
-            font-family: 'Geist Mono', monospace;
-            font-size: 11px;
-            line-height: 1.6;
-            color: var(--text-muted);
-            min-height: 220px;
-        }
         .story-viz-label {
             position: absolute;
             bottom: 12px;
@@ -1095,6 +1086,37 @@
         }
         .story-viz-badge.error { color: var(--danger); border-color: rgba(248,113,113,0.35); }
         .story-viz-badge.ok { color: var(--term-ok); border-color: rgba(52,211,153,0.35); }
+
+        /* MagicUI-style sequential terminal animation (story section) */
+        .mt-terminal {
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            line-height: 1.75;
+            padding: 1.25rem;
+            min-height: 220px;
+            color: var(--text-muted);
+        }
+        .mt-line { min-height: 1.6em; }
+        .mt-terminal.mt-js .mt-line {
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .mt-terminal.mt-js .mt-line.mt-visible { opacity: 1; transform: translateY(0); }
+        .mt-cursor {
+            display: inline-block;
+            width: 6px;
+            height: 12px;
+            background: currentColor;
+            margin-left: 2px;
+            vertical-align: text-bottom;
+            animation: mt-blink 1s step-end infinite;
+        }
+        @keyframes mt-blink { 50% { opacity: 0; } }
+        .mt-dim { color: var(--text-faint); }
+        .mt-ok { color: var(--term-ok); }
+        .mt-err { color: var(--danger); }
+        .mt-warn { color: #fbbf24; }
 
         /* Benchmark chart */
         .bench-metric-card { padding: 1.75rem 1.25rem; }
@@ -1130,6 +1152,14 @@
             align-items: flex-end;
             cursor: pointer;
             position: relative;
+            border-radius: 4px;
+            transition: background 0.15s ease;
+        }
+        .bench-bar-col:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+        [data-theme="light"] .bench-bar-col:hover {
+            background: rgba(0, 0, 0, 0.03);
         }
         .bench-bar {
             width: 100%;
@@ -1142,7 +1172,7 @@
         .bench-bar-col:hover .bench-bar,
         .bench-bar-col.active .bench-bar {
             opacity: 1;
-            background: var(--term-green);
+            background: var(--accent);
         }
         .bench-bar-col:hover .bench-bar-value,
         .bench-bar-col.active .bench-bar-value {
@@ -1287,36 +1317,36 @@
             <div class="cmd-block active" data-agent-panel="claude">
                 <div class="cmd-row">
                     <code>$ npx roka-mcp connect --agent claude-code</code>
-                    <button type="button" class="cmd-copy" data-copy="npx roka-mcp connect --agent claude-code">copy</button>
+                    <button type="button" class="cmd-copy" data-copy="npx roka-mcp connect --agent claude-code" aria-label="Copy"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
                 </div>
                 <div class="cmd-row">
                     <code class="text-faint"># or pipe a log directly</code>
                 </div>
                 <div class="cmd-row">
                     <code>$ cat deploy.log | roka prune --query "what broke" --budget 8000</code>
-                    <button type="button" class="cmd-copy" data-copy='cat deploy.log | roka prune --query "what broke" --budget 8000'>copy</button>
+                    <button type="button" class="cmd-copy" data-copy='cat deploy.log | roka prune --query "what broke" --budget 8000' aria-label="Copy"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
                 </div>
             </div>
             <div class="cmd-block" data-agent-panel="cursor">
                 <div class="cmd-row">
                     <code>$ npx roka-mcp connect --agent cursor</code>
-                    <button type="button" class="cmd-copy" data-copy="npx roka-mcp connect --agent cursor">copy</button>
+                    <button type="button" class="cmd-copy" data-copy="npx roka-mcp connect --agent cursor" aria-label="Copy"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
                 </div>
                 <div class="cmd-row">
                     <code>$ npx roka-mcp watch ./logs/dev.log --on-crash</code>
-                    <button type="button" class="cmd-copy" data-copy="npx roka-mcp watch ./logs/dev.log --on-crash">copy</button>
+                    <button type="button" class="cmd-copy" data-copy="npx roka-mcp watch ./logs/dev.log --on-crash" aria-label="Copy"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
                 </div>
             </div>
             <div class="cmd-block" data-agent-panel="codex">
                 <div class="cmd-row">
                     <code>$ npx roka-mcp connect --agent codex</code>
-                    <button type="button" class="cmd-copy" data-copy="npx roka-mcp connect --agent codex">copy</button>
+                    <button type="button" class="cmd-copy" data-copy="npx roka-mcp connect --agent codex" aria-label="Copy"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
                 </div>
             </div>
             <div class="cmd-block" data-agent-panel="copilot">
                 <div class="cmd-row">
                     <code>$ npx roka-mcp connect --agent copilot</code>
-                    <button type="button" class="cmd-copy" data-copy="npx roka-mcp connect --agent copilot">copy</button>
+                    <button type="button" class="cmd-copy" data-copy="npx roka-mcp connect --agent copilot" aria-label="Copy"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
                 </div>
             </div>
 
@@ -1380,12 +1410,12 @@
                 <p>Roka fingerprints repetitive patterns across your entire log file — UUIDs, timestamps, and stack frames collapse into provenance headers. The agent sees what happened, not 500 copies of it.</p>
             </div>
             <div class="story-viz" data-viz="error500">
-                <canvas id="canvasError500" aria-label="Animation: 500 ERROR lines collapsing to one line"></canvas>
-                <div class="story-viz-fallback" id="fallbackError500">
-                    <div class="nd-err">ERROR [worker] connection refused</div>
-                    <div class="nd-dim mt-1">× 500 identical lines …</div>
-                    <div class="nd-ok mt-3">[500x | lines 240–740] ERROR [worker] connection refused</div>
-                    <div class="nd-badge mt-2">Compressed: ERROR ×500 → 1 line</div>
+                <div class="mt-terminal" id="mtError500" aria-label="Animation: 500 ERROR lines collapsing to one line">
+                    <div class="mt-line mt-err" data-type="typing">ERROR [worker] connection refused</div>
+                    <div class="mt-line mt-dim" data-delay="300">× 500 identical lines …</div>
+                    <div class="mt-line mt-warn" data-delay="500">roka pruning …</div>
+                    <div class="mt-line mt-ok" data-type="typing" data-speed="16" data-delay="200">[500x | lines 240–740] ERROR [worker] connection refused</div>
+                    <div class="mt-line mt-dim" data-delay="300">−99.8% repetition · 1 line in context</div>
                 </div>
                 <div class="story-viz-label">
                     <span class="story-viz-badge error" id="vizBadgeError">ERROR ×500</span>
@@ -1401,11 +1431,10 @@
                 <p>roka-mcp watches dev.log in real time. On crash it prunes 12,400 lines down to 1.1K tokens and hands Claude Code exactly the slice it needs — no copy-paste, no blown context window.</p>
             </div>
             <div class="story-viz" data-viz="crash">
-                <canvas id="canvasCrash" aria-label="Animation: crash detected, prune, handoff to agent"></canvas>
-                <div class="story-viz-fallback">
-                    <div class="nd-err mt-1">🔴 ERROR [worker] connection refused</div>
-                    <div class="nd-ok mt-1">pruning 12,400 lines → 1.1K tokens</div>
-                    <div class="nd-ok mt-1">✓ handed to Claude Code</div>
+                <div class="mt-terminal" id="mtCrash" aria-label="Animation: crash detected, prune, handoff to agent">
+                    <div class="mt-line mt-err" data-type="typing">🔴 ERROR [worker] connection refused</div>
+                    <div class="mt-line mt-ok" data-delay="400">pruning 12,400 lines → 1.1K tokens</div>
+                    <div class="mt-line mt-ok" data-delay="400">✓ handed to Claude Code</div>
                 </div>
             </div>
         </div>
@@ -1417,10 +1446,11 @@
                 <p>Type what you care about — "what broke during last night's deploy?" — and Roka re-ranks chunks against intent, not just keywords. Semantic re-ranking surfaces the fatal error first.</p>
             </div>
             <div class="story-viz" data-viz="query">
-                <canvas id="canvasQuery" aria-label="Animation: natural language query re-ranking log output"></canvas>
-                <div class="story-viz-fallback">
-                    <div>"what broke during last night's deploy?"</div>
-                    <div class="nd-ok mt-2">ERROR [Database] FATAL: Connection reset ↑ #1</div>
+                <div class="mt-terminal" id="mtQuery" aria-label="Animation: natural language query re-ranking log output">
+                    <div class="mt-line" data-type="typing" data-speed="22">"what broke during last night's deploy?"</div>
+                    <div class="mt-line mt-dim" data-delay="300">INFO [startup] Application started</div>
+                    <div class="mt-line mt-ok" data-delay="150">ERROR [Database] FATAL: Connection reset  ↑ #1</div>
+                    <div class="mt-line mt-dim" data-delay="150">INFO [Cache] Cache miss key: session_123</div>
                 </div>
             </div>
         </div>
@@ -1617,36 +1647,8 @@
         </div>
 
         <div class="text-center">
-            <a href="#mcp-install" class="btn-primary rounded-full px-6 py-2.5 text-sm font-medium">One-click MCP install</a>
+            <a href="#pricing" class="btn-primary rounded-full px-6 py-2.5 text-sm font-medium">One-click MCP install</a>
             <p class="text-xs text-faint mt-3 mono">Pro feature · <a href="#pricing" class="hover:text-[var(--text-muted)] transition underline underline-offset-2">see pricing</a></p>
-        </div>
-    </section>
-
-    <!-- One-click MCP integration preview -->
-    <section id="mcp-install" class="max-w-6xl mx-auto px-5 py-16 reveal">
-        <div class="text-center mb-10">
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">One-click integration</h2>
-            <p class="text-muted text-sm max-w-xl mx-auto">Connect Roka to your agent in one command. Watches your logs. Prunes on crash. Hands context to your IDE.</p>
-        </div>
-
-        <div class="browser-frame surface max-w-2xl mx-auto">
-            <div class="browser-bar">
-                <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
-                <div class="browser-url">terminal</div>
-            </div>
-            <div class="p-4 bg-[var(--bg)]">
-                <div class="terminal-preview-label mb-3">Interactive preview — type a command and watch it run (not a live terminal)</div>
-                <div class="terminal-preview" id="mcpTerminalPreview" aria-live="polite">
-                    <div class="tp-line" id="tpLine1"><span class="tp-cursor"></span></div>
-                    <div class="tp-line tp-success" id="tpLine2"></div>
-                    <div class="tp-line tp-success" id="tpLine3"></div>
-                    <div class="tp-line tp-success" id="tpLine4"></div>
-                    <div class="tp-line" id="tpLine5"></div>
-                    <div class="tp-line tp-danger" id="tpLine6"></div>
-                    <div class="tp-line tp-success" id="tpLine7"></div>
-                    <div class="tp-line tp-success" id="tpLine8"></div>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -1818,69 +1820,6 @@
         </div>
     </section>
 
-    <!-- Real Before/After Log Example -->
-    <section id="before-after" class="max-w-6xl mx-auto px-5 py-16 reveal">
-        <div class="text-center mb-10">
-            <span class="eyebrow">Real example — sanitized production log</span>
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-3 mb-3">What Roka actually does to your logs</h2>
-            <p class="text-muted text-sm max-w-xl mx-auto">Query: <span class="mono text-xs">"why is my auth broken?"</span></p>
-        </div>
-        <div class="grid sm:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            <!-- Before -->
-            <div>
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs text-faint uppercase tracking-wider">Before — 4,847 lines · 214K tokens</span>
-                    <span class="text-xs px-2 py-0.5 rounded" style="background:rgba(248,113,113,0.1);color:var(--danger)">$0.86 / call</span>
-                </div>
-                <div class="surface rounded-xl overflow-hidden">
-                    <div class="browser-bar">
-                        <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
-                        <div class="browser-url">auth-service.log</div>
-                    </div>
-                    <pre class="mock-terminal bg-[var(--bg)] text-xs overflow-auto" style="max-height:280px"><code><span class="term-info">2026-06-20 09:00:01 INFO  [startup] auth-service v2.3.1 starting</span>
-<span class="term-ok">2026-06-20 09:00:02 INFO  [db] connected to postgres://prod-db:5432</span>
-<span class="term-ok">2026-06-20 09:00:02 INFO  [cache] redis connected at 10.0.0.8:6379</span>
-<span class="term-ok">2026-06-20 09:00:05 INFO  [health] GET /health 200 1ms</span>
-<span class="term-ok">2026-06-20 09:00:06 INFO  [health] GET /health 200 1ms</span>
-<span class="term-ok">2026-06-20 09:00:07 INFO  [health] GET /health 200 1ms</span>
-<span class="term-dim">... 840 more identical health checks ...</span>
-<span class="term-info">2026-06-20 09:14:32 INFO  [auth] login attempt user_id=48821 ip=203.0.113.5</span>
-<span class="term-info">2026-06-20 09:14:32 INFO  [auth] login attempt user_id=48822 ip=203.0.113.6</span>
-<span class="term-dim">... 2,400 more login attempts ...</span>
-<span class="term-err">2026-06-20 09:22:17 ERROR [jwt] token validation failed: signature mismatch</span>
-<span class="term-err">2026-06-20 09:22:17 ERROR [jwt] token validation failed: signature mismatch</span>
-<span class="term-err">2026-06-20 09:22:17 ERROR [jwt] token validation failed: signature mismatch</span>
-<span class="term-dim">... 1,200 more identical jwt errors ...</span>
-<span class="term-warn">2026-06-20 09:22:19 WARN  [auth] rate limit hit user_id=48821</span>
-<span class="term-ok">2026-06-20 09:22:20 INFO  [health] GET /health 200 1ms</span>
-<span class="term-dim">... 300 more health checks ...</span>
-<span class="term-crit">2026-06-20 09:23:05 CRITICAL [config] JWT_SECRET env var changed at 09:21:44 — token reissue required</span>
-<span class="term-err">2026-06-20 09:23:06 ERROR [auth] all sessions invalidated — forced re-login for 3,241 users</span></code></pre>
-                </div>
-            </div>
-            <!-- After -->
-            <div>
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs text-faint uppercase tracking-wider">After Roka — 7 lines · 1.2K tokens</span>
-                    <span class="text-xs px-2 py-0.5 rounded" style="background:rgba(52,211,153,0.12);color:var(--term-green);border:1px solid rgba(52,211,153,0.3)">$0.005 / call</span>
-                </div>
-                <div class="surface rounded-xl overflow-hidden">
-                    <div class="browser-bar">
-                        <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
-                        <div class="browser-url">auth-service.log — pruned · 99.4% reduction</div>
-                    </div>
-                    <pre class="mock-terminal bg-[var(--bg)] text-xs overflow-auto" style="max-height:280px"><code><span class="term-dim">[841x collapsed] INFO  [health] GET /health 200 1ms</span>
-<span class="term-dim">[2400x collapsed] INFO  [auth] login attempt</span>
-<span class="term-err">2026-06-20 09:22:17 ERROR [jwt] token validation failed: signature mismatch</span>
-<span class="term-err">[1200x collapsed] ERROR [jwt] token validation failed: signature mismatch</span>
-<span class="term-dim">[300x collapsed] INFO  [health] GET /health 200 1ms</span>
-<span class="term-crit">2026-06-20 09:23:05 CRITICAL [config] JWT_SECRET env var changed at 09:21:44 — token reissue required</span>
-<span class="term-err">2026-06-20 09:23:06 ERROR [auth] all sessions invalidated — forced re-login for 3,241 users</span></code></pre>
-                </div>
-                <p class="text-xs text-muted mt-3 text-center">Claude now sees the root cause immediately: <span class="mono text-xs">JWT_SECRET</span> changed mid-session.</p>
-            </div>
-        </div>
-    </section>
 
     <!-- Benchmark -->
     <section id="benchmark" class="max-w-6xl mx-auto px-5 py-16 reveal">
@@ -1997,7 +1936,7 @@
 
                 <div class="border-t border-[var(--border)] mt-4 pt-4 flex items-center justify-between">
                     <span id="benchLabel" class="text-xs text-muted flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-sm" style="background:var(--term-green)"></span>OpenStack (cloud infra)
+                        <span class="w-2 h-2 rounded-sm" style="background:var(--accent)"></span>OpenStack (cloud infra)
                     </span>
                     <span id="benchValue" class="mono text-sm font-semibold">99.0%</span>
                 </div>
@@ -2048,7 +1987,7 @@
                             <tr class="border-t border-[var(--border)]">
                                 <td class="px-3 py-2">"Bind to port 22" found?</td>
                                 <td class="text-right px-3 py-2 font-medium" style="color:var(--danger)">No — 0 matches</td>
-                                <td class="text-right px-3 py-2 font-medium" style="color:var(--term-green)">Yes — kept</td>
+                                <td class="text-right px-3 py-2 font-medium text-[var(--text)]">Yes — kept</td>
                             </tr>
                         </tbody>
                     </table>
@@ -2058,74 +1997,6 @@
                     <span class="mono text-[11px]">gmetad: data_thread()</span> monitoring noise. Verified live via the MCP <span class="mono text-[11px]">prune_file</span> tool, not simulated.
                 </p>
             </div>
-        </div>
-    </section>
-
-    <!-- ROI Calculator -->
-    <section id="roi" class="max-w-6xl mx-auto px-5 py-16 reveal">
-        <div class="text-center mb-12">
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">ROI Calculator</h2>
-            <p class="text-muted text-sm max-w-2xl mx-auto">See how much you could save with Roka.</p>
-        </div>
-
-        <div class="surface rounded-xl p-8 max-w-3xl mx-auto">
-            <!-- Inputs row -->
-            <div class="grid sm:grid-cols-2 gap-8 mb-8">
-                <div>
-                    <label class="text-xs text-faint uppercase tracking-wider mb-4 block">Logs fed to AI per day</label>
-                    <input type="range" id="roiSlider" min="10" max="1000" value="100" step="10" class="w-full">
-                    <div class="flex justify-between mt-2 text-xs text-muted">
-                        <span>10 MB</span>
-                        <span id="roiValue" class="font-semibold text-[var(--text)]">100 MB</span>
-                        <span>1000 MB</span>
-                    </div>
-                </div>
-                <div>
-                    <label class="text-xs text-faint uppercase tracking-wider mb-4 block">AI model</label>
-                    <div class="flex flex-col gap-2">
-                        <label class="flex items-center gap-2 text-sm text-muted cursor-pointer">
-                            <input type="radio" name="roiModel" value="sonnet" checked class="accent-[var(--success)]">
-                            Claude Sonnet ($3 / MTok input)
-                        </label>
-                        <label class="flex items-center gap-2 text-sm text-muted cursor-pointer">
-                            <input type="radio" name="roiModel" value="opus" class="accent-[var(--success)]">
-                            Claude Opus ($15 / MTok input)
-                        </label>
-                        <label class="flex items-center gap-2 text-sm text-muted cursor-pointer">
-                            <input type="radio" name="roiModel" value="gpt4o" class="accent-[var(--success)]">
-                            GPT-4o ($2.50 / MTok input)
-                        </label>
-                    </div>
-                    <div class="mt-4">
-                        <label class="text-xs text-faint uppercase tracking-wider mb-2 block">Engineer hourly rate</label>
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm text-muted">$</span>
-                            <input type="number" id="roiRate" value="75" min="20" max="300" step="5" class="w-20 bg-[var(--bg)] border border-[var(--border)] rounded px-2 py-1 text-sm text-[var(--text)] mono">
-                            <span class="text-sm text-muted">/hr</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Results row -->
-            <div class="border-t border-[var(--border)] pt-6 grid sm:grid-cols-3 gap-6 text-center">
-                <div>
-                    <div class="text-xs text-muted uppercase tracking-wider mb-2">Token savings</div>
-                    <div class="text-3xl font-bold text-[var(--text)]">$<span id="roiTokenSavings">24</span></div>
-                    <div class="text-xs text-faint">/month</div>
-                </div>
-                <div>
-                    <div class="text-xs text-muted uppercase tracking-wider mb-2">Engineer time saved</div>
-                    <div class="text-3xl font-bold text-[var(--text)]">$<span id="roiTimeSavings">180</span></div>
-                    <div class="text-xs text-faint">/month (~2.4 hrs)</div>
-                </div>
-                <div class="sm:border-l border-[var(--border)] sm:pl-6">
-                    <div class="text-xs text-muted uppercase tracking-wider mb-2">Total savings</div>
-                    <div class="text-3xl font-bold" style="color:var(--success)">$<span id="roiTotal">204</span></div>
-                    <div class="text-xs text-faint">/month vs no Roka</div>
-                </div>
-            </div>
-            <p class="text-xs text-faint text-center mt-4">Assumes 1 MB ≈ 750K tokens, Roka reduces input by ~90%, debugging session = 30 min saved per incident, ~5 incidents/month.</p>
         </div>
     </section>
 
@@ -2211,37 +2082,6 @@
         </div>
         <div class="text-center mt-4 text-xs text-faint mono" id="statusConsole">// ready</div>
     </section>
-
-    <!-- Integrate -->
-    <section id="integrate" class="max-w-6xl mx-auto px-5 py-16 reveal">
-        <div class="grid lg:grid-cols-2 gap-8 items-start">
-            <div>
-                <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-4">Integrate anywhere</h2>
-                <p class="text-muted text-sm leading-relaxed mb-6">Drop Roka into your agent pipeline, CI debug step, or observability stack. One POST with your raw context and query — get back pruned text plus compression stats.</p>
-                <ul class="space-y-3 text-sm text-muted">
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Pipe logs through CLI before sending to Claude</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Pre-process RAG chunks at ingestion time</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Shrink incident dumps in on-call workflows</li>
-                </ul>
-            </div>
-            <div class="browser-frame surface">
-                <div class="browser-bar">
-                    <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
-                    <div class="browser-url">POST /api/prune</div>
-                </div>
-                <pre class="mock-terminal bg-[var(--bg)] text-xs overflow-x-auto"><code>curl -X POST https://api.roka-prune.com/api/prune \
-  -H "Content-Type: application/json" \
-  -d '{
-    "text": "&lt;raw logs or code&gt;",
-    "query": "why did auth fail",
-    "token_budget": 8000,
-    "use_semantic": true,
-    "use_minification": false
-  }'</code></pre>
-            </div>
-        </div>
-    </section>
-
 
     <!-- Pricing -->
     <section id="pricing" class="max-w-6xl mx-auto px-5 py-16 reveal">
@@ -2336,70 +2176,6 @@
                         <p class="text-xs" style="color:var(--text-muted)">Semantic re-ranking surfaces what matters to <em>your</em> query. Ask "why did auth break?" — Pro ranks the relevant slice first. Plus MCP servers for real-time crash detection.</p>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Download Section -->
-        <div class="max-w-4xl mx-auto mt-16">
-            <h3 class="text-2xl font-semibold tracking-tight mb-4 text-center">Install Roka CLI</h3>
-            <p class="text-center text-muted mb-8">One command. That's it.</p>
-            
-            <div class="surface rounded-xl p-8 max-w-2xl mx-auto">
-                <div class="bg-[var(--bg)] rounded-lg p-4 mb-6 border border-[var(--border)]">
-                    <code class="text-sm mono text-[var(--text)]">curl -fsSL https://install.roka-prune.com | bash</code>
-                </div>
-                
-                <div class="text-center text-sm text-muted mb-6">
-                    Auto-detects your OS and architecture
-                </div>
-
-                <div class="space-y-4 text-sm">
-                    <div class="flex gap-3 items-start">
-                        <span class="text-[var(--success)] font-bold">→</span>
-                        <div>
-                            <span class="font-medium">Auto-detects</span> your OS and architecture
-                        </div>
-                    </div>
-                    <div class="flex gap-3 items-start">
-                        <span class="text-[var(--success)] font-bold">→</span>
-                        <div>
-                            <span class="font-medium">Downloads</span> the latest binary from GitHub
-                        </div>
-                    </div>
-                    <div class="flex gap-3 items-start">
-                        <span class="text-[var(--success)] font-bold">→</span>
-                        <div>
-                            <span class="font-medium">Installs</span> to /usr/local/bin (or ~/.local/bin)
-                        </div>
-                    </div>
-                    <div class="flex gap-3 items-start">
-                        <span class="text-[var(--success)] font-bold">→</span>
-                        <div>
-                            <span class="font-medium">Verifies</span> checksum for security
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Trial Details -->
-        <div class="max-w-3xl mx-auto mt-12">
-            <div class="surface rounded-xl p-6">
-                <h3 class="text-lg font-semibold mb-4">What happens after I start a free trial?</h3>
-                <p class="text-sm text-muted mb-4">7-day free trial gives you full access to Pro features:</p>
-                <ul class="space-y-2 text-sm text-muted mb-4">
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Web UI with interactive demo</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> REST API for integration</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> 500K token budget (replenishes daily)</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Full email support</li>
-                </ul>
-                <p class="text-sm text-muted">No credit card required. After 7 days, you can:</p>
-                <ul class="space-y-2 text-sm text-muted">
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Continue free tier (50K/month)</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Upgrade to Pro (auto-billing starts)</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Cancel anytime (no lock-in)</li>
-                </ul>
             </div>
         </div>
 
@@ -2936,18 +2712,23 @@
             }
         }
 
-        async function checkApiHealth() {
+        async function checkApiHealth(attempt = 1) {
+            const MAX_ATTEMPTS = 3;
             try {
-                const res = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(4000) });
-                if (!res.ok) {
-                    apiOnline = false;
-                    logConsole(`api error: HTTP ${res.status}`);
-                    return;
-                }
+                // Longer timeout + retries: the backend can cold-start after
+                // idling, and a single quick timeout was falsely reporting
+                // "offline" during that warm-up window.
+                const res = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(8000) });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await readJsonResponse(res);
                 apiOnline = data.status === 'healthy';
                 logConsole(apiOnline ? 'api online' : 'api error: unexpected response');
             } catch (err) {
+                if (attempt < MAX_ATTEMPTS) {
+                    logConsole(`api waking up… retrying (${attempt}/${MAX_ATTEMPTS - 1})`);
+                    setTimeout(() => checkApiHealth(attempt + 1), 2000 * attempt);
+                    return;
+                }
                 apiOnline = false;
                 logConsole(`api offline — ${err.message}`);
             }
@@ -2975,6 +2756,22 @@
             reader.readAsText(file);
         });
 
+        async function fetchWithRetry(url, options, attempt = 1) {
+            const MAX_ATTEMPTS = 2;
+            try {
+                return await fetch(url, options);
+            } catch (err) {
+                // "Failed to fetch" can be a transient cold-start blip on the
+                // Railway backend rather than a real outage — retry once.
+                if (attempt < MAX_ATTEMPTS && err.name === 'TypeError') {
+                    logConsole('backend unreachable, retrying…');
+                    await new Promise((r) => setTimeout(r, 1500));
+                    return fetchWithRetry(url, options, attempt + 1);
+                }
+                throw err;
+            }
+        }
+
         async function handlePrune() {
             const query = els.queryInput.value.trim();
             const text = els.inputText.value.trim();
@@ -2987,7 +2784,7 @@
 
             setLoading(true);
             try {
-                const response = await fetch(API_PRUNE, {
+                const response = await fetchWithRetry(API_PRUNE, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -3022,8 +2819,9 @@
                 if (err.name === 'TypeError' && err.message === 'Failed to fetch') {
                     logConsole('error: backend unreachable');
                     els.outputArea.textContent = [
-                        '// Cannot reach the API.',
-                        '// Check https://api.roka-prune.com/health or try again later.',
+                        '// Cannot reach the API after retrying.',
+                        '// The backend may be waking up from a cold start.',
+                        '// Check https://api.roka-prune.com/health, or try again in a few seconds.',
                     ].join('\n');
                 } else {
                     logConsole(`error: ${err.message}`);
@@ -3143,46 +2941,6 @@
             demoObserver.observe(demoAnimation);
         }
 
-        // ── ROI Calculator ──────────────────────────────────────
-        const roiSlider = document.getElementById('roiSlider');
-        const roiValue = document.getElementById('roiValue');
-        const roiTokenSavings = document.getElementById('roiTokenSavings');
-        const roiTimeSavings = document.getElementById('roiTimeSavings');
-        const roiTotal = document.getElementById('roiTotal');
-        const roiRate = document.getElementById('roiRate');
-
-        const modelPrices = { sonnet: 3, opus: 15, gpt4o: 2.5 };
-
-        function updateROI() {
-            const mb = parseInt(roiSlider.value, 10);
-            const selectedModel = document.querySelector('input[name="roiModel"]:checked').value;
-            const hourlyRate = parseFloat(roiRate.value) || 75;
-
-            const tokensPerMB = 750000;
-            const rokaReduction = 0.90;
-            const daysPerMonth = 30;
-            const costPerMTok = modelPrices[selectedModel];
-
-            const monthlyTokensSaved = mb * daysPerMonth * tokensPerMB * rokaReduction;
-            const tokenSavings = Math.round(monthlyTokensSaved / 1_000_000 * costPerMTok);
-
-            const incidentsPerMonth = 5;
-            const minsPerIncident = 30;
-            const timeSavings = Math.round(incidentsPerMonth * (minsPerIncident / 60) * hourlyRate);
-
-            const total = tokenSavings + timeSavings;
-
-            roiValue.textContent = `${mb} MB`;
-            roiTokenSavings.textContent = tokenSavings.toLocaleString();
-            roiTimeSavings.textContent = timeSavings.toLocaleString();
-            roiTotal.textContent = total.toLocaleString();
-        }
-
-        roiSlider.addEventListener('input', updateROI);
-        roiRate.addEventListener('input', updateROI);
-        document.querySelectorAll('input[name="roiModel"]').forEach(r => r.addEventListener('change', updateROI));
-        updateROI();
-
         // ── Benchmark Chart ──────────────────────────────────────
         const benchChart = document.getElementById('benchChart');
         const benchLabel = document.getElementById('benchLabel');
@@ -3193,7 +2951,7 @@
                 col.addEventListener('mouseenter', () => {
                     benchCols.forEach((c) => c.classList.remove('active'));
                     col.classList.add('active');
-                    benchLabel.innerHTML = `<span class="w-2 h-2 rounded-sm" style="background:var(--term-green)"></span>${col.dataset.name}`;
+                    benchLabel.innerHTML = `<span class="w-2 h-2 rounded-sm" style="background:var(--accent)"></span>${col.dataset.name}`;
                     benchValue.textContent = `${col.dataset.value}%`;
                 });
             });
@@ -3238,12 +2996,18 @@
                 document.querySelectorAll('.cmd-block').forEach(p => p.classList.toggle('active', p.dataset.agentPanel === agent));
             });
         });
+        const COPY_ICON = '<svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+        const COPIED_ICON = '<svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
         document.querySelectorAll('.cmd-copy').forEach(btn => {
             btn.addEventListener('click', () => {
                 const text = btn.dataset.copy || '';
                 navigator.clipboard.writeText(text).then(() => {
-                    btn.textContent = 'copied';
-                    setTimeout(() => { btn.textContent = 'copy'; }, 1500);
+                    btn.classList.add('copied');
+                    btn.innerHTML = COPIED_ICON;
+                    setTimeout(() => {
+                        btn.classList.remove('copied');
+                        btn.innerHTML = COPY_ICON;
+                    }, 1500);
                 });
             });
         });
@@ -3316,193 +3080,119 @@
             }, 2200);
         }
 
-        // ── Canvas animations ──
-        function setupCanvas(canvas) {
-            const dpr = Math.min(window.devicePixelRatio || 1, 2);
-            const rect = canvas.parentElement.getBoundingClientRect();
-            canvas.width = rect.width * dpr;
-            canvas.height = rect.height * dpr;
-            const ctx = canvas.getContext('2d');
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            return { ctx, w: rect.width, h: rect.height };
-        }
+        // ── Story terminals: MagicUI-style sequential animation ──
+        // Ports the behavior of the Magic UI `Terminal` component
+        // (AnimatedSpan + TypingAnimation, played in strict sequence,
+        // looping while the row is in view) to plain DOM/CSS.
+        function createMagicTerminal(container, opts = {}) {
+            const loopDelay = opts.loopDelay ?? 1500;
+            const items = Array.from(container.querySelectorAll('.mt-line')).map((el) => ({
+                el,
+                text: el.textContent,
+                type: el.dataset.type || 'span',
+                delay: Number(el.dataset.delay) || 0,
+                speed: Number(el.dataset.speed) || 26,
+            }));
+            let stopped = true;
+            let runId = 0;
 
-        function getThemeColors() {
-            const dark = document.documentElement.dataset.theme !== 'light';
+            function typeLine(item) {
+                return new Promise((resolve) => {
+                    const { el, text, speed } = item;
+                    el.classList.add('mt-visible');
+                    el.textContent = '';
+                    const cursor = document.createElement('span');
+                    cursor.className = 'mt-cursor';
+                    let i = 0;
+                    (function tick() {
+                        if (stopped) { resolve(); return; }
+                        if (i < text.length) {
+                            el.textContent = text.slice(0, i + 1);
+                            el.appendChild(cursor);
+                            i++;
+                            setTimeout(tick, speed);
+                        } else {
+                            if (cursor.parentNode) el.removeChild(cursor);
+                            setTimeout(resolve, 220);
+                        }
+                    })();
+                });
+            }
+
+            function showLine(item) {
+                return new Promise((resolve) => {
+                    item.el.textContent = item.text;
+                    item.el.classList.add('mt-visible');
+                    setTimeout(resolve, 260);
+                });
+            }
+
+            function reset() {
+                items.forEach(({ el }) => { el.classList.remove('mt-visible'); el.textContent = ''; });
+                if (opts.onReset) opts.onReset();
+            }
+
+            async function playOnce(id) {
+                for (let i = 0; i < items.length; i++) {
+                    if (stopped || id !== runId) return;
+                    const item = items[i];
+                    await new Promise((r) => setTimeout(r, item.delay));
+                    if (stopped || id !== runId) return;
+                    await (item.type === 'typing' ? typeLine(item) : showLine(item));
+                    if (opts.onStep) opts.onStep(i, item.el);
+                }
+            }
+
+            async function loop(id) {
+                while (!stopped && id === runId) {
+                    reset();
+                    await playOnce(id);
+                    if (stopped || id !== runId) return;
+                    await new Promise((r) => setTimeout(r, loopDelay));
+                }
+            }
+
             return {
-                bg: dark ? '#141416' : '#ffffff',
-                faint: dark ? '#52525b' : '#a1a1aa',
-                text: dark ? '#a1a1aa' : '#52525b',
-                err: '#f87171',
-                ok: dark ? '#34d399' : '#059669',
-                warn: '#fbbf24',
+                start() {
+                    if (!stopped) return;
+                    stopped = false;
+                    runId++;
+                    container.classList.add('mt-js');
+                    loop(runId);
+                },
+                stop() { stopped = true; },
             };
         }
 
-        function initError500Canvas() {
-            const canvas = document.getElementById('canvasError500');
-            const badgeErr = document.getElementById('vizBadgeError');
-            const badgeOk = document.getElementById('vizBadgeOk');
-            if (!canvas || prefersReducedMotion) return;
-
-            let playing = false;
-            let start = 0;
-            const DURATION = 4200;
-
-            function draw(ts) {
-                if (!playing) return;
-                if (!start) start = ts;
-                const t = (ts - start) % DURATION;
-                const { ctx, w, h } = setupCanvas(canvas);
-                const c = getThemeColors();
-                ctx.fillStyle = c.bg;
-                ctx.fillRect(0, 0, w, h);
-                ctx.font = '10px Geist Mono, monospace';
-
-                const lineText = 'ERROR [worker] connection refused';
-                const phase = t / DURATION;
-
-                if (phase < 0.55) {
-                    const count = Math.min(500, Math.floor(phase * 900));
-                    const scroll = phase * 120;
-                    if (badgeErr) badgeErr.style.opacity = '1';
-                    if (badgeOk) badgeOk.style.opacity = '0';
-                    for (let i = 0; i < 18; i++) {
-                        const y = 20 + i * 14 - scroll % 14;
-                        const alpha = 0.15 + (i / 18) * 0.55;
-                        ctx.fillStyle = `rgba(248,113,113,${alpha})`;
-                        ctx.fillText(lineText, 14, y);
-                    }
-                    ctx.fillStyle = c.faint;
-                    ctx.fillText(`${count}× identical · scrolling …`, 14, h - 16);
-                } else if (phase < 0.72) {
-                    const p = (phase - 0.55) / 0.17;
-                    const lines = 18;
-                    for (let i = 0; i < lines; i++) {
-                        const y = 20 + i * 14;
-                        const cy = h / 2;
-                        const ny = y + (cy - y) * p;
-                        const alpha = 0.6 * (1 - p);
-                        ctx.fillStyle = `rgba(248,113,113,${alpha})`;
-                        ctx.fillText(lineText, 14 + (1 - p) * 20, ny);
-                    }
-                    ctx.fillStyle = c.warn;
-                    ctx.fillText('roka pruning …', 14, h - 16);
-                } else {
-                    if (badgeErr) badgeErr.style.opacity = '0.5';
-                    if (badgeOk) badgeOk.style.opacity = '1';
-                    const snap = Math.min(1, (phase - 0.72) / 0.08);
-                    ctx.fillStyle = c.ok;
-                    ctx.globalAlpha = snap;
-                    ctx.fillText('[500x | lines 240–740] ' + lineText, 14, h / 2);
-                    ctx.globalAlpha = 1;
-                    ctx.fillStyle = c.faint;
-                    ctx.fillText('−99.8% repetition · 1 line in context', 14, h - 16);
-                }
-                requestAnimationFrame(draw);
-            }
-
+        function initMagicTerminal(id, options) {
+            const container = document.getElementById(id);
+            if (!container || prefersReducedMotion) return;
+            const terminal = createMagicTerminal(container, options);
+            const target = container.closest('.story-viz') || container;
             const obs = new IntersectionObserver((entries) => {
-                playing = entries[0].isIntersecting;
-                if (playing) { start = 0; requestAnimationFrame(draw); }
-            }, { threshold: 0.2 });
-            obs.observe(canvas.parentElement);
-            window.addEventListener('resize', () => { start = 0; });
+                if (entries[0].isIntersecting) terminal.start();
+                else terminal.stop();
+            }, { threshold: 0.25 });
+            obs.observe(target);
         }
 
-        function initCrashCanvas() {
-            const canvas = document.getElementById('canvasCrash');
-            if (!canvas || prefersReducedMotion) return;
-            let playing = false;
-            let start = 0;
-            const STEPS = ['🔴 crash detected', 'pruning 12,400 → 1.1K tokens', '✓ handed to Claude Code'];
-            const COLORS = ['err', 'ok', 'ok'];
-
-            function draw(ts) {
-                if (!playing) return;
-                if (!start) start = ts;
-                const t = ((ts - start) % 4800) / 4800;
-                const { ctx, w, h } = setupCanvas(canvas);
-                const c = getThemeColors();
-                ctx.fillStyle = c.bg;
-                ctx.fillRect(0, 0, w, h);
-                ctx.font = '11px Geist Mono, monospace';
-                const stepIdx = Math.min(3, Math.floor(t * 4));
-                const colorMap = { faint: c.faint, err: c.err, warn: c.warn, ok: c.ok };
-                for (let i = 0; i <= stepIdx; i++) {
-                    ctx.fillStyle = colorMap[COLORS[i]];
-                    ctx.globalAlpha = i === stepIdx ? 1 : 0.35;
-                    ctx.fillText(STEPS[i], 16, 36 + i * 28);
+        const vizBadgeError = document.getElementById('vizBadgeError');
+        const vizBadgeOk = document.getElementById('vizBadgeOk');
+        initMagicTerminal('mtError500', {
+            loopDelay: 1600,
+            onReset: () => {
+                if (vizBadgeError) vizBadgeError.style.opacity = '1';
+                if (vizBadgeOk) vizBadgeOk.style.opacity = '0';
+            },
+            onStep: (idx) => {
+                if (idx === 3) {
+                    if (vizBadgeError) vizBadgeError.style.opacity = '0.35';
+                    if (vizBadgeOk) vizBadgeOk.style.opacity = '1';
                 }
-                ctx.globalAlpha = 1;
-                requestAnimationFrame(draw);
-            }
-            const obs = new IntersectionObserver((e) => {
-                playing = e[0].isIntersecting;
-                if (playing) { start = 0; requestAnimationFrame(draw); }
-            }, { threshold: 0.2 });
-            obs.observe(canvas.parentElement);
-        }
-
-        function initQueryCanvas() {
-            const canvas = document.getElementById('canvasQuery');
-            if (!canvas || prefersReducedMotion) return;
-            let playing = false;
-            let start = 0;
-            const query = '"what broke during last night\'s deploy?"';
-            const lines = [
-                { t: 'INFO [startup] Application started', rank: false },
-                { t: 'ERROR [Database] FATAL: Connection reset', rank: true },
-                { t: 'INFO [Cache] Cache miss key: session_123', rank: false },
-            ];
-
-            function draw(ts) {
-                if (!playing) return;
-                if (!start) start = ts;
-                const t = ((ts - start) % 5000) / 5000;
-                const { ctx, w, h } = setupCanvas(canvas);
-                const c = getThemeColors();
-                ctx.fillStyle = c.bg;
-                ctx.fillRect(0, 0, w, h);
-                ctx.font = '10px Geist Mono, monospace';
-                ctx.fillStyle = c.text;
-                const typed = Math.min(query.length, Math.floor(Math.min(t, 0.25) / 0.25 * query.length));
-                ctx.fillText(query.slice(0, typed), 14, 28);
-                if (t > 0.3) {
-                    lines.forEach((line, i) => {
-                        const highlight = line.rank && t > 0.45 && t < 0.85;
-                        ctx.fillStyle = highlight ? c.ok : c.faint;
-                        ctx.globalAlpha = t > 0.35 + i * 0.05 ? 1 : 0;
-                        ctx.fillText(line.t + (highlight ? '  ↑ #1' : ''), 14, 52 + i * 22);
-                    });
-                }
-                ctx.globalAlpha = 1;
-                requestAnimationFrame(draw);
-            }
-            const obs = new IntersectionObserver((e) => {
-                playing = e[0].isIntersecting;
-                if (playing) { start = 0; requestAnimationFrame(draw); }
-            }, { threshold: 0.2 });
-            obs.observe(canvas.parentElement);
-        }
-
-        initError500Canvas();
-        initCrashCanvas();
-        initQueryCanvas();
-
-        //MCP
-        const MCP_ACT1 = [
-            { el: 'tpLine1', text: '$ npx roka-mcp connect --agent claude-code', speed: 28 },
-            { el: 'tpLine2', text: '✓ detected Claude Code config', delay: 400 },
-            { el: 'tpLine3', text: '✓ installed MCP server', delay: 300 },
-            { el: 'tpLine4', text: '✓ watching ./logs/dev.log', delay: 300 },
-            { el: 'tpLine5', text: 'roka-mcp ready on stdio', delay: 500 },
-        ];
-        const MCP_ACT2 = [
-            { el: 'tpLine6', text: '🔴 ERROR [worker] connection refused (×500)', delay: 800 },
-            { el: 'tpLine7', text: 'pruning 12,400 lines → 1.1K tokens …', delay: 600 },
-            { el: 'tpLine8', text: '✓ handed to Claude Code', delay: 500 },
-        ];
+            },
+        });
+        initMagicTerminal('mtCrash', { loopDelay: 1800 });
+        initMagicTerminal('mtQuery', { loopDelay: 1800 });
 
         function typeText(el, text, speed, cb) {
             if (!el) { cb?.(); return; }
@@ -3522,87 +3212,6 @@
                 }
             }
             tick();
-        }
-
-        function clearTerminalLines(ids) {
-            ids.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.textContent = '';
-            });
-        }
-
-        function runMcpTerminalLoop() {
-            if (prefersReducedMotion) {
-                MCP_ACT1.forEach(({ el, text }) => {
-                    const node = document.getElementById(el);
-                    if (node) node.textContent = text;
-                });
-                MCP_ACT2.forEach(({ el, text }) => {
-                    const node = document.getElementById(el);
-                    if (node) node.textContent = text;
-                });
-                return;
-            }
-
-            clearTerminalLines(['tpLine1','tpLine2','tpLine3','tpLine4','tpLine5','tpLine6','tpLine7','tpLine8']);
-
-            let step = 0;
-            function nextAct1() {
-                if (step >= MCP_ACT1.length) {
-                    setTimeout(runAct2, 1200);
-                    return;
-                }
-                const { el, text, speed, delay } = MCP_ACT1[step];
-                const node = document.getElementById(el);
-                const wait = delay || 0;
-                setTimeout(() => {
-                    if (speed) {
-                        typeText(node, text, speed, () => { step++; nextAct1(); });
-                    } else {
-                        if (node) node.textContent = text;
-                        step++;
-                        nextAct1();
-                    }
-                }, wait);
-            }
-
-            function runAct2() {
-                let s2 = 0;
-                function nextAct2() {
-                    if (s2 >= MCP_ACT2.length) {
-                        setTimeout(() => {
-                            clearTerminalLines(['tpLine6','tpLine7','tpLine8']);
-                            step = 0;
-                            clearTerminalLines(['tpLine1','tpLine2','tpLine3','tpLine4','tpLine5']);
-                            nextAct1();
-                        }, 3000);
-                        return;
-                    }
-                    const { el, text, delay } = MCP_ACT2[s2];
-                    const node = document.getElementById(el);
-                    setTimeout(() => {
-                        if (node) node.textContent = text;
-                        s2++;
-                        nextAct2();
-                    }, delay || 0);
-                }
-                nextAct2();
-            }
-
-            nextAct1();
-        }
-
-        const mcpTerminalPreview = document.getElementById('mcpTerminalPreview');
-        if (mcpTerminalPreview) {
-            const mcpTermObserver = new IntersectionObserver((entries) => {
-                entries.forEach((e) => {
-                    if (e.isIntersecting) {
-                        runMcpTerminalLoop();
-                        mcpTermObserver.disconnect();
-                    }
-                });
-            }, { threshold: 0.3 });
-            mcpTermObserver.observe(mcpTerminalPreview);
         }
 
         // motion
