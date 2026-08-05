@@ -2585,7 +2585,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Right now: Claude and GPT (via API).<br><br>Soon: Gemini, Llama, other models.<br><br>We're building Roka as a context layer, not a Claude-only tool. Ping us if you need a specific integration.</p>
+                        <p class="text-sm text-muted">Yes. The CLI is model-agnostic — pruned output goes to stdout, so you can pipe it into Claude, GPT, Gemini, Cursor, or anything else.<br><br>MCP connect currently wires Claude Code, Cursor, Codex, and Copilot (plus Windsurf / VS Code / Cline). We're building Roka as a context layer, not a single-vendor tool.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -2603,7 +2603,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Yes. The API is production-ready. Many teams use Roka in their incident response pipelines (logs → Roka → Claude → Slack alert).</p>
+                        <p class="text-sm text-muted">Yes. Pipe or call Roka in CI, on-call scripts, or agent workflows — e.g. logs → Roka → your model → Slack. We're early (MVP); start with the CLI / MCP tools and tell us what you need for production hardening.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -2612,17 +2612,17 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Local CLI: Your machine, your data.<br><br>Pro/Cloud: SOC 2 Type 2 in progress. Happy to discuss security requirements.<br><br>Enterprise: Custom security audits, SSO, audit logs, data residency options.</p>
+                        <p class="text-sm text-muted">Local CLI / MCP prune tools: your machine, your data — pruning does not upload logs.<br><br>Pro cloud / API: TLS in transit; we don't train on your logs. Formal compliance (SOC 2, SSO, residency) is on the Enterprise roadmap — email us if you need a security questionnaire.</p>
                     </div>
                 </div>
 
                 <div class="surface rounded-lg overflow-hidden">
                     <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
-                        <h4 class="font-medium text-sm">What's the catch? How many free users actually upgrade?</h4>
+                        <h4 class="font-medium text-sm">When should I upgrade to Pro?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Honest answer: about 8–12% of active free users upgrade to Pro within 30 days. Most free users are individual developers who hit the 50K token/month ceiling during an incident and decide Pro is worth $20.<br><br>The "catch" is that the free tier is intentionally generous for occasional use. If you're running Roka daily in CI pipelines or on-call workflows, you'll hit the limit and need Pro. That's by design — not bait and switch.</p>
+                        <p class="text-sm text-muted">We're early — no fake conversion stats. Free is the local CLI with a 50K token/month ceiling and basic fingerprinting. Upgrade to Pro when you need MCP agent connect, semantic re-ranking, higher limits, or the web/API. Occasional debugging usually stays free; daily CI / on-call use is where Pro pays for itself.</p>
                     </div>
                 </div>
 

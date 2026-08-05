@@ -1,46 +1,70 @@
-# roka-cli
+# Roka
 
 [![Website](https://img.shields.io/badge/Website-roka--prune.com-blue)](https://roka-prune.com)
 [![License](https://img.shields.io/badge/License-MIT-green)](https://opensource.org/licenses/MIT)
 [![GitHub Stars](https://img.shields.io/github/stars/Roka-Dev-Labs/roka?style=social)](https://github.com/Roka-Dev-Labs/roka/stargazers)
 
-> **Free CLI to prune logs, code, and docs down to your token budget — without losing what matters.**
+> **Prune your logs.** Collapse noise, keep real errors, pack to a token budget — before your AI agent ever sees the dump.
 
-Roka is the command-line interface for [Roka](https://roka-prune.com). Pipe a noisy crash log, a bloated codebase, or a long document — get back a tight, ranked, budget-aware context your agent can actually use.
+Roka is a context-pruning layer for AI coding agents. Point it at a noisy crash log (or pipe stdin) and get back a tight, ranked, budget-aware slice your agent can actually use.
 
 ```bash
-cat deploy.log | roka --query "why did the deploy fail" --budget 8000
+cat deploy.log | roka prune --query "what broke" --budget 8000
 ```
 
-Part of [Roka Dev Labs](https://github.com/Roka-Dev-Labs) — see also [roka-mcp](https://github.com/Roka-Dev-Labs/roka-mcp) for Cursor / Claude Code integration.
+**Site:** [roka-prune.com](https://roka-prune.com) · **Install:** [install.html](https://roka-prune.com/install.html) · **Research:** [LogHub benchmark write-up](https://roka-prune.com/research.html)
 
-## Install
+Part of [Roka Dev Labs](https://github.com/Roka-Dev-Labs). MCP server: [roka-mcp](https://github.com/Roka-Dev-Labs/roka-mcp).
+
+---
+
+## Install (CLI)
 
 ```bash
 curl -fsSL https://install.roka-prune.com | bash
+roka --version
 ```
 
-Auto-detects OS and architecture, verifies SHA256 checksum, installs to `~/.local/bin`. See [INSTALLATION.md](INSTALLATION.md) for manual install and PATH setup.
-
+Auto-detects OS/arch, verifies checksum, installs to `~/.local/bin` (no sudo).  
 Supported: **macOS** (Intel + Apple Silicon), **Linux** (x86_64 + ARM64), **Windows** (WSL2).
+
+Manual install and PATH notes: [INSTALLATION.md](INSTALLATION.md).
+
+---
+
+## Connect an AI agent (MCP)
+
+One command registers Roka as an MCP server so Claude Code / Cursor / Codex / Copilot can call `prune_file`, `prune_logs`, and `prune_tail`:
+
+```bash
+npx roka-mcp connect --agent claude-code
+npx roka-mcp connect --agent cursor
+npx roka-mcp connect --agent codex
+npx roka-mcp connect --agent copilot
+```
+
+Optional Pro key: `--api-key rk_live_...` or `ROKA_API_KEY`. Restart the IDE after connect.  
+Full MCP docs: [roka-mcp README](https://github.com/Roka-Dev-Labs/roka-mcp).
+
+---
 
 ## Usage
 
 ```bash
 # Pipe from stdin
-cat deploy.log | roka --query "connection errors" --budget 8000
+cat deploy.log | roka prune --query "connection errors" --budget 8000
 
 # Point at a file
 roka --input app.log --query "what broke during last night's deploy" --budget 12000
 
-# Write output to file
+# Write output to a file
 roka --input big.log --query "OOM" --budget 5000 --output pruned.txt
 
-# Pro: pass your API key for semantic ranking
+# Pro: API key for semantic ranking
 roka --input logs.txt --query "auth failures" --budget 8000 --api-key rk_live_...
 ```
 
-### Flags
+### Common flags
 
 | Flag | Default | Description |
 |------|---------|-------------|
@@ -48,28 +72,68 @@ roka --input logs.txt --query "auth failures" --budget 8000 --api-key rk_live_..
 | `-b, --budget` | `8000` | Token budget for the output |
 | `-i, --input` | stdin | Input file path |
 | `-o, --output` | stdout | Output file path |
-| `-a, --api-key` | — | API key (Pro / Enterprise) |
+| `-a, --api-key` | — | API key (Pro) |
 
-## What the CLI does
+Exact flags may vary by release — run `roka --help`.
 
-- **Fingerprinting** — Collapses repeated lines (UUIDs, IPs, timestamps → placeholders)
-- **Critical preservation** — Panics, exceptions, OOM, stack traces always survive
-- **Semantic ranking** — BM25 + optional semantic re-ranking against your query (Pro)
-- **Token-budget packing** — Exact token counts, respects `--budget`
+---
+
+## What it does
+
+1. **Collapse** — Adjacent duplicate / near-duplicate lines merge with counts (heartbeats, retries stop dominating).
+2. **Rank / force-keep** — Lines matching `ERROR|FATAL|CRITICAL|Exception|Traceback|panic` survive; other lines score by rarity / anomaly.
+3. **Fit** — Pack into your character/token budget.
+
+Deterministic by default; semantic re-ranking is a Pro/optional path. Local prune tools do not upload your logs.
+
+---
+
+## Benchmark (MVP)
+
+We ran the shipped MCP `prune_file` tool against the [LogHub](https://github.com/logpai/loghub) corpus (15 real production log sources, fixed 4,000-character budget, no per-file tuning):
+
+| Metric | Result |
+|--------|--------|
+| Avg. lines removed | **92.2%** |
+| Avg. compression | **~69×** (chars in → 4K out) |
+| Sources with real errors still surfaced | **11 / 11** |
+
+Full write-up (methodology, Thunderbird before/after, limits): [roka-prune.com/research.html](https://roka-prune.com/research.html).
+
+We're early — the study measures **retention under budget**, not downstream agent task success.
+
+---
+
+## Pricing (summary)
+
+| Tier | Price | Highlights |
+|------|-------|------------|
+| **Free** | $0 | Local CLI, up to 50K tokens/month, basic fingerprinting |
+| **Pro** | $20/mo | Web UI + API, 500K tokens/month, semantic re-rank, MCP agent connect |
+| **Enterprise** | Custom | Unlimited, SSO / audit / integrations — [contact](mailto:mukhamedjankydyrli@gmail.com) |
+
+Details: [roka-prune.com/#pricing](https://roka-prune.com/#pricing).
+
+---
 
 ## Releases
 
-Pre-built binaries are on [GitHub Releases](https://github.com/Roka-Dev-Labs/roka/releases). They are built from the private product repo when a `v*` tag is pushed (see `RELEASE.md` there). Assets match `install.roka-prune.com` naming: `roka-{linux|darwin}-{amd64|arm64}.gz`.
+Pre-built binaries: [GitHub Releases](https://github.com/Roka-Dev-Labs/roka/releases).  
+Assets match `install.roka-prune.com` naming: `roka-{linux|darwin}-{amd64|arm64}.gz`.
 
-## Other Roka projects
+This public repo is **docs, website, and issue tracking**. The pruning engine source and hosted backend are proprietary.
+
+---
+
+## Other projects
 
 | Repo | Description |
 |------|-------------|
-| [roka](https://github.com/Roka-Dev-Labs/roka) | CLI — this repository |
-| [roka-mcp](https://github.com/Roka-Dev-Labs/roka-mcp) | MCP server for Cursor, Claude Code, Codex (Pro) |
-| [Roka Dev Labs](https://github.com/Roka-Dev-Labs) | Org profile — website, dashboard, API |
+| [roka](https://github.com/Roka-Dev-Labs/roka) | CLI + website — this repository |
+| [roka-mcp](https://github.com/Roka-Dev-Labs/roka-mcp) | MCP server (`connect` / `serve` / `watch`) |
+| [Roka Dev Labs](https://github.com/Roka-Dev-Labs) | Org |
 
-The pruning engine source and hosted backend are proprietary. This public repo is **CLI docs and issue tracking** only. Install via [install.roka-prune.com](https://install.roka-prune.com); binaries come from [Releases](https://github.com/Roka-Dev-Labs/roka/releases).
+---
 
 ## Support
 

@@ -42,17 +42,12 @@ Include:
 
 ### Data Privacy
 
-Roka processes your data locally by default. When using the cloud API:
+Roka processes your data locally by default (CLI and MCP prune tools). When using the cloud API:
 - Data is encrypted in transit (TLS 1.2+)
-- Data is encrypted at rest
-- We do not store your processed data longer than necessary
 - We do not sell your data to third parties
+- We do not train models on your logs
 - You can request data deletion at any time
 
-For enterprise customers, we offer:
-- Private cloud deployment
-- Data residency options
-- SOC 2 Type II compliance
-- Custom security agreements
+Enterprise options (SSO, audit logs, data residency, formal compliance reviews) are available for discussion — email support@roka-prune.com.
 
 Thank you for helping keep Roka secure!

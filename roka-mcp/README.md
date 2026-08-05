@@ -126,6 +126,8 @@ sent to a hosted API from this package.
 ## Links
 
 - [Website](https://roka-prune.com)
+- [Install + MCP](https://roka-prune.com/install.html#mcp)
+- [Research (LogHub)](https://roka-prune.com/research.html)
 - [Pricing](https://roka-prune.com/#pricing)
 - [CLI install](https://github.com/Roka-Dev-Labs/roka#install)
 - [Support](mailto:support@roka-prune.com)
