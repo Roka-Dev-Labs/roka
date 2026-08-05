@@ -1,0 +1,33 @@
+{
+  "name": "roka-mcp",
+  "version": "0.1.1",
+  "description": "MCP server for Roka — prune noisy logs down to the slice an AI coding agent needs to debug",
+  "type": "module",
+  "bin": {
+    "roka-mcp": "bin/roka-mcp.js"
+  },
+  "main": "bin/roka-mcp.js",
+  "files": [
+    "bin",
+    "lib",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node bin/roka-mcp.js serve"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "roka",
+    "logs"
+  ],
+  "author": "Roka Dev Labs",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^3.25.0"
+  }
+}

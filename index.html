@@ -986,35 +986,6 @@
         }
         .hero-live-stat span { color: var(--success); }
 
-        /* Privacy trust strip */
-        .privacy-trust-strip {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem 1rem;
-            padding: 0.75rem 1.5rem;
-            background: rgba(255,255,255,0.04);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-        .trust-item {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 11px;
-            color: var(--text-muted);
-            font-family: var(--font-mono);
-            letter-spacing: 0.02em;
-        }
-        .trust-sep {
-            color: var(--text-faint);
-            font-size: 11px;
-        }
-        @media (max-width: 640px) {
-            .trust-sep { display: none; }
-        }
-
         .roka-letter.scrambling {
             animation: none !important;
             color: transparent;
@@ -1622,29 +1593,6 @@
         <p class="hero-live-stat z-10" id="heroLiveStat">// <span>48,204</span> lines ingested · <span>−94%</span> noise removed · <span>312ms</span></p>
     </section>
 
-    <!-- Privacy trust strip -->
-    <div class="privacy-trust-strip">
-        <span class="trust-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--success);flex-shrink:0"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
-            Logs never leave your machine (Free CLI)
-        </span>
-        <span class="trust-sep">·</span>
-        <span class="trust-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--success);flex-shrink:0"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-            No indexing, no training on your data
-        </span>
-        <span class="trust-sep">·</span>
-        <span class="trust-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--success);flex-shrink:0"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-            Pro/API: processed in-flight, deleted after 24h
-        </span>
-        <span class="trust-sep">·</span>
-        <span class="trust-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--success);flex-shrink:0"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-            Open-source core on GitHub
-        </span>
-    </div>
-
     <!-- Motion story -->
     <section id="story" class="story-section reveal">
         <div class="story-row">
@@ -2241,6 +2189,14 @@
                     <span class="mono text-[11px]">gmetad: data_thread()</span> monitoring noise. Verified live via the MCP <span class="mono text-[11px]">prune_file</span> tool, not simulated.
                 </p>
             </div>
+        </div>
+    </section>
+
+    <!-- Full research link -->
+    <section class="max-w-6xl mx-auto px-5 pb-16 -mt-8 reveal">
+        <div class="surface rounded-xl p-6 text-center">
+            <p class="text-sm text-muted mb-2">Full methodology, raw data, and a deeper look at context augmentation for AI agents.</p>
+            <a href="https://www.trynia.ai/blog/nia-context-augmentation-benchmark" target="_blank" rel="noopener" class="text-sm font-medium underline underline-offset-2 hover:text-[var(--text)]">Read the full research →</a>
         </div>
     </section>
 
