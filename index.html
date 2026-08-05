@@ -377,11 +377,14 @@
         }
 
         .mock-terminal {
-            padding: 16px;
-            font-size: 11px;
-            line-height: 1.65;
+            padding: 18px 20px;
+            font-size: 15px;
+            line-height: 1.7;
             font-family: var(--font-mono);
-            min-height: 220px;
+            font-weight: 450;
+            letter-spacing: -0.01em;
+            -webkit-font-smoothing: antialiased;
+            min-height: 240px;
         }
 
         .log-warn { color: #fbbf24; }
@@ -692,8 +695,8 @@
             display: inline-flex;
             align-items: center;
             font-family: var(--font-mono);
-            font-size: 10px;
-            padding: 4px 10px;
+            font-size: 12px;
+            padding: 5px 12px;
             border-radius: 20px;
             background: rgba(248, 113, 113, 0.12);
             color: var(--danger);
@@ -716,15 +719,18 @@
         }
         .terminal-preview {
             font-family: var(--font-mono);
-            font-size: 12px;
+            font-size: 15px;
+            font-weight: 450;
+            letter-spacing: -0.01em;
+            -webkit-font-smoothing: antialiased;
             line-height: 1.7;
-            min-height: 180px;
+            min-height: 200px;
         }
         .terminal-preview .tp-line { min-height: 1.7em; }
         .terminal-preview .tp-cursor {
             display: inline-block;
-            width: 7px;
-            height: 14px;
+            width: 8px;
+            height: 16px;
             background: var(--text-muted);
             animation: tp-blink 1s step-end infinite;
             vertical-align: text-bottom;
@@ -759,23 +765,29 @@
         }
         .showcase-stage {
             position: relative;
-            height: 160px;
-            padding: 12px;
+            height: 180px;
+            padding: 14px 16px;
             font-family: var(--font-mono);
-            font-size: 10px;
-            line-height: 1.5;
+            font-size: 14px;
+            font-weight: 450;
+            letter-spacing: -0.01em;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.55;
             overflow: hidden;
             background: var(--bg);
         }
         .showcase-static {
             display: none;
-            padding: 12px;
+            padding: 14px 16px;
             font-family: var(--font-mono);
-            font-size: 10px;
-            line-height: 1.5;
+            font-size: 14px;
+            font-weight: 450;
+            letter-spacing: -0.01em;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.55;
             color: var(--text-muted);
             background: var(--bg);
-            min-height: 160px;
+            min-height: 180px;
         }
         .sc-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .sc-warn { color: #fbbf24; }
@@ -1286,7 +1298,7 @@
         }
         .story-viz-badge {
             font-family: var(--font-mono);
-            font-size: 10px;
+            font-size: 12px;
             padding: 4px 10px;
             border-radius: 20px;
             background: rgba(0,0,0,0.6);
@@ -1299,13 +1311,16 @@
         /* MagicUI-style sequential terminal animation (story section) */
         .mt-terminal {
             font-family: var(--font-mono);
-            font-size: 11px;
-            line-height: 1.75;
-            padding: 1.25rem;
-            min-height: 220px;
+            font-size: 15px;
+            font-weight: 450;
+            letter-spacing: -0.01em;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.7;
+            padding: 1.35rem 1.4rem;
+            min-height: 250px;
             color: var(--text-muted);
         }
-        .mt-line { min-height: 1.6em; }
+        .mt-line { min-height: 1.65em; }
         .mt-terminal.mt-js .mt-line {
             opacity: 0;
             transform: translateY(-4px);
@@ -1314,8 +1329,8 @@
         .mt-terminal.mt-js .mt-line.mt-visible { opacity: 1; transform: translateY(0); }
         .mt-cursor {
             display: inline-block;
-            width: 6px;
-            height: 12px;
+            width: 7px;
+            height: 15px;
             background: currentColor;
             margin-left: 2px;
             vertical-align: text-bottom;
@@ -1439,6 +1454,9 @@
             border: 1px solid #27272a;
             background: #0a0a0a;
             padding: 4.5rem 1.5rem 3.25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
         }
         [data-theme="light"] .cta-terminal {
@@ -1469,6 +1487,7 @@
             color: #fafafa;
             margin: 0 0 1.75rem;
             line-height: 1.45;
+            max-width: 36rem;
         }
         .cta-terminal-btn {
             display: inline-flex;
@@ -1484,6 +1503,8 @@
             border-radius: 2px;
             padding: 0.7rem 1.35rem;
             text-decoration: none;
+            margin-left: auto;
+            margin-right: auto;
             transition: opacity 0.15s ease, transform 0.15s ease;
         }
         .cta-terminal-btn:hover {
@@ -1497,6 +1518,20 @@
             gap: 0.5rem;
             margin-top: 1.35rem;
         }
+        .cta-terminal-kev-btn {
+            display: inline-flex;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 9999px;
+            line-height: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .cta-terminal-kev-btn:focus-visible {
+            outline: 2px solid #a1a1aa;
+            outline-offset: 3px;
+        }
         .cta-terminal-kev img {
             width: 28px;
             height: 28px;
@@ -1505,6 +1540,16 @@
             object-position: center 12%;
             border: 1px solid #3f3f46;
             flex-shrink: 0;
+            transition: width 0.35s cubic-bezier(.34,1.4,.64,1),
+                        height 0.35s cubic-bezier(.34,1.4,.64,1),
+                        box-shadow 0.3s ease,
+                        border-color 0.3s ease;
+        }
+        .cta-terminal-kev-btn.is-big img {
+            width: 120px;
+            height: 120px;
+            border-color: #71717a;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
         }
         .cta-terminal-kev span {
             font-family: var(--font-mono);
@@ -1633,26 +1678,6 @@
                     <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent copilot</span>
                     <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
                 </button>
-
-                <div class="demo-wrap">
-                    <div class="demo-label">BEFORE / AFTER — REAL CRASH LOG</div>
-                    <div class="demo-box">
-                        <div class="demo-bar">
-                            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
-                            <div class="demo-url">deploy.log</div>
-                        </div>
-                        <div class="demo-body" id="demoBody" aria-live="polite">
-                            <div class="nd-line nd-dim" id="nd1"></div>
-                            <div class="nd-line" id="nd2"></div>
-                            <div class="nd-line nd-ok" id="nd3"></div>
-                            <div class="nd-line nd-ok" id="nd4"></div>
-                            <div class="nd-line nd-err" id="nd5"></div>
-                            <div class="nd-line nd-warn" id="nd6"></div>
-                            <div class="nd-line nd-ok" id="nd7"></div>
-                            <div class="nd-line" id="nd8"></div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="flex flex-wrap items-center gap-3 mt-4">
@@ -2654,7 +2679,9 @@
             <h2 id="cta-heading" class="cta-terminal-title">Try Roka now (pssst: it's free).</h2>
             <a href="/install.html" class="cta-terminal-btn">Start now</a>
             <div class="cta-terminal-kev">
-                <img src="/kevin.png" alt="" width="28" height="28">
+                <button type="button" class="cta-terminal-kev-btn" id="kevAvatarBtn" aria-label="Enlarge Kev" aria-pressed="false" title="Kev approves">
+                    <img src="/kevin.png" alt="" width="28" height="28">
+                </button>
                 <span>(Kev approves.)</span>
             </div>
         </div>
@@ -2755,6 +2782,16 @@
         const themeToggle    = document.getElementById('themeToggle');
         const themeLabel     = document.getElementById('themeLabel');
         const themeIconFill  = document.getElementById('themeIconFill');
+
+        // Kev avatar enlarge toggle
+        const kevAvatarBtn = document.getElementById('kevAvatarBtn');
+        if (kevAvatarBtn) {
+            kevAvatarBtn.addEventListener('click', () => {
+                const big = kevAvatarBtn.classList.toggle('is-big');
+                kevAvatarBtn.setAttribute('aria-pressed', String(big));
+                kevAvatarBtn.setAttribute('aria-label', big ? 'Shrink Kev' : 'Enlarge Kev');
+            });
+        }
 
         function applyTheme(theme) {
             html.dataset.theme = theme;
@@ -3384,61 +3421,6 @@
         });
 
         // o
-        const DEMO_STEPS = [
-            { id: 'nd1', text: '$ cat deploy.log | roka prune --query "what broke" --budget 8000', speed: 22 },
-            { id: 'nd2', text: 'scanning 48,204 lines …', delay: 500, cls: 'nd-dim' },
-            { id: 'nd3', text: '✓ detected 500× ERROR [worker] connection refused', delay: 400, cls: 'nd-ok' },
-            { id: 'nd4', text: '✓ collapsed repetitive patterns', delay: 300, cls: 'nd-ok' },
-            { id: 'nd5', text: '✓ BM25 rank → semantic re-rank', delay: 300, cls: 'nd-ok' },
-            { id: 'nd6', text: 'pattern collapsed · 500 lines → 1', delay: 500, cls: 'nd-warn' },
-            { id: 'nd7', text: '[500x | lines 240–740] ERROR [worker] connection refused', delay: 400, cls: 'nd-err', badge: true },
-            { id: 'nd8', text: 'ready for Claude Code · 312ms', delay: 400, cls: 'nd-ok' },
-        ];
-
-        function runDemo() {
-            DEMO_STEPS.forEach(({ id }) => { const el = document.getElementById(id); if (el) el.innerHTML = ''; });
-            let i = 0;
-            function next() {
-                if (i >= DEMO_STEPS.length) {
-                    setTimeout(runDemo, 4000);
-                    return;
-                }
-                const step = DEMO_STEPS[i];
-                const el = document.getElementById(step.id);
-                const wait = step.delay || 0;
-                setTimeout(() => {
-                    if (!el) { i++; next(); return; }
-                    if (step.speed) {
-                        typeText(el, step.text, step.speed, () => { i++; next(); });
-                    } else {
-                        el.textContent = step.text;
-                        if (step.cls) el.className = 'nd-line ' + step.cls;
-                        if (step.badge) {
-                            const b = document.createElement('span');
-                            b.className = 'nd-badge';
-                            b.textContent = 'Compressed: ERROR ×500 → 1 line';
-                            el.appendChild(document.createElement('br'));
-                            el.appendChild(b);
-                        }
-                        i++;
-                        next();
-                    }
-                }, wait);
-            }
-            next();
-        }
-
-        const demoBody = document.getElementById('demoBody');
-        if (demoBody) {
-            if (prefersReducedMotion) {
-                DEMO_STEPS.forEach(({ id, text, cls }) => {
-                    const el = document.getElementById(id);
-                    if (el) { el.textContent = text; if (cls) el.className = 'nd-line ' + cls; }
-                });
-            } else {
-                setTimeout(runDemo, 800);
-            }
-        }
 
         // Live stat ticker
         const heroLiveStat = document.getElementById('heroLiveStat');
@@ -3564,26 +3546,6 @@
         });
         initMagicTerminal('mtCrash', { loopDelay: 1800 });
         initMagicTerminal('mtQuery', { loopDelay: 1800 });
-
-        function typeText(el, text, speed, cb) {
-            if (!el) { cb?.(); return; }
-            el.innerHTML = '';
-            let i = 0;
-            const cursor = document.createElement('span');
-            cursor.className = 'tp-cursor';
-            function tick() {
-                if (i < text.length) {
-                    el.textContent = text.slice(0, i + 1);
-                    el.appendChild(cursor);
-                    i++;
-                    setTimeout(tick, speed);
-                } else {
-                    el.removeChild(cursor);
-                    cb?.();
-                }
-            }
-            tick();
-        }
 
         // motion
         const showcaseCards = document.querySelectorAll('.showcase-card');
