@@ -15,17 +15,23 @@
     <link rel="manifest" href="/site.webmanifest" />
 
     <title>Terms of Use — Roka</title>
-    <link rel="stylesheet" href="style.css">
+    <link href="https://api.fontshare.com/v2/css?f[]=plein@300,400,500,700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #09090b; --bg-card: rgba(255,255,255,0.03);
+            --bg: #09090b; --bg-card: #141416;
             --border: rgba(255,255,255,0.08); --border-strong: rgba(255,255,255,0.14);
-            --text: #ffffff; --text-muted: rgba(255,255,255,0.6); --text-faint: rgba(255,255,255,0.38);
+            --text: #fafafa; --text-muted: #a1a1aa; --text-faint: #52525b;
             --logo-filter: invert(1);
         }
+        [data-theme="light"] {
+            --bg: #fafafa; --bg-card: #ffffff;
+            --border: rgba(0,0,0,0.08); --border-strong: rgba(0,0,0,0.12);
+            --text: #09090b; --text-muted: #52525b; --text-faint: #a1a1aa;
+            --logo-filter: none;
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 1.125rem; font-weight: 400; letter-spacing: -0.01em; line-height: 1.65; min-height: 100vh; }
-        h1, h2, h3, h4, h5, h6 { font-family: var(--font-sans); font-weight: 600; letter-spacing: -0.02em; }
+        body { background: var(--bg); color: var(--text); font-family: 'Plein', system-ui, sans-serif; font-size: 1.125rem; font-weight: 300; letter-spacing: -0.01em; line-height: 1.65; min-height: 100vh; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: -0.03em; }
         nav { border-bottom: 1px solid var(--border); padding: 0 20px; height: 56px; display: flex; align-items: center; justify-content: space-between; max-width: 768px; margin: 0 auto; width: 100%; }
         .nav-inner { max-width: 768px; margin: 0 auto; width: 100%; padding: 0 20px; height: 56px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
         header { padding: 0 20px; border-bottom: 1px solid var(--border); }
@@ -36,8 +42,7 @@
         h2 { font-size: 1.125rem; font-weight: 400; margin: 36px 0 10px; }
         p, li { font-size: 1rem; line-height: 1.8; color: var(--text-muted); }
         ul { padding-left: 20px; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
-        a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; transition: var(--transition-fast); }
-        a:hover { color: rgba(56, 132, 255, 0.9); }
+        a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
         footer-bar { display: block; border-top: 1px solid var(--border); padding: 24px 20px; text-align: center; font-size: 0.75rem; color: var(--text-faint); }
     </style>
 </head>

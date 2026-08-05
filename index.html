@@ -18,47 +18,76 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        heading: ['Inter', 'system-ui', 'sans-serif'],
-                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
+                        sans: ['Plein', 'system-ui', 'sans-serif'],
+                        mono: ['Geist Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
                     },
                 },
             },
         };
     </script>
     <script src="/js/config.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <link href="https://api.fontshare.com/v2/css?f[]=plein@300,400,500,700&display=swap" rel="stylesheet">
+    <style>
+        /* Same Geist Mono source as trynia.ai — variable font for terminals / code UI */
+        @font-face {
+            font-family: 'Geist Mono';
+            src: url('https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/GeistMono-Variable.woff2') format('woff2');
+            font-weight: 100 900;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
     <style>
         :root {
-            --bg: #09090b;
+            --bg: #0a0a0a;
             --bg-elevated: #111112;
-            --bg-card: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
-            --border-strong: rgba(255, 255, 255, 0.14);
-            --text: #ffffff;
-            --text-muted: rgba(255, 255, 255, 0.6);
-            --text-faint: rgba(255, 255, 255, 0.38);
+            --bg-card: #0e0e0f;
+            --border: #27272a;
+            --border-strong: #3f3f46;
+            --text: #e4e4e7;
+            --text-muted: #71717a;
+            --text-faint: #52525b;
             --accent: #e4e4e7;
-            --accent-glow: rgba(56, 132, 255, 0.18);
-            --hero-glow: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(56,132,255,0.12), transparent 70%);
-            --btn-primary-bg: #ffffff;
+            --accent-glow: rgba(255, 255, 255, 0.06);
+            --hero-glow: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(255,255,255,0.07), transparent 70%);
+            --btn-primary-bg: #fafafa;
             --btn-primary-text: #09090b;
             --btn-secondary-bg: transparent;
-            --btn-secondary-text: #ffffff;
-            --success: #34d399;
+            --btn-secondary-text: #fafafa;
+            --success: #e4e4e7;
             --term-ok: #34d399;
             --danger: #f87171;
             --scan-line: rgba(255, 255, 255, 0.03);
             --grid-line: rgba(255, 255, 255, 0.045);
-            --term-border: rgba(255, 255, 255, 0.14);
+            --term-border: rgba(255, 255, 255, 0.18);
             --term-green: #34d399;
             --logo-filter: invert(1);
-            --font-mono: 'SFMono-Regular', ui-monospace, 'JetBrains Mono', 'Fira Code', Menlo, Consolas, monospace;
+            --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
             --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            --glow-blue: rgba(56, 132, 255, 0.45);
-            --glow-purple: rgba(147, 87, 255, 0.45);
+        }
+
+        [data-theme="light"] {
+            --bg: #fafafa;
+            --bg-elevated: #f4f4f5;
+            --bg-card: #ffffff;
+            --border: rgba(0, 0, 0, 0.08);
+            --border-strong: rgba(0, 0, 0, 0.12);
+            --text: #09090b;
+            --text-muted: #52525b;
+            --text-faint: #a1a1aa;
+            --accent: #18181b;
+            --accent-glow: rgba(0, 0, 0, 0.04);
+            --hero-glow: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,0,0,0.04), transparent 70%);
+            --btn-primary-bg: #09090b;
+            --btn-primary-text: #fafafa;
+            --btn-secondary-text: #09090b;
+            --scan-line: rgba(0, 0, 0, 0.03);
+            --success: #18181b;
+            --grid-line: rgba(0, 0, 0, 0.05);
+            --term-border: rgba(0, 0, 0, 0.6);
+            --term-green: #059669;
+            --term-ok: #059669;
+            --logo-filter: none;
         }
 
         * { box-sizing: border-box; }
@@ -70,20 +99,21 @@
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: var(--font-sans);
-            font-weight: 400;
+            font-family: 'Plein', system-ui, sans-serif;
+            font-weight: 300;
             letter-spacing: -0.01em;
             line-height: 1.65;
+            transition: background 0.35s ease, color 0.35s ease;
         }
 
-        .font-medium { font-weight: 500; }
-        .font-semibold { font-weight: 600; }
-        .font-bold { font-weight: 700; }
+        /* Soften Tailwind weight utilities — Plein reads better light */
+        .font-medium { font-weight: 400; }
+        .font-semibold { font-weight: 400; }
+        .font-bold { font-weight: 500; }
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: var(--font-heading);
-            font-weight: 600;
-            letter-spacing: -0.02em;
+        h1, h2, h3 {
+            font-weight: 400;
+            letter-spacing: -0.03em;
         }
 
         .mono { font-family: var(--font-mono); font-weight: 400; }
@@ -125,16 +155,10 @@
         .serif-quote { font-family: var(--font-serif); }
 
         .surface {
-            position: relative;
             background: var(--bg-card);
             border: 1px solid var(--border);
             box-shadow: none;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            transition: var(--transition-base);
-        }
-        .surface:hover {
-            border-color: var(--border-strong);
+            transition: background 0.35s ease, border-color 0.35s ease;
         }
 
         .text-muted { color: var(--text-muted); }
@@ -144,35 +168,38 @@
             background: var(--btn-primary-bg);
             color: var(--btn-primary-text);
             box-shadow: none;
-            transition: var(--transition-fast);
+            transition: transform 0.15s ease, opacity 0.15s ease;
         }
-        .btn-primary:hover {
-            background: rgba(255, 255, 255, 0.88);
-            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15), 0 8px 24px -8px var(--glow-blue);
-        }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
 
         .btn-secondary {
             background: var(--btn-secondary-bg);
             color: var(--btn-secondary-text);
             border: 1px solid var(--border-strong);
             box-shadow: none;
-            transition: var(--transition-fast);
+            transition: background 0.2s ease, transform 0.15s ease;
         }
         .btn-secondary:hover {
             background: var(--accent-glow);
-            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
         }
 
-        /* ── High-Tech Minimal: rounded cards/blocks/buttons, no flattening ── */
+        /* ── Developer Minimal: flatten radius on cards/blocks/buttons ── */
         .surface.rounded-xl,
         .surface.rounded-lg,
         .surface.rounded-2xl,
+        .btn-primary.rounded-full,
+        .btn-secondary.rounded-full,
         .btn-primary.rounded-lg,
         .btn-secondary.rounded-lg,
         .feature-card.rounded-xl {
-            border-radius: 12px;
+            border-radius: 4px;
         }
-        .compress-badge { border-radius: 20px; }
+        .compress-badge { border-radius: 4px; }
+
+        #themeToggle:hover {
+            color: var(--text) !important;
+        }
 
         /* Hero dynamic roka */
         .hero-stage {
@@ -297,9 +324,13 @@
 
         /* Browser mock frames */
         .browser-frame {
-            border-radius: 12px;
+            border-radius: 4px;
             overflow: hidden;
             border: 1px solid var(--term-border);
+            box-shadow: none;
+        }
+
+        [data-theme="light"] .browser-frame {
             box-shadow: none;
         }
 
@@ -355,11 +386,10 @@
         .feature-card:hover {
             border-color: var(--border-strong);
             transform: translateY(-2px);
-            box-shadow: 0 0 60px -20px var(--glow-blue);
         }
 
         .feature-card {
-            transition: var(--transition-base);
+            transition: transform 0.2s ease, border-color 0.2s ease;
         }
 
         /* Prune lab controls */
@@ -384,13 +414,12 @@
             background: var(--bg);
             border: 1px solid var(--border);
             color: var(--text);
-            border-radius: 8px;
-            transition: var(--transition-fast);
+            border-radius: 4px;
+            transition: border-color 0.2s;
         }
         .lab-input:focus {
             outline: none;
             border-color: var(--border-strong);
-            box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
         .custom-checkbox {
@@ -409,7 +438,7 @@
         }
 
         ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 999px; }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
 
         @keyframes scan {
             0%, 100% { opacity: 0.35; }
@@ -480,6 +509,9 @@
             will-change: transform, width;
         }
         .pill-nav-indicator.ready { opacity: 1; }
+        [data-theme="light"] .pill-nav-indicator {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+        }
         .pill-nav-link {
             position: relative;
             z-index: 2;
@@ -636,7 +668,7 @@
             font-family: var(--font-mono);
             font-size: 10px;
             padding: 3px 8px;
-            border-radius: 20px;
+            border-radius: 4px;
             background: rgba(255, 255, 255, 0.06);
             color: var(--success);
             border: 1px solid var(--border-strong);
@@ -843,7 +875,7 @@
             align-items: center; justify-content: center;
             gap: 2px;
             z-index: 10;
-            box-shadow: 0 0 60px -10px var(--glow-blue), 0 0 100px -20px var(--glow-purple);
+            box-shadow: 0 0 40px rgba(255,255,255,0.08);
         }
         .orbit-item {
             position: absolute;
@@ -1271,6 +1303,9 @@
         .bench-bar-col:hover {
             background: rgba(255, 255, 255, 0.04);
         }
+        [data-theme="light"] .bench-bar-col:hover {
+            background: rgba(0, 0, 0, 0.03);
+        }
         .bench-bar {
             width: 100%;
             background: var(--text-faint);
@@ -1356,6 +1391,16 @@
                 <a href="/about.html" class="pill-nav-link" data-section="about">About</a>
             </div>
             <div class="flex items-center gap-2">
+                <button id="themeToggle" type="button"
+                    class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer"
+                    style="color:var(--text-muted);background:none;border:1px solid var(--border-strong);font-family:'Plein',system-ui,sans-serif"
+                    aria-label="Toggle theme">
+                    <svg id="themeIcon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style="flex-shrink:0">
+                        <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.25"/>
+                        <path id="themeIconFill" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
+                    </svg>
+                    <span id="themeLabel">Light</span>
+                </button>
                 <a href="/install.html" class="btn-primary rounded-lg px-3 py-1.5 text-xs font-medium">Install</a>
             </div>
         </div>
@@ -2555,6 +2600,30 @@
     </footer>
 
     <script>
+        // ── Theme ──────────────────────────────────────────────
+        const html = document.documentElement;
+        const themeToggle    = document.getElementById('themeToggle');
+        const themeLabel     = document.getElementById('themeLabel');
+        const themeIconFill  = document.getElementById('themeIconFill');
+
+        function applyTheme(theme) {
+            html.dataset.theme = theme;
+            themeLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
+            // dark mode → left half filled (switch to light); light mode → right half filled (switch to dark)
+            themeIconFill.setAttribute('d', theme === 'dark'
+                ? 'M6 1 A5 5 0 0 0 6 11 Z'
+                : 'M6 1 A5 5 0 0 1 6 11 Z');
+            themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+            localStorage.setItem('roka-theme', theme);
+        }
+
+        const savedTheme = localStorage.getItem('roka-theme');
+        if (savedTheme) applyTheme(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            applyTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
+        });
+
         // ── Hero: prune stream + letter animation ──────────────
         const LOG_SNIPPETS = [
             'WARN pool retry 50ms', 'INFO login 192.168.x', 'DEBUG heartbeat ok',
@@ -2652,7 +2721,7 @@
                 const elapsed = (ts - cycleStart) % CYCLE;
 
                 // Background cells always invisible — only ROKA letter cells light up
-                const maxOp = 0.92;
+                const maxOp = document.documentElement.getAttribute('data-theme') === 'light' ? 1.0 : 0.92;
                 if (elapsed < NOISE_DUR) {
                     const t = ease(elapsed / NOISE_DUR);
                     cells.forEach(c => { c.target = c.isLet ? t * maxOp : 0; });
@@ -2662,9 +2731,10 @@
 
                 ctx.clearRect(0, 0, COLS*CW, ROWS*CH);
 
-                const rgb = '255,255,255';
-                const fs  = Math.round(CH * 0.68);
-                ctx.font = `400 ${fs}px ui-monospace, "SFMono-Regular", monospace`;
+                const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+                const rgb = isDark ? '250,250,250' : '15,15,18';
+                const fs  = Math.round(CH * (isDark ? 0.68 : 0.80));
+                ctx.font = `${isDark ? '400' : '700'} ${fs}px "Geist Mono", monospace`;
                 ctx.textAlign    = 'center';
                 ctx.textBaseline = 'middle';
 
@@ -2686,8 +2756,10 @@
                     if (c.opacity < 0.004) return;
 
                     if (c.isLet && c.opacity > 0.3) {
-                        ctx.shadowColor = `rgba(56,132,255,${(c.opacity - 0.3) * 0.4})`;
-                        ctx.shadowBlur = 12;
+                        ctx.shadowColor = isDark
+                            ? `rgba(255,255,255,${(c.opacity - 0.3) * 0.4})`
+                            : `rgba(0,0,0,${(c.opacity - 0.3) * 0.55})`;
+                        ctx.shadowBlur = isDark ? 10 : 8;
                     } else {
                         ctx.shadowBlur = 0;
                     }
