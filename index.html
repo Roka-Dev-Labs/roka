@@ -1058,39 +1058,40 @@
             color: var(--text-faint);
         }
         .agent-tabs {
-            display: flex;
+            display: inline-flex;
             flex-wrap: wrap;
-            gap: 0;
+            gap: 3px;
+            padding: 4px;
             border: 1px solid var(--border);
-            border-bottom: none;
-            border-radius: 10px 10px 0 0;
-            background: var(--bg-card);
-            margin-bottom: 0;
+            border-radius: 10px;
+            background: var(--bg-elevated);
+            margin-bottom: 14px;
         }
         .agent-tab {
             font-family: var(--font-mono);
             font-size: 11px;
-            padding: 0.65rem 1rem;
+            font-weight: 500;
+            padding: 0.55rem 1rem;
             color: var(--text-faint);
             background: none;
-            border: none;
-            border-bottom: 2px solid transparent;
+            border: 1px solid transparent;
+            border-radius: 7px;
             cursor: pointer;
-            transition: color 0.2s, border-color 0.2s;
-            margin-bottom: -1px;
+            transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
         }
         .agent-tab:hover { color: var(--text-muted); }
         .agent-tab.active {
             color: var(--text);
-            border-bottom-color: var(--text);
+            background: var(--bg-card);
+            border-color: var(--border-strong);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
         }
         .cmd-block {
             display: none;
             padding: 1rem 1.25rem;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-top: none;
-            border-radius: 0 0 10px 10px;
+            border-radius: 10px;
         }
         .cmd-block.active { display: block; }
         .cmd-row {
