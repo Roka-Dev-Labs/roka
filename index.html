@@ -39,13 +39,13 @@
     </style>
     <style>
         :root {
-            --bg: #09090b;
-            --bg-elevated: #111113;
-            --bg-card: #141416;
-            --border: rgba(255, 255, 255, 0.08);
-            --border-strong: rgba(255, 255, 255, 0.14);
-            --text: #fafafa;
-            --text-muted: #a1a1aa;
+            --bg: #0a0a0a;
+            --bg-elevated: #111112;
+            --bg-card: #0e0e0f;
+            --border: #27272a;
+            --border-strong: #3f3f46;
+            --text: #e4e4e7;
+            --text-muted: #71717a;
             --text-faint: #52525b;
             --accent: #e4e4e7;
             --accent-glow: rgba(255, 255, 255, 0.06);
@@ -157,6 +157,7 @@
         .surface {
             background: var(--bg-card);
             border: 1px solid var(--border);
+            box-shadow: none;
             transition: background 0.35s ease, border-color 0.35s ease;
         }
 
@@ -166,6 +167,7 @@
         .btn-primary {
             background: var(--btn-primary-bg);
             color: var(--btn-primary-text);
+            box-shadow: none;
             transition: transform 0.15s ease, opacity 0.15s ease;
         }
         .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
@@ -174,12 +176,26 @@
             background: var(--btn-secondary-bg);
             color: var(--btn-secondary-text);
             border: 1px solid var(--border-strong);
+            box-shadow: none;
             transition: background 0.2s ease, transform 0.15s ease;
         }
         .btn-secondary:hover {
             background: var(--accent-glow);
             transform: translateY(-1px);
         }
+
+        /* ── Developer Minimal: flatten radius on cards/blocks/buttons ── */
+        .surface.rounded-xl,
+        .surface.rounded-lg,
+        .surface.rounded-2xl,
+        .btn-primary.rounded-full,
+        .btn-secondary.rounded-full,
+        .btn-primary.rounded-lg,
+        .btn-secondary.rounded-lg,
+        .feature-card.rounded-xl {
+            border-radius: 4px;
+        }
+        .compress-badge { border-radius: 4px; }
 
         #themeToggle:hover {
             color: var(--text) !important;
@@ -308,14 +324,14 @@
 
         /* Browser mock frames */
         .browser-frame {
-            border-radius: 12px;
+            border-radius: 4px;
             overflow: hidden;
             border: 1px solid var(--term-border);
-            box-shadow: 0 24px 80px -20px rgba(0,0,0,0.45);
+            box-shadow: none;
         }
 
         [data-theme="light"] .browser-frame {
-            box-shadow: 0 24px 80px -20px rgba(0,0,0,0.12);
+            box-shadow: none;
         }
 
         .browser-bar {
@@ -398,7 +414,7 @@
             background: var(--bg);
             border: 1px solid var(--border);
             color: var(--text);
-            border-radius: 8px;
+            border-radius: 4px;
             transition: border-color 0.2s;
         }
         .lab-input:focus {
@@ -640,9 +656,10 @@
         .eyebrow {
             font-family: var(--font-mono);
             font-size: 11px;
-            letter-spacing: 0.12em;
+            font-weight: 500;
+            letter-spacing: 0.16em;
             text-transform: uppercase;
-            color: var(--text-faint);
+            color: var(--text-muted);
         }
         .pro-badge {
             display: inline-flex;
@@ -1576,7 +1593,7 @@
 
 
     <!-- Comparison table -->
-    <section id="vs-upload" class="max-w-6xl mx-auto px-5 py-20 reveal">
+    <section id="vs-upload" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-12">
             <h2 class="text-3xl sm:text-5xl font-bold tracking-tight mb-3">same logs. smarter context.</h2>
             <p class="text-muted text-sm">Why Roka beats just uploading to Claude directly.</p>
@@ -1648,7 +1665,7 @@
     </section>
 
     <!-- Works with your AI agent -->
-    <section id="agents" class="max-w-6xl mx-auto px-5 py-20 reveal">
+    <section id="agents" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-14">
             <span class="eyebrow">Universal context layer</span>
             <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-3 mb-3">Roka connects to any AI agent</h2>
@@ -1728,7 +1745,7 @@
     </section>
 
     <!-- Niche MCP Servers -->
-    <section id="mcp" class="max-w-6xl mx-auto px-5 py-16 reveal">
+    <section id="mcp" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-10">
             <div class="flex items-center justify-center gap-3 mb-4">
                 <span class="eyebrow">If you use Claude Code or Cursor — read this</span>
@@ -1771,7 +1788,7 @@
     </section>
 
     <!-- Motion showcase -->
-    <section id="showcase" class="max-w-6xl mx-auto px-5 py-16 reveal">
+    <section id="showcase" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-10">
             <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">See it happen</h2>
             <p class="text-muted text-sm max-w-xl mx-auto">Four moments that define Roka — noise to signal, crash to fix, install to debug.</p>
@@ -1849,7 +1866,7 @@
     </section>
 
     <!-- Features -->
-    <section id="features" class="max-w-6xl mx-auto px-5 py-16 reveal">
+    <section id="features" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-12">
             <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Built for real context, not toy demos</h2>
             <p class="text-muted text-sm max-w-2xl mx-auto">Roka is a pruning middleware: ingest logs, code, or prose, detect structure, score relevance to your query, and deliver exactly what fits the budget.</p>
@@ -1901,7 +1918,7 @@
     </section>
 
     <!-- Use Cases -->
-    <section id="use-cases" class="max-w-6xl mx-auto px-5 py-16 reveal">
+    <section id="use-cases" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-12">
             <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Use Cases</h2>
             <p class="text-muted text-sm max-w-2xl mx-auto">Beyond logs — Roka optimizes context for incident investigation, RAG pipelines, and code review at scale.</p>
@@ -1940,7 +1957,7 @@
 
 
     <!-- Benchmark -->
-    <section id="benchmark" class="max-w-6xl mx-auto px-5 py-16 reveal">
+    <section id="benchmark" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-10">
             <span class="eyebrow">Real benchmark — LogHub corpus</span>
             <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-3 mb-3">Tested on real production logs, not a cherry-picked demo</h2>
@@ -2119,7 +2136,7 @@
     </section>
 
     <!-- Interactive Try It -->
-    <section id="try" class="max-w-6xl mx-auto px-5 py-16 reveal">
+    <section id="try" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-10">
             <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Try it now</h2>
             <p class="text-muted text-sm">Paste a log dump, set your query and budget, and run the live pipeline.</p>
@@ -2202,7 +2219,7 @@
     </section>
 
     <!-- Pricing -->
-    <section id="pricing" class="max-w-6xl mx-auto px-5 py-16 reveal">
+    <section id="pricing" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-12">
             <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Pricing</h2>
             <p class="text-muted text-sm max-w-2xl mx-auto">Start free, upgrade when logs get serious. No credit card for the CLI.</p>
