@@ -16,6 +16,8 @@ node_modules/
 # Environment & secrets
 *.env
 .env*
+.npmrc
+**/.npmrc
 
 # OS
 .DS_Store

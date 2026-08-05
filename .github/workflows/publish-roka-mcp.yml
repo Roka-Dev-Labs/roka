@@ -4,9 +4,11 @@ name: Publish roka-mcp to npm
 #   - Push a tag matching roka-mcp-v* (e.g. roka-mcp-v0.1.1) to publish that version.
 #   - Or run manually via workflow_dispatch for a one-off/backfill publish.
 #
-# Requires a repository secret named NPM_TOKEN (an npm "Automation" access token
-# with publish rights for the roka-mcp package). Add it under
-# Settings -> Secrets and variables -> Actions -> New repository secret.
+# Requires a repository secret named NPM_TOKEN:
+#   1. Create a Granular Access Token at https://www.npmjs.com/settings/~/tokens
+#      (Read and write + Bypass 2FA + All packages, or scoped to roka-mcp)
+#   2. Add it under Settings → Secrets and variables → Actions → New repository secret
+#      Name: NPM_TOKEN   Value: npm_...
 
 on:
   push:
@@ -37,6 +39,34 @@ jobs:
         with:
           node-version: "20"
           registry-url: "https://registry.npmjs.org"
+          # Write auth into the package dir so npm publish (cwd=roka-mcp) finds it.
+          scope: ""
+
+      - name: Ensure NPM_TOKEN is configured
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::error::Repository secret NPM_TOKEN is missing or empty."
+            echo "Create a Granular Access Token (Read and write + Bypass 2FA) at"
+            echo "https://www.npmjs.com/settings/~/tokens"
+            echo "then add it as Actions secret NPM_TOKEN:"
+            echo "https://github.com/${{ github.repository }}/settings/secrets/actions"
+            exit 1
+          fi
+
+      - name: Write npm auth for package directory
+        working-directory: .
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # setup-node writes .npmrc at repo root; also write one inside roka-mcp/
+          # so publish with working-directory=roka-mcp always has auth.
+          cat > roka-mcp/.npmrc <<EOF
+          //registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}
+          registry=https://registry.npmjs.org/
+          always-auth=true
+          EOF
 
       - name: Install dependencies
         run: npm ci
