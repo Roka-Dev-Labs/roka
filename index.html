@@ -18,7 +18,7 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Plein', 'system-ui', 'sans-serif'],
+                        sans: ['Montserrat', 'system-ui', 'sans-serif'],
                         mono: ['Geist Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
                     },
                 },
@@ -26,7 +26,9 @@
         };
     </script>
     <script src="/js/config.js"></script>
-    <link href="https://api.fontshare.com/v2/css?f[]=plein@300,400,500,700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@375&display=swap" rel="stylesheet">
     <style>
         /* Same Geist Mono source as trynia.ai — variable font for terminals / code UI */
         @font-face {
@@ -99,14 +101,16 @@
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: 'Plein', system-ui, sans-serif;
-            font-weight: 300;
+            font-family: "Montserrat", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 375;
+            font-style: normal;
             letter-spacing: -0.01em;
             line-height: 1.65;
             transition: background 0.35s ease, color 0.35s ease;
         }
 
-        /* Soften Tailwind weight utilities — Plein reads better light */
+        /* Soften Tailwind weight utilities — Montserrat reads better light */
         .font-medium { font-weight: 400; }
         .font-semibold { font-weight: 400; }
         .font-bold { font-weight: 500; }
@@ -1393,7 +1397,7 @@
             <div class="flex items-center gap-2">
                 <button id="themeToggle" type="button"
                     class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer"
-                    style="color:var(--text-muted);background:none;border:1px solid var(--border-strong);font-family:'Plein',system-ui,sans-serif"
+                    style="color:var(--text-muted);background:none;border:1px solid var(--border-strong);font-family:'Montserrat',system-ui,sans-serif"
                     aria-label="Toggle theme">
                     <svg id="themeIcon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style="flex-shrink:0">
                         <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.25"/>
