@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.2] - 2026-08-05
+
+### Fixed
+
+- Align package version with the `roka-mcp-v0.1.2` release tag so the GitHub Actions publish
+  workflow can publish successfully.
+- Harden the publish workflow: fail fast when `NPM_TOKEN` is missing, and write auth into
+  `roka-mcp/.npmrc` so `npm publish` always sees credentials.
+
 ## [0.1.1] - 2026-08-05
 
 ### Added
