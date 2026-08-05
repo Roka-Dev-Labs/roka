@@ -1511,34 +1511,18 @@
                 </div>
             </div>
 
-            <!-- Terminal mode: package-manager install -->
+            <!-- Terminal mode: CLI installer -->
             <div class="mode-panel active" data-mode-panel="terminal">
-                <div class="agent-tabs" role="tablist" id="installTabs">
-                    <button type="button" class="install-tab active" data-pm="npx" role="tab">npx</button>
-                    <button type="button" class="install-tab" data-pm="yarn" role="tab">yarn</button>
-                    <button type="button" class="install-tab" data-pm="pnpm" role="tab">pnpm</button>
-                    <button type="button" class="install-tab" data-pm="bun" role="tab">bun</button>
-                </div>
-                <button type="button" class="cmd-btn active" data-pm-panel="npx" data-copy="npx roka-mcp@latest" aria-label="Copy command">
-                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">&gt;</span>npx roka-mcp@latest</span>
-                    <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
-                </button>
-                <button type="button" class="cmd-btn" data-pm-panel="yarn" data-copy="yarn dlx roka-mcp@latest" aria-label="Copy command">
-                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">&gt;</span>yarn dlx roka-mcp@latest</span>
-                    <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
-                </button>
-                <button type="button" class="cmd-btn" data-pm-panel="pnpm" data-copy="pnpm dlx roka-mcp@latest" aria-label="Copy command">
-                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">&gt;</span>pnpm dlx roka-mcp@latest</span>
-                    <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
-                </button>
-                <button type="button" class="cmd-btn" data-pm-panel="bun" data-copy="bunx roka-mcp@latest" aria-label="Copy command">
-                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">&gt;</span>bunx roka-mcp@latest</span>
+                <p class="text-xs text-muted mb-3">Install the local <span class="mono text-[11px]" style="color:var(--text)">roka</span> CLI — detects OS and architecture automatically.</p>
+                <button type="button" class="cmd-btn active" data-copy="curl -fsSL https://install.roka-prune.com | bash" aria-label="Copy command">
+                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>curl -fsSL https://install.roka-prune.com | bash</span>
                     <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
                 </button>
             </div>
 
             <!-- AI Agent mode: per-agent connect command -->
             <div class="mode-panel" data-mode-panel="agent">
+                <p class="text-xs text-muted mb-3">Connect Roka MCP to your AI agent in one command.</p>
                 <div class="agent-tabs" role="tablist">
                     <button type="button" class="agent-tab active" data-agent="claude" role="tab">Claude Code</button>
                     <button type="button" class="agent-tab" data-agent="cursor" role="tab">Cursor</button>
