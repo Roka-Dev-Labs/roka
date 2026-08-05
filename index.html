@@ -80,15 +80,31 @@
 
         * { box-sizing: border-box; }
 
+        html {
+            font-size: 112.5%; /* 18px root — scales all rem / Tailwind text sizes */
+        }
+
         body {
             background: var(--bg);
             color: var(--text);
             font-family: 'Plein', system-ui, sans-serif;
-            letter-spacing: -0.02em;
+            font-weight: 300;
+            letter-spacing: -0.01em;
+            line-height: 1.65;
             transition: background 0.35s ease, color 0.35s ease;
         }
 
-        .mono { font-family: 'Geist Mono', monospace; }
+        /* Soften Tailwind weight utilities — Plein reads better light */
+        .font-medium { font-weight: 400; }
+        .font-semibold { font-weight: 400; }
+        .font-bold { font-weight: 500; }
+
+        h1, h2, h3 {
+            font-weight: 400;
+            letter-spacing: -0.03em;
+        }
+
+        .mono { font-family: 'Geist Mono', monospace; font-weight: 400; }
 
         .surface {
             background: var(--bg-card);
@@ -185,8 +201,8 @@
             position: relative;
             display: flex;
             gap: 0.02em;
-            font-size: clamp(4.5rem, 14vw, 9rem);
-            font-weight: 700;
+            font-size: clamp(5rem, 15vw, 10rem);
+            font-weight: 400;
             line-height: 1;
             letter-spacing: -0.06em;
             z-index: 2;
@@ -523,15 +539,15 @@
             margin-bottom: 2rem;
         }
         .hero-tagline {
-            font-size: 1.125rem;
-            line-height: 1.75rem;
+            font-size: 1.25rem;
+            line-height: 1.85rem;
             font-weight: 300;
-            letter-spacing: -0.025em;
+            letter-spacing: -0.015em;
             color: var(--text-muted);
             transition: opacity 0.25s ease, transform 0.25s ease;
         }
         @media (min-width: 640px) {
-            .hero-tagline { font-size: 1.25rem; line-height: 1.75rem; }
+            .hero-tagline { font-size: 1.4rem; line-height: 2rem; }
         }
         .hero-noise-burst {
             position: absolute;
@@ -868,23 +884,24 @@
 
         /* ── Agent panel ── */
         .hero-headline {
-            font-size: clamp(1.75rem, 5vw, 2.75rem);
-            font-weight: 600;
-            letter-spacing: -0.04em;
+            font-size: clamp(2.1rem, 5.5vw, 3.25rem);
+            font-weight: 400;
+            letter-spacing: -0.035em;
             text-align: center;
             z-index: 10;
-            max-width: 28rem;
+            max-width: 30rem;
             line-height: 1.15;
         }
         .hero-sub {
-            font-size: 0.9375rem;
+            font-size: 1.125rem;
+            font-weight: 300;
             color: var(--text-muted);
             text-align: center;
             z-index: 10;
-            max-width: 26rem;
+            max-width: 28rem;
             margin-top: 0.75rem;
             margin-bottom: 2rem;
-            line-height: 1.5;
+            line-height: 1.55;
         }
         .hero-live-stat {
             font-family: 'Geist Mono', monospace;
@@ -1107,16 +1124,17 @@
             .story-row.reverse > * { direction: ltr; }
         }
         .story-copy h3 {
-            font-size: clamp(1.35rem, 3vw, 1.75rem);
-            font-weight: 600;
-            letter-spacing: -0.03em;
+            font-size: clamp(1.55rem, 3.2vw, 2rem);
+            font-weight: 400;
+            letter-spacing: -0.025em;
             margin-bottom: 0.75rem;
             line-height: 1.2;
         }
         .story-copy p {
-            font-size: 0.875rem;
+            font-size: 1rem;
+            font-weight: 300;
             color: var(--text-muted);
-            line-height: 1.65;
+            line-height: 1.7;
         }
         .story-viz {
             position: relative;

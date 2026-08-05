@@ -30,16 +30,17 @@
             --logo-filter: none;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--text); font-family: 'Plein', system-ui, sans-serif; letter-spacing: -0.02em; min-height: 100vh; }
+        body { background: var(--bg); color: var(--text); font-family: 'Plein', system-ui, sans-serif; font-size: 1.125rem; font-weight: 300; letter-spacing: -0.01em; line-height: 1.65; min-height: 100vh; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: -0.03em; }
         nav { border-bottom: 1px solid var(--border); padding: 0 20px; height: 56px; display: flex; align-items: center; justify-content: space-between; max-width: 768px; margin: 0 auto; width: 100%; }
         .nav-inner { max-width: 768px; margin: 0 auto; width: 100%; padding: 0 20px; height: 56px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
         header { padding: 0 20px; border-bottom: 1px solid var(--border); }
         header .inner { max-width: 768px; margin: 0 auto; height: 56px; display: flex; align-items: center; justify-content: space-between; }
         main { max-width: 768px; margin: 0 auto; padding: 60px 20px 80px; }
-        h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.04em; margin-bottom: 8px; }
-        .meta { font-size: 0.8rem; color: var(--text-faint); margin-bottom: 48px; }
-        h2 { font-size: 1rem; font-weight: 600; margin: 36px 0 10px; }
-        p, li { font-size: 0.9rem; line-height: 1.75; color: var(--text-muted); }
+        h1 { font-size: 2.25rem; font-weight: 400; letter-spacing: -0.03em; margin-bottom: 8px; }
+        .meta { font-size: 0.85rem; color: var(--text-faint); margin-bottom: 48px; }
+        h2 { font-size: 1.125rem; font-weight: 400; margin: 36px 0 10px; }
+        p, li { font-size: 1rem; line-height: 1.8; color: var(--text-muted); }
         ul { padding-left: 20px; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
         a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
         footer-bar { display: block; border-top: 1px solid var(--border); padding: 24px 20px; text-align: center; font-size: 0.75rem; color: var(--text-faint); }
