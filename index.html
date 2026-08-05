@@ -13,8 +13,20 @@
     <link rel="manifest" href="/site.webmanifest" />
     <title>Roka: Prune your logs</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plein', 'system-ui', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
     <script src="/js/config.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=plein@300,400,500,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #09090b;
@@ -71,7 +83,7 @@
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Plein', system-ui, sans-serif;
             letter-spacing: -0.02em;
             transition: background 0.35s ease, color 0.35s ease;
         }
@@ -385,6 +397,56 @@
         }
         .logo-animate {
             animation: logoSpin 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* Floating pill navigation */
+        .pill-nav {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            padding: 4px;
+            border-radius: 999px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+        }
+        .pill-nav-indicator {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            height: calc(100% - 8px);
+            width: 0;
+            border-radius: 999px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.14), 0 1px 2px rgba(0,0,0,0.08);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
+            transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1),
+                        width 0.45s cubic-bezier(0.65, 0, 0.35, 1),
+                        opacity 0.2s ease;
+            will-change: transform, width;
+        }
+        .pill-nav-indicator.ready { opacity: 1; }
+        [data-theme="light"] .pill-nav-indicator {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+        }
+        .pill-nav-link {
+            position: relative;
+            z-index: 2;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.8125rem;
+            line-height: 1.4;
+            color: var(--text-muted);
+            white-space: nowrap;
+            transition: color 0.25s ease;
+        }
+        .pill-nav-link:hover,
+        .pill-nav-link.active { color: var(--text); }
+        @media (prefers-reduced-motion: reduce) {
+            .pill-nav-indicator { transition: opacity 0.2s ease; }
         }
 
         /* Mobile Sidebar */
@@ -1236,18 +1298,19 @@
                 <img src="/favicon-32x32.png" alt="" class="w-7 h-7 logo-animate" width="28" height="28">
                 Roka
             </a>
-            <div class="hidden sm:flex items-center gap-6 text-sm text-muted">
-                <a href="#story" class="hover:text-[var(--text)] transition">Showcase</a>
-                <a href="/testing.html" class="hover:text-[var(--text)] transition">Testing</a>
-                <a href="#mcp" class="hover:text-[var(--text)] transition">MCP</a>
-                <a href="#features" class="hover:text-[var(--text)] transition">Features</a>
-                <a href="#pricing" class="hover:text-[var(--text)] transition">Pricing</a>
-                <a href="/about.html" class="hover:text-[var(--text)] transition">About</a>
+            <div class="hidden sm:flex pill-nav" id="pillNav">
+                <span class="pill-nav-indicator" id="pillNavIndicator"></span>
+                <a href="#story" class="pill-nav-link" data-section="story">Showcase</a>
+                <a href="/testing.html" class="pill-nav-link" data-section="testing">Testing</a>
+                <a href="#mcp" class="pill-nav-link" data-section="mcp">MCP</a>
+                <a href="#features" class="pill-nav-link" data-section="features">Features</a>
+                <a href="#pricing" class="pill-nav-link" data-section="pricing">Pricing</a>
+                <a href="/about.html" class="pill-nav-link" data-section="about">About</a>
             </div>
             <div class="flex items-center gap-2">
                 <button id="themeToggle" type="button"
                     class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer"
-                    style="color:var(--text-muted);background:none;border:1px solid var(--border-strong);font-family:'Inter',system-ui,sans-serif"
+                    style="color:var(--text-muted);background:none;border:1px solid var(--border-strong);font-family:'Plein',system-ui,sans-serif"
                     aria-label="Toggle theme">
                     <svg id="themeIcon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style="flex-shrink:0">
                         <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.25"/>
@@ -2722,7 +2785,7 @@
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await readJsonResponse(res);
                 apiOnline = data.status === 'healthy';
-                logConsole(apiOnline ? 'api online' : 'api error: unexpected response');
+                if (!apiOnline) logConsole('api error: unexpected response');
             } catch (err) {
                 if (attempt < MAX_ATTEMPTS) {
                     logConsole(`api waking up… retrying (${attempt}/${MAX_ATTEMPTS - 1})`);
@@ -2984,6 +3047,58 @@
         mobileSidebarLinks.forEach(link => {
             link.addEventListener('click', closeMobileSidebar);
         });
+
+        // ── Floating pill navigation ──────────────────────────────
+        (function initPillNav() {
+            const nav = document.getElementById('pillNav');
+            const indicator = document.getElementById('pillNavIndicator');
+            if (!nav || !indicator) return;
+
+            const links = Array.from(nav.querySelectorAll('.pill-nav-link'));
+            let activeLink = null;
+
+            function movePill(link) {
+                if (!link) return;
+                indicator.style.width = `${link.offsetWidth}px`;
+                indicator.style.transform = `translateX(${link.offsetLeft - 4}px)`;
+                indicator.classList.add('ready');
+            }
+
+            function setActive(sectionId) {
+                const link = links.find(l => l.dataset.section === sectionId);
+                if (!link || link === activeLink) return;
+                links.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                activeLink = link;
+                if (!nav.matches(':hover')) movePill(link);
+            }
+
+            const path = window.location.pathname;
+            if (path.includes('testing.html')) setActive('testing');
+            else if (path.includes('about.html')) setActive('about');
+            else setActive('story');
+
+            links.forEach(link => {
+                link.addEventListener('mouseenter', () => movePill(link));
+            });
+            nav.addEventListener('mouseleave', () => movePill(activeLink));
+            window.addEventListener('resize', () => movePill(activeLink));
+
+            if (!path.includes('testing.html') && !path.includes('about.html')) {
+                const sectionIds = ['story', 'mcp', 'features', 'pricing'];
+                const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+                if (sections.length) {
+                    const spy = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) setActive(entry.target.id);
+                        });
+                    }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+                    sections.forEach(s => spy.observe(s));
+                }
+            }
+
+            requestAnimationFrame(() => movePill(activeLink));
+        })();
 
         // ── Hero animations (handled by canvas above) ──
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
