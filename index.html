@@ -130,6 +130,7 @@
         .agent-panel,
         .agent-label,
         .agent-tab,
+        .install-tab,
         .cmd-block,
         .cmd-row,
         .cmd-row code,
@@ -1053,7 +1054,7 @@
         }
         .agent-label {
             font-family: var(--font-mono);
-            font-size: 10px;
+            font-size: 10.5px;
             letter-spacing: 0.14em;
             color: var(--text-faint);
         }
@@ -1067,11 +1068,12 @@
             background: var(--bg-elevated);
             margin-bottom: 14px;
         }
-        .agent-tab {
+        .agent-tab,
+        .install-tab {
             font-family: var(--font-mono);
-            font-size: 11px;
+            font-size: 12.5px;
             font-weight: 500;
-            padding: 0.55rem 1rem;
+            padding: 0.6rem 1.1rem;
             color: var(--text-faint);
             background: none;
             border: 1px solid transparent;
@@ -1079,8 +1081,9 @@
             cursor: pointer;
             transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
         }
-        .agent-tab:hover { color: var(--text-muted); }
-        .agent-tab.active {
+        .agent-tab:hover, .install-tab:hover { color: var(--text-muted); }
+        .agent-tab.active,
+        .install-tab.active {
             color: var(--text);
             background: var(--bg-card);
             border-color: var(--border-strong);
@@ -1088,13 +1091,13 @@
         }
         .cmd-block {
             display: none;
-            padding: 1rem 1.25rem;
-            background: #000000;
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 1.1rem 1.35rem;
+            background: var(--bg);
+            border: 1px solid var(--term-border);
             border-radius: 10px;
-            transition: border-color 0.15s ease;
+            transition: background-color 0.35s ease, border-color 0.35s ease;
         }
-        .cmd-block:hover { border-color: rgba(255, 255, 255, 0.4); }
+        .cmd-block:hover { border-color: var(--border-strong); }
         .cmd-block.active { display: block; }
         .cmd-row {
             display: flex;
@@ -1102,15 +1105,18 @@
             justify-content: space-between;
             gap: 0.75rem;
             font-family: var(--font-mono);
-            font-size: 11px;
+            font-size: 13px;
             color: var(--text-muted);
-            padding: 0.5rem 0;
+            padding: 0.6rem 0;
+            transition: color 0.35s ease;
         }
         .cmd-row code:not(.text-faint) {
-            color: #ffffff;
+            color: var(--text);
             font-weight: 500;
+            font-size: 13.5px;
+            transition: color 0.35s ease;
         }
-        .cmd-row + .cmd-row { border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        .cmd-row + .cmd-row { border-top: 1px solid var(--border); }
         .cmd-copy {
             flex-shrink: 0;
             display: inline-flex;
@@ -1119,15 +1125,15 @@
             width: 28px;
             height: 28px;
             padding: 0;
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            border: 1px solid var(--border-strong);
             border-radius: 6px;
             background: transparent;
-            color: rgba(255, 255, 255, 0.55);
+            color: var(--text-faint);
             cursor: pointer;
-            transition: color 0.15s, border-color 0.15s, background 0.15s;
+            transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
         }
         .cmd-copy .copy-icon { width: 14px; height: 14px; display: block; }
-        .cmd-copy:hover { color: #ffffff; border-color: rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.06); }
+        .cmd-copy:hover { color: var(--text); border-color: var(--border-strong); background: var(--accent-glow); }
         .cmd-copy.copied { color: var(--term-green); border-color: var(--term-green); }
 
         .demo-wrap {
@@ -1517,10 +1523,48 @@
             </div>
         </div>
 
-        <div class="flex flex-wrap items-center justify-center gap-3 z-10 mt-8 px-5">
-            <a href="/install.html" class="btn-primary rounded-full px-6 py-2.5 text-sm font-medium">Install Free CLI</a>
-            <a href="#story" class="btn-secondary rounded-full px-6 py-2.5 text-sm font-medium">See it work →</a>
+        <!-- Install panel -->
+        <div class="agent-panel px-5 reveal visible mt-4" style="max-width:32rem">
+            <div class="agent-panel-top">
+                <span class="agent-label">INSTALL IN SECONDS</span>
+            </div>
+            <div class="agent-tabs" role="tablist" id="installTabs">
+                <button type="button" class="install-tab active" data-pm="npx" role="tab">npx</button>
+                <button type="button" class="install-tab" data-pm="yarn" role="tab">yarn</button>
+                <button type="button" class="install-tab" data-pm="pnpm" role="tab">pnpm</button>
+                <button type="button" class="install-tab" data-pm="bun" role="tab">bun</button>
+            </div>
+            <div class="cmd-block active" data-pm-panel="npx">
+                <div class="cmd-row">
+                    <code>$ npx roka-mcp@latest connect --agent claude-code</code>
+                    <button type="button" class="cmd-copy" data-copy="npx roka-mcp@latest connect --agent claude-code" aria-label="Copy"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                </div>
+            </div>
+            <div class="cmd-block" data-pm-panel="yarn">
+                <div class="cmd-row">
+                    <code>$ yarn dlx roka-mcp connect --agent claude-code</code>
+                    <button type="button" class="cmd-copy" data-copy="yarn dlx roka-mcp connect --agent claude-code" aria-label="Copy"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                </div>
+            </div>
+            <div class="cmd-block" data-pm-panel="pnpm">
+                <div class="cmd-row">
+                    <code>$ pnpm dlx roka-mcp connect --agent claude-code</code>
+                    <button type="button" class="cmd-copy" data-copy="pnpm dlx roka-mcp connect --agent claude-code" aria-label="Copy"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                </div>
+            </div>
+            <div class="cmd-block" data-pm-panel="bun">
+                <div class="cmd-row">
+                    <code>$ bunx roka-mcp connect --agent claude-code</code>
+                    <button type="button" class="cmd-copy" data-copy="bunx roka-mcp connect --agent claude-code" aria-label="Copy"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-3 mt-4">
+                <a href="/install.html" class="btn-primary rounded-full px-5 py-2 text-sm font-medium">Get Started Free</a>
+                <a href="https://github.com/Roka-Dev-Labs/roka-mcp" target="_blank" rel="noopener" class="btn-secondary rounded-full px-5 py-2 text-sm font-medium">Read the Docs</a>
+                <a href="#story" class="text-xs font-medium" style="color:var(--text-muted)">See it work →</a>
+            </div>
         </div>
+
         <p class="hero-live-stat z-10" id="heroLiveStat">// <span>48,204</span> lines ingested · <span>−94%</span> noise removed · <span>312ms</span></p>
     </section>
 
@@ -3191,7 +3235,16 @@
             tab.addEventListener('click', () => {
                 const agent = tab.dataset.agent;
                 document.querySelectorAll('.agent-tab').forEach(t => t.classList.toggle('active', t === tab));
-                document.querySelectorAll('.cmd-block').forEach(p => p.classList.toggle('active', p.dataset.agentPanel === agent));
+                document.querySelectorAll('.cmd-block[data-agent-panel]').forEach(p => p.classList.toggle('active', p.dataset.agentPanel === agent));
+            });
+        });
+
+        // Install (package manager) tabs
+        document.querySelectorAll('.install-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const pm = tab.dataset.pm;
+                document.querySelectorAll('.install-tab').forEach(t => t.classList.toggle('active', t === tab));
+                document.querySelectorAll('.cmd-block[data-pm-panel]').forEach(p => p.classList.toggle('active', p.dataset.pmPanel === pm));
             });
         });
         const COPY_ICON = '<svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
