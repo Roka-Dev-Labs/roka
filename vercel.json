@@ -28,33 +28,40 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "X-XSS-Protection", "value": "1; mode=block" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
-        {
-          "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://roka-prune.com https://www.roka-prune.com https://api.roka-prune.com; frame-ancestors 'none';"
-        },
-        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" }
-      ]
+      "src": "^/$",
+      "has": [{ "type": "host", "value": "install.roka-prune.com" }],
+      "dest": "/install.sh",
+      "headers": {
+        "content-type": "text/x-shellscript; charset=utf-8",
+        "cache-control": "no-cache, no-store, must-revalidate",
+        "x-content-type-options": "nosniff"
+      }
     },
     {
-      "source": "/install.sh",
-      "headers": [
-        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" }
-      ]
+      "src": "^/install\\.sh$",
+      "headers": {
+        "content-type": "text/x-shellscript; charset=utf-8",
+        "cache-control": "no-cache, no-store, must-revalidate",
+        "x-content-type-options": "nosniff"
+      },
+      "continue": true
+    },
+    {
+      "src": "/(.*)",
+      "headers": {
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "1; mode=block",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "camera=(), microphone=(), geolocation=()",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://roka-prune.com https://www.roka-prune.com https://api.roka-prune.com; frame-ancestors 'none';",
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload"
+      },
+      "continue": true
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }
