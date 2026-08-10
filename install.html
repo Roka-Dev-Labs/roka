@@ -220,16 +220,37 @@
             justify-content: center;
             width: 28px;
             height: 28px;
+            min-width: 28px;
+            min-height: 28px;
             padding: 0;
-            border: 1px solid var(--border-strong);
+            border: 1px solid var(--border);
             border-radius: 6px;
             background: transparent;
             color: var(--text-faint);
             cursor: pointer;
+            line-height: 0;
+            -webkit-appearance: none;
+            appearance: none;
+            box-sizing: border-box;
             transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
         }
-        .cmd-copy .copy-icon { width: 14px; height: 14px; display: block; }
-        .cmd-copy:hover { color: var(--text); background: var(--accent-glow); }
+        .cmd-copy .cmd-btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            line-height: 0;
+            pointer-events: none;
+        }
+        .cmd-copy .copy-icon,
+        .cmd-copy svg {
+            width: 14px;
+            height: 14px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .cmd-copy:hover { color: var(--text); border-color: var(--border-strong); background: var(--accent-glow); }
         .cmd-copy.copied { color: var(--success); border-color: var(--success); }
 
         /* Install / MCP panels */
@@ -357,6 +378,25 @@
             background: var(--bg-elevated);
             border-bottom: 1px solid var(--border);
         }
+        .terminal-mini .terminal-bar {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            column-gap: 8px;
+            padding: 8px 10px;
+        }
+        .terminal-mini .terminal-dots { grid-column: 1; }
+        .terminal-mini .terminal-title {
+            grid-column: 2;
+            flex: unset;
+        }
+        .terminal-bar-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .terminal-mini .terminal-bar-actions { grid-column: 3; }
         .terminal-dots { display: flex; gap: 6px; flex-shrink: 0; }
         .terminal-dots span {
             width: 10px; height: 10px; border-radius: 50%;
@@ -470,9 +510,17 @@
             color: var(--text-muted);
             border-radius: 6px;
             font-size: 10px;
-            padding: 4px 9px;
+            line-height: 1;
+            height: 28px;
+            padding: 0 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             flex-shrink: 0;
+            -webkit-appearance: none;
+            appearance: none;
+            box-sizing: border-box;
             transition: border-color .2s, color .2s;
         }
         .mini-replay:hover { color: var(--text); border-color: var(--border-strong); }
@@ -563,10 +611,12 @@
                         <div class="terminal-bar">
                             <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
                             <div class="terminal-title">terminal</div>
-                            <button class="mini-replay" type="button">Replay</button>
-                            <button class="cmd-copy" type="button" data-copy="curl -fsSL https://install.roka-prune.com | bash" aria-label="Copy command">
-                                <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                            </button>
+                            <div class="terminal-bar-actions">
+                                <button class="mini-replay" type="button">Replay</button>
+                                <button class="cmd-copy" type="button" data-copy="curl -fsSL https://install.roka-prune.com | bash" aria-label="Copy command">
+                                    <span class="cmd-btn-icon" aria-hidden="true"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
+                                </button>
+                            </div>
                         </div>
                         <div class="terminal-body">
                             <div class="cmd-line"><span class="prompt">$</span><span class="mini-cmd"></span><span class="caret"></span></div>
@@ -578,10 +628,12 @@
                         <div class="terminal-bar">
                             <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
                             <div class="terminal-title">verify</div>
-                            <button class="mini-replay" type="button">Replay</button>
-                            <button class="cmd-copy" type="button" data-copy="roka --version" aria-label="Copy command">
-                                <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                            </button>
+                            <div class="terminal-bar-actions">
+                                <button class="mini-replay" type="button">Replay</button>
+                                <button class="cmd-copy" type="button" data-copy="roka --version" aria-label="Copy command">
+                                    <span class="cmd-btn-icon" aria-hidden="true"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
+                                </button>
+                            </div>
                         </div>
                         <div class="terminal-body">
                             <div class="cmd-line"><span class="prompt">$</span><span class="mini-cmd"></span><span class="caret"></span></div>
@@ -593,10 +645,12 @@
                         <div class="terminal-bar">
                             <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
                             <div class="terminal-title">prune</div>
-                            <button class="mini-replay" type="button">Replay</button>
-                            <button class="cmd-copy" type="button" data-copy='cat your-log.log | roka prune --query "what broke" --budget 8000' aria-label="Copy command">
-                                <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2 2v1"/></svg>
-                            </button>
+                            <div class="terminal-bar-actions">
+                                <button class="mini-replay" type="button">Replay</button>
+                                <button class="cmd-copy" type="button" data-copy='cat your-log.log | roka prune --query "what broke" --budget 8000' aria-label="Copy command">
+                                    <span class="cmd-btn-icon" aria-hidden="true"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
+                                </button>
+                            </div>
                         </div>
                         <div class="terminal-body">
                             <div class="cmd-line"><span class="prompt">$</span><span class="mini-cmd"></span><span class="caret"></span></div>
@@ -702,18 +756,18 @@
             const text = btn.dataset.copy || '';
             navigator.clipboard.writeText(text).then(() => {
                 btn.classList.add('copied');
-                if (restoreHtml !== undefined) {
+                const icon = btn.querySelector('.cmd-btn-icon');
+                if (icon) {
+                    icon.innerHTML = COPIED_ICON;
+                    setTimeout(() => {
+                        btn.classList.remove('copied');
+                        icon.innerHTML = COPY_ICON;
+                    }, 1500);
+                } else if (restoreHtml !== undefined) {
                     btn.innerHTML = COPIED_ICON;
                     setTimeout(() => {
                         btn.classList.remove('copied');
                         btn.innerHTML = restoreHtml;
-                    }, 1500);
-                } else {
-                    const icon = btn.querySelector('.cmd-btn-icon');
-                    if (icon) icon.innerHTML = COPIED_ICON;
-                    setTimeout(() => {
-                        btn.classList.remove('copied');
-                        if (icon) icon.innerHTML = COPY_ICON;
                     }, 1500);
                 }
             });
@@ -730,8 +784,7 @@
         });
 
         document.querySelectorAll('.cmd-copy').forEach((btn) => {
-            const original = btn.innerHTML;
-            btn.addEventListener('click', () => flashCopied(btn, original));
+            btn.addEventListener('click', () => flashCopied(btn));
         });
 
         document.querySelectorAll('.cmd-btn').forEach((btn) => {
