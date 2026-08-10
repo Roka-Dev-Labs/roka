@@ -14,6 +14,7 @@ import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { pruneText, DEFAULT_BUDGET } from "./prune.js";
+import { verifyProAccess, printVerificationError } from "./verify.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(readFileSync(join(__dirname, "..", "package.json"), "utf8"));
@@ -128,12 +129,15 @@ export function createServer() {
 }
 
 export async function serve() {
-  if (!process.env.ROKA_API_KEY) {
+  const verification = await verifyProAccess(process.env.ROKA_API_KEY);
+  if (!verification.ok) {
+    printVerificationError("serve", verification);
     console.error(
-      "[roka-mcp] warning: ROKA_API_KEY is not set. MCP is a Pro feature (see https://roka-prune.com) " +
-        "— tools will still run locally for now, but connect/watch require a key."
+      "[roka-mcp] refusing to start: MCP tools are a Pro feature and require a verified API key."
     );
+    process.exit(1);
   }
+  console.error(`[roka-mcp] verified Pro access (tier "${verification.tier}") — starting tools.`);
 
   if (process.stdin.isTTY) {
     console.error(`[roka-mcp] v${SERVER_VERSION} — starting MCP server on stdio.`);

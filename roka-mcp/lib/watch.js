@@ -11,6 +11,7 @@ import { closeSync, existsSync, mkdirSync, openSync, readSync, statSync } from "
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { pruneText, DEFAULT_BUDGET, CRASH_PATTERN } from "./prune.js";
+import { verifyProAccess, printVerificationError } from "./verify.js";
 
 const MAX_BUFFER_LINES = 2000;
 const POLL_INTERVAL_MS = 300;
@@ -83,6 +84,12 @@ export async function watchCommand(args) {
   if (!apiKey) {
     console.error("[roka-mcp] watch: MCP is a Pro feature and requires an API key.");
     console.error(`  Set ROKA_API_KEY or pass --api-key <key>. Get one at ${API_KEY_DASHBOARD_URL}`);
+    process.exit(1);
+  }
+
+  const verification = await verifyProAccess(apiKey);
+  if (!verification.ok) {
+    printVerificationError("watch", verification);
     process.exit(1);
   }
 

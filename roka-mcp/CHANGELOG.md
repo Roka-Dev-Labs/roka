@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-08-10
+
+### Changed
+
+- **Breaking:** `connect`, `serve`, and `watch` now verify the API key against the hosted
+  `/api/status` endpoint instead of only checking that a key string was present. A missing,
+  invalid, expired, or free-tier key is now rejected (`serve` refuses to start any tools;
+  `connect` refuses to write the agent config; `watch` refuses to start tailing). This closes the
+  gap where MCP tools would silently run locally for anyone who set any `ROKA_API_KEY` value,
+  Pro or not.
+- Set `ROKA_API_URL_BASE` to override the verification host (defaults to
+  `https://api.roka-prune.com`), primarily for local development against a self-hosted backend.
+
 ## [0.1.2] - 2026-08-05
 
 ### Fixed

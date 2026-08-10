@@ -199,6 +199,162 @@
             transform: translateY(-1px);
         }
 
+        /* ── Pro Tier "free for feedback" promo highlight ── */
+        .pro-tier-card {
+            position: relative;
+            border: 2px solid var(--term-green);
+            box-shadow: 0 18px 44px -28px var(--term-green);
+        }
+        .pro-tier-badge {
+            position: absolute;
+            top: -11px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--term-green);
+            color: var(--bg);
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            padding: 4px 14px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+        .pro-tier-promo {
+            color: var(--term-green);
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: -0.5rem;
+            margin-bottom: 1rem;
+        }
+        .pro-tier-cta {
+            border: 1px solid var(--term-green) !important;
+        }
+        .pro-tier-cta:hover { opacity: 0.85; }
+
+        /* ── Feedback modal ── */
+        .feedback-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.55);
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+        }
+        .feedback-modal-overlay.open { display: flex; }
+        .feedback-modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: 14px;
+            width: 100%;
+            max-width: 34rem;
+            max-height: 88vh;
+            overflow-y: auto;
+            padding: 1.75rem;
+            box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.5);
+        }
+        .feedback-modal-close {
+            position: absolute;
+            top: 1.1rem;
+            right: 1.1rem;
+            width: 28px;
+            height: 28px;
+            border: 1px solid var(--border-strong);
+            border-radius: 6px;
+            background: transparent;
+            color: var(--text-faint);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .feedback-modal-close:hover { color: var(--text); background: var(--accent-glow); }
+        .feedback-field { margin-bottom: 1.1rem; }
+        .feedback-field label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+            color: var(--text);
+        }
+        .feedback-field .hint {
+            font-size: 0.7rem;
+            color: var(--text-faint);
+            font-weight: 400;
+        }
+        .feedback-field input[type="text"],
+        .feedback-field input[type="email"],
+        .feedback-field textarea {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border-strong);
+            border-radius: 8px;
+            padding: 0.6rem 0.75rem;
+            font-size: 0.85rem;
+            font-family: inherit;
+            color: var(--text);
+            resize: vertical;
+        }
+        .feedback-field input:focus,
+        .feedback-field textarea:focus {
+            outline: none;
+            border-color: var(--term-green);
+        }
+        .feedback-agent-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .feedback-agent-options label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            font-weight: 400;
+            border: 1px solid var(--border-strong);
+            border-radius: 999px;
+            padding: 0.35rem 0.75rem;
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+        .feedback-agent-options input { accent-color: var(--term-green); }
+        .feedback-error {
+            color: var(--danger);
+            font-size: 0.78rem;
+            margin-top: -0.5rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        .feedback-success {
+            text-align: center;
+        }
+        .feedback-success .key-box {
+            background: var(--bg);
+            border: 1px solid var(--term-green);
+            border-radius: 8px;
+            padding: 0.9rem;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            word-break: break-all;
+            margin: 1rem 0;
+            color: var(--term-green);
+            position: relative;
+        }
+        .feedback-success .connect-cmd {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem 0.9rem;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-align: left;
+            overflow-x: auto;
+            white-space: pre;
+            margin-top: 0.75rem;
+        }
+
         /* ── Developer Minimal: flatten radius on cards/blocks/buttons ── */
         .surface.rounded-xl,
         .surface.rounded-lg,
@@ -2393,11 +2549,13 @@
             </div>
 
             <!-- Pro Tier -->
-            <div class="surface rounded-xl p-6 flex flex-col border-2 border-[var(--border-strong)]">
+            <div class="surface rounded-xl p-6 flex flex-col pro-tier-card">
+                <span class="pro-tier-badge">Pro free for feedback</span>
                 <div class="mb-4">
                     <h3 class="font-semibold text-lg mb-1">Pro Tier</h3>
                     <p class="text-xs text-muted">For developers & small teams serious about speed</p>
                 </div>
+                <p class="pro-tier-promo">Free for 3 months in exchange for product feedback</p>
                 <div class="mb-6">
                     <span class="text-3xl font-bold">$20</span><span class="text-sm text-muted">/month (or $14/month annual)</span>
                 </div>
@@ -2410,7 +2568,7 @@
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> MCP servers for Claude Code, Cursor &amp; Codex — auto-prune on crash</li>
                 </ul>
                 <div class="flex gap-2 justify-end">
-                    <a href="/login.html" class="btn-primary rounded-lg py-2 px-4 text-xs font-medium">Start 7-Day Free Trial</a>
+                    <button type="button" id="proFeedbackBtn" class="btn-primary rounded-lg py-2 px-4 text-xs font-medium pro-tier-cta">Get Free now</button>
                     <a href="/login.html" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium">Pay Now</a>
                 </div>
             </div>
@@ -2758,6 +2916,75 @@
             </div>
         </div>
     </footer>
+
+    <!-- "Pro free for feedback" modal -->
+    <div class="feedback-modal-overlay" id="feedbackModalOverlay" role="dialog" aria-modal="true" aria-labelledby="feedbackModalTitle">
+        <div class="feedback-modal" style="position:relative">
+            <button type="button" class="feedback-modal-close" id="feedbackModalClose" aria-label="Close">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+
+            <div id="feedbackFormView">
+                <h3 id="feedbackModalTitle" class="text-lg font-semibold mb-1">Get 3 months of Pro, free</h3>
+                <p class="text-xs text-muted mb-5">In exchange for a few honest answers about using Roka. We read every submission — this isn't a formality.</p>
+
+                <form id="feedbackForm" novalidate>
+                    <div class="feedback-field">
+                        <label for="fbContact">Email or GitHub username <span style="color:var(--term-green)">*</span></label>
+                        <input type="text" id="fbContact" name="contact" placeholder="you@example.com or github-handle" autocomplete="email" required>
+                    </div>
+
+                    <div class="feedback-field">
+                        <label>Which stack / agent do you use?</label>
+                        <div class="feedback-agent-options">
+                            <label><input type="checkbox" name="agent" value="cursor"> Cursor</label>
+                            <label><input type="checkbox" name="agent" value="claude-code"> Claude Code</label>
+                            <label><input type="checkbox" name="agent" value="mcp"> MCP (other agent)</label>
+                            <label><input type="checkbox" name="agent" value="cli-only"> CLI only, no agent</label>
+                        </div>
+                    </div>
+
+                    <div class="feedback-field">
+                        <label for="fbMainProblem">What's the biggest problem you have with context / log noise right now? <span style="color:var(--term-green)">*</span></label>
+                        <textarea id="fbMainProblem" name="main_problem" rows="2" placeholder="e.g. crashes get buried under retry spam before my agent ever sees the real error" required></textarea>
+                    </div>
+
+                    <div class="feedback-field">
+                        <label for="fbDownsides">What's missing or annoying in Roka itself — what should we fix or build first?</label>
+                        <textarea id="fbDownsides" name="product_downsides" rows="2" placeholder="be blunt — bugs, missing features, confusing output, wrong defaults…"></textarea>
+                    </div>
+
+                    <div class="feedback-field">
+                        <label for="fbSiteDiscomfort">Did anything on this website feel confusing, broken, or off? <span class="hint">(if yes, where)</span></label>
+                        <textarea id="fbSiteDiscomfort" name="site_discomfort" rows="2" placeholder="a specific page, button, or step is most useful"></textarea>
+                    </div>
+
+                    <div class="feedback-field">
+                        <label for="fbSatisfaction">Where does Roka fall short for you — or where did it fully deliver?</label>
+                        <textarea id="fbSatisfaction" name="satisfaction" rows="2" placeholder="what worked well enough that you'd keep using it as-is"></textarea>
+                    </div>
+
+                    <p class="feedback-error" id="feedbackError"></p>
+
+                    <div class="flex gap-2 justify-end">
+                        <button type="button" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium" id="feedbackCancelBtn">Cancel</button>
+                        <button type="submit" class="btn-primary rounded-lg py-2 px-4 text-xs font-medium pro-tier-cta" id="feedbackSubmitBtn">Submit &amp; Get Pro Access</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="feedbackSuccessView" class="feedback-success" style="display:none">
+                <h3 class="text-lg font-semibold mb-1">You're in — Pro unlocked</h3>
+                <p class="text-xs text-muted" id="feedbackSuccessSub">Free for 3 months. Save this key — it won't be shown again on this device.</p>
+                <div class="key-box" id="feedbackApiKey">rk_live_...</div>
+                <div class="flex gap-2 justify-center mb-2">
+                    <button type="button" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium" id="feedbackCopyKeyBtn">Copy key</button>
+                    <button type="button" class="btn-primary rounded-lg py-2 px-4 text-xs font-medium" id="feedbackDoneBtn">Done</button>
+                </div>
+                <div class="connect-cmd" id="feedbackConnectCmd">npx roka-mcp connect --agent cursor --api-key rk_live_...</div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // ── Theme ──────────────────────────────────────────────
@@ -3566,6 +3793,124 @@
                 }, 3200);
             });
         }
+    </script>
+
+    <script>
+        // ── "Pro free for feedback" modal ──────────────────────
+        (() => {
+            const FEEDBACK_API_BASE = window.ROKA_API_BASE || 'https://api.roka-prune.com';
+            const openBtn = document.getElementById('proFeedbackBtn');
+            const overlay = document.getElementById('feedbackModalOverlay');
+            const closeBtn = document.getElementById('feedbackModalClose');
+            const cancelBtn = document.getElementById('feedbackCancelBtn');
+            const form = document.getElementById('feedbackForm');
+            const errorEl = document.getElementById('feedbackError');
+            const submitBtn = document.getElementById('feedbackSubmitBtn');
+            const formView = document.getElementById('feedbackFormView');
+            const successView = document.getElementById('feedbackSuccessView');
+            const successSub = document.getElementById('feedbackSuccessSub');
+            const apiKeyEl = document.getElementById('feedbackApiKey');
+            const connectCmdEl = document.getElementById('feedbackConnectCmd');
+            const copyKeyBtn = document.getElementById('feedbackCopyKeyBtn');
+            const doneBtn = document.getElementById('feedbackDoneBtn');
+            if (!openBtn || !overlay || !form) return;
+
+            function showError(message) {
+                errorEl.textContent = message;
+                errorEl.style.display = message ? 'block' : 'none';
+            }
+
+            function openModal() {
+                overlay.classList.add('open');
+                formView.style.display = '';
+                successView.style.display = 'none';
+                showError('');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                overlay.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            openBtn.addEventListener('click', openModal);
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            doneBtn.addEventListener('click', closeModal);
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+            });
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                showError('');
+
+                const contact = form.contact.value.trim();
+                const mainProblem = form.main_problem.value.trim();
+                if (!contact) {
+                    showError('Email or GitHub username is required.');
+                    form.contact.focus();
+                    return;
+                }
+                if (!mainProblem) {
+                    showError('Tell us the biggest problem you run into — that\u2019s the point of the trade.');
+                    form.main_problem.focus();
+                    return;
+                }
+
+                const agents = Array.from(form.querySelectorAll('input[name="agent"]:checked')).map((el) => el.value);
+                const payload = {
+                    contact,
+                    agents,
+                    main_problem: mainProblem,
+                    product_downsides: form.product_downsides.value.trim(),
+                    site_discomfort: form.site_discomfort.value.trim(),
+                    satisfaction: form.satisfaction.value.trim(),
+                };
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting…';
+
+                try {
+                    const res = await fetch(`${FEEDBACK_API_BASE}/feedback/pro`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload),
+                        signal: AbortSignal.timeout(15000),
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    if (!res.ok) {
+                        throw new Error(data.detail || `Request failed (HTTP ${res.status})`);
+                    }
+
+                    apiKeyEl.textContent = data.api_key || '';
+                    connectCmdEl.textContent = `npx roka-mcp connect --agent cursor --api-key ${data.api_key || ''}`;
+                    const endsAt = data.trial_ends_at ? new Date(data.trial_ends_at) : null;
+                    successSub.textContent = endsAt && !Number.isNaN(endsAt.getTime())
+                        ? `Free until ${endsAt.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}. Save this key — it won't be shown again on this device.`
+                        : 'Free for 3 months. Save this key — it won\u2019t be shown again on this device.';
+
+                    formView.style.display = 'none';
+                    successView.style.display = '';
+                } catch (err) {
+                    showError(err.message || 'Something went wrong — please try again.');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit & Get Pro Access';
+                }
+            });
+
+            copyKeyBtn.addEventListener('click', () => {
+                const key = apiKeyEl.textContent.trim();
+                if (!key) return;
+                navigator.clipboard.writeText(key).then(() => {
+                    const original = copyKeyBtn.textContent;
+                    copyKeyBtn.textContent = 'Copied!';
+                    setTimeout(() => { copyKeyBtn.textContent = original; }, 1500);
+                });
+            });
+        })();
     </script>
 </body>
 </html>

@@ -10,6 +10,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
+import { verifyProAccess, printVerificationError } from "./verify.js";
 
 const SERVER_KEY = "roka-mcp";
 const API_KEY_DASHBOARD_URL = "https://roka-prune.com/dashboard/api-keys.html";
@@ -241,6 +242,14 @@ export async function connectCommand(args) {
     console.error(`  Set ROKA_API_KEY or pass --api-key <key>. Get one at ${API_KEY_DASHBOARD_URL}`);
     process.exit(1);
   }
+
+  console.error("[roka-mcp] connect: verifying API key…");
+  const verification = await verifyProAccess(apiKey);
+  if (!verification.ok) {
+    printVerificationError("connect", verification);
+    process.exit(1);
+  }
+  console.error(`[roka-mcp] connect: verified — tier "${verification.tier}", MCP access confirmed.`);
 
   const filePath = agentConf.describe(process.cwd());
   try {

@@ -18,10 +18,9 @@ npx roka-mcp connect --agent cursor
 
 Supported agents: **Claude Code**, **Cursor**, **Codex**, **Copilot**, **Windsurf**, **VS Code**, **Cline**.
 
-`connect` and `watch` both require `ROKA_API_KEY` (env var or `--api-key`) and will exit with a clear
-error if it's missing — no key, no config gets written. `serve` (the raw MCP stdio server an agent
-launches under the hood) currently prints a warning to stderr if the key is missing rather than
-refusing to run, since it's typically invoked programmatically by whatever `connect` already wired up.
+`connect`, `serve`, and `watch` all verify `ROKA_API_KEY` (env var or `--api-key`) against the hosted
+API before doing anything else. Missing, invalid, expired, or free-tier keys are rejected — `connect`
+won't write the agent config, `serve` won't start any tools, `watch` won't start tailing.
 
 ## Install
 
@@ -111,9 +110,11 @@ On crash, Roka writes pruned context to `.roka/crash-context.txt`.
 ## API
 
 Pruning itself (`prune_logs`/`prune_file`/`prune_tail`, and the `watch --on-crash` pipeline) runs
-**locally** in this package — no network calls, no data leaves your machine. `ROKA_API_KEY` currently
-only gates the `connect`/`watch` commands locally (see [Pro required](#pro-required)); it is not yet
-sent to a hosted API from this package.
+**locally** in this package — your log text never leaves your machine. The only network call this
+package makes is a one-time check against `https://api.roka-prune.com/api/status` (with your API key
+in the `Authorization` header) to confirm the key is real and on a Pro-eligible tier before `connect`,
+`serve`, or `watch` will do anything — see [Pro required](#pro-required). Set `ROKA_API_URL_BASE` to
+point that check at a different host (e.g. for local development).
 
 ## Other Roka projects
 
