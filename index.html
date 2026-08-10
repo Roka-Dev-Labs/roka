@@ -207,18 +207,26 @@
         }
         .pro-tier-badge {
             position: absolute;
-            top: -11px;
+            top: -12px;
             left: 50%;
             transform: translateX(-50%);
-            background: var(--term-green);
-            color: var(--bg);
+            background: #09090b;
+            color: #fafafa;
             font-family: var(--font-mono);
-            font-size: 10.5px;
+            font-size: 10px;
             font-weight: 600;
-            letter-spacing: 0.02em;
-            padding: 4px 14px;
+            letter-spacing: 0.04em;
+            padding: 5px 14px;
             border-radius: 999px;
             white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.45);
+        }
+        html.light .pro-tier-badge {
+            background: #09090b;
+            color: #fafafa;
+            border-color: transparent;
+            box-shadow: 0 4px 12px -6px rgba(0, 0, 0, 0.35);
         }
         .pro-tier-promo {
             color: var(--term-green);
@@ -2535,11 +2543,11 @@
                     <p class="text-xs text-muted">For developers exploring Roka</p>
                 </div>
                 <div class="mb-6">
-                    <span class="text-3xl font-bold">$0</span><span class="text-sm text-muted">/month</span>
+                    <span class="text-3xl font-bold">$0</span><span class="text-sm text-muted">/forever</span>
                 </div>
                 <ul class="space-y-3 text-sm text-muted mb-6 flex-1">
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Local CLI tool (no cloud required)</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Up to 50K tokens/month</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Up to 50K tokens lifetime</li>
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Basic deduplication & fingerprinting</li>
                 </ul>
                 <div class="flex gap-2 justify-end">
@@ -2550,7 +2558,7 @@
 
             <!-- Pro Tier -->
             <div class="surface rounded-xl p-6 flex flex-col pro-tier-card">
-                <span class="pro-tier-badge">Pro free for feedback</span>
+                <span class="pro-tier-badge">Popular</span>
                 <div class="mb-4">
                     <h3 class="font-semibold text-lg mb-1">Pro Tier</h3>
                     <p class="text-xs text-muted">For developers & small teams serious about speed</p>
@@ -2640,7 +2648,7 @@
                         </tr>
                         <tr class="border-b border-[var(--border)]">
                             <td class="p-3 text-muted">Tokens</td>
-                            <td class="p-3 text-center text-[var(--text)]">50K</td>
+                            <td class="p-3 text-center text-[var(--text)]">50K lifetime</td>
                             <td class="p-3 text-center text-[var(--text)]">500K</td>
                             <td class="p-3 text-center text-[var(--text)]">∞</td>
                         </tr>
@@ -2707,7 +2715,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Free: Local CLI tool, 50K tokens/month, basic deduplication.<br><br>Pro: Web UI + API, 500K tokens/month, semantic ranking, critical preservation, priority support. $20/month.<br><br>Most developers use Free for occasional debugging. Teams and on-call engineers use Pro.</p>
+                        <p class="text-sm text-muted">Free: Local CLI tool, 50K tokens lifetime, basic deduplication — $0 forever.<br><br>Pro: Web UI + API, 500K tokens/month, semantic ranking, critical preservation, priority support. $20/month.<br><br>Most developers use Free for occasional debugging. Teams and on-call engineers use Pro.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -2752,7 +2760,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Free: 50K tokens/month.<br><br>Pro: 500K tokens/month.<br><br>Enterprise: Unlimited. Custom SLAs.</p>
+                        <p class="text-sm text-muted">Free: 50K tokens lifetime.<br><br>Pro: 500K tokens/month.<br><br>Enterprise: Unlimited. Custom SLAs.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -2780,7 +2788,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">We're early — no fake conversion stats. Free is the local CLI with a 50K token/month ceiling and basic fingerprinting. Upgrade to Pro when you need MCP agent connect, semantic re-ranking, higher limits, or the web/API. Occasional debugging usually stays free; daily CI / on-call use is where Pro pays for itself.</p>
+                        <p class="text-sm text-muted">We're early — no fake conversion stats. Free is the local CLI with a 50K token lifetime ceiling and basic fingerprinting — $0 forever. Upgrade to Pro when you need MCP agent connect, semantic re-ranking, higher limits, or the web/API. Occasional debugging usually stays free; daily CI / on-call use is where Pro pays for itself.</p>
                     </div>
                 </div>
 
