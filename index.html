@@ -2642,10 +2642,10 @@
             <!-- 01 Log compaction — video preview + lightbox -->
             <div class="bento-card bento-card--span-2">
                 <div class="bento-card-bg">
-                    <button type="button" class="bento-media has-video" data-video-src="/media/log-compaction.mp4" aria-label="Play Log compaction video">
+                    <button type="button" class="bento-media has-video" data-video-src="/media/log-compaction.mp4?v=20260811c" aria-label="Play Log compaction video">
                         <img
                             class="bento-media-thumb"
-                            src="/media/log-compaction-poster.jpg"
+                            src="/media/log-compaction-poster.jpg?v=20260811c"
                             alt=""
                             loading="lazy"
                             decoding="async"
@@ -2656,8 +2656,8 @@
                             loop
                             playsinline
                             preload="metadata"
-                            src="/media/log-compaction.mp4"
-                            poster="/media/log-compaction-poster.jpg"
+                            src="/media/log-compaction.mp4?v=20260811c"
+                            poster="/media/log-compaction-poster.jpg?v=20260811c"
                             aria-hidden="true"
                         ></video>
                         <span class="bento-media-play" aria-hidden="true">
@@ -4363,8 +4363,33 @@
             const canHover = window.matchMedia('(hover: hover) and (pointer: fine)');
             let lightboxOpen = false;
 
+            function getPreview(btn) {
+                return btn.querySelector('video.bento-media-preview');
+            }
+
+            function resetPreviewElement(btn) {
+                const old = getPreview(btn);
+                if (!old) return null;
+                const src = old.getAttribute('src') || btn.getAttribute('data-video-src');
+                const poster = old.getAttribute('poster') || btn.querySelector('.bento-media-thumb')?.getAttribute('src') || '';
+                const fresh = document.createElement('video');
+                fresh.className = 'bento-media-preview';
+                fresh.muted = true;
+                fresh.defaultMuted = true;
+                fresh.loop = true;
+                fresh.playsInline = true;
+                fresh.preload = 'metadata';
+                fresh.setAttribute('muted', '');
+                fresh.setAttribute('playsinline', '');
+                fresh.setAttribute('aria-hidden', 'true');
+                if (poster) fresh.poster = poster;
+                if (src) fresh.src = src;
+                old.replaceWith(fresh);
+                return fresh;
+            }
+
             function stopHoverPreview(btn) {
-                const preview = btn.querySelector('video.bento-media-preview');
+                const preview = getPreview(btn);
                 if (preview) {
                     preview.pause();
                     try { preview.currentTime = 0; } catch (_) {}
@@ -4374,19 +4399,36 @@
 
             function startHoverPreview(btn) {
                 if (lightboxOpen || !canHover.matches) return;
-                const preview = btn.querySelector('video.bento-media-preview');
+                let preview = getPreview(btn);
                 if (!preview) return;
+
+                // If a previous decode error poisoned the element, rebuild it.
+                if (preview.error) {
+                    preview = resetPreviewElement(btn);
+                    if (!preview) return;
+                }
+
                 preview.muted = true;
                 preview.defaultMuted = true;
                 preview.setAttribute('muted', '');
                 preview.playsInline = true;
                 preview.setAttribute('playsinline', '');
                 btn.classList.add('is-hovering');
+
                 const tryPlay = () => {
+                    if (!preview || preview.error) return;
                     preview.muted = true;
                     const play = preview.play();
                     if (play && play.catch) {
                         play.catch(() => {
+                            if (preview.error) {
+                                preview = resetPreviewElement(btn);
+                                if (!preview) return;
+                                btn.classList.add('is-hovering');
+                                preview.muted = true;
+                                preview.play().catch(() => {});
+                                return;
+                            }
                             preview.addEventListener('canplay', () => {
                                 preview.muted = true;
                                 preview.play().catch(() => {});
@@ -4394,11 +4436,16 @@
                         });
                     }
                 };
+
+                preview.addEventListener('error', () => {
+                    // Keep UI usable; recreate on next hover.
+                    btn.classList.remove('is-hovering');
+                }, { once: true });
+
                 if (preview.readyState >= 2) tryPlay();
                 else {
                     preview.addEventListener('loadeddata', tryPlay, { once: true });
                     preview.addEventListener('canplay', tryPlay, { once: true });
-                    try { preview.load(); } catch (_) {}
                 }
             }
 
@@ -4413,6 +4460,8 @@
                 const poster = btn.querySelector('.bento-media-thumb')?.getAttribute('src') || '';
 
                 stopHoverPreview(btn);
+                // Rebuild preview so a poisoned hover <video> doesn't stick around.
+                resetPreviewElement(btn);
                 mount.innerHTML = '';
                 if (titleEl) titleEl.textContent = title;
                 if (descEl) descEl.textContent = desc;
@@ -4423,7 +4472,7 @@
                 video.playsInline = true;
                 video.setAttribute('playsinline', '');
                 video.setAttribute('webkit-playsinline', '');
-                // Silent autoplay is allowed; our demo MP4 is encoded without an audio track.
+                // Silent autoplay is allowed; demo MP4 is video-only.
                 video.muted = true;
                 video.defaultMuted = true;
                 video.setAttribute('muted', '');
@@ -4432,14 +4481,11 @@
                 if (poster) video.poster = poster;
 
                 const tryPlay = () => {
+                    if (!video.isConnected || video.error) return;
                     video.muted = true;
                     const p = video.play();
                     if (p && typeof p.then === 'function') {
-                        p.then(() => {
-                            // If still stuck at 0 after a tick, force a restart once media is ready.
-                            if (video.paused) video.play().catch(() => {});
-                        }).catch(() => {
-                            // Retry after more data arrives (autoplay policies / slow start).
+                        p.catch(() => {
                             video.addEventListener('canplay', () => {
                                 video.muted = true;
                                 video.play().catch(() => {});
@@ -4452,15 +4498,14 @@
                 video.addEventListener('canplay', tryPlay, { once: true });
                 mount.appendChild(video);
                 video.src = src;
-                // Kick decode immediately within the click gesture.
-                try { video.load(); } catch (_) {}
                 tryPlay();
 
                 lightboxOpen = true;
                 overlay.hidden = false;
                 overlay.classList.add('open');
                 document.documentElement.style.overflow = 'hidden';
-                closeBtn.focus();
+                // Focus close after starting playback so we don't steal the click gesture.
+                requestAnimationFrame(() => closeBtn.focus());
             }
 
             function closeLightbox() {
