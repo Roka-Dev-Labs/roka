@@ -4378,17 +4378,27 @@
                 if (!preview) return;
                 preview.muted = true;
                 preview.defaultMuted = true;
+                preview.setAttribute('muted', '');
                 preview.playsInline = true;
                 preview.setAttribute('playsinline', '');
                 btn.classList.add('is-hovering');
                 const tryPlay = () => {
+                    preview.muted = true;
                     const play = preview.play();
-                    if (play && play.catch) play.catch(() => {});
+                    if (play && play.catch) {
+                        play.catch(() => {
+                            preview.addEventListener('canplay', () => {
+                                preview.muted = true;
+                                preview.play().catch(() => {});
+                            }, { once: true });
+                        });
+                    }
                 };
                 if (preview.readyState >= 2) tryPlay();
                 else {
                     preview.addEventListener('loadeddata', tryPlay, { once: true });
-                    if (preview.networkState === 0) preview.load();
+                    preview.addEventListener('canplay', tryPlay, { once: true });
+                    try { preview.load(); } catch (_) {}
                 }
             }
 
@@ -4411,13 +4421,40 @@
                 const video = document.createElement('video');
                 video.controls = true;
                 video.playsInline = true;
+                video.setAttribute('playsinline', '');
+                video.setAttribute('webkit-playsinline', '');
+                // Silent autoplay is allowed; our demo MP4 is encoded without an audio track.
+                video.muted = true;
+                video.defaultMuted = true;
+                video.setAttribute('muted', '');
                 video.autoplay = true;
                 video.preload = 'auto';
-                video.src = src;
                 if (poster) video.poster = poster;
+
+                const tryPlay = () => {
+                    video.muted = true;
+                    const p = video.play();
+                    if (p && typeof p.then === 'function') {
+                        p.then(() => {
+                            // If still stuck at 0 after a tick, force a restart once media is ready.
+                            if (video.paused) video.play().catch(() => {});
+                        }).catch(() => {
+                            // Retry after more data arrives (autoplay policies / slow start).
+                            video.addEventListener('canplay', () => {
+                                video.muted = true;
+                                video.play().catch(() => {});
+                            }, { once: true });
+                        });
+                    }
+                };
+
+                video.addEventListener('loadeddata', tryPlay, { once: true });
+                video.addEventListener('canplay', tryPlay, { once: true });
                 mount.appendChild(video);
-                const p = video.play();
-                if (p && p.catch) p.catch(() => {});
+                video.src = src;
+                // Kick decode immediately within the click gesture.
+                try { video.load(); } catch (_) {}
+                tryPlay();
 
                 lightboxOpen = true;
                 overlay.hidden = false;
