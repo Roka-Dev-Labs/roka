@@ -696,61 +696,38 @@
             overflow: hidden;
         }
 
-        .bento-window {
+        .bento-media {
             position: absolute;
             top: 0.85rem;
             right: 0.85rem;
             left: 0.85rem;
             height: 58%;
+            border: 0;
+            padding: 0;
+            margin: 0;
             border-radius: 10px;
-            border: 1px solid var(--border-strong);
             background: #0b0b0c;
             box-shadow: 0 18px 40px -20px rgba(0,0,0,.45);
             overflow: hidden;
             mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
             -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
-            transition: transform 0.35s ease, opacity 0.35s ease;
+            transition: transform 0.35s ease;
+            display: block;
+            width: auto;
+            cursor: default;
+            pointer-events: none;
         }
-        .bento-card:hover .bento-window {
+        .bento-media.has-video {
+            pointer-events: auto;
+            cursor: pointer;
+            background: #000;
+        }
+        .bento-card:hover .bento-media.has-video {
             transform: scale(1.02);
         }
-
-        .bento-window-chrome {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 10px;
-            border-bottom: 1px solid rgba(255,255,255,.08);
-            background: #151517;
-            position: relative;
-            z-index: 2;
-        }
-        .bento-window-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--text-faint);
-            opacity: 0.55;
-        }
-        .bento-window-dot:nth-child(1) { background: #ff5f57; opacity: 0.9; }
-        .bento-window-dot:nth-child(2) { background: #febc2e; opacity: 0.9; }
-        .bento-window-dot:nth-child(3) { background: #28c840; opacity: 0.9; }
-        .bento-window-title {
-            margin-left: 6px;
-            font-family: var(--font-mono);
-            font-size: 10px;
-            color: #8a8a93;
-            letter-spacing: 0.02em;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .bento-window-body {
-            position: relative;
-            width: 100%;
-            height: calc(100% - 28px);
+        .bento-media.is-empty {
             background:
+                #0b0b0c
                 repeating-linear-gradient(
                     0deg,
                     transparent,
@@ -761,21 +738,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
         }
-        .bento-window-body.is-empty::after {
+        .bento-media.is-empty::after {
             content: "Video coming soon";
             font-family: var(--font-mono);
             font-size: 11px;
             color: #6b6b73;
             letter-spacing: 0.04em;
             text-transform: uppercase;
-            z-index: 1;
         }
-        .bento-window-body.has-video {
-            background: #000;
-        }
-        .bento-window-body video {
+        .bento-media video {
             position: absolute;
             inset: 0;
             width: 100%;
@@ -784,7 +756,76 @@
             object-position: top center;
             display: block;
             background: #000;
-            z-index: 1;
+            pointer-events: none;
+        }
+        .bento-media-play {
+            position: absolute;
+            left: 50%;
+            top: 42%;
+            transform: translate(-50%, -50%);
+            width: 44px;
+            height: 44px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.92);
+            color: #09090b;
+            display: grid;
+            place-items: center;
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 2;
+            box-shadow: 0 8px 24px rgba(0,0,0,.35);
+        }
+        .bento-media-play svg { width: 16px; height: 16px; margin-left: 2px; }
+        .bento-media.has-video:hover .bento-media-play,
+        .bento-media.has-video:focus-visible .bento-media-play {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+
+        /* Features video lightbox */
+        .bento-video-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 120;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+            background: rgba(0,0,0,.72);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+        .bento-video-overlay.open { display: flex; }
+        .bento-video-modal {
+            position: relative;
+            width: min(960px, 100%);
+            background: #0a0a0a;
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,.55);
+        }
+        .bento-video-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            border: 0;
+            background: rgba(0,0,0,.55);
+            color: #fafafa;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+        }
+        .bento-video-close:hover { background: rgba(0,0,0,.75); }
+        .bento-video-modal video {
+            display: block;
+            width: 100%;
+            max-height: min(80vh, 720px);
+            background: #000;
         }
 
         .bento-card-content {
@@ -2539,28 +2580,15 @@
         </div>
 
         <div class="bento-grid">
-            <!-- 01 Log compaction — video background -->
+            <!-- 01 Log compaction — video preview + lightbox -->
             <div class="bento-card bento-card--span-2">
-                <div class="bento-card-bg" aria-hidden="true">
-                    <div class="bento-window">
-                        <div class="bento-window-chrome">
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-title">log-compaction.mp4</span>
-                        </div>
-                        <div class="bento-window-body has-video">
-                            <video
-                                src="/media/log-compaction.mp4"
-                                autoplay
-                                muted
-                                loop
-                                playsinline
-                                webkit-playsinline
-                                preload="auto"
-                            ></video>
-                        </div>
-                    </div>
+                <div class="bento-card-bg">
+                    <button type="button" class="bento-media has-video" data-video-src="/media/log-compaction.mp4" aria-label="Play Log compaction video">
+                        <video src="/media/log-compaction.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto"></video>
+                        <span class="bento-media-play" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                        </span>
+                    </button>
                 </div>
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
@@ -2573,15 +2601,7 @@
             <!-- 02 Critical preservation — empty video slot -->
             <div class="bento-card">
                 <div class="bento-card-bg" aria-hidden="true">
-                    <div class="bento-window">
-                        <div class="bento-window-chrome">
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-title">critical-preservation.mp4</span>
-                        </div>
-                        <div class="bento-window-body is-empty" data-video-slot="critical-preservation"></div>
-                    </div>
+                    <div class="bento-media is-empty" data-video-slot="critical-preservation"></div>
                 </div>
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
@@ -2594,15 +2614,7 @@
             <!-- 03 BM25 + semantic rank -->
             <div class="bento-card">
                 <div class="bento-card-bg" aria-hidden="true">
-                    <div class="bento-window">
-                        <div class="bento-window-chrome">
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-title">bm25-semantic-rank.mp4</span>
-                        </div>
-                        <div class="bento-window-body is-empty" data-video-slot="bm25-semantic-rank"></div>
-                    </div>
+                    <div class="bento-media is-empty" data-video-slot="bm25-semantic-rank"></div>
                 </div>
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
@@ -2615,15 +2627,7 @@
             <!-- 04 Token budget packer — wide -->
             <div class="bento-card bento-card--span-2">
                 <div class="bento-card-bg" aria-hidden="true">
-                    <div class="bento-window">
-                        <div class="bento-window-chrome">
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-title">token-budget-packer.mp4</span>
-                        </div>
-                        <div class="bento-window-body is-empty" data-video-slot="token-budget-packer"></div>
-                    </div>
+                    <div class="bento-media is-empty" data-video-slot="token-budget-packer"></div>
                 </div>
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
@@ -2636,15 +2640,7 @@
             <!-- 05 Multi-format input -->
             <div class="bento-card">
                 <div class="bento-card-bg" aria-hidden="true">
-                    <div class="bento-window">
-                        <div class="bento-window-chrome">
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-title">multi-format-input.mp4</span>
-                        </div>
-                        <div class="bento-window-body is-empty" data-video-slot="multi-format-input"></div>
-                    </div>
+                    <div class="bento-media is-empty" data-video-slot="multi-format-input"></div>
                 </div>
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
@@ -2657,15 +2653,7 @@
             <!-- 06 API & CLI -->
             <div class="bento-card">
                 <div class="bento-card-bg" aria-hidden="true">
-                    <div class="bento-window">
-                        <div class="bento-window-chrome">
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-title">api-cli.mp4</span>
-                        </div>
-                        <div class="bento-window-body is-empty" data-video-slot="api-cli"></div>
-                    </div>
+                    <div class="bento-media is-empty" data-video-slot="api-cli"></div>
                 </div>
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
@@ -2675,18 +2663,10 @@
                 </div>
             </div>
 
-            <!-- 07 Natural language queries — same width as 05/06, fills last row -->
+            <!-- 07 Natural language queries -->
             <div class="bento-card">
                 <div class="bento-card-bg" aria-hidden="true">
-                    <div class="bento-window">
-                        <div class="bento-window-chrome">
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-dot"></span>
-                            <span class="bento-window-title">natural-language-queries.mp4</span>
-                        </div>
-                        <div class="bento-window-body is-empty" data-video-slot="natural-language-queries"></div>
-                    </div>
+                    <div class="bento-media is-empty" data-video-slot="natural-language-queries"></div>
                 </div>
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
@@ -3419,6 +3399,16 @@
             </div>
         </div>
     </footer>
+
+    <!-- Features video lightbox -->
+    <div class="bento-video-overlay" id="bentoVideoOverlay" role="dialog" aria-modal="true" aria-label="Feature demo video" hidden>
+        <div class="bento-video-modal">
+            <button type="button" class="bento-video-close" id="bentoVideoClose" aria-label="Close video">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+            <video id="bentoVideoPlayer" controls playsinline preload="metadata"></video>
+        </div>
+    </div>
 
     <!-- "Pro free for feedback" modal -->
     <div class="feedback-modal-overlay" id="feedbackModalOverlay" role="dialog" aria-modal="true" aria-labelledby="feedbackModalTitle">
@@ -4276,21 +4266,63 @@
     </script>
 
     <script>
-        // ── Features bento: ensure demo videos play when visible ──
+        // ── Features bento: muted preview + click-to-open lightbox ──
         (() => {
-            const videos = document.querySelectorAll('.bento-window-body.has-video video');
-            if (!videos.length) return;
-            const play = (v) => { v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+            const triggers = document.querySelectorAll('.bento-media.has-video[data-video-src]');
+            const overlay = document.getElementById('bentoVideoOverlay');
+            const player = document.getElementById('bentoVideoPlayer');
+            const closeBtn = document.getElementById('bentoVideoClose');
+            if (!triggers.length || !overlay || !player || !closeBtn) return;
+
+            const previewVideos = document.querySelectorAll('.bento-media.has-video video');
+            const playPreview = (v) => {
+                v.muted = true;
+                const p = v.play();
+                if (p && p.catch) p.catch(() => {});
+            };
             const io = new IntersectionObserver((entries) => {
                 entries.forEach((e) => {
-                    const v = e.target;
-                    if (e.isIntersecting) play(v);
-                    else v.pause();
+                    if (e.isIntersecting) playPreview(e.target);
+                    else e.target.pause();
                 });
             }, { threshold: 0.2 });
-            videos.forEach((v) => {
-                v.addEventListener('loadeddata', () => play(v), { once: true });
+            previewVideos.forEach((v) => {
+                v.addEventListener('loadeddata', () => playPreview(v), { once: true });
                 io.observe(v);
+            });
+
+            function openLightbox(src) {
+                player.src = src;
+                overlay.hidden = false;
+                overlay.classList.add('open');
+                document.documentElement.style.overflow = 'hidden';
+                player.currentTime = 0;
+                const p = player.play();
+                if (p && p.catch) p.catch(() => {});
+                closeBtn.focus();
+            }
+
+            function closeLightbox() {
+                player.pause();
+                player.removeAttribute('src');
+                player.load();
+                overlay.classList.remove('open');
+                overlay.hidden = true;
+                document.documentElement.style.overflow = '';
+            }
+
+            triggers.forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    const src = btn.getAttribute('data-video-src');
+                    if (src) openLightbox(src);
+                });
+            });
+            closeBtn.addEventListener('click', closeLightbox);
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closeLightbox();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && overlay.classList.contains('open')) closeLightbox();
             });
         })();
     </script>
