@@ -709,8 +709,6 @@
             background: #0b0b0c;
             box-shadow: 0 18px 40px -20px rgba(0,0,0,.45);
             overflow: hidden;
-            mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
             transition: transform 0.35s ease;
             display: block;
             width: auto;
@@ -738,6 +736,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
         }
         .bento-media.is-empty::after {
             content: "Video coming soon";
@@ -759,44 +759,45 @@
             background: #000;
             border: 0;
             pointer-events: none;
+            mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
         }
         .bento-media-preview {
             opacity: 0;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.25s ease;
             z-index: 1;
         }
         .bento-media.is-hovering .bento-media-preview { opacity: 1; }
-        .bento-media.is-hovering .bento-media-play { opacity: 0; }
         .bento-media-play {
             position: absolute;
             left: 12px;
-            bottom: 28%;
+            bottom: 14px;
             z-index: 2;
             display: inline-flex;
             align-items: center;
             gap: 0.4rem;
             height: 30px;
             padding: 0 0.7rem 0 0.55rem;
-            border-radius: 8px;
-            background: rgba(255,255,255,.88);
+            border-radius: 6px;
+            background: rgba(255,255,255,.94);
             color: #0a0a0b;
             font-family: var(--font-mono);
             font-size: 11px;
             font-weight: 500;
             letter-spacing: 0.02em;
-            opacity: 0.95;
+            opacity: 0;
+            transform: translateY(4px);
             transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
             box-shadow: 0 6px 18px rgba(0,0,0,.28);
             pointer-events: none;
         }
         .bento-media-play svg { width: 11px; height: 11px; margin-left: 1px; flex-shrink: 0; }
         .bento-media.has-video:hover .bento-media-play,
-        .bento-media.has-video:focus-visible .bento-media-play {
-            background: rgba(255,255,255,.98);
-            transform: translateY(-1px);
-        }
+        .bento-media.has-video:focus-visible .bento-media-play,
         .bento-media.has-video.is-hovering .bento-media-play {
-            opacity: 0;
+            opacity: 1;
+            transform: translateY(0);
+            background: rgba(255,255,255,.98);
         }
 
         /* Features video lightbox — tryania-style shell */
@@ -2654,8 +2655,9 @@
                             muted
                             loop
                             playsinline
-                            preload="metadata"
+                            preload="auto"
                             src="/media/log-compaction.mp4"
+                            poster="/media/log-compaction-poster.jpg"
                             aria-hidden="true"
                         ></video>
                         <span class="bento-media-play" aria-hidden="true">
@@ -4375,10 +4377,20 @@
                 const preview = btn.querySelector('video.bento-media-preview');
                 if (!preview) return;
                 preview.muted = true;
+                preview.defaultMuted = true;
                 preview.playsInline = true;
-                const play = preview.play();
-                if (play && play.catch) play.catch(() => {});
+                preview.setAttribute('playsinline', '');
                 btn.classList.add('is-hovering');
+                const tryPlay = () => {
+                    const play = preview.play();
+                    if (play && play.catch) play.catch(() => {});
+                };
+                if (preview.readyState >= 2) {
+                    tryPlay();
+                } else {
+                    preview.addEventListener('loadeddata', tryPlay, { once: true });
+                    preview.load();
+                }
             }
 
             function openLightbox(btn) {
@@ -4424,8 +4436,9 @@
             }
 
             triggers.forEach((btn) => {
-                btn.addEventListener('mouseenter', () => startHoverPreview(btn));
-                btn.addEventListener('mouseleave', () => stopHoverPreview(btn));
+                const card = btn.closest('.bento-card') || btn;
+                card.addEventListener('mouseenter', () => startHoverPreview(btn));
+                card.addEventListener('mouseleave', () => stopHoverPreview(btn));
                 btn.addEventListener('focus', () => startHoverPreview(btn));
                 btn.addEventListener('blur', () => stopHoverPreview(btn));
                 btn.addEventListener('click', () => openLightbox(btn));
