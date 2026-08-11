@@ -28,10 +28,10 @@ DIM='\033[2m'
 NC='\033[0m'
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
-info()    { echo -e "${GREEN}  >${NC}  $*"; }
-success() { echo -e "${GREEN}  [OK]${NC}  $*"; }
-warn()    { echo -e "${YELLOW}  [WARN]${NC}  $*"; }
-die()     { echo -e "${RED}  [FAIL]${NC}  $*" >&2; exit 1; }
+info()    { echo -e "${GREEN}  ➜${NC}  $*"; }
+success() { echo -e "${GREEN}  ✓${NC}  $*"; }
+warn()    { echo -e "${YELLOW}  ⚠${NC}  $*"; }
+die()     { echo -e "${RED}  ✗${NC}  $*" >&2; exit 1; }
 
 # ── Cleanup trap ─────────────────────────────────────────────────────────────
 TEMP_DIR=""
@@ -225,7 +225,7 @@ if command -v "${BINARY_NAME}" &>/dev/null; then
 
   echo ""
   echo -e "${BLUE}  ──────────────────────────────────────────────────${NC}"
-  echo -e "${GREEN}${BOLD}    [OK]  Installation complete!${NC}"
+  echo -e "${GREEN}${BOLD}    ✓  Installation complete!${NC}"
   echo -e "${BLUE}  ──────────────────────────────────────────────────${NC}"
   echo ""
   echo -e "${YELLOW}  Quick start:${NC}"

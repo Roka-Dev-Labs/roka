@@ -608,7 +608,7 @@
                 </button>
 
                 <div class="mt-5 space-y-4">
-                    <div class="terminal-window terminal-mini" data-cmd="curl -fsSL https://install.roka-prune.com | bash" data-output="  >  Detecting operating system...&#10;  [OK]  OS: darwin&#10;  >  Detecting processor architecture...&#10;  [OK]  Architecture: arm64&#10;  >  Fetching latest release from GitHub...&#10;  [OK]  Latest version: v1.0.0&#10;  >  Downloading binary...&#10;  [OK]  Download complete&#10;  [OK]  Installed (no sudo required)&#10;  [OK]  Installation complete!">
+                    <div class="terminal-window terminal-mini" data-cmd="curl -fsSL https://install.roka-prune.com | bash" data-output="  ➜  Detecting operating system...&#10;  ✓  OS: darwin&#10;  ➜  Detecting processor architecture...&#10;  ✓  Architecture: arm64&#10;  ➜  Fetching latest release from GitHub...&#10;  ✓  Latest version: v1.0.0&#10;  ➜  Downloading binary...&#10;  ✓  Download complete&#10;  ✓  Installed (no sudo required)&#10;  ✓  Installation complete!">
                         <div class="terminal-bar">
                             <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
                             <div class="terminal-title">terminal</div>
@@ -642,7 +642,7 @@
                         </div>
                     </div>
 
-                    <div class="terminal-window terminal-mini" data-cmd='cat your-log.log | roka prune --query "what broke" --budget 8000' data-output="[OK] kept 12 of 4,209 lines &middot; 2,140 tokens">
+                    <div class="terminal-window terminal-mini" data-cmd='cat your-log.log | roka prune --query "what broke" --budget 8000' data-output="&#x2713; kept 12 of 4,209 lines &middot; 2,140 tokens">
                         <div class="terminal-bar">
                             <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
                             <div class="terminal-title">prune</div>
@@ -817,7 +817,7 @@
             { text: '2026-06-24 07:00:45 INFO   [health] GET /health 200 1ms', keep: false }
         ];
         const heroCmd = 'cat deploy.log | roka prune --query "why did deploy fail" --budget 8000';
-        const heroSummary = '[OK] kept 3 of 12,847 lines &middot; <span class="muted">124,480 &rarr; 7,842 tokens (&minus;94%) &middot; 312ms</span>';
+        const heroSummary = '&#x2713; kept 3 of 12,847 lines &middot; <span class="muted">124,480 &rarr; 7,842 tokens (&minus;94%) &middot; 312ms</span>';
 
         const logStream = document.getElementById('logStream');
         const cmdTyped = document.getElementById('cmdTyped');
