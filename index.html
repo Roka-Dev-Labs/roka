@@ -748,7 +748,9 @@
             text-transform: uppercase;
         }
         .bento-media img,
-        .bento-media video {
+        .bento-media video,
+        .bento-media-hover,
+        .bento-media-hover iframe {
             position: absolute;
             inset: 0;
             width: 100%;
@@ -757,8 +759,16 @@
             object-position: top center;
             display: block;
             background: #000;
+            border: 0;
             pointer-events: none;
         }
+        .bento-media-hover {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 1;
+        }
+        .bento-media.is-hovering .bento-media-hover { opacity: 1; }
+        .bento-media.is-hovering .bento-media-play { opacity: 0; }
         .bento-media-play {
             position: absolute;
             left: 50%;
@@ -782,8 +792,11 @@
             opacity: 1;
             transform: translate(-50%, -50%) scale(1.05);
         }
+        .bento-media.has-video.is-hovering:hover .bento-media-play {
+            opacity: 0;
+        }
 
-        /* Features video lightbox */
+        /* Features video lightbox — tryania-style shell */
         .bento-video-overlay {
             position: fixed;
             inset: 0;
@@ -791,19 +804,25 @@
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 1.25rem;
-            background: rgba(0,0,0,.72);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
+            padding: 1.5rem;
+            background: rgba(0,0,0,.88);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
         .bento-video-overlay.open { display: flex; }
-        .bento-video-modal {
+        .bento-video-shell {
             position: relative;
-            width: min(960px, 100%);
+            width: min(920px, 100%);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        .bento-video-frame {
+            position: relative;
+            width: 100%;
             aspect-ratio: 16 / 9;
-            background: #0a0a0a;
-            border: 1px solid rgba(255,255,255,.12);
-            border-radius: 12px;
+            background: #000;
+            border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 30px 80px rgba(0,0,0,.55);
         }
@@ -811,7 +830,7 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            z-index: 2;
+            z-index: 3;
             width: 32px;
             height: 32px;
             border-radius: 999px;
@@ -827,13 +846,39 @@
             position: absolute;
             inset: 0;
         }
-        .bento-video-modal iframe,
-        .bento-video-modal video {
+        #bentoVideoMount iframe,
+        #bentoVideoMount video {
             display: block;
             width: 100%;
             height: 100%;
             border: 0;
             background: #000;
+        }
+        .bento-video-meta {
+            text-align: center;
+            padding: 0 0.5rem 0.25rem;
+        }
+        .bento-video-meta .eyebrow {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.45);
+            margin-bottom: 0.45rem;
+        }
+        .bento-video-meta h3 {
+            font-size: clamp(1.15rem, 2.4vw, 1.6rem);
+            font-weight: 500;
+            color: #fafafa;
+            margin: 0 0 0.45rem;
+            letter-spacing: -0.02em;
+        }
+        .bento-video-meta p {
+            margin: 0 auto;
+            max-width: 42rem;
+            font-size: 0.92rem;
+            line-height: 1.55;
+            color: rgba(255,255,255,.62);
         }
 
         .bento-card-content {
@@ -2593,11 +2638,13 @@
                 <div class="bento-card-bg">
                     <button type="button" class="bento-media has-video" data-youtube-id="1Ck6-CVq6vA" aria-label="Play Log compaction video">
                         <img
+                            class="bento-media-thumb"
                             src="https://i.ytimg.com/vi/1Ck6-CVq6vA/maxresdefault.jpg"
                             alt=""
                             loading="lazy"
                             decoding="async"
                         >
+                        <div class="bento-media-hover" aria-hidden="true"></div>
                         <span class="bento-media-play" aria-hidden="true">
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
                         </span>
@@ -3415,11 +3462,18 @@
 
     <!-- Features video lightbox -->
     <div class="bento-video-overlay" id="bentoVideoOverlay" role="dialog" aria-modal="true" aria-label="Feature demo video" hidden>
-        <div class="bento-video-modal">
-            <button type="button" class="bento-video-close" id="bentoVideoClose" aria-label="Close video">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-            </button>
-            <div id="bentoVideoMount"></div>
+        <div class="bento-video-shell">
+            <div class="bento-video-frame">
+                <button type="button" class="bento-video-close" id="bentoVideoClose" aria-label="Close video">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+                <div id="bentoVideoMount"></div>
+            </div>
+            <div class="bento-video-meta">
+                <div class="eyebrow" id="bentoVideoEyebrow">Feature demo</div>
+                <h3 id="bentoVideoTitle"></h3>
+                <p id="bentoVideoDesc"></p>
+            </div>
         </div>
     </div>
 
@@ -4279,30 +4333,90 @@
     </script>
 
     <script>
-        // ── Features bento: YouTube / local video lightbox ──
+        // ── Features bento: hover preview + tryania-style lightbox ──
         (() => {
             const triggers = document.querySelectorAll('.bento-media.has-video');
             const overlay = document.getElementById('bentoVideoOverlay');
             const mount = document.getElementById('bentoVideoMount');
             const closeBtn = document.getElementById('bentoVideoClose');
+            const titleEl = document.getElementById('bentoVideoTitle');
+            const descEl = document.getElementById('bentoVideoDesc');
+            const eyebrowEl = document.getElementById('bentoVideoEyebrow');
             if (!triggers.length || !overlay || !mount || !closeBtn) return;
+
+            const canHover = window.matchMedia('(hover: hover) and (pointer: fine)');
+            let lightboxOpen = false;
+
+            function ytEmbedUrl(id, { autoplay = 0, mute = 0, controls = 1, loop = 0 } = {}) {
+                const params = new URLSearchParams({
+                    autoplay: String(autoplay),
+                    mute: String(mute),
+                    controls: String(controls),
+                    rel: '0',
+                    modestbranding: '1',
+                    playsinline: '1',
+                    iv_load_policy: '3',
+                    fs: controls ? '1' : '0',
+                });
+                if (loop) {
+                    params.set('loop', '1');
+                    params.set('playlist', id);
+                }
+                return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?${params.toString()}`;
+            }
+
+            function makeIframe(src, title) {
+                const iframe = document.createElement('iframe');
+                iframe.src = src;
+                iframe.title = title || 'Feature demo video';
+                iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                iframe.allowFullscreen = true;
+                iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+                iframe.setAttribute('loading', 'eager');
+                return iframe;
+            }
+
+            function stopHoverPreview(btn) {
+                const hover = btn.querySelector('.bento-media-hover');
+                if (hover) hover.innerHTML = '';
+                btn.classList.remove('is-hovering');
+            }
+
+            function startHoverPreview(btn) {
+                if (lightboxOpen || !canHover.matches) return;
+                const id = btn.getAttribute('data-youtube-id');
+                const hover = btn.querySelector('.bento-media-hover');
+                if (!id || !hover) return;
+                if (!hover.querySelector('iframe')) {
+                    hover.appendChild(makeIframe(
+                        ytEmbedUrl(id, { autoplay: 1, mute: 1, controls: 0, loop: 1 }),
+                        btn.getAttribute('aria-label')
+                    ));
+                }
+                btn.classList.add('is-hovering');
+            }
 
             function openLightbox(btn) {
                 const youtubeId = btn.getAttribute('data-youtube-id');
                 const src = btn.getAttribute('data-video-src');
+                const card = btn.closest('.bento-card');
+                const title = card?.querySelector('.bento-card-content h3')?.textContent?.trim() || 'Feature demo';
+                const desc = card?.querySelector('.bento-card-content p')?.textContent?.trim() || '';
+                const eyebrow = card?.querySelector('.bento-card-content .mono')?.textContent?.trim() || 'Feature demo';
+
+                stopHoverPreview(btn);
                 mount.innerHTML = '';
+                if (titleEl) titleEl.textContent = title;
+                if (descEl) descEl.textContent = desc;
+                if (eyebrowEl) eyebrowEl.textContent = eyebrow;
 
                 if (youtubeId) {
-                    const iframe = document.createElement('iframe');
-                    iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(youtubeId)}?autoplay=1&rel=0&modestbranding=1`;
-                    iframe.title = btn.getAttribute('aria-label') || 'Feature demo video';
-                    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-                    iframe.allowFullscreen = true;
-                    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-                    mount.appendChild(iframe);
+                    mount.appendChild(makeIframe(
+                        ytEmbedUrl(youtubeId, { autoplay: 1, mute: 0, controls: 1, loop: 0 }),
+                        title
+                    ));
                 } else if (src) {
                     const video = document.createElement('video');
-                    video.id = 'bentoVideoPlayer';
                     video.controls = true;
                     video.playsInline = true;
                     video.autoplay = true;
@@ -4314,6 +4428,7 @@
                     return;
                 }
 
+                lightboxOpen = true;
                 overlay.hidden = false;
                 overlay.classList.add('open');
                 document.documentElement.style.overflow = 'hidden';
@@ -4325,9 +4440,14 @@
                 overlay.classList.remove('open');
                 overlay.hidden = true;
                 document.documentElement.style.overflow = '';
+                lightboxOpen = false;
             }
 
             triggers.forEach((btn) => {
+                btn.addEventListener('mouseenter', () => startHoverPreview(btn));
+                btn.addEventListener('mouseleave', () => stopHoverPreview(btn));
+                btn.addEventListener('focus', () => startHoverPreview(btn));
+                btn.addEventListener('blur', () => stopHoverPreview(btn));
                 btn.addEventListener('click', () => openLightbox(btn));
             });
             closeBtn.addEventListener('click', closeLightbox);
