@@ -858,8 +858,8 @@
             object-fit: contain;
         }
         .bento-video-meta {
-            text-align: center;
-            padding: 0 0.5rem 0.25rem;
+            text-align: left;
+            padding: 0 0.15rem 0.25rem;
         }
         .bento-video-meta .eyebrow {
             font-family: var(--font-mono);
@@ -870,15 +870,17 @@
             margin-bottom: 0.45rem;
         }
         .bento-video-meta h3 {
-            font-size: clamp(1.15rem, 2.4vw, 1.6rem);
+            font-family: var(--font-mono);
+            font-size: clamp(1.05rem, 2.2vw, 1.35rem);
             font-weight: 500;
             color: #fafafa;
             margin: 0 0 0.45rem;
-            letter-spacing: -0.02em;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
         }
         .bento-video-meta p {
-            margin: 0 auto;
-            max-width: 42rem;
+            margin: 0;
+            max-width: 40rem;
             font-size: 0.92rem;
             line-height: 1.55;
             color: rgba(255,255,255,.62);
@@ -2639,10 +2641,10 @@
             <!-- 01 Log compaction — video preview + lightbox -->
             <div class="bento-card bento-card--span-2">
                 <div class="bento-card-bg">
-                    <button type="button" class="bento-media has-video" data-video-src="media/log-compaction.mp4" aria-label="Play Log compaction video">
+                    <button type="button" class="bento-media has-video" data-video-src="/media/log-compaction.mp4" aria-label="Play Log compaction video">
                         <img
                             class="bento-media-thumb"
-                            src="media/log-compaction-poster.jpg"
+                            src="/media/log-compaction-poster.jpg"
                             alt=""
                             loading="lazy"
                             decoding="async"
@@ -2653,7 +2655,7 @@
                             loop
                             playsinline
                             preload="metadata"
-                            src="media/log-compaction.mp4"
+                            src="/media/log-compaction.mp4"
                             aria-hidden="true"
                         ></video>
                         <span class="bento-media-play" aria-hidden="true">
