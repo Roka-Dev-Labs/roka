@@ -2655,7 +2655,7 @@
                             muted
                             loop
                             playsinline
-                            preload="auto"
+                            preload="metadata"
                             src="/media/log-compaction.mp4"
                             poster="/media/log-compaction-poster.jpg"
                             aria-hidden="true"
@@ -4349,7 +4349,7 @@
     </script>
 
     <script>
-        // ── Features bento: native hover preview + tryania-style lightbox ──
+        // ── Features bento: native MP4 hover preview + lightbox (tryania-style) ──
         (() => {
             const triggers = document.querySelectorAll('.bento-media.has-video');
             const overlay = document.getElementById('bentoVideoOverlay');
@@ -4385,11 +4385,10 @@
                     const play = preview.play();
                     if (play && play.catch) play.catch(() => {});
                 };
-                if (preview.readyState >= 2) {
-                    tryPlay();
-                } else {
+                if (preview.readyState >= 2) tryPlay();
+                else {
                     preview.addEventListener('loadeddata', tryPlay, { once: true });
-                    preview.load();
+                    if (preview.networkState === 0) preview.load();
                 }
             }
 
