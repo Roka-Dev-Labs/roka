@@ -160,6 +160,10 @@
             transform: translateY(-1px);
         }
 
+        #themeToggle:hover {
+            color: var(--text) !important;
+        }
+
         a, button { -webkit-tap-highlight-color: transparent; }
         button { touch-action: manipulation; }
         a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
@@ -546,7 +550,14 @@
             <div class="flex items-center gap-3">
                 <a href="#mcp" class="hidden sm:inline text-sm text-muted hover:text-[var(--text)] transition-colors">MCP</a>
                 <a href="/" class="roka-back hidden sm:inline text-sm text-muted hover:text-[var(--text)] transition-colors" data-back-host><span data-back-hijacker="active" aria-hidden="true"></span>&larr; Back</a>
-                <button id="themeToggle" type="button" class="btn-secondary rounded-lg px-3 py-1.5 text-xs font-medium" aria-label="Toggle theme">
+                <button id="themeToggle" type="button"
+                    class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer"
+                    style="color:var(--text-muted);background:none;border:1px solid var(--border-strong);font-family:'Montserrat',system-ui,sans-serif"
+                    aria-label="Toggle theme">
+                    <svg id="themeIcon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style="flex-shrink:0">
+                        <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.25"/>
+                        <path id="themeIconFill" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
+                    </svg>
                     <span id="themeLabel">Light</span>
                 </button>
             </div>
@@ -722,10 +733,17 @@
         const html = document.documentElement;
         const themeToggle = document.getElementById('themeToggle');
         const themeLabel = document.getElementById('themeLabel');
+        const themeIconFill = document.getElementById('themeIconFill');
 
         function applyTheme(theme) {
             html.dataset.theme = theme;
             themeLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
+            if (themeIconFill) {
+                themeIconFill.setAttribute('d', theme === 'dark'
+                    ? 'M6 1 A5 5 0 0 0 6 11 Z'
+                    : 'M6 1 A5 5 0 0 1 6 11 Z');
+            }
+            themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
             try { localStorage.setItem('roka-theme', theme); } catch (e) {}
         }
 
