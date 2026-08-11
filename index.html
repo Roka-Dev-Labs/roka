@@ -649,7 +649,7 @@
             width: 100%;
             grid-template-columns: 1fr;
             gap: 1rem;
-            grid-auto-rows: minmax(22rem, auto);
+            grid-auto-rows: minmax(20rem, auto);
         }
         @media (min-width: 640px) {
             .bento-grid { grid-template-columns: repeat(2, 1fr); }
@@ -659,7 +659,6 @@
                 grid-template-columns: repeat(3, 1fr);
                 grid-auto-rows: 22rem;
             }
-            .bento-card--wide { grid-column: span 2; }
         }
 
         .bento-card {
@@ -673,7 +672,12 @@
             background: var(--bg-card);
             box-shadow: 0 0 0 1px rgba(0,0,0,.03), 0 2px 4px rgba(0,0,0,.05), 0 12px 24px rgba(0,0,0,.05);
             transition: border-color 0.25s ease, transform 0.25s ease;
-            min-height: 22rem;
+            min-height: 20rem;
+        }
+        @media (min-width: 1024px) {
+            .bento-card { min-height: 22rem; }
+            /* Magic UI spans: wide-narrow / narrow-wide / three equal */
+            .bento-card--span-2 { grid-column: span 2; }
         }
         [data-theme="dark"] .bento-card {
             box-shadow: 0 -20px 80px -20px rgba(255,255,255,.08) inset;
@@ -694,25 +698,21 @@
 
         .bento-window {
             position: absolute;
-            top: 1rem;
-            left: 50%;
-            transform: translateX(-50%);
-            width: min(92%, 420px);
-            aspect-ratio: 16 / 10;
+            top: 0.85rem;
+            right: 0.85rem;
+            left: 0.85rem;
+            height: 58%;
             border-radius: 10px;
             border: 1px solid var(--border-strong);
-            background: var(--bg-elevated);
-            box-shadow: 0 18px 40px -20px rgba(0,0,0,.55);
+            background: #0b0b0c;
+            box-shadow: 0 18px 40px -20px rgba(0,0,0,.45);
             overflow: hidden;
-            mask-image: linear-gradient(to top, transparent 0%, #000 45%);
-            -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 45%);
+            mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
             transition: transform 0.35s ease, opacity 0.35s ease;
         }
         .bento-card:hover .bento-window {
-            transform: translateX(-50%) scale(1.03);
-        }
-        .bento-card--wide .bento-window {
-            width: min(88%, 560px);
+            transform: scale(1.02);
         }
 
         .bento-window-chrome {
@@ -720,8 +720,10 @@
             align-items: center;
             gap: 6px;
             padding: 8px 10px;
-            border-bottom: 1px solid var(--border);
-            background: color-mix(in srgb, var(--bg-elevated) 92%, var(--text) 8%);
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            background: #151517;
+            position: relative;
+            z-index: 2;
         }
         .bento-window-dot {
             width: 7px;
@@ -737,7 +739,7 @@
             margin-left: 6px;
             font-family: var(--font-mono);
             font-size: 10px;
-            color: var(--text-faint);
+            color: #8a8a93;
             letter-spacing: 0.02em;
             white-space: nowrap;
             overflow: hidden;
@@ -749,25 +751,29 @@
             width: 100%;
             height: calc(100% - 28px);
             background:
-                linear-gradient(180deg, transparent, var(--bg-card) 95%),
                 repeating-linear-gradient(
                     0deg,
                     transparent,
                     transparent 11px,
-                    var(--grid-line) 11px,
-                    var(--grid-line) 12px
+                    rgba(255,255,255,.04) 11px,
+                    rgba(255,255,255,.04) 12px
                 );
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
         .bento-window-body.is-empty::after {
             content: "Video coming soon";
             font-family: var(--font-mono);
             font-size: 11px;
-            color: var(--text-faint);
+            color: #6b6b73;
             letter-spacing: 0.04em;
             text-transform: uppercase;
+            z-index: 1;
+        }
+        .bento-window-body.has-video {
+            background: #000;
         }
         .bento-window-body video {
             position: absolute;
@@ -775,7 +781,10 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: top center;
             display: block;
+            background: #000;
+            z-index: 1;
         }
 
         .bento-card-content {
@@ -785,9 +794,10 @@
             pointer-events: none;
             transform: translateZ(0);
             transition: transform 0.3s ease;
+            background: linear-gradient(to top, var(--bg-card) 55%, transparent);
         }
         .bento-card:hover .bento-card-content {
-            transform: translateY(-6px);
+            transform: translateY(-4px);
         }
         .bento-card-content .mono {
             margin-bottom: 0.35rem;
@@ -2530,7 +2540,7 @@
 
         <div class="bento-grid">
             <!-- 01 Log compaction — video background -->
-            <div class="bento-card bento-card--wide">
+            <div class="bento-card bento-card--span-2">
                 <div class="bento-card-bg" aria-hidden="true">
                     <div class="bento-window">
                         <div class="bento-window-chrome">
@@ -2539,14 +2549,15 @@
                             <span class="bento-window-dot"></span>
                             <span class="bento-window-title">log-compaction.mp4</span>
                         </div>
-                        <div class="bento-window-body">
+                        <div class="bento-window-body has-video">
                             <video
                                 src="/media/log-compaction.mp4"
                                 autoplay
                                 muted
                                 loop
                                 playsinline
-                                preload="metadata"
+                                webkit-playsinline
+                                preload="auto"
                             ></video>
                         </div>
                     </div>
@@ -2602,7 +2613,7 @@
             </div>
 
             <!-- 04 Token budget packer — wide -->
-            <div class="bento-card bento-card--wide">
+            <div class="bento-card bento-card--span-2">
                 <div class="bento-card-bg" aria-hidden="true">
                     <div class="bento-window">
                         <div class="bento-window-chrome">
@@ -2664,8 +2675,8 @@
                 </div>
             </div>
 
-            <!-- 07 Natural language queries — wide to fill last row -->
-            <div class="bento-card bento-card--wide">
+            <!-- 07 Natural language queries — same width as 05/06, fills last row -->
+            <div class="bento-card">
                 <div class="bento-card-bg" aria-hidden="true">
                     <div class="bento-window">
                         <div class="bento-window-chrome">
@@ -4262,6 +4273,26 @@
             });
         }, { threshold: 0.25, rootMargin: '50px' });
         showcaseCards.forEach((card) => showcaseObserver.observe(card));
+    </script>
+
+    <script>
+        // ── Features bento: ensure demo videos play when visible ──
+        (() => {
+            const videos = document.querySelectorAll('.bento-window-body.has-video video');
+            if (!videos.length) return;
+            const play = (v) => { v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach((e) => {
+                    const v = e.target;
+                    if (e.isIntersecting) play(v);
+                    else v.pause();
+                });
+            }, { threshold: 0.2 });
+            videos.forEach((v) => {
+                v.addEventListener('loadeddata', () => play(v), { once: true });
+                io.observe(v);
+            });
+        })();
     </script>
 
     <script>
