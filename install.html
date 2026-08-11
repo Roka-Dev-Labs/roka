@@ -17,6 +17,7 @@
     <title>Install Roka - Prune your logs</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/console-egg.js" defer></script>
+    <script src="/js/back-trigger.js" defer></script>
     <script>
         tailwind.config = {
             theme: {
@@ -544,7 +545,7 @@
             </a>
             <div class="flex items-center gap-3">
                 <a href="#mcp" class="hidden sm:inline text-sm text-muted hover:text-[var(--text)] transition-colors">MCP</a>
-                <a href="/" class="hidden sm:inline text-sm text-muted hover:text-[var(--text)] transition-colors">&larr; Back</a>
+                <a href="/" class="roka-back hidden sm:inline text-sm text-muted hover:text-[var(--text)] transition-colors" data-back-host><span data-back-hijacker="active" aria-hidden="true"></span>&larr; Back</a>
                 <button id="themeToggle" type="button" class="btn-secondary rounded-lg px-3 py-1.5 text-xs font-medium" aria-label="Toggle theme">
                     <span id="themeLabel">Light</span>
                 </button>
@@ -711,7 +712,7 @@
                 <a href="https://github.com/Roka-Dev-Labs/roka/issues" target="_blank" rel="noopener" class="text-muted hover:text-[var(--text)] transition-colors">CLI issues</a>
                 <a href="https://github.com/Roka-Dev-Labs/roka-mcp" target="_blank" rel="noopener" class="text-muted hover:text-[var(--text)] transition-colors">MCP on GitHub</a>
                 <a href="https://github.com/Roka-Dev-Labs" target="_blank" rel="noopener" class="text-muted hover:text-[var(--text)] transition-colors">All repos</a>
-                <a href="/" class="text-base text-muted hover:text-[var(--text)] transition-colors">&larr; Back</a>
+                <a href="/" class="roka-back text-base text-muted hover:text-[var(--text)] transition-colors" data-back-host><span data-back-hijacker="active" aria-hidden="true"></span>&larr; Back</a>
             </div>
         </div>
     </main>
