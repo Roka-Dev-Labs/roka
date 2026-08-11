@@ -58,8 +58,9 @@
             --btn-secondary-bg: transparent;
             --btn-secondary-text: #fafafa;
             --success: #e4e4e7;
-            --term-ok: #34d399;
-            --danger: #f87171;
+            --term-ok: #3dd68c;
+            --danger: #ff6b7a;
+            --term-result: #5b9fff;
             --scan-line: rgba(255, 255, 255, 0.03);
             --grid-line: rgba(255, 255, 255, 0.045);
             --term-border: rgba(255, 255, 255, 0.18);
@@ -89,7 +90,9 @@
             --grid-line: rgba(0, 0, 0, 0.05);
             --term-border: rgba(0, 0, 0, 0.6);
             --term-green: #059669;
-            --term-ok: #059669;
+            --term-ok: #3dd68c;
+            --danger: #ff6b7a;
+            --term-result: #5b9fff;
             --logo-filter: none;
         }
 
@@ -131,6 +134,9 @@
 
         /* Terminal / code / agent UI — same mono stack as trynia.ai */
         .mock-terminal,
+        .terminal-loader,
+        .terminal-body,
+        .terminal-title,
         .terminal-preview,
         .terminal-preview-label,
         .mt-terminal,
@@ -1003,7 +1009,134 @@
         .terminal-preview .tp-danger { color: var(--danger); }
         .terminal-preview .tp-warn { color: #fbbf24; }
 
-        /* Motion showcase loops */
+        /* ── terminal-loader chrome (story / MCP / showcase demos) ── */
+        @keyframes blinkCursor {
+            50% { border-right-color: transparent; }
+        }
+        @keyframes typeAndDelete {
+            0%, 10% { width: 0; }
+            45%, 55% { width: 100%; }
+            90%, 100% { width: 0; }
+        }
+
+        .terminal-loader {
+            border: 1px solid #333;
+            background-color: #1a1a1a;
+            color: #d4d4d8;
+            font-family: var(--font-mono);
+            font-size: 0.8125rem;
+            padding: 0;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .terminal-loader .control:first-child { margin-left: 0; }
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-direction: row-reverse;
+            height: 1.75rem;
+            background-color: #2a2a2a;
+            padding: 0 0.55rem;
+            box-sizing: border-box;
+            border-bottom: 1px solid #333;
+        }
+        .terminal-controls {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .terminal-loader .control {
+            display: inline-block;
+            width: 0.55rem;
+            height: 0.55rem;
+            margin-left: 0.35rem;
+            border-radius: 50%;
+            background-color: #777;
+        }
+        .terminal-loader .control.close { background-color: #e33; }
+        .terminal-loader .control.minimize { background-color: #ee0; }
+        .terminal-loader .control.maximize { background-color: #0b0; }
+        .terminal-title {
+            line-height: 1.75rem;
+            color: #eee;
+            font-size: 0.7rem;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 0.75rem;
+        }
+        .terminal-body {
+            padding: 1rem 1.05rem 1.15rem;
+            line-height: 1.65;
+            min-height: 8.5rem;
+            -webkit-font-smoothing: antialiased;
+        }
+        .tl-err { color: var(--danger); font-weight: 600; }
+        .tl-fix { color: var(--term-ok); font-weight: 650; }
+        .tl-result { color: var(--term-result); font-weight: 650; }
+        .tl-dim { color: #6b7280; }
+        .tl-warn { color: #fbbf24; }
+        .tl-text { color: #e4e4e7; }
+        .tl-typing {
+            display: inline-block;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 0.15em solid var(--term-ok);
+            animation:
+                typeAndDelete 4s steps(28) infinite,
+                blinkCursor 0.5s step-end infinite alternate;
+            vertical-align: bottom;
+        }
+        .tl-typing.tl-err { border-right-color: var(--danger); }
+        .tl-typing.tl-result { border-right-color: var(--term-result); }
+        .tl-typing.tl-text { border-right-color: #a1a1aa; }
+
+        /* Map legacy mt-* roles inside terminal-loader */
+        .terminal-loader .mt-err { color: var(--danger); }
+        .terminal-loader .mt-ok { color: var(--term-ok); font-weight: 650; }
+        .terminal-loader .mt-result { color: var(--term-result); font-weight: 600; }
+        .terminal-loader .mt-dim { color: #6b7280; }
+        .terminal-loader .mt-warn { color: #fbbf24; }
+        .terminal-loader .mt-line { min-height: 1.5em; }
+        .terminal-body.mt-js .mt-line {
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .terminal-body.mt-js .mt-line.mt-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tl-badge {
+            display: inline-flex;
+            align-items: center;
+            margin-top: 0.65rem;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        .tl-badge-err {
+            color: var(--danger);
+            background: rgba(255, 107, 122, 0.1);
+            border: 1px solid rgba(255, 107, 122, 0.35);
+        }
+        .tl-badge-result {
+            color: var(--term-result);
+            background: rgba(91, 159, 255, 0.1);
+            border: 1px solid rgba(91, 159, 255, 0.35);
+        }
+
+        /* Motion showcase — terminal-loader cards */
         .showcase-grid {
             display: grid;
             grid-template-columns: repeat(1, 1fr);
@@ -1013,130 +1146,17 @@
             .showcase-grid { grid-template-columns: repeat(2, 1fr); }
         }
         .showcase-card {
-            border-radius: 12px;
-            overflow: hidden;
-            background: var(--bg-card);
-            border: 1px solid var(--term-border);
+            border: none;
+            background: transparent;
+            overflow: visible;
         }
-        .showcase-label {
-            padding: 10px 14px;
-            font-size: 11px;
-            color: var(--text-muted);
-            border-bottom: 1px solid var(--border);
-            background: var(--bg-elevated);
+        .showcase-card .terminal-loader {
+            width: 100%;
+            height: 100%;
+            min-height: 210px;
         }
-        .showcase-stage {
-            position: relative;
-            height: 180px;
-            padding: 14px 16px;
-            font-family: var(--font-mono);
-            font-size: 14px;
-            font-weight: 450;
-            letter-spacing: -0.01em;
-            -webkit-font-smoothing: antialiased;
-            line-height: 1.55;
-            overflow: hidden;
-            background: var(--bg);
-        }
-        .showcase-static {
-            display: none;
-            padding: 14px 16px;
-            font-family: var(--font-mono);
-            font-size: 14px;
-            font-weight: 450;
-            letter-spacing: -0.01em;
-            -webkit-font-smoothing: antialiased;
-            line-height: 1.55;
-            color: var(--text-muted);
-            background: var(--bg);
-            min-height: 180px;
-        }
-        .sc-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .sc-warn { color: #fbbf24; }
-        .sc-error { color: var(--danger); }
-        .sc-success { color: var(--term-ok); }
-        .sc-dim { color: var(--text-faint); opacity: 0.4; }
-
-        /* Loop 1: collapse */
-        .sc-collapse-wall .sc-line { opacity: 0.5; }
-        .showcase-card.playing .sc-collapse-wall .sc-line {
-            animation: sc-fade-out 0.3s ease forwards;
-            animation-delay: calc(var(--i, 0) * 0.04s);
-        }
-        .showcase-card.playing .sc-collapse-result {
-            animation: sc-snap-in 0.25s ease 0.6s forwards;
-            opacity: 0;
-        }
-        @keyframes sc-fade-out {
-            0% { opacity: 0.5; max-height: 1.5em; }
-            60% { opacity: 0.2; transform: scale(0.98); }
-            100% { opacity: 0; max-height: 0; margin: 0; }
-        }
-        @keyframes sc-snap-in {
-            from { opacity: 0; transform: scale(1.08); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* Loop 2: crash flow */
-        .sc-crash-flow .sc-step {
-            position: absolute;
-            inset: 12px;
-            opacity: 0;
-        }
-        .showcase-card.playing .sc-crash-flow .sc-step:nth-child(1) { animation: sc-step 2.4s ease 0s infinite; }
-        .showcase-card.playing .sc-crash-flow .sc-step:nth-child(2) { animation: sc-step 2.4s ease 0.8s infinite; }
-        .showcase-card.playing .sc-crash-flow .sc-step:nth-child(3) { animation: sc-step 2.4s ease 1.6s infinite; }
-        @keyframes sc-step {
-            0%, 8% { opacity: 0; transform: translateY(4px); }
-            12%, 38% { opacity: 1; transform: translateY(0); }
-            42%, 100% { opacity: 0; transform: translateY(-4px); }
-        }
-
-        /* Loop 3: install typing indicator */
-        .sc-install .sc-cmd {
-            overflow: hidden;
-            white-space: nowrap;
-            border-right: 2px solid var(--text-muted);
-            animation: sc-type-cmd 2.4s steps(38) infinite, sc-cursor 0.8s step-end infinite;
-            max-width: 0;
-        }
-        .showcase-card.playing .sc-install .sc-cmd {
-            animation: sc-type-cmd 2.4s steps(38) 0s infinite, sc-cursor 0.8s step-end infinite;
-        }
-        @keyframes sc-type-cmd {
-            0%, 5% { max-width: 0; }
-            45%, 90% { max-width: 100%; }
-            100% { max-width: 100%; }
-        }
-        @keyframes sc-cursor { 50% { border-color: transparent; } }
-        .sc-install-out { opacity: 0; }
-        .showcase-card.playing .sc-install-out {
-            animation: sc-install-reveal 2.4s ease infinite;
-        }
-        @keyframes sc-install-reveal {
-            0%, 40% { opacity: 0; }
-            50%, 90% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
-        /* Loop 4: query rerank */
-        .sc-query-input {
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 6px;
-            margin-bottom: 8px;
-            color: var(--text);
-        }
-        .sc-rank-line {
-            opacity: 0.3;
-            transition: opacity 0.2s;
-        }
-        .showcase-card.playing .sc-rank-line:nth-child(2) { animation: sc-rank 2.8s ease infinite; }
-        .showcase-card.playing .sc-rank-line:nth-child(3) { animation: sc-rank 2.8s ease 0.3s infinite; }
-        .showcase-card.playing .sc-rank-line:nth-child(4) { animation: sc-rank 2.8s ease 0.6s infinite; }
-        @keyframes sc-rank {
-            0%, 15% { opacity: 0.3; color: var(--text-muted); }
-            25%, 55% { opacity: 1; color: var(--term-ok); }
-            65%, 100% { opacity: 0.3; color: var(--text-muted); }
+        .showcase-card .terminal-body {
+            min-height: 11rem;
         }
 
         /* ── Orbit scene ─────────────────────────────────── */
@@ -1220,17 +1240,13 @@
             .hero-tagline { opacity: 1 !important; transform: none !important; }
             .roka-letter.wave { animation: none !important; }
             .prune-line { animation: none !important; display: none; }
-            .showcase-stage { display: none; }
-            .showcase-static { display: block; }
-            .showcase-card.playing .sc-crash-flow .sc-step,
-            .showcase-card.playing .sc-install .sc-cmd,
-            .showcase-card.playing .sc-install-out,
-            .showcase-card.playing .sc-rank-line,
-            .showcase-card.playing .sc-collapse-wall .sc-line,
-            .showcase-card.playing .sc-collapse-result { animation: none !important; }
-            .sc-crash-flow .sc-step:last-child,
-            .sc-collapse-result,
-            .sc-install-out { opacity: 1 !important; }
+            .tl-typing,
+            .sc-type {
+                animation: none !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                border-right-color: transparent !important;
+            }
             .terminal-preview .tp-cursor { display: none; }
             .mt-cursor { display: none; }
             .story-viz-label { display: none; }
@@ -1541,12 +1557,14 @@
         }
         .story-viz {
             position: relative;
-            border-radius: 14px;
-            overflow: hidden;
-            border: 1px solid var(--term-border);
-            background: var(--bg-card);
-            aspect-ratio: 16 / 10;
-            min-height: 220px;
+            border-radius: 4px;
+            overflow: visible;
+            border: none;
+            background: transparent;
+            min-height: 0;
+        }
+        .story-viz .terminal-loader {
+            min-height: 240px;
         }
         .story-viz-label {
             position: absolute;
@@ -1557,38 +1575,22 @@
             justify-content: space-between;
             align-items: center;
             pointer-events: none;
+            z-index: 2;
         }
         .story-viz-badge {
             font-family: var(--font-mono);
             font-size: 12px;
             padding: 4px 10px;
-            border-radius: 20px;
-            background: rgba(0,0,0,0.6);
+            border-radius: 4px;
+            background: rgba(0,0,0,0.65);
             backdrop-filter: blur(8px);
-            border: 1px solid var(--border);
+            border: 1px solid #333;
         }
-        .story-viz-badge.error { color: var(--danger); border-color: rgba(248,113,113,0.35); }
-        .story-viz-badge.ok { color: var(--term-ok); border-color: rgba(52,211,153,0.35); }
+        .story-viz-badge.error { color: var(--danger); border-color: rgba(255,107,122,0.4); }
+        .story-viz-badge.ok { color: var(--term-ok); border-color: rgba(61,214,140,0.4); }
 
-        /* MagicUI-style sequential terminal animation (story section) */
-        .mt-terminal {
-            font-family: var(--font-mono);
-            font-size: 15px;
-            font-weight: 450;
-            letter-spacing: -0.01em;
-            -webkit-font-smoothing: antialiased;
-            line-height: 1.7;
-            padding: 1.35rem 1.4rem;
-            min-height: 250px;
-            color: var(--text-muted);
-        }
-        .mt-line { min-height: 1.65em; }
-        .mt-terminal.mt-js .mt-line {
-            opacity: 0;
-            transform: translateY(-4px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-        .mt-terminal.mt-js .mt-line.mt-visible { opacity: 1; transform: translateY(0); }
+        /* MagicUI sequential lines — body lives inside terminal-loader */
+        .mt-line { min-height: 1.5em; }
         .mt-cursor {
             display: inline-block;
             width: 7px;
@@ -1603,6 +1605,7 @@
         .mt-ok { color: var(--term-ok); }
         .mt-err { color: var(--danger); }
         .mt-warn { color: #fbbf24; }
+        .mt-result { color: var(--term-result); }
 
         /* Benchmark chart */
         .bench-metric-card { padding: 1.75rem 1.25rem; }
@@ -1982,12 +1985,22 @@
                 <p>Roka fingerprints repetitive patterns across your entire log file — UUIDs, timestamps, and stack frames collapse into provenance headers. The agent sees what happened, not 500 copies of it.</p>
             </div>
             <div class="story-viz" data-viz="error500">
-                <div class="mt-terminal" id="mtError500" aria-label="Animation: 500 ERROR lines collapsing to one line">
-                    <div class="mt-line mt-err" data-type="typing">ERROR [worker] connection refused</div>
-                    <div class="mt-line mt-dim" data-delay="300">× 500 identical lines …</div>
-                    <div class="mt-line mt-warn" data-delay="500">roka pruning …</div>
-                    <div class="mt-line mt-ok" data-type="typing" data-speed="16" data-delay="200">[500x | lines 240–740] ERROR [worker] connection refused</div>
-                    <div class="mt-line mt-dim" data-delay="300">−99.8% repetition · 1 line in context</div>
+                <div class="terminal-loader" aria-label="Animation: 500 ERROR lines collapsing to one line">
+                    <div class="terminal-header">
+                        <div class="terminal-title">Status</div>
+                        <div class="terminal-controls">
+                            <div class="control close"></div>
+                            <div class="control minimize"></div>
+                            <div class="control maximize"></div>
+                        </div>
+                    </div>
+                    <div class="terminal-body" id="mtError500">
+                        <div class="mt-line mt-err tl-err" data-type="typing">ERROR [worker] connection refused</div>
+                        <div class="mt-line mt-dim tl-dim" data-delay="300">× 500 identical lines …</div>
+                        <div class="mt-line mt-warn tl-warn" data-delay="500">roka pruning …</div>
+                        <div class="mt-line mt-ok tl-fix" data-type="typing" data-speed="16" data-delay="200">[500x | lines 240–740] ERROR [worker] connection refused</div>
+                        <div class="mt-line mt-result tl-result" data-delay="300">−99.8% repetition · 1 line in context</div>
+                    </div>
                 </div>
                 <div class="story-viz-label">
                     <span class="story-viz-badge error" id="vizBadgeError">ERROR ×500</span>
@@ -2003,10 +2016,20 @@
                 <p>roka-mcp watches dev.log in real time. On crash it prunes 12,400 lines down to 1.1K tokens and hands Claude Code exactly the slice it needs — no copy-paste, no blown context window.</p>
             </div>
             <div class="story-viz" data-viz="crash">
-                <div class="mt-terminal" id="mtCrash" aria-label="Animation: crash detected, prune, handoff to agent">
-                    <div class="mt-line mt-err" data-type="typing">🔴 ERROR [worker] connection refused</div>
-                    <div class="mt-line mt-ok" data-delay="400">pruning 12,400 lines → 1.1K tokens</div>
-                    <div class="mt-line mt-ok" data-delay="400">✓ handed to Claude Code</div>
+                <div class="terminal-loader" aria-label="Animation: crash detected, prune, handoff to agent">
+                    <div class="terminal-header">
+                        <div class="terminal-title">Crash</div>
+                        <div class="terminal-controls">
+                            <div class="control close"></div>
+                            <div class="control minimize"></div>
+                            <div class="control maximize"></div>
+                        </div>
+                    </div>
+                    <div class="terminal-body" id="mtCrash">
+                        <div class="mt-line mt-err tl-err" data-type="typing">ERROR [worker] connection refused</div>
+                        <div class="mt-line mt-ok tl-fix" data-delay="400">pruning 12,400 lines → 1.1K tokens</div>
+                        <div class="mt-line mt-result tl-result" data-delay="400">✓ handed to Claude Code</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2018,11 +2041,21 @@
                 <p>Type what you care about — "what broke during last night's deploy?" — and Roka re-ranks chunks against intent, not just keywords. Semantic re-ranking surfaces the fatal error first.</p>
             </div>
             <div class="story-viz" data-viz="query">
-                <div class="mt-terminal" id="mtQuery" aria-label="Animation: natural language query re-ranking log output">
-                    <div class="mt-line" data-type="typing" data-speed="22">"what broke during last night's deploy?"</div>
-                    <div class="mt-line mt-dim" data-delay="300">INFO [startup] Application started</div>
-                    <div class="mt-line mt-ok" data-delay="150">ERROR [Database] FATAL: Connection reset  ↑ #1</div>
-                    <div class="mt-line mt-dim" data-delay="150">INFO [Cache] Cache miss key: session_123</div>
+                <div class="terminal-loader" aria-label="Animation: natural language query re-ranking log output">
+                    <div class="terminal-header">
+                        <div class="terminal-title">Query</div>
+                        <div class="terminal-controls">
+                            <div class="control close"></div>
+                            <div class="control minimize"></div>
+                            <div class="control maximize"></div>
+                        </div>
+                    </div>
+                    <div class="terminal-body" id="mtQuery">
+                        <div class="mt-line tl-text" data-type="typing" data-speed="22">"what broke during last night's deploy?"</div>
+                        <div class="mt-line mt-dim tl-dim" data-delay="300">INFO [startup] Application started</div>
+                        <div class="mt-line mt-ok tl-result" data-delay="150">ERROR [Database] FATAL: Connection reset  ↑ #1</div>
+                        <div class="mt-line mt-dim tl-dim" data-delay="150">INFO [Cache] Cache miss key: session_123</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2199,22 +2232,24 @@
         </div>
 
         <!-- ERROR ×500 compression proof -->
-        <div class="browser-frame surface max-w-3xl mx-auto mb-8">
-            <div class="browser-bar">
-                <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
-                <div class="browser-url">crash detected · roka-mcp pruning</div>
-            </div>
-            <div class="mock-terminal bg-[var(--bg)]">
-                <div class="text-faint mb-3 text-xs">// before: 12,400 lines of connection errors</div>
-                <div class="log-critical">ERROR [worker] connection refused</div>
-                <div class="log-critical">ERROR [worker] connection refused</div>
-                <div class="log-critical">ERROR [worker] connection refused</div>
-                <div class="text-faint mb-4">… 497 more identical lines …</div>
-                <div class="text-faint mb-2 text-xs border-t border-[var(--border)] pt-3">// after: pruned output</div>
-                <div class="mcp-demo-output">
-                    <div class="log-collapsed">[500x | lines 240–740] ERROR [worker] connection refused</div>
-                    <span class="compress-badge">Compressed: ERROR ×500 → 1 line</span>
+        <div class="terminal-loader max-w-3xl mx-auto mb-8">
+            <div class="terminal-header">
+                <div class="terminal-title">crash detected · roka-mcp pruning</div>
+                <div class="terminal-controls">
+                    <div class="control close"></div>
+                    <div class="control minimize"></div>
+                    <div class="control maximize"></div>
                 </div>
+            </div>
+            <div class="terminal-body">
+                <div class="tl-dim mb-2" style="font-size:0.75em">// before: 12,400 lines of connection errors</div>
+                <div class="tl-err">ERROR [worker] connection refused</div>
+                <div class="tl-err">ERROR [worker] connection refused</div>
+                <div class="tl-err">ERROR [worker] connection refused</div>
+                <div class="tl-dim mb-3">… 497 more identical lines …</div>
+                <div class="tl-dim mb-2" style="font-size:0.75em;border-top:1px solid #333;padding-top:0.65rem">// after: pruned output</div>
+                <div class="tl-fix">[500x | lines 240–740] ERROR [worker] connection refused</div>
+                <span class="tl-badge tl-badge-err">Compressed: ERROR ×500 → 1 line</span>
             </div>
         </div>
 
@@ -2234,69 +2269,78 @@
         <div class="showcase-grid">
             <!-- Loop 1: collapse -->
             <div class="showcase-card" data-showcase="collapse">
-                <div class="showcase-label">Log compaction</div>
-                <div class="showcase-stage">
-                    <div class="sc-collapse-wall">
-                        <div class="sc-line sc-warn" style="--i:0">WARN [db_pool] Connection pool 85%, retry 50ms</div>
-                        <div class="sc-line sc-warn" style="--i:1">WARN [db_pool] Connection pool 85%, retry 50ms</div>
-                        <div class="sc-line sc-warn" style="--i:2">WARN [db_pool] Connection pool 85%, retry 50ms</div>
-                        <div class="sc-line sc-warn" style="--i:3">WARN [db_pool] Connection pool 85%, retry 50ms</div>
-                        <div class="sc-line sc-warn" style="--i:4">WARN [db_pool] Connection pool 85%, retry 50ms</div>
-                        <div class="sc-line sc-warn" style="--i:5">WARN [db_pool] Connection pool 85%, retry 50ms</div>
-                        <div class="sc-line sc-dim" style="--i:6">… 841 more …</div>
+                <div class="terminal-loader">
+                    <div class="terminal-header">
+                        <div class="terminal-title">Log compaction</div>
+                        <div class="terminal-controls">
+                            <div class="control close"></div>
+                            <div class="control minimize"></div>
+                            <div class="control maximize"></div>
+                        </div>
                     </div>
-                    <div class="sc-collapse-result sc-success">[847x] WARN [db_pool] Connection pool 85%, retry 50ms</div>
-                </div>
-                <div class="showcase-static">
-                    <div class="sc-success">[847x] WARN [db_pool] Connection pool 85%, retry 50ms</div>
-                    <div class="sc-dim mt-2">847 repetitive lines → 1 ranked chunk</div>
+                    <div class="terminal-body">
+                        <div><span class="tl-typing tl-fix">[847x] WARN [db_pool] Connection pool 85%, retry 50ms</span></div>
+                        <div class="tl-result" style="margin-top:0.65rem;opacity:0.9">847 repetitive lines → 1 ranked chunk</div>
+                    </div>
                 </div>
             </div>
 
             <!-- Loop 2: crash flow -->
             <div class="showcase-card" data-showcase="crash">
-                <div class="showcase-label">Crash → prune → handoff</div>
-                <div class="showcase-stage sc-crash-flow">
-                    <div class="sc-step sc-error">🔴 ERROR [worker] connection refused</div>
-                    <div class="sc-step sc-success">pruning 12,400 lines → 1.1K tokens</div>
-                    <div class="sc-step sc-success">✓ handed to Claude Code</div>
-                </div>
-                <div class="showcase-static">
-                    <div class="sc-error">🔴 crash detected</div>
-                    <div class="sc-success mt-1">pruning 12,400 lines → 1.1K tokens</div>
-                    <div class="sc-success mt-1">✓ handed to Claude Code</div>
+                <div class="terminal-loader">
+                    <div class="terminal-header">
+                        <div class="terminal-title">Crash → prune → handoff</div>
+                        <div class="terminal-controls">
+                            <div class="control close"></div>
+                            <div class="control minimize"></div>
+                            <div class="control maximize"></div>
+                        </div>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="tl-err">ERROR [worker] connection refused</div>
+                        <div class="tl-fix">pruning 12,400 lines → 1.1K tokens</div>
+                        <div style="margin-top:0.35rem"><span class="tl-typing tl-result">✓ handed to Claude Code</span></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Loop 3: MCP install -->
             <div class="showcase-card" data-showcase="install">
-                <div class="showcase-label">One-click MCP install</div>
-                <div class="showcase-stage sc-install">
-                    <div class="sc-line sc-cmd">$ npx roka-mcp connect --agent claude-code --api-key rk_live_...</div>
-                    <div class="sc-install-out mt-2">
-                        <div class="sc-success">✓ detected Claude Code config</div>
-                        <div class="sc-success">✓ installed MCP server</div>
-                        <div class="sc-success">✓ watching ./logs/dev.log</div>
+                <div class="terminal-loader">
+                    <div class="terminal-header">
+                        <div class="terminal-title">One-click MCP install</div>
+                        <div class="terminal-controls">
+                            <div class="control close"></div>
+                            <div class="control minimize"></div>
+                            <div class="control maximize"></div>
+                        </div>
                     </div>
-                </div>
-                <div class="showcase-static">
-                    <div>$ npx roka-mcp connect --agent claude-code --api-key rk_live_...</div>
-                    <div class="sc-success mt-2">✓ roka-mcp ready on stdio</div>
+                    <div class="terminal-body">
+                        <div><span class="tl-typing tl-text">$ npx roka-mcp connect --agent claude-code</span></div>
+                        <div class="tl-fix" style="margin-top:0.55rem">✓ detected Claude Code config</div>
+                        <div class="tl-fix">✓ installed MCP server</div>
+                        <div class="tl-result">✓ watching ./logs/dev.log · ready</div>
+                    </div>
                 </div>
             </div>
 
             <!-- Loop 4: NL query -->
             <div class="showcase-card" data-showcase="query">
-                <div class="showcase-label">Natural language query</div>
-                <div class="showcase-stage">
-                    <div class="sc-query-input">"what broke during last night's deploy?"</div>
-                    <div class="sc-rank-line sc-dim">INFO [startup] Application started</div>
-                    <div class="sc-rank-line">ERROR [Database] FATAL: Connection reset</div>
-                    <div class="sc-rank-line sc-dim">INFO [Cache] Cache miss key: session_123</div>
-                </div>
-                <div class="showcase-static">
-                    <div class="sc-query-input mb-2">"what broke during last night's deploy?"</div>
-                    <div class="sc-success">ERROR [Database] FATAL: Connection reset ↑ ranked #1</div>
+                <div class="terminal-loader">
+                    <div class="terminal-header">
+                        <div class="terminal-title">Natural language query</div>
+                        <div class="terminal-controls">
+                            <div class="control close"></div>
+                            <div class="control minimize"></div>
+                            <div class="control maximize"></div>
+                        </div>
+                    </div>
+                    <div class="terminal-body">
+                        <div><span class="tl-typing tl-text">"what broke during last night's deploy?"</span></div>
+                        <div class="tl-dim" style="margin-top:0.55rem">INFO [startup] Application started</div>
+                        <div class="tl-result">ERROR [Database] FATAL: Connection reset ↑ #1</div>
+                        <div class="tl-dim">INFO [Cache] Cache miss key: session_123</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -3911,7 +3955,7 @@
         initMagicTerminal('mtCrash', { loopDelay: 1800 });
         initMagicTerminal('mtQuery', { loopDelay: 1800 });
 
-        // motion
+        // motion (harmless if cards no longer depend on .playing)
         const showcaseCards = document.querySelectorAll('.showcase-card');
         const showcaseObserver = new IntersectionObserver((entries) => {
             entries.forEach((e) => {
@@ -3923,30 +3967,6 @@
             });
         }, { threshold: 0.25, rootMargin: '50px' });
         showcaseCards.forEach((card) => showcaseObserver.observe(card));
-
-        // ре триггер
-        if (!prefersReducedMotion) {
-            showcaseCards.forEach((card) => {
-                if (card.dataset.showcase !== 'collapse') return;
-                setInterval(() => {
-                    if (!card.classList.contains('playing')) return;
-                    const wall = card.querySelector('.sc-collapse-wall');
-                    const result = card.querySelector('.sc-collapse-result');
-                    if (!wall || !result) return;
-                    wall.querySelectorAll('.sc-line').forEach((l) => {
-                        l.style.opacity = '0.5';
-                        l.style.animation = 'none';
-                        l.style.maxHeight = '';
-                        void l.offsetWidth;
-                        l.style.animation = '';
-                    });
-                    result.style.opacity = '0';
-                    result.style.animation = 'none';
-                    void result.offsetWidth;
-                    result.style.animation = '';
-                }, 3200);
-            });
-        }
     </script>
 
     <script>
