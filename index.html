@@ -724,54 +724,89 @@
             animation: logoSpin 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
-        /* Floating pill navigation */
-        .pill-nav {
-            position: relative;
+        /* From Uiverse.io by WhiteNervosa — site nav */
+        .customCheckBoxHolder {
+            margin: 0;
             display: flex;
             align-items: center;
-            gap: 2px;
-            padding: 4px;
-            border-radius: 999px;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border);
         }
-        .pill-nav-indicator {
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            height: calc(100% - 8px);
-            width: 0;
-            border-radius: 999px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-strong);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.14), 0 1px 2px rgba(0,0,0,0.08);
-            opacity: 0;
-            pointer-events: none;
-            z-index: 1;
-            transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1),
-                        width 0.45s cubic-bezier(0.65, 0, 0.35, 1),
-                        opacity 0.2s ease;
-            will-change: transform, width;
-        }
-        .pill-nav-indicator.ready { opacity: 1; }
-        [data-theme="light"] .pill-nav-indicator {
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-        }
-        .pill-nav-link {
+        .customCheckBox {
+            width: fit-content;
             position: relative;
-            z-index: 2;
-            padding: 6px 14px;
-            border-radius: 999px;
-            font-size: 0.8125rem;
-            line-height: 1.4;
-            color: var(--text-muted);
-            white-space: nowrap;
-            transition: color 0.25s ease;
+            overflow: hidden;
+            cursor: pointer;
+            user-select: none;
+            padding: 2px 10px;
+            background-color: rgba(0, 0, 0, 0.16);
+            border-radius: 0;
+            color: rgba(255, 255, 255, 0.7);
+            transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition-duration: 300ms;
+            transition-property: color, background-color, box-shadow;
+            display: flex;
+            height: 32px;
+            align-items: center;
+            box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px 1px 1px 0px;
+            outline: none;
+            justify-content: center;
+            min-width: 55px;
         }
-        .pill-nav-link:hover,
-        .pill-nav-link.active { color: var(--text); }
-        @media (prefers-reduced-motion: reduce) {
-            .pill-nav-indicator { transition: opacity 0.2s ease; }
+        .customCheckBox:hover {
+            background-color: #2c2c2c;
+            color: white;
+            box-shadow: rgba(0, 0, 0, 0.23) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.17) 0px 2px 4px 1px;
+        }
+        .customCheckBox .inner {
+            font-family: inherit;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            pointer-events: none;
+            transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition-duration: 300ms;
+            transition-property: transform;
+            transform: translateY(0px);
+            white-space: nowrap;
+        }
+        .customCheckBox:hover .inner {
+            transform: translateY(-2px);
+        }
+        .customCheckBoxWrapper:first-of-type .customCheckBox {
+            border-bottom-left-radius: 5px;
+            border-top-left-radius: 5px;
+            border-right: 0;
+        }
+        .customCheckBoxWrapper:last-of-type .customCheckBox {
+            border-bottom-right-radius: 5px;
+            border-top-right-radius: 5px;
+            border-left: 0;
+        }
+        .customCheckBoxInput {
+            display: none;
+        }
+        .customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox {
+            background-color: #2d6737;
+            color: white;
+            box-shadow: rgba(0, 0, 0, 0.23) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.17) 0px 2px 4px 1px;
+        }
+        .customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox .inner {
+            transform: translateY(-2px);
+        }
+        .customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox:hover {
+            background-color: #34723f;
+            box-shadow: rgba(0, 0, 0, 0.26) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.15) 0px 3px 6px 2px;
+        }
+        .customCheckBoxWrapper .customCheckBox:hover .inner {
+            transform: translateY(-2px);
+        }
+        [data-theme="light"] .customCheckBox {
+            background-color: rgba(0, 0, 0, 0.08);
+            color: rgba(0, 0, 0, 0.55);
+            box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 1px 0px inset, rgba(255, 255, 255, 0.6) 0px 1px 1px 0px;
+        }
+        [data-theme="light"] .customCheckBox:hover {
+            background-color: #2c2c2c;
+            color: white;
         }
 
         /* Mobile Sidebar */
@@ -1782,14 +1817,36 @@
                 <img src="/favicon-32x32.png" alt="" class="w-7 h-7 logo-animate" width="28" height="28">
                 Roka
             </a>
-            <div class="hidden sm:flex pill-nav" id="pillNav">
-                <span class="pill-nav-indicator" id="pillNavIndicator"></span>
-                <a href="#story" class="pill-nav-link" data-section="story">Showcase</a>
-                <a href="/testing.html" class="pill-nav-link" data-section="testing">Testing</a>
-                <a href="#mcp" class="pill-nav-link" data-section="mcp">MCP</a>
-                <a href="#features" class="pill-nav-link" data-section="features">Features</a>
-                <a href="#pricing" class="pill-nav-link" data-section="pricing">Pricing</a>
-                <a href="/about.html" class="pill-nav-link" data-section="about">About</a>
+            <div class="customCheckBoxHolder hidden sm:flex" id="pillNav">
+                <input class="customCheckBoxInput" id="nav-story" type="radio" name="siteNav" data-section="story">
+                <label class="customCheckBoxWrapper" for="nav-story" data-href="#story">
+                    <div class="customCheckBox"><div class="inner">Showcase</div></div>
+                </label>
+
+                <input class="customCheckBoxInput" id="nav-testing" type="radio" name="siteNav" data-section="testing">
+                <label class="customCheckBoxWrapper" for="nav-testing" data-href="/testing.html">
+                    <div class="customCheckBox"><div class="inner">Testing</div></div>
+                </label>
+
+                <input class="customCheckBoxInput" id="nav-mcp" type="radio" name="siteNav" data-section="mcp">
+                <label class="customCheckBoxWrapper" for="nav-mcp" data-href="#mcp">
+                    <div class="customCheckBox"><div class="inner">MCP</div></div>
+                </label>
+
+                <input class="customCheckBoxInput" id="nav-features" type="radio" name="siteNav" data-section="features">
+                <label class="customCheckBoxWrapper" for="nav-features" data-href="#features">
+                    <div class="customCheckBox"><div class="inner">Features</div></div>
+                </label>
+
+                <input class="customCheckBoxInput" id="nav-pricing" type="radio" name="siteNav" data-section="pricing">
+                <label class="customCheckBoxWrapper" for="nav-pricing" data-href="#pricing">
+                    <div class="customCheckBox"><div class="inner">Pricing</div></div>
+                </label>
+
+                <input class="customCheckBoxInput" id="nav-about" type="radio" name="siteNav" data-section="about">
+                <label class="customCheckBoxWrapper" for="nav-about" data-href="/about.html">
+                    <div class="customCheckBox"><div class="inner">About</div></div>
+                </label>
             </div>
             <div class="flex items-center gap-2">
                 <button id="themeToggle" type="button"
@@ -3605,41 +3662,44 @@
             link.addEventListener('click', closeMobileSidebar);
         });
 
-        // ── Floating pill navigation ──────────────────────────────
+        // ── Segmented nav (Uiverse customCheckBox style) ──────────
         (function initPillNav() {
             const nav = document.getElementById('pillNav');
-            const indicator = document.getElementById('pillNavIndicator');
-            if (!nav || !indicator) return;
+            if (!nav) return;
 
-            const links = Array.from(nav.querySelectorAll('.pill-nav-link'));
-            let activeLink = null;
-
-            function movePill(link) {
-                if (!link) return;
-                indicator.style.width = `${link.offsetWidth}px`;
-                indicator.style.transform = `translateX(${link.offsetLeft - 4}px)`;
-                indicator.classList.add('ready');
-            }
+            const inputs = Array.from(nav.querySelectorAll('.customCheckBoxInput'));
+            const wrappers = Array.from(nav.querySelectorAll('.customCheckBoxWrapper'));
 
             function setActive(sectionId) {
-                const link = links.find(l => l.dataset.section === sectionId);
-                if (!link || link === activeLink) return;
-                links.forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
-                activeLink = link;
-                if (!nav.matches(':hover')) movePill(link);
+                const input = inputs.find(i => i.dataset.section === sectionId);
+                if (!input || input.checked) return;
+                input.checked = true;
             }
+
+            function go(href) {
+                if (!href) return;
+                if (href.startsWith('#')) {
+                    const el = document.querySelector(href);
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    else window.location.hash = href;
+                    return;
+                }
+                window.location.href = href;
+            }
+
+            wrappers.forEach(label => {
+                label.addEventListener('click', (e) => {
+                    // Let the radio check, then navigate
+                    const href = label.getAttribute('data-href');
+                    // Delay so :checked paints before hash scroll / navigation
+                    setTimeout(() => go(href), 0);
+                });
+            });
 
             const path = window.location.pathname;
             if (path.includes('testing.html')) setActive('testing');
             else if (path.includes('about.html')) setActive('about');
             else setActive('story');
-
-            links.forEach(link => {
-                link.addEventListener('mouseenter', () => movePill(link));
-            });
-            nav.addEventListener('mouseleave', () => movePill(activeLink));
-            window.addEventListener('resize', () => movePill(activeLink));
 
             if (!path.includes('testing.html') && !path.includes('about.html')) {
                 const sectionIds = ['story', 'mcp', 'features', 'pricing'];
@@ -3653,8 +3713,6 @@
                     sections.forEach(s => spy.observe(s));
                 }
             }
-
-            requestAnimationFrame(() => movePill(activeLink));
         })();
 
         // ── Hero animations (handled by canvas above) ──
