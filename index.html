@@ -643,6 +643,181 @@
             transition: transform 0.2s ease, border-color 0.2s ease;
         }
 
+        /* Magic UI–style Bento Grid for Features */
+        .bento-grid {
+            display: grid;
+            width: 100%;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            grid-auto-rows: minmax(22rem, auto);
+        }
+        @media (min-width: 640px) {
+            .bento-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(3, 1fr);
+                grid-auto-rows: 22rem;
+            }
+            .bento-card--wide { grid-column: span 2; }
+        }
+
+        .bento-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            overflow: hidden;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            box-shadow: 0 0 0 1px rgba(0,0,0,.03), 0 2px 4px rgba(0,0,0,.05), 0 12px 24px rgba(0,0,0,.05);
+            transition: border-color 0.25s ease, transform 0.25s ease;
+            min-height: 22rem;
+        }
+        [data-theme="dark"] .bento-card {
+            box-shadow: 0 -20px 80px -20px rgba(255,255,255,.08) inset;
+            border-color: rgba(255,255,255,.1);
+        }
+        .bento-card:hover {
+            border-color: var(--border-strong);
+            transform: translateY(-2px);
+        }
+
+        .bento-card-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bento-window {
+            position: absolute;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(92%, 420px);
+            aspect-ratio: 16 / 10;
+            border-radius: 10px;
+            border: 1px solid var(--border-strong);
+            background: var(--bg-elevated);
+            box-shadow: 0 18px 40px -20px rgba(0,0,0,.55);
+            overflow: hidden;
+            mask-image: linear-gradient(to top, transparent 0%, #000 45%);
+            -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 45%);
+            transition: transform 0.35s ease, opacity 0.35s ease;
+        }
+        .bento-card:hover .bento-window {
+            transform: translateX(-50%) scale(1.03);
+        }
+        .bento-card--wide .bento-window {
+            width: min(88%, 560px);
+        }
+
+        .bento-window-chrome {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            background: color-mix(in srgb, var(--bg-elevated) 92%, var(--text) 8%);
+        }
+        .bento-window-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--text-faint);
+            opacity: 0.55;
+        }
+        .bento-window-dot:nth-child(1) { background: #ff5f57; opacity: 0.9; }
+        .bento-window-dot:nth-child(2) { background: #febc2e; opacity: 0.9; }
+        .bento-window-dot:nth-child(3) { background: #28c840; opacity: 0.9; }
+        .bento-window-title {
+            margin-left: 6px;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-faint);
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .bento-window-body {
+            position: relative;
+            width: 100%;
+            height: calc(100% - 28px);
+            background:
+                linear-gradient(180deg, transparent, var(--bg-card) 95%),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 11px,
+                    var(--grid-line) 11px,
+                    var(--grid-line) 12px
+                );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .bento-window-body.is-empty::after {
+            content: "Video coming soon";
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-faint);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .bento-window-body video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .bento-card-content {
+            position: relative;
+            z-index: 1;
+            padding: 1.25rem;
+            pointer-events: none;
+            transform: translateZ(0);
+            transition: transform 0.3s ease;
+        }
+        .bento-card:hover .bento-card-content {
+            transform: translateY(-6px);
+        }
+        .bento-card-content .mono {
+            margin-bottom: 0.35rem;
+        }
+        .bento-card-content h3 {
+            font-size: 1.125rem;
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+            color: var(--text);
+        }
+        .bento-card-content p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+            max-width: 36rem;
+        }
+        .bento-card-overlay {
+            pointer-events: none;
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            transition: background 0.3s ease;
+        }
+        .bento-card:hover .bento-card-overlay {
+            background: color-mix(in srgb, var(--bg) 0%, transparent);
+        }
+        [data-theme="dark"] .bento-card:hover .bento-card-overlay {
+            background: rgba(255,255,255,0.02);
+        }
+
         /* Prune lab controls */
         input[type="range"] {
             -webkit-appearance: none;
@@ -2353,41 +2528,161 @@
             <p class="text-muted text-sm max-w-2xl mx-auto">Roka is a pruning middleware: ingest logs, code, or prose, detect structure, score relevance to your query, and deliver exactly what fits the budget.</p>
         </div>
 
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div class="feature-card surface rounded-xl p-5">
-                <div class="mono text-xs text-faint mb-2">01</div>
-                <h3 class="font-semibold mb-2">Log compaction</h3>
-                <p class="text-sm text-muted leading-relaxed">Fingerprints repetitive lines (UUIDs, IPs, timestamps → placeholders) and collapses patterns above a threshold into summary chunks with provenance.</p>
+        <div class="bento-grid">
+            <!-- 01 Log compaction — video background -->
+            <div class="bento-card bento-card--wide">
+                <div class="bento-card-bg" aria-hidden="true">
+                    <div class="bento-window">
+                        <div class="bento-window-chrome">
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-title">log-compaction.mp4</span>
+                        </div>
+                        <div class="bento-window-body">
+                            <video
+                                src="/media/log-compaction.mp4"
+                                autoplay
+                                muted
+                                loop
+                                playsinline
+                                preload="metadata"
+                            ></video>
+                        </div>
+                    </div>
+                </div>
+                <div class="bento-card-overlay"></div>
+                <div class="bento-card-content">
+                    <div class="mono text-xs text-faint">01</div>
+                    <h3>Log compaction</h3>
+                    <p>Fingerprints repetitive lines (UUIDs, IPs, timestamps → placeholders) and collapses patterns above a threshold into summary chunks with provenance.</p>
+                </div>
             </div>
-            <div class="feature-card surface rounded-xl p-5">
-                <div class="mono text-xs text-faint mb-2">02</div>
-                <h3 class="font-semibold mb-2">Critical preservation</h3>
-                <p class="text-sm text-muted leading-relaxed">Panics, exceptions, OOM, auth failures, and stack traces are never collapsed — always packed first regardless of score.</p>
+
+            <!-- 02 Critical preservation — empty video slot -->
+            <div class="bento-card">
+                <div class="bento-card-bg" aria-hidden="true">
+                    <div class="bento-window">
+                        <div class="bento-window-chrome">
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-title">critical-preservation.mp4</span>
+                        </div>
+                        <div class="bento-window-body is-empty" data-video-slot="critical-preservation"></div>
+                    </div>
+                </div>
+                <div class="bento-card-overlay"></div>
+                <div class="bento-card-content">
+                    <div class="mono text-xs text-faint">02</div>
+                    <h3>Critical preservation</h3>
+                    <p>Panics, exceptions, OOM, auth failures, and stack traces are never collapsed — always packed first regardless of score.</p>
+                </div>
             </div>
-            <div class="feature-card surface rounded-xl p-5">
-                <div class="mono text-xs text-faint mb-2">03</div>
-                <h3 class="font-semibold mb-2">BM25 + semantic rank</h3>
-                <p class="text-sm text-muted leading-relaxed">Fast lexical scoring with BM25Okapi, then optional sentence-transformer re-ranking so chunks match your query intent.</p>
+
+            <!-- 03 BM25 + semantic rank -->
+            <div class="bento-card">
+                <div class="bento-card-bg" aria-hidden="true">
+                    <div class="bento-window">
+                        <div class="bento-window-chrome">
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-title">bm25-semantic-rank.mp4</span>
+                        </div>
+                        <div class="bento-window-body is-empty" data-video-slot="bm25-semantic-rank"></div>
+                    </div>
+                </div>
+                <div class="bento-card-overlay"></div>
+                <div class="bento-card-content">
+                    <div class="mono text-xs text-faint">03</div>
+                    <h3>BM25 + semantic rank</h3>
+                    <p>Fast lexical scoring with BM25Okapi, then optional sentence-transformer re-ranking so chunks match your query intent.</p>
+                </div>
             </div>
-            <div class="feature-card surface rounded-xl p-5">
-                <div class="mono text-xs text-faint mb-2">04</div>
-                <h3 class="font-semibold mb-2">Token budget packer</h3>
-                <p class="text-sm text-muted leading-relaxed">Greedy packing with exact tiktoken counts (cl100k_base). Source diversity cap prevents one file from hogging the budget.</p>
+
+            <!-- 04 Token budget packer — wide -->
+            <div class="bento-card bento-card--wide">
+                <div class="bento-card-bg" aria-hidden="true">
+                    <div class="bento-window">
+                        <div class="bento-window-chrome">
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-title">token-budget-packer.mp4</span>
+                        </div>
+                        <div class="bento-window-body is-empty" data-video-slot="token-budget-packer"></div>
+                    </div>
+                </div>
+                <div class="bento-card-overlay"></div>
+                <div class="bento-card-content">
+                    <div class="mono text-xs text-faint">04</div>
+                    <h3>Token budget packer</h3>
+                    <p>Greedy packing with exact tiktoken counts (cl100k_base). Source diversity cap prevents one file from hogging the budget.</p>
+                </div>
             </div>
-            <div class="feature-card surface rounded-xl p-5">
-                <div class="mono text-xs text-faint mb-2">05</div>
-                <h3 class="font-semibold mb-2">Multi-format input</h3>
-                <p class="text-sm text-muted leading-relaxed">Auto-detects logs, code, or prose. Code can be minified (docstrings/comments stripped) and chunked by function/class scope.</p>
+
+            <!-- 05 Multi-format input -->
+            <div class="bento-card">
+                <div class="bento-card-bg" aria-hidden="true">
+                    <div class="bento-window">
+                        <div class="bento-window-chrome">
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-title">multi-format-input.mp4</span>
+                        </div>
+                        <div class="bento-window-body is-empty" data-video-slot="multi-format-input"></div>
+                    </div>
+                </div>
+                <div class="bento-card-overlay"></div>
+                <div class="bento-card-content">
+                    <div class="mono text-xs text-faint">05</div>
+                    <h3>Multi-format input</h3>
+                    <p>Auto-detects logs, code, or prose. Code can be minified (docstrings/comments stripped) and chunked by function/class scope.</p>
+                </div>
             </div>
-            <div class="feature-card surface rounded-xl p-5">
-                <div class="mono text-xs text-faint mb-2">06</div>
-                <h3 class="font-semibold mb-2">API & CLI</h3>
-                <p class="text-sm text-muted leading-relaxed">Pipe stdin, point at a file, or POST to <span class="mono inline-code">/api/prune</span>. Same pipeline everywhere — stdout is always the pruned context.</p>
+
+            <!-- 06 API & CLI -->
+            <div class="bento-card">
+                <div class="bento-card-bg" aria-hidden="true">
+                    <div class="bento-window">
+                        <div class="bento-window-chrome">
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-title">api-cli.mp4</span>
+                        </div>
+                        <div class="bento-window-body is-empty" data-video-slot="api-cli"></div>
+                    </div>
+                </div>
+                <div class="bento-card-overlay"></div>
+                <div class="bento-card-content">
+                    <div class="mono text-xs text-faint">06</div>
+                    <h3>API &amp; CLI</h3>
+                    <p>Pipe stdin, point at a file, or POST to <span class="mono inline-code">/api/prune</span>. Same pipeline everywhere — stdout is always the pruned context.</p>
+                </div>
             </div>
-            <div class="feature-card surface rounded-xl p-5">
-                <div class="mono text-xs text-faint mb-2">07</div>
-                <h3 class="font-semibold mb-2">Natural language queries</h3>
-                <p class="text-sm text-muted leading-relaxed">Ask in plain English what you care about — Roka ranks chunks against intent, not just keywords.</p>
+
+            <!-- 07 Natural language queries — wide to fill last row -->
+            <div class="bento-card bento-card--wide">
+                <div class="bento-card-bg" aria-hidden="true">
+                    <div class="bento-window">
+                        <div class="bento-window-chrome">
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-dot"></span>
+                            <span class="bento-window-title">natural-language-queries.mp4</span>
+                        </div>
+                        <div class="bento-window-body is-empty" data-video-slot="natural-language-queries"></div>
+                    </div>
+                </div>
+                <div class="bento-card-overlay"></div>
+                <div class="bento-card-content">
+                    <div class="mono text-xs text-faint">07</div>
+                    <h3>Natural language queries</h3>
+                    <p>Ask in plain English what you care about — Roka ranks chunks against intent, not just keywords.</p>
+                </div>
             </div>
         </div>
 

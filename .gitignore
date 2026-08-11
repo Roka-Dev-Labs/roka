@@ -48,6 +48,12 @@ real_logs.txt
 test_*.txt
 Anthropic-Cybersecurity-Skills/
 
+# Large feature demo videos (GitHub 100MB limit) — compress before committing
+# Keep media/.gitkeep so the folder exists; drop compressed mp4s into media/
+Log Compaction Video.mp4
+*.mp4
+!media/.gitkeep
+
 # Private product website (lives in private repo — local backup only)
 .private-product/
 
