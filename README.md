@@ -34,17 +34,19 @@ Manual install and PATH notes: [INSTALLATION.md](INSTALLATION.md).
 
 ## Connect an AI agent (MCP)
 
-One command registers Roka as an MCP server so Claude Code / Cursor / Codex / Copilot can call `prune_file`, `prune_logs`, and `prune_tail`:
+MCP is a **Pro** feature. The `roka-mcp` package is on npm (`npx roka-mcp@latest`), but `connect` / `serve` / `watch` require a Pro API key — without one the command exits instead of writing config.
+
+Get a key via the [3-month feedback promo](https://roka-prune.com/#pricing) or the [dashboard](https://roka-prune.com/dashboard/api-keys.html), then:
 
 ```bash
-npx roka-mcp connect --agent claude-code
-npx roka-mcp connect --agent cursor
-npx roka-mcp connect --agent codex
-npx roka-mcp connect --agent copilot
+npx roka-mcp connect --agent claude-code --api-key rk_live_...
+npx roka-mcp connect --agent cursor --api-key rk_live_...
+npx roka-mcp connect --agent codex --api-key rk_live_...
+npx roka-mcp connect --agent copilot --api-key rk_live_...
 ```
 
-Optional Pro key: `--api-key rk_live_...` or `ROKA_API_KEY`. Restart the IDE after connect.  
-Full MCP docs: [roka-mcp README](https://github.com/Roka-Dev-Labs/roka-mcp).
+Or set `ROKA_API_KEY` and omit `--api-key`. Restart the IDE after connect.  
+Free cold start (no key): install the CLI above. Full MCP docs: [roka-mcp README](https://github.com/Roka-Dev-Labs/roka-mcp).
 
 ---
 
@@ -106,11 +108,15 @@ We're early — the study measures **retention under budget**, not downstream ag
 
 ## Pricing (summary)
 
+Matches the live API quotas (Free = 15K tokens lifetime per device; Pro = 500K / month):
+
 | Tier | Price | Highlights |
 |------|-------|------------|
-| **Free** | $0 | Local CLI, up to 15K tokens lifetime per device, basic fingerprinting |
+| **Free** | $0 | Local CLI, up to 15K tokens lifetime per device, fingerprinting, critical-error force-keep |
 | **Pro** | $20/mo | Web UI + API, 500K tokens/month, semantic re-rank, MCP agent connect |
 | **Enterprise** | Custom | Unlimited, SSO / audit / integrations — [contact](mailto:mukhamedjankydyrli@gmail.com) |
+
+Promo: **3 months of Pro free** in exchange for product feedback ([pricing page](https://roka-prune.com/#pricing)). A separate 7-day trial path also exists for signed-in accounts.
 
 Details: [roka-prune.com/#pricing](https://roka-prune.com/#pricing).
 
@@ -121,7 +127,7 @@ Details: [roka-prune.com/#pricing](https://roka-prune.com/#pricing).
 Pre-built binaries: [GitHub Releases](https://github.com/Roka-Dev-Labs/roka/releases).  
 Assets match `install.roka-prune.com` naming: `roka-{linux|darwin}-{amd64|arm64}.gz`.
 
-This public repo is **docs, website, and issue tracking**. The pruning engine source and hosted backend are proprietary.
+This public repo is **docs, website, issue tracking, and the `roka-mcp` npm package**. The pruning engine (Rust) and hosted backend are proprietary and live in private repos — GitHub language stats here reflect the marketing site + MCP JS, not the engine. See [`.gitattributes`](.gitattributes).
 
 ---
 

@@ -665,9 +665,9 @@
         <!-- Dedicated MCP section -->
         <section class="mb-16" id="mcp" aria-labelledby="mcp-heading">
             <div class="text-center mb-8">
-                <p class="mono text-[11px] uppercase tracking-[0.22em] text-muted mb-3">MCP</p>
+                <p class="mono text-[11px] uppercase tracking-[0.22em] text-muted mb-3">MCP · Pro</p>
                 <h2 id="mcp-heading" class="text-2xl font-semibold mb-3">Connect Roka to your AI agent</h2>
-                <p class="text-muted text-sm max-w-2xl mx-auto">Roka ships as an MCP server. Run one connect command for your agent — no manual JSON editing. After that, the agent can prune logs before they burn tokens.</p>
+                <p class="text-muted text-sm max-w-2xl mx-auto">MCP is a Pro feature — <span class="mono inline-code" style="color:var(--text)">connect</span> requires a Roka API key. Free path: install the CLI above. Need Pro? <a href="/#pricing" class="underline underline-offset-2 hover:text-[var(--text)]">Get 3 months free for feedback</a>, then run one connect command for your agent.</p>
             </div>
 
             <div class="surface rounded-xl p-5 sm:p-6 max-w-2xl mx-auto">
@@ -680,28 +680,28 @@
                     <button type="button" class="agent-tab" data-mcp-agent="codex" role="tab">Codex</button>
                     <button type="button" class="agent-tab" data-mcp-agent="copilot" role="tab">Copilot</button>
                 </div>
-                <button type="button" class="cmd-btn active" data-mcp-panel="claude" data-copy="npx roka-mcp connect --agent claude-code" aria-label="Copy command">
-                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent claude-code</span>
+                <button type="button" class="cmd-btn active" data-mcp-panel="claude" data-copy="npx roka-mcp connect --agent claude-code --api-key rk_live_..." aria-label="Copy command">
+                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent claude-code --api-key rk_live_...</span>
                     <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
                 </button>
-                <button type="button" class="cmd-btn" data-mcp-panel="cursor" data-copy="npx roka-mcp connect --agent cursor" aria-label="Copy command">
-                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent cursor</span>
+                <button type="button" class="cmd-btn" data-mcp-panel="cursor" data-copy="npx roka-mcp connect --agent cursor --api-key rk_live_..." aria-label="Copy command">
+                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent cursor --api-key rk_live_...</span>
                     <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
                 </button>
-                <button type="button" class="cmd-btn" data-mcp-panel="codex" data-copy="npx roka-mcp connect --agent codex" aria-label="Copy command">
-                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent codex</span>
+                <button type="button" class="cmd-btn" data-mcp-panel="codex" data-copy="npx roka-mcp connect --agent codex --api-key rk_live_..." aria-label="Copy command">
+                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent codex --api-key rk_live_...</span>
                     <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
                 </button>
-                <button type="button" class="cmd-btn" data-mcp-panel="copilot" data-copy="npx roka-mcp connect --agent copilot" aria-label="Copy command">
-                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent copilot</span>
+                <button type="button" class="cmd-btn" data-mcp-panel="copilot" data-copy="npx roka-mcp connect --agent copilot --api-key rk_live_..." aria-label="Copy command">
+                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent copilot --api-key rk_live_...</span>
                     <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2 2v1"/></svg></span>
                 </button>
 
                 <ul class="mcp-feature-list list-none p-0">
+                    <li><span class="tick">→</span><span>Requires a Pro API key (<span class="mono inline-code" style="color:var(--text)">--api-key</span> or <span class="mono inline-code" style="color:var(--text)">ROKA_API_KEY</span>). Package is on npm: <span class="mono inline-code" style="color:var(--text)">roka-mcp</span>.</span></li>
                     <li><span class="tick">→</span><span>Writes the MCP config for your agent automatically (Claude Code, Cursor, Codex, Copilot).</span></li>
                     <li><span class="tick">→</span><span>Exposes <span class="mono inline-code" style="color:var(--text)">prune_file</span>, <span class="mono inline-code" style="color:var(--text)">prune_logs</span>, and <span class="mono inline-code" style="color:var(--text)">prune_tail</span> as tools.</span></li>
-                    <li><span class="tick">→</span><span>Optional Pro key: <span class="mono inline-code" style="color:var(--text)">npx roka-mcp connect --agent cursor --api-key rk_live_...</span></span></li>
-                    <li><span class="tick">→</span><span>Watch mode: <span class="mono inline-code" style="color:var(--text)">npx roka-mcp watch ./logs/dev.log --on-crash</span></span></li>
+                    <li><span class="tick">→</span><span>Watch mode: <span class="mono inline-code" style="color:var(--text)">npx roka-mcp watch ./logs/dev.log --on-crash --api-key rk_live_...</span></span></li>
                 </ul>
             </div>
         </section>

@@ -60,27 +60,28 @@ cat your-log.log | roka prune --query "what broke" --budget 8000
 
 ## Connect MCP to your AI agent
 
-Registers Roka as an MCP server (Claude Code, Cursor, Codex, Copilot). Restart the IDE after connect.
+MCP is **Pro-only**. The `roka-mcp` package is published on npm; `connect` / `watch` refuse to run without a Pro API key. Get a key via the [3-month feedback promo](https://roka-prune.com/#pricing) or the [dashboard](https://roka-prune.com/dashboard/api-keys.html), then:
 
 ```bash
-npx roka-mcp connect --agent claude-code
-npx roka-mcp connect --agent cursor
-npx roka-mcp connect --agent codex
-npx roka-mcp connect --agent copilot
-```
-
-Optional Pro API key:
-
-```bash
+npx roka-mcp connect --agent claude-code --api-key rk_live_...
 npx roka-mcp connect --agent cursor --api-key rk_live_...
-# or
-export ROKA_API_KEY=rk_live_...
+npx roka-mcp connect --agent codex --api-key rk_live_...
+npx roka-mcp connect --agent copilot --api-key rk_live_...
 ```
+
+Or:
+
+```bash
+export ROKA_API_KEY=rk_live_...
+npx roka-mcp connect --agent cursor
+```
+
+Restart the IDE after connect.
 
 Watch mode:
 
 ```bash
-npx roka-mcp watch ./logs/dev.log --on-crash
+npx roka-mcp watch ./logs/dev.log --on-crash --api-key rk_live_...
 ```
 
-More detail: [roka-mcp on GitHub](https://github.com/Roka-Dev-Labs/roka-mcp) · [Install page MCP section](https://roka-prune.com/install.html#mcp).
+Free cold start (no key): use the CLI install above. More detail: [roka-mcp on GitHub](https://github.com/Roka-Dev-Labs/roka-mcp) · [Install page MCP section](https://roka-prune.com/install.html#mcp).

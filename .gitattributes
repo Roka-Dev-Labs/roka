@@ -1,0 +1,11 @@
+# Marketing site and static pages live in this repo for deployment,
+# but they are not the product language mix. Exclude them from GitHub
+# Linguist stats so the bar reflects the shipped MCP/JS tooling (and
+# does not imply the prune engine is "mostly HTML").
+*.html linguist-documentation
+js/** linguist-documentation
+
+# Local / generated build leftovers if ever tracked
+target/** linguist-generated
+*.pyc linguist-generated
+__pycache__/** linguist-generated

@@ -1936,29 +1936,29 @@
                 </button>
             </div>
 
-            <!-- AI Agent mode: per-agent connect command -->
+            <!-- AI Agent mode: per-agent connect command (Pro — requires API key) -->
             <div class="mode-panel" data-mode-panel="agent">
-                <p class="text-xs text-muted mb-3">Connect Roka MCP to your AI agent in one command.</p>
+                <p class="text-xs text-muted mb-3">MCP is <span class="pro-badge" style="vertical-align:middle">Pro</span> — needs an API key. Free cold start: use <strong style="color:var(--text);font-weight:500">Terminal</strong> above, or <a href="#pricing" class="hover:text-[var(--text)] underline underline-offset-2">get 3 months of Pro for feedback</a>.</p>
                 <div class="agent-tabs" role="tablist">
                     <button type="button" class="agent-tab active" data-agent="claude" role="tab">Claude Code</button>
                     <button type="button" class="agent-tab" data-agent="cursor" role="tab">Cursor</button>
                     <button type="button" class="agent-tab" data-agent="codex" role="tab">Codex</button>
                     <button type="button" class="agent-tab" data-agent="copilot" role="tab">Copilot</button>
                 </div>
-                <button type="button" class="cmd-btn active" data-agent-panel="claude" data-copy="npx roka-mcp connect --agent claude-code" aria-label="Copy command">
-                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent claude-code</span>
+                <button type="button" class="cmd-btn active" data-agent-panel="claude" data-copy="npx roka-mcp connect --agent claude-code --api-key rk_live_..." aria-label="Copy command">
+                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent claude-code --api-key rk_live_...</span>
                     <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
                 </button>
-                <button type="button" class="cmd-btn" data-agent-panel="cursor" data-copy="npx roka-mcp connect --agent cursor" aria-label="Copy command">
-                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent cursor</span>
+                <button type="button" class="cmd-btn" data-agent-panel="cursor" data-copy="npx roka-mcp connect --agent cursor --api-key rk_live_..." aria-label="Copy command">
+                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent cursor --api-key rk_live_...</span>
                     <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
                 </button>
-                <button type="button" class="cmd-btn" data-agent-panel="codex" data-copy="npx roka-mcp connect --agent codex" aria-label="Copy command">
-                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent codex</span>
+                <button type="button" class="cmd-btn" data-agent-panel="codex" data-copy="npx roka-mcp connect --agent codex --api-key rk_live_..." aria-label="Copy command">
+                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent codex --api-key rk_live_...</span>
                     <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
                 </button>
-                <button type="button" class="cmd-btn" data-agent-panel="copilot" data-copy="npx roka-mcp connect --agent copilot" aria-label="Copy command">
-                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent copilot</span>
+                <button type="button" class="cmd-btn" data-agent-panel="copilot" data-copy="npx roka-mcp connect --agent copilot --api-key rk_live_..." aria-label="Copy command">
+                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent copilot --api-key rk_live_...</span>
                     <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
                 </button>
             </div>
@@ -2174,10 +2174,11 @@
 
         <!-- Command -->
         <div class="text-center mt-12">
-            <p class="text-xs text-faint mb-3">Hover the icons to see agent names · one command to connect:</p>
+            <p class="text-xs text-faint mb-3">Hover the icons to see agent names · Pro MCP connect (API key required):</p>
             <div class="inline-block bg-[var(--bg)] border border-[var(--border-strong)] rounded-lg px-6 py-3 mono text-sm">
-                npx roka-mcp connect --agent <span style="color:var(--success)">&lt;claude-code&nbsp;|&nbsp;cursor&nbsp;|&nbsp;codex&nbsp;|&nbsp;…&gt;</span>
+                npx roka-mcp connect --agent <span style="color:var(--success)">&lt;claude-code&nbsp;|&nbsp;cursor&nbsp;|&nbsp;…&gt;</span> --api-key rk_live_...
             </div>
+            <p class="text-xs text-faint mt-3"><a href="#pricing" class="hover:text-[var(--text-muted)] transition underline underline-offset-2">Get a Pro key</a> (3 months free for feedback) · free CLI: use Terminal install above</p>
         </div>
     </section>
 
@@ -2271,7 +2272,7 @@
             <div class="showcase-card" data-showcase="install">
                 <div class="showcase-label">One-click MCP install</div>
                 <div class="showcase-stage sc-install">
-                    <div class="sc-line sc-cmd">$ npx roka-mcp connect --agent claude-code</div>
+                    <div class="sc-line sc-cmd">$ npx roka-mcp connect --agent claude-code --api-key rk_live_...</div>
                     <div class="sc-install-out mt-2">
                         <div class="sc-success">✓ detected Claude Code config</div>
                         <div class="sc-success">✓ installed MCP server</div>
@@ -2279,7 +2280,7 @@
                     </div>
                 </div>
                 <div class="showcase-static">
-                    <div>$ npx roka-mcp connect --agent claude-code</div>
+                    <div>$ npx roka-mcp connect --agent claude-code --api-key rk_live_...</div>
                     <div class="sc-success mt-2">✓ roka-mcp ready on stdio</div>
                 </div>
             </div>
@@ -2683,6 +2684,7 @@
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Local CLI tool (no cloud required)</li>
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Up to 15K tokens lifetime per device</li>
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Basic deduplication & fingerprinting</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Critical error preservation (ERROR / FATAL / panic always kept)</li>
                 </ul>
                 <div class="flex gap-2 justify-end">
                     <a href="#try" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium">Get Started</a>
@@ -2704,7 +2706,7 @@
                 <ul class="space-y-3 text-sm text-muted mb-6 flex-1">
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Web UI + REST API</li>
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> 500K tokens/month</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Semantic re-ranking + critical preservation</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Semantic re-ranking (query-aware)</li>
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> One-click agent integration (MCP)</li>
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Natural language query understanding</li>
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> MCP servers for Claude Code, Cursor &amp; Codex — auto-prune on crash</li>
@@ -2748,7 +2750,7 @@
                     </div>
                     <div>
                         <p class="text-sm font-semibold mb-1">Free — structural patterns</p>
-                        <p class="text-xs" style="color:var(--text-muted)">Deduplication, fingerprinting, and token-budget packing. Handles the repetition problem. Works entirely offline, no account needed.</p>
+                        <p class="text-xs" style="color:var(--text-muted)">Deduplication, fingerprinting, critical-error force-keep, and token-budget packing. Handles the repetition problem. Works entirely offline, no account needed.</p>
                     </div>
                 </div>
                 <div class="p-5 flex gap-4 items-start" style="background:var(--bg-card)">
@@ -2785,9 +2787,15 @@
                         </tr>
                         <tr class="border-b border-[var(--border)]">
                             <td class="p-3 text-muted">Tokens</td>
-                            <td class="p-3 text-center text-[var(--text)]">15K / device</td>
-                            <td class="p-3 text-center text-[var(--text)]">500K</td>
+                            <td class="p-3 text-center text-[var(--text)]">15K lifetime / device</td>
+                            <td class="p-3 text-center text-[var(--text)]">500K / month</td>
                             <td class="p-3 text-center text-[var(--text)]">∞</td>
+                        </tr>
+                        <tr class="border-b border-[var(--border)]">
+                            <td class="p-3 text-muted">Critical error preservation</td>
+                            <td class="p-3 text-center text-[var(--success)]">✓</td>
+                            <td class="p-3 text-center text-[var(--success)]">✓</td>
+                            <td class="p-3 text-center text-[var(--success)]">✓</td>
                         </tr>
                         <tr class="border-b border-[var(--border)]">
                             <td class="p-3 text-muted">API</td>
@@ -2852,7 +2860,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Free: Local CLI tool, 15K tokens lifetime per device, basic deduplication — $0 forever.<br><br>Pro: Web UI + API, 500K tokens/month, semantic ranking, critical preservation, priority support. $20/month.<br><br>Most developers use Free for occasional debugging. Teams and on-call engineers use Pro.</p>
+                        <p class="text-sm text-muted">Free: Local CLI tool, 15K tokens lifetime per device, basic deduplication, and critical error preservation (ERROR / FATAL / panic always kept) — $0 forever.<br><br>Pro: Web UI + API, 500K tokens/month, semantic re-ranking, MCP agent connect, priority support. $20/month — or get 3 months free in exchange for product feedback.<br><br>Most developers use Free for occasional debugging. Teams and on-call engineers use Pro.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -2925,7 +2933,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">We're early — no fake conversion stats. Free is the local CLI with a 15K token lifetime ceiling per device and basic fingerprinting — $0 forever. Upgrade to Pro when you need MCP agent connect, semantic re-ranking, higher limits, or the web/API. Occasional debugging usually stays free; daily CI / on-call use is where Pro pays for itself.</p>
+                        <p class="text-sm text-muted">We're early — no fake conversion stats. Free is the local CLI with a 15K token lifetime ceiling per device, fingerprinting, and critical-error force-keep — $0 forever. Upgrade to Pro when you need MCP agent connect, semantic re-ranking, higher limits, or the web/API. Occasional debugging usually stays free; daily CI / on-call use is where Pro pays for itself.</p>
                     </div>
                 </div>
 
