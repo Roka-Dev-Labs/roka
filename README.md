@@ -108,7 +108,7 @@ We're early — the study measures **retention under budget**, not downstream ag
 
 | Tier | Price | Highlights |
 |------|-------|------------|
-| **Free** | $0 | Local CLI, up to 50K tokens/month, basic fingerprinting |
+| **Free** | $0 | Local CLI, up to 15K tokens lifetime per device, basic fingerprinting |
 | **Pro** | $20/mo | Web UI + API, 500K tokens/month, semantic re-rank, MCP agent connect |
 | **Enterprise** | Custom | Unlimited, SSO / audit / integrations — [contact](mailto:mukhamedjankydyrli@gmail.com) |
 
