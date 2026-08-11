@@ -124,6 +124,25 @@
             font-weight: 500;
         }
 
+        #themeToggle {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            background: none;
+            border: 1px solid var(--border-strong, var(--border));
+            color: var(--text-muted);
+            border-radius: 8px;
+            padding: 0.375rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 400;
+            font-family: "Montserrat", system-ui, sans-serif;
+            transition: color 0.2s ease;
+        }
+        #themeToggle:hover {
+            color: var(--text);
+        }
+
         .back-link {
             display: inline-block;
             margin-bottom: 2rem;
@@ -166,7 +185,13 @@
             <img src="/favicon-32x32.png" alt="" class="logo-animate" width="28" height="28">
             Roka
         </a>
-        <button id="themeToggle" type="button" style="background: transparent; border: 1px solid var(--border); color: var(--text-muted); border-radius: 6px; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.875rem;"><span id="themeLabel">Light</span></button>
+        <button id="themeToggle" type="button" aria-label="Toggle theme">
+            <svg id="themeIcon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style="flex-shrink:0">
+                <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.25"/>
+                <path id="themeIconFill" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
+            </svg>
+            <span id="themeLabel">Light</span>
+        </button>
     </nav>
 
     <canvas id="particles"></canvas>
@@ -194,18 +219,24 @@
         const html = document.documentElement;
         const themeToggle = document.getElementById('themeToggle');
         const themeLabel = document.getElementById('themeLabel');
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        
-        if (savedTheme === 'dark') {
-            html.classList.add('dark');
-            themeLabel.textContent = 'Dark';
+        const themeIconFill = document.getElementById('themeIconFill');
+
+        function applyTheme(theme) {
+            html.classList.toggle('dark', theme === 'dark');
+            themeLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
+            themeIconFill.setAttribute('d', theme === 'dark'
+                ? 'M6 1 A5 5 0 0 0 6 11 Z'
+                : 'M6 1 A5 5 0 0 1 6 11 Z');
+            themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+            localStorage.setItem('roka-theme', theme);
+            localStorage.setItem('theme', theme);
         }
 
+        const savedTheme = localStorage.getItem('roka-theme') || localStorage.getItem('theme') || 'light';
+        applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
+
         themeToggle.addEventListener('click', () => {
-            html.classList.toggle('dark');
-            const newTheme = html.classList.contains('dark') ? 'dark' : 'light';
-            localStorage.setItem('theme', newTheme);
-            themeLabel.textContent = newTheme === 'dark' ? 'Dark' : 'Light';
+            applyTheme(html.classList.contains('dark') ? 'light' : 'dark');
         });
 
         const canvas = document.getElementById('particles');
