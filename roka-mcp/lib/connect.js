@@ -260,8 +260,8 @@ export async function connectCommand(args) {
     process.exit(1);
   }
 
-  console.log(`✓ registered roka-mcp with ${agentConf.label}`);
-  console.log(`✓ wrote config to ${filePath}`);
+  console.log(`[OK] registered roka-mcp with ${agentConf.label}`);
+  console.log(`[OK] wrote config to ${filePath}`);
   if (agentConf.note) console.log(`  note: ${agentConf.note}`);
   console.log(`Restart ${agentConf.label} (or reload its window) to pick up the new MCP server.`);
 }

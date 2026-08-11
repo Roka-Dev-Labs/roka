@@ -14,7 +14,7 @@ If you discover a security vulnerability, please report it responsibly.
 
 **Please do not** report security vulnerabilities through public GitHub issues.
 
-Instead, please send an email to: support@roka-prune.com
+Instead, please send an email to: mukhamedjankydyrli@gmail.com
 
 Include:
 - Description of the vulnerability
@@ -48,6 +48,6 @@ Roka processes your data locally by default (CLI and MCP prune tools). When usin
 - We do not train models on your logs
 - You can request data deletion at any time
 
-Enterprise options (SSO, audit logs, data residency, formal compliance reviews) are available for discussion — email support@roka-prune.com.
+Enterprise options (SSO, audit logs, data residency, formal compliance reviews) are available for discussion — email mukhamedjankydyrli@gmail.com.
 
 Thank you for helping keep Roka secure!

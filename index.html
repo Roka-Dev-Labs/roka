@@ -2004,9 +2004,9 @@
             </div>
             <div class="story-viz" data-viz="crash">
                 <div class="mt-terminal" id="mtCrash" aria-label="Animation: crash detected, prune, handoff to agent">
-                    <div class="mt-line mt-err" data-type="typing">🔴 ERROR [worker] connection refused</div>
+                    <div class="mt-line mt-err" data-type="typing">[ERR] ERROR [worker] connection refused</div>
                     <div class="mt-line mt-ok" data-delay="400">pruning 12,400 lines → 1.1K tokens</div>
-                    <div class="mt-line mt-ok" data-delay="400">✓ handed to Claude Code</div>
+                    <div class="mt-line mt-ok" data-delay="400">[OK] handed to Claude Code</div>
                 </div>
             </div>
         </div>
@@ -2050,43 +2050,43 @@
                 <tbody>
                     <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
                         <td class="p-4 text-muted">No file size limit</td>
-                        <td class="p-4 text-center text-[var(--success)]">✓</td>
+                        <td class="p-4 text-center text-[var(--success)]">*</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">— <span class="text-xs">(100MB max)</span></td>
-                        <td class="p-4 text-center text-[var(--success)]">✓</td>
+                        <td class="p-4 text-center text-[var(--success)]">*</td>
                     </tr>
                     <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
                         <td class="p-4 text-muted">Logs never leave your machine</td>
-                        <td class="p-4 text-center text-[var(--success)]">✓</td>
+                        <td class="p-4 text-center text-[var(--success)]">*</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                     </tr>
                     <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
                         <td class="p-4 text-muted">90% token reduction</td>
-                        <td class="p-4 text-center text-[var(--success)]">✓</td>
+                        <td class="p-4 text-center text-[var(--success)]">*</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">— <span class="text-xs">(partial)</span></td>
                     </tr>
                     <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
                         <td class="p-4 text-muted">312ms processing</td>
-                        <td class="p-4 text-center text-[var(--success)]">✓</td>
+                        <td class="p-4 text-center text-[var(--success)]">*</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">— <span class="text-xs">(10s+)</span></td>
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                     </tr>
                     <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
                         <td class="p-4 text-muted">Critical error always preserved</td>
-                        <td class="p-4 text-center text-[var(--success)]">✓</td>
+                        <td class="p-4 text-center text-[var(--success)]">*</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                     </tr>
                     <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
                         <td class="p-4 text-muted">Collapses repeated log patterns</td>
-                        <td class="p-4 text-center text-[var(--success)]">✓</td>
+                        <td class="p-4 text-center text-[var(--success)]">*</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                     </tr>
                     <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
                         <td class="p-4 text-muted">Works offline</td>
-                        <td class="p-4 text-center text-[var(--success)]">✓</td>
+                        <td class="p-4 text-center text-[var(--success)]">*</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                     </tr>
@@ -2257,14 +2257,14 @@
             <div class="showcase-card" data-showcase="crash">
                 <div class="showcase-label">Crash → prune → handoff</div>
                 <div class="showcase-stage sc-crash-flow">
-                    <div class="sc-step sc-error">🔴 ERROR [worker] connection refused</div>
+                    <div class="sc-step sc-error">[ERR] ERROR [worker] connection refused</div>
                     <div class="sc-step sc-success">pruning 12,400 lines → 1.1K tokens</div>
-                    <div class="sc-step sc-success">✓ handed to Claude Code</div>
+                    <div class="sc-step sc-success">[OK] handed to Claude Code</div>
                 </div>
                 <div class="showcase-static">
-                    <div class="sc-error">🔴 crash detected</div>
+                    <div class="sc-error">[ERR] crash detected</div>
                     <div class="sc-success mt-1">pruning 12,400 lines → 1.1K tokens</div>
-                    <div class="sc-success mt-1">✓ handed to Claude Code</div>
+                    <div class="sc-success mt-1">[OK] handed to Claude Code</div>
                 </div>
             </div>
 
@@ -2274,14 +2274,14 @@
                 <div class="showcase-stage sc-install">
                     <div class="sc-line sc-cmd">$ npx roka-mcp connect --agent claude-code --api-key rk_live_...</div>
                     <div class="sc-install-out mt-2">
-                        <div class="sc-success">✓ detected Claude Code config</div>
-                        <div class="sc-success">✓ installed MCP server</div>
-                        <div class="sc-success">✓ watching ./logs/dev.log</div>
+                        <div class="sc-success">[OK] detected Claude Code config</div>
+                        <div class="sc-success">[OK] installed MCP server</div>
+                        <div class="sc-success">[OK] watching ./logs/dev.log</div>
                     </div>
                 </div>
                 <div class="showcase-static">
                     <div>$ npx roka-mcp connect --agent claude-code --api-key rk_live_...</div>
-                    <div class="sc-success mt-2">✓ roka-mcp ready on stdio</div>
+                    <div class="sc-success mt-2">[OK] roka-mcp ready on stdio</div>
                 </div>
             </div>
 
@@ -2793,9 +2793,9 @@
                         </tr>
                         <tr class="border-b border-[var(--border)]">
                             <td class="p-3 text-muted">Critical error preservation</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
+                            <td class="p-3 text-center text-[var(--success)]">*</td>
+                            <td class="p-3 text-center text-[var(--success)]">*</td>
+                            <td class="p-3 text-center text-[var(--success)]">*</td>
                         </tr>
                         <tr class="border-b border-[var(--border)]">
                             <td class="p-3 text-muted">API</td>
@@ -2806,26 +2806,26 @@
                         <tr class="border-b border-[var(--border)]">
                             <td class="p-3 text-muted">Semantic</td>
                             <td class="p-3 text-center text-[var(--text-muted)]">—</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
+                            <td class="p-3 text-center text-[var(--success)]">*</td>
+                            <td class="p-3 text-center text-[var(--success)]">*</td>
                         </tr>
                         <tr class="border-b border-[var(--border)]">
                             <td class="p-3 text-muted">Natural language queries</td>
                             <td class="p-3 text-center text-[var(--text-muted)]">—</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
+                            <td class="p-3 text-center text-[var(--success)]">*</td>
+                            <td class="p-3 text-center text-[var(--success)]">*</td>
                         </tr>
                         <tr class="border-b border-[var(--border)]">
                             <td class="p-3 text-muted">One-click MCP integration</td>
                             <td class="p-3 text-center text-[var(--text-muted)]">—</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
+                            <td class="p-3 text-center text-[var(--success)]">*</td>
+                            <td class="p-3 text-center text-[var(--success)]">*</td>
                         </tr>
                         <tr class="border-b border-[var(--border)]">
                             <td class="p-3 text-muted">Real-time crash-log MCP server</td>
                             <td class="p-3 text-center text-[var(--text-muted)]">—</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
+                            <td class="p-3 text-center text-[var(--success)]">*</td>
+                            <td class="p-3 text-center text-[var(--success)]">*</td>
                         </tr>
                     </tbody>
                 </table>

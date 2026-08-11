@@ -82,6 +82,15 @@ jobs:
           fi
 
       - name: Publish to npm
-        run: npm publish --access public --tag "${{ github.event.inputs.tag || 'latest' }}"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          DIST_TAG: ${{ github.event.inputs.tag || 'latest' }}
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          if npm view "roka-mcp@${VERSION}" version >/dev/null 2>&1; then
+            echo "roka-mcp@${VERSION} is already on npm — skipping publish."
+            # Keep the dist-tag pointed at this version when re-running a tag build.
+            npm dist-tag add "roka-mcp@${VERSION}" "${DIST_TAG}" || true
+            exit 0
+          fi
+          npm publish --access public --tag "${DIST_TAG}"

@@ -28,4 +28,4 @@ This repository contains the **public website**, **CLI docs**, and **issue track
 
 - [GitHub Issues](https://github.com/Roka-Dev-Labs/roka/issues)
 - [Website](https://roka-prune.com)
-- [support@roka-prune.com](mailto:support@roka-prune.com)
+- [mukhamedjankydyrli@gmail.com](mailto:mukhamedjankydyrli@gmail.com)

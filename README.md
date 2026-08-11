@@ -145,7 +145,7 @@ This public repo is **docs, website, issue tracking, and the `roka-mcp` npm pack
 
 - [Report a bug](../../issues/new?labels=bug&template=bug_report.md)
 - [Request a feature](../../issues/new?labels=enhancement&template=feature_request.md)
-- [Website](https://roka-prune.com) · [support@roka-prune.com](mailto:support@roka-prune.com)
+- [Website](https://roka-prune.com) · [mukhamedjankydyrli@gmail.com](mailto:mukhamedjankydyrli@gmail.com)
 
 ## License
 

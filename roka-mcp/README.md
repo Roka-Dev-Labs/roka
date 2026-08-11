@@ -131,7 +131,7 @@ point that check at a different host (e.g. for local development).
 - [Research (LogHub)](https://roka-prune.com/research.html)
 - [Pricing](https://roka-prune.com/#pricing)
 - [CLI install](https://github.com/Roka-Dev-Labs/roka#install)
-- [Support](mailto:support@roka-prune.com)
+- [Support](mailto:mukhamedjankydyrli@gmail.com)
 
 ## License
 
