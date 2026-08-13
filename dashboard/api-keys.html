@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Keys - Roka</title>
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png" />
+    <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg" />
+    <link rel="shortcut icon" href="/assets/icons/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
     <script src="/js/config.js"></script>
     <script src="/js/console-egg.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -108,6 +108,26 @@
         .btn-secondary:hover {
             color: var(--text);
             border-color: var(--text);
+        }
+
+        #themeToggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            border-radius: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            font-family: "Montserrat", system-ui, sans-serif;
+            color: var(--text-muted);
+            background: none;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        #themeToggle:hover {
+            color: var(--text);
         }
 
         .container {
@@ -331,14 +351,18 @@
 <body>
     <nav class="nav">
         <a href="/index.html" class="nav-logo">
-            <img src="/favicon-32x32.png" alt="" class="logo-animate" width="28" height="28">
+            <img src="/assets/icons/favicon-32x32.png" alt="" class="logo-animate" width="28" height="28">
             Roka
         </a>
         <div class="nav-links">
             <a href="/dashboard.html">Dashboard</a>
             <a href="/dashboard/api-keys.html" class="active">API Keys</a>
             <a href="/dashboard/upgrade.html">Upgrade</a>
-            <button id="themeToggle" type="button" class="btn-secondary" aria-label="Toggle theme">
+            <button id="themeToggle" type="button" aria-label="Switch to light mode">
+                <svg id="themeIcon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style="flex-shrink:0">
+                    <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.25"/>
+                    <path id="themeIconFill" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
+                </svg>
                 <span id="themeLabel">Light</span>
             </button>
         </div>
@@ -376,6 +400,7 @@
         const html = document.documentElement;
         const themeToggle = document.getElementById('themeToggle');
         const themeLabel = document.getElementById('themeLabel');
+        const themeIconFill = document.getElementById('themeIconFill');
 
         function applyTheme(theme) {
             if (theme === 'dark') {
@@ -383,16 +408,25 @@
             } else {
                 html.classList.remove('dark');
             }
-            themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
+            themeLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
+            if (themeIconFill) {
+                themeIconFill.setAttribute(
+                    'd',
+                    theme === 'dark' ? 'M6 1 A5 5 0 0 0 6 11 Z' : 'M6 1 A5 5 0 0 1 6 11 Z'
+                );
+            }
+            themeToggle.setAttribute(
+                'aria-label',
+                theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+            );
             localStorage.setItem('roka-theme', theme);
         }
 
-        const savedTheme = localStorage.getItem('roka-theme') || 'light';
-        applyTheme(savedTheme);
+        const savedTheme = localStorage.getItem('roka-theme');
+        applyTheme(savedTheme === 'light' ? 'light' : 'dark');
 
         themeToggle.addEventListener('click', () => {
-            const newTheme = html.classList.contains('dark') ? 'light' : 'dark';
-            applyTheme(newTheme);
+            applyTheme(html.classList.contains('dark') ? 'light' : 'dark');
         });
 
         const API_BASE = window.ROKA_API_BASE || 'https://api.roka-prune.com';

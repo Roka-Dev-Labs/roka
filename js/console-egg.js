@@ -4,7 +4,7 @@
  */
 (function () {
   try {
-    var url = new URL('/kevin.png', window.location.origin).href;
+    var url = new URL('/assets/images/kevin.png', window.location.origin).href;
     var width = 220;
     var height = Math.round(width * (618 / 500));
 
