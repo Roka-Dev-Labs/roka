@@ -12,7 +12,7 @@ Roka is a context-pruning layer for AI coding agents. Point it at a noisy crash 
 cat deploy.log | roka prune --query "what broke" --budget 8000
 ```
 
-**Site:** [roka-prune.com](https://roka-prune.com) · **Install:** [install.html](https://roka-prune.com/install.html) · **Research:** [LogHub benchmark write-up](https://roka-prune.com/research.html)
+**Site:** [roka-prune.com](https://roka-prune.com) · **Install:** [install.html](https://roka-prune.com/install.html) · **Research:** [LogHub benchmark write-up](https://roka-prune.com/testing.html#research)
 
 Part of [Roka Dev Labs](https://github.com/Roka-Dev-Labs). MCP server: [roka-mcp](https://github.com/Roka-Dev-Labs/roka-mcp).
 
@@ -100,7 +100,7 @@ We ran the shipped MCP `prune_file` tool against the [LogHub](https://github.com
 | Avg. compression | **~69×** (chars in → 4K out) |
 | Sources with real errors still surfaced | **11 / 11** |
 
-Full write-up (methodology, Thunderbird before/after, limits): [roka-prune.com/research.html](https://roka-prune.com/research.html).
+Full write-up (methodology, Thunderbird before/after, limits): [roka-prune.com/testing.html#research](https://roka-prune.com/testing.html#research).
 
 We're early — the study measures **retention under budget**, not downstream agent task success.
 
