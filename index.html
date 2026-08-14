@@ -1025,6 +1025,9 @@
         .site-brand img {
             width: 2.25rem;
             height: 2.25rem;
+            object-fit: contain;
+            image-rendering: auto;
+            filter: var(--logo-filter);
         }
 
         /* From Uiverse.io by WhiteNervosa — site nav */
@@ -2235,11 +2238,11 @@
     <nav class="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--bg)]/80 backdrop-blur-xl">
         <div class="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
             <button id="mobileMenuToggle" class="site-brand sm:hidden">
-                <img src="/assets/icons/favicon-32x32.png" alt="" class="logo-animate" width="36" height="36">
+                <img src="/assets/logos/logo-roka.png" alt="" class="logo-animate" width="36" height="36">
                 Roka
             </button>
             <a href="#" class="site-brand hidden sm:flex">
-                <img src="/assets/icons/favicon-32x32.png" alt="" class="logo-animate" width="36" height="36">
+                <img src="/assets/logos/logo-roka.png" alt="" class="logo-animate" width="36" height="36">
                 Roka
             </a>
             <div class="customCheckBoxHolder hidden sm:flex" id="pillNav" style="width: 33rem; max-width: 100%;">
