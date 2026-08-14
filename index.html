@@ -11,8 +11,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="Roka" />
     <link rel="manifest" href="/site.webmanifest" />
-    <title>Roka — the context layer for AI coding agents</title>
-    <meta name="description" content="Roka is the context layer for AI coding agents. It turns massive logs and tool output into compact debugging context while preserving the failures that matter.">
+    <title>Roka: Prune your logs</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -1685,7 +1684,7 @@
             letter-spacing: -0.035em;
             text-align: center;
             z-index: 10;
-            max-width: 38rem;
+            max-width: 30rem;
             line-height: 1.15;
         }
         .hero-sub {
@@ -1694,7 +1693,7 @@
             color: var(--text-muted);
             text-align: center;
             z-index: 10;
-            max-width: 40rem;
+            max-width: 28rem;
             margin-top: 0.75rem;
             margin-bottom: 2rem;
             line-height: 1.55;
@@ -2160,7 +2159,7 @@
             color: var(--text);
             margin: 0 0 1.75rem;
             line-height: 1.45;
-            max-width: 42rem;
+            max-width: 36rem;
             transition: color 0.35s ease;
         }
         .cta-terminal-btn {
@@ -2336,8 +2335,8 @@
             <canvas id="rokaCanvas"></canvas>
         </div>
 
-        <h1 class="hero-headline">Give your coding agent the signal — not the noise.</h1>
-        <p class="hero-sub">Roka is the context layer for AI coding agents. It turns massive logs and tool output into compact, relevant debugging context while preserving the failures that matter.</p>
+        <h1 class="hero-headline">Prune any log using one command.</h1>
+        <p class="hero-sub">Designed for AI agents. Collapse noise, rank relevance, pack to budget — before Claude ever sees it.</p>
 
         <!-- Install / Agent panel -->
         <div class="agent-panel px-5 reveal visible">
@@ -2357,7 +2356,7 @@
 
             <!-- Terminal mode: CLI installer -->
             <div class="mode-panel active" data-mode-panel="terminal">
-                <p class="text-xs text-muted mb-3">From zero to useful context in under a minute. Install the local <span class="mono inline-code" style="color:var(--text)">roka</span> CLI — detects OS and architecture automatically.</p>
+                <p class="text-xs text-muted mb-3">Install the local <span class="mono inline-code" style="color:var(--text)">roka</span> CLI — detects OS and architecture automatically.</p>
                 <button type="button" class="cmd-btn active" data-copy="curl -fsSL https://install.roka-prune.com | bash" aria-label="Copy command">
                     <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>curl -fsSL https://install.roka-prune.com | bash</span>
                     <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
@@ -2392,48 +2391,22 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-3 mt-4">
-                <a href="/install.html" class="btn-primary rounded-full px-5 py-2 text-sm font-medium">Install Roka</a>
-                <a href="#try" class="btn-secondary rounded-full px-5 py-2 text-sm font-medium">Try it on a log</a>
-                <a href="https://github.com/Roka-Dev-Labs/roka" target="_blank" rel="noopener" class="text-xs font-medium" style="color:var(--text-muted)">View on GitHub</a>
-            </div>
-            <p class="text-xs text-faint mt-3" style="letter-spacing:0.04em">Claude Code · Cursor · Codex · Copilot</p>
-        </div>
-
-        <p class="hero-live-stat z-10" id="heroLiveStat">// RAW OUTPUT · <span>48,204</span> lines · <span>−94%</span> noise removed · <span>312ms</span></p>
-        <p class="hero-live-stat z-10" style="margin-top:0.35rem">✓ repetitive noise removed · ✓ critical error preserved · ✓ debugging context ready for the agent</p>
-    </section>
-
-    <!-- Proof metrics -->
-    <section class="max-w-6xl mx-auto px-5 py-16 reveal" aria-label="Benchmark proof">
-        <div class="text-center mb-8">
-            <p class="text-muted text-sm max-w-xl mx-auto">Less context does not have to mean less useful information.</p>
-            <p class="text-xs text-faint mt-2">Tested on 15 real LogHub systems.</p>
-        </div>
-        <div class="surface rounded-xl relative">
-            <div class="grid sm:grid-cols-3">
-                <div class="bench-metric-card text-center">
-                    <div class="text-3xl sm:text-4xl font-semibold mono">92.2%</div>
-                    <div class="text-xs text-muted mt-2">average lines removed</div>
-                </div>
-                <div class="bench-metric-card text-center">
-                    <div class="text-3xl sm:text-4xl font-semibold mono">69×</div>
-                    <div class="text-xs text-muted mt-2">average compression</div>
-                </div>
-                <div class="bench-metric-card text-center">
-                    <div class="text-3xl sm:text-4xl font-semibold mono">11/11</div>
-                    <div class="text-xs text-muted mt-2">critical-error sources preserved</div>
-                </div>
+                <a href="/install.html" class="btn-primary rounded-full px-5 py-2 text-sm font-medium">Get Started Free</a>
+                <a href="https://github.com/Roka-Dev-Labs/roka-mcp" target="_blank" rel="noopener" class="btn-secondary rounded-full px-5 py-2 text-sm font-medium">Read the Docs</a>
+                <a href="#story" class="text-xs font-medium" style="color:var(--text-muted)">See it work →</a>
             </div>
         </div>
+
+        <p class="hero-live-stat z-10" id="heroLiveStat">// <span>48,204</span> lines ingested · <span>−94%</span> noise removed · <span>312ms</span></p>
     </section>
 
     <!-- Motion story -->
     <section id="story" class="story-section reveal">
         <div class="story-row">
             <div class="story-copy">
-                <div class="eyebrow mb-3">The problem</div>
-                <h3>Your coding agent sees everything. It shouldn't.</h3>
-                <p>Build failures, stack traces, repeated warnings, tool output and unrelated events can bury the one piece of evidence your agent actually needs.</p>
+                <div class="eyebrow mb-3">Log compaction</div>
+                <h3>500 identical errors. One line in context.</h3>
+                <p>Roka fingerprints repetitive patterns across your entire log file — UUIDs, timestamps, and stack frames collapse into provenance headers. The agent sees what happened, not 500 copies of it.</p>
             </div>
             <div class="story-viz" data-viz="error500">
                 <div class="terminal-loader" aria-label="Animation: 500 ERROR lines collapsing to one line">
@@ -2462,9 +2435,9 @@
 
         <div class="story-row reverse">
             <div class="story-copy">
-                <div class="eyebrow mb-3">Raw logs → prune → prioritize → context</div>
-                <h3>Turn noisy logs into fix-ready context.</h3>
-                <p>Roka removes repetitive output, preserves critical evidence, and gives your coding agent a focused starting point for debugging. 12,400 lines → 1.1K tokens.</p>
+                <div class="eyebrow mb-3">Crash → context</div>
+                <h3>Your dev server crashes. Your agent already knows.</h3>
+                <p>roka-mcp watches dev.log in real time. On crash it prunes 12,400 lines down to 1.1K tokens and hands Claude Code exactly the slice it needs — no copy-paste, no blown context window.</p>
             </div>
             <div class="story-viz" data-viz="crash">
                 <div class="terminal-loader" aria-label="Animation: crash detected, prune, handoff to agent">
@@ -2487,9 +2460,9 @@
 
         <div class="story-row">
             <div class="story-copy">
-                <div class="eyebrow mb-3">Compression without losing the signal</div>
-                <h3>Roka is optimized for debugging, not blind compression.</h3>
-                <p>Roka aggressively removes repetition without throwing away the evidence you need to find the failure — FATAL errors, exceptions, stack traces, OOMs, and root-cause evidence stay in context.</p>
+                <div class="eyebrow mb-3">Natural language</div>
+                <h3>Ask in plain English. Get ranked output.</h3>
+                <p>Type what you care about — "what broke during last night's deploy?" — and Roka re-ranks chunks against intent, not just keywords. Semantic re-ranking surfaces the fatal error first.</p>
             </div>
             <div class="story-viz" data-viz="query">
                 <div class="terminal-loader" aria-label="Animation: natural language query re-ranking log output">
@@ -2513,55 +2486,11 @@
     </section>
 
 
-    <!-- Niche MCP Servers -->
-    <section id="mcp" class="max-w-6xl mx-auto px-5 py-24 reveal">
-        <div class="text-center mb-10">
-            <div class="flex items-center justify-center gap-3 mb-4">
-                <span class="eyebrow">Connect on crash</span>
-                <span class="pro-badge">Pro</span>
-            </div>
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-4 max-w-3xl mx-auto">When your dev server crashes, your agent already has the context.</h2>
-            <p class="text-muted text-sm max-w-2xl mx-auto leading-relaxed">Instead of feeding an agent thousands of noisy log lines, Roka isolates the failure, preserves the relevant evidence, and delivers a compact debugging context. 12,400 lines → 1.1K tokens — no copy-pasting stack traces.</p>
-            <div class="flex flex-wrap justify-center items-center gap-x-8 gap-y-3 mt-6 text-xs text-muted">
-                <span class="flex items-center gap-1.5"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--success)]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Claude Code · Cursor · Codex · Copilot</span>
-                <span class="flex items-center gap-1.5"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--success)]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>One command to connect</span>
-                <span class="flex items-center gap-1.5"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--success)]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Auto-prunes on crash</span>
-            </div>
-        </div>
-
-        <!-- ERROR ×500 compression proof -->
-        <div class="terminal-loader max-w-3xl mx-auto mb-8">
-            <div class="terminal-header">
-                <div class="terminal-title">crash detected · roka-mcp pruning</div>
-                <div class="terminal-controls">
-                    <div class="control close"></div>
-                    <div class="control minimize"></div>
-                    <div class="control maximize"></div>
-                </div>
-            </div>
-            <div class="terminal-body">
-                <div class="tl-dim mb-2" style="font-size:0.75em">// before: 12,400 lines of connection errors</div>
-                <div class="tl-err">ERROR [worker] connection refused</div>
-                <div class="tl-err">ERROR [worker] connection refused</div>
-                <div class="tl-err">ERROR [worker] connection refused</div>
-                <div class="tl-dim mb-3">… 497 more identical lines …</div>
-                <div class="tl-dim mb-2" style="font-size:0.75em;border-top:1px solid #333;padding-top:0.65rem">// after: pruned output</div>
-                <div class="tl-fix">[500x | lines 240–740] ERROR [worker] connection refused</div>
-                <span class="tl-badge tl-badge-err">Compressed: ERROR ×500 → 1 line</span>
-            </div>
-        </div>
-
-        <div class="text-center">
-            <a href="#pricing" class="btn-primary rounded-full px-6 py-2.5 text-sm font-medium">One-click MCP install</a>
-            <p class="text-xs text-faint mt-3 mono">Pro feature · <a href="#pricing" class="hover:text-[var(--text-muted)] transition underline underline-offset-2">see pricing</a></p>
-        </div>
-    </section>
-
     <!-- Comparison table -->
     <section id="vs-upload" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-12">
-            <h2 class="text-3xl sm:text-5xl font-bold tracking-tight mb-3">Less noise. Same critical signal.</h2>
-            <p class="text-muted text-sm">Why Roka is built for debugging context — not generic retrieval or blind compression.</p>
+            <h2 class="text-3xl sm:text-5xl font-bold tracking-tight mb-3">same logs. smarter context.</h2>
+            <p class="text-muted text-sm">Why Roka beats just uploading to Claude directly.</p>
         </div>
         <div class="max-w-3xl mx-auto surface rounded-2xl overflow-hidden">
             <table class="w-full text-sm">
@@ -2572,7 +2501,7 @@
                             <span class="mono text-base">roka</span>
                         </th>
                         <th class="text-center p-4 text-xs text-muted font-normal">Upload to Claude</th>
-                        <th class="text-center p-4 text-xs text-muted font-normal">Generic retrieval</th>
+                        <th class="text-center p-4 text-xs text-muted font-normal">Semantic Search</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -2607,7 +2536,7 @@
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                     </tr>
                     <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
-                        <td class="p-4 text-muted">Repetitive noise collapsed</td>
+                        <td class="p-4 text-muted">Collapses repeated log patterns</td>
                         <td class="p-4 text-center text-[var(--success)]">✓</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
@@ -2632,9 +2561,9 @@
     <!-- Works with your AI agent -->
     <section id="agents" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-14">
-            <span class="eyebrow">Connect Roka to your coding agent</span>
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-3 mb-3">Use Roka through MCP, CLI or API with the tools you already use.</h2>
-            <p class="text-muted text-sm max-w-xl mx-auto">Claude Code · Cursor · Codex · Copilot</p>
+            <span class="eyebrow">Universal context layer</span>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-3 mb-3">Roka connects to any AI agent</h2>
+            <p class="text-muted text-sm max-w-xl mx-auto">One command. Same pruning pipeline, any IDE or chat interface.</p>
         </div>
 
         <!-- Orbit scene -->
@@ -2710,11 +2639,55 @@
         </div>
     </section>
 
+    <!-- Niche MCP Servers -->
+    <section id="mcp" class="max-w-6xl mx-auto px-5 py-24 reveal">
+        <div class="text-center mb-10">
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <span class="eyebrow">If you use Claude Code or Cursor — read this</span>
+                <span class="pro-badge">Pro</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-4 max-w-3xl mx-auto">Your dev server crashes. Your agent already has the fix in context.</h2>
+            <p class="text-muted text-sm max-w-2xl mx-auto leading-relaxed">Roka runs as an MCP server next to your local dev server, watching logs in real time. The moment something crashes, it runs the same prune pipeline — collapse repetition, preserve the exception, rank, pack to budget — and hands Claude Code or Cursor exactly the slice of context needed to debug. No copy-pasting stack traces. No blowing the context window on thousands of lines of noise.</p>
+            <div class="flex flex-wrap justify-center items-center gap-x-8 gap-y-3 mt-6 text-xs text-muted">
+                <span class="flex items-center gap-1.5"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--success)]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Works with your AI Agent</span>
+                <span class="flex items-center gap-1.5"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--success)]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>One command to connect</span>
+                <span class="flex items-center gap-1.5"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--success)]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Auto-prunes on crash</span>
+            </div>
+        </div>
+
+        <!-- ERROR ×500 compression proof -->
+        <div class="terminal-loader max-w-3xl mx-auto mb-8">
+            <div class="terminal-header">
+                <div class="terminal-title">crash detected · roka-mcp pruning</div>
+                <div class="terminal-controls">
+                    <div class="control close"></div>
+                    <div class="control minimize"></div>
+                    <div class="control maximize"></div>
+                </div>
+            </div>
+            <div class="terminal-body">
+                <div class="tl-dim mb-2" style="font-size:0.75em">// before: 12,400 lines of connection errors</div>
+                <div class="tl-err">ERROR [worker] connection refused</div>
+                <div class="tl-err">ERROR [worker] connection refused</div>
+                <div class="tl-err">ERROR [worker] connection refused</div>
+                <div class="tl-dim mb-3">… 497 more identical lines …</div>
+                <div class="tl-dim mb-2" style="font-size:0.75em;border-top:1px solid #333;padding-top:0.65rem">// after: pruned output</div>
+                <div class="tl-fix">[500x | lines 240–740] ERROR [worker] connection refused</div>
+                <span class="tl-badge tl-badge-err">Compressed: ERROR ×500 → 1 line</span>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a href="#pricing" class="btn-primary rounded-full px-6 py-2.5 text-sm font-medium">One-click MCP install</a>
+            <p class="text-xs text-faint mt-3 mono">Pro feature · <a href="#pricing" class="hover:text-[var(--text-muted)] transition underline underline-offset-2">see pricing</a></p>
+        </div>
+    </section>
+
     <!-- Motion showcase -->
     <section id="showcase" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-10">
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">See the signal emerge</h2>
-            <p class="text-muted text-sm max-w-xl mx-auto">Noise to signal, crash to context, install to debug.</p>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">See it happen</h2>
+            <p class="text-muted text-sm max-w-xl mx-auto">Four moments that define Roka — noise to signal, crash to fix, install to debug.</p>
         </div>
 
         <div class="showcase-grid">
@@ -2722,7 +2695,7 @@
             <div class="showcase-card" data-showcase="collapse">
                 <div class="terminal-loader">
                     <div class="terminal-header">
-                        <div class="terminal-title">Remove the noise</div>
+                        <div class="terminal-title">Log compaction</div>
                         <div class="terminal-controls">
                             <div class="control close"></div>
                             <div class="control minimize"></div>
@@ -2740,7 +2713,7 @@
             <div class="showcase-card" data-showcase="crash">
                 <div class="terminal-loader">
                     <div class="terminal-header">
-                        <div class="terminal-title">Crash → context</div>
+                        <div class="terminal-title">Crash → prune → handoff</div>
                         <div class="terminal-controls">
                             <div class="control close"></div>
                             <div class="control minimize"></div>
@@ -2779,7 +2752,7 @@
             <div class="showcase-card" data-showcase="query">
                 <div class="terminal-loader">
                     <div class="terminal-header">
-                        <div class="terminal-title">Ask your logs</div>
+                        <div class="terminal-title">Natural language query</div>
                         <div class="terminal-controls">
                             <div class="control close"></div>
                             <div class="control minimize"></div>
@@ -2800,8 +2773,8 @@
     <!-- Features -->
     <section id="features" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-12">
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Turn noisy logs into fix-ready context.</h2>
-            <p class="text-muted text-sm max-w-2xl mx-auto">Roka removes repetitive output, preserves critical evidence, and gives your coding agent a focused starting point for debugging.</p>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Built for real context, not toy demos</h2>
+            <p class="text-muted text-sm max-w-2xl mx-auto">Roka is a pruning middleware: ingest logs, code, or prose, detect structure, score relevance to your query, and deliver exactly what fits the budget.</p>
         </div>
 
         <div class="bento-grid">
@@ -2835,8 +2808,8 @@
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
                     <div class="mono text-xs text-faint">01</div>
-                    <h3>Remove the noise</h3>
-                    <p>Collapse repetitive logs, boilerplate and irrelevant output before they reach your coding agent.</p>
+                    <h3>Log compaction</h3>
+                    <p>Fingerprints repetitive lines (UUIDs, IPs, timestamps → placeholders) and collapses patterns above a threshold into summary chunks with provenance.</p>
                 </div>
             </div>
 
@@ -2848,8 +2821,8 @@
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
                     <div class="mono text-xs text-faint">02</div>
-                    <h3>Preserve what matters</h3>
-                    <p>Keep critical errors, exceptions, stack traces and the evidence surrounding failures.</p>
+                    <h3>Critical preservation</h3>
+                    <p>Panics, exceptions, OOM, auth failures, and stack traces are never collapsed — always packed first regardless of score.</p>
                 </div>
             </div>
 
@@ -2861,8 +2834,8 @@
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
                     <div class="mono text-xs text-faint">03</div>
-                    <h3>Fit the context budget</h3>
-                    <p>Give the agent the most relevant debugging context that fits the available budget.</p>
+                    <h3>BM25 + semantic rank</h3>
+                    <p>Fast lexical scoring with BM25Okapi, then optional sentence-transformer re-ranking so chunks match your query intent.</p>
                 </div>
             </div>
 
@@ -2874,8 +2847,8 @@
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
                     <div class="mono text-xs text-faint">04</div>
-                    <h3>Token-aware packing</h3>
-                    <p>Under the hood: greedy packing with exact tiktoken counts. Source diversity cap keeps one file from hogging the budget.</p>
+                    <h3>Token budget packer</h3>
+                    <p>Greedy packing with exact tiktoken counts (cl100k_base). Source diversity cap prevents one file from hogging the budget.</p>
                 </div>
             </div>
 
@@ -2888,7 +2861,7 @@
                 <div class="bento-card-content">
                     <div class="mono text-xs text-faint">05</div>
                     <h3>Multi-format input</h3>
-                    <p>Logs and tool output first. Code and prose are supported as secondary inputs — not the core product.</p>
+                    <p>Auto-detects logs, code, or prose. Code can be minified (docstrings/comments stripped) and chunked by function/class scope.</p>
                 </div>
             </div>
 
@@ -2901,7 +2874,7 @@
                 <div class="bento-card-content">
                     <div class="mono text-xs text-faint">06</div>
                     <h3>API &amp; CLI</h3>
-                    <p>Pipe stdin, point at a file, or POST to <span class="mono inline-code">/api/prune</span>. Same pipeline — stdout is the context your agent needs.</p>
+                    <p>Pipe stdin, point at a file, or POST to <span class="mono inline-code">/api/prune</span>. Same pipeline everywhere — stdout is always the pruned context.</p>
                 </div>
             </div>
 
@@ -2913,13 +2886,11 @@
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
                     <div class="mono text-xs text-faint">07</div>
-                    <h3>Ask your logs questions</h3>
-                    <p>Explore a log in plain English when you need to. This is how you inspect context — not the reason Roka exists.</p>
+                    <h3>Natural language queries</h3>
+                    <p>Ask in plain English what you care about — Roka ranks chunks against intent, not just keywords.</p>
                 </div>
             </div>
         </div>
-
-        <p class="text-xs text-faint text-center mt-8 max-w-xl mx-auto">Under the hood: fingerprinting, relevance ranking, semantic reranking and token-aware packing.</p>
 
         <div class="flex flex-wrap justify-center gap-3 mt-8">
             <a href="https://github.com/Roka-Dev-Labs/roka" class="btn-secondary rounded-full px-6 py-2.5 text-sm font-medium" rel="noopener">CLI on GitHub</a>
@@ -2931,14 +2902,14 @@
     <!-- Use Cases -->
     <section id="use-cases" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-12">
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">More ways to use Roka</h2>
-            <p class="text-muted text-sm max-w-2xl mx-auto">The main job is debugging context for coding agents. These are extra paths when you already have Roka in the loop.</p>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Use Cases</h2>
+            <p class="text-muted text-sm max-w-2xl mx-auto">Beyond logs — Roka optimizes context for incident investigation, RAG pipelines, and code review at scale.</p>
         </div>
 
         <div class="grid md:grid-cols-3 gap-6">
             <div class="surface rounded-xl p-6">
-                <h3 class="font-semibold text-lg mb-3">Incident investigation</h3>
-                <p class="text-sm text-muted mb-4">When the dump is huge, keep the failure evidence and drop the repetition.</p>
+                <h3 class="font-semibold text-lg mb-3">Incident Investigation</h3>
+                <p class="text-sm text-muted mb-4">Compress incident dumps and error traces into AI-ready summaries.</p>
                 <ul class="space-y-2 text-sm text-muted">
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Collapse redundant stack traces and log repetition</li>
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Preserve critical error context and panic messages</li>
@@ -2946,8 +2917,8 @@
                 </ul>
             </div>
             <div class="surface rounded-xl p-6">
-                <h3 class="font-semibold text-lg mb-3">Document corpora</h3>
-                <p class="text-sm text-muted mb-4">A secondary path: strip boilerplate before you index. Not why Roka exists.</p>
+                <h3 class="font-semibold text-lg mb-3">RAG & Knowledge Base Optimization</h3>
+                <p class="text-sm text-muted mb-4">Prune your document corpus before ingesting into retrieval pipelines.</p>
                 <ul class="space-y-2 text-sm text-muted">
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Strip boilerplate, comments, and redundant sections from code files</li>
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Collapse similar documents and de-duplicate content</li>
@@ -2955,8 +2926,8 @@
                 </ul>
             </div>
             <div class="surface rounded-xl p-6">
-                <h3 class="font-semibold text-lg mb-3">Large diffs</h3>
-                <p class="text-sm text-muted mb-4">A secondary path: drop reformatting noise so review focuses on the change.</p>
+                <h3 class="font-semibold text-lg mb-3">Code Review at Scale</h3>
+                <p class="text-sm text-muted mb-4">Review massive pull requests by compressing diff context.</p>
                 <ul class="space-y-2 text-sm text-muted">
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Strip whitespace and reformatting noise from diffs</li>
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Collapse repetitive changes across similar files</li>
@@ -2971,10 +2942,11 @@
     <section id="benchmark" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-10">
             <span class="eyebrow">Real benchmark — LogHub corpus</span>
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-3 mb-3">Does Roka actually preserve the information that matters?</h2>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-3 mb-3">Tested on real production logs, not a cherry-picked demo</h2>
             <p class="text-muted text-sm max-w-2xl mx-auto">
-                We tested Roka on 15 real LogHub systems using the same output budget and no per-file tuning.
-                Less context. Same critical signal.
+                We ran the exact <span class="mono inline-code">prune_file</span> / <span class="mono inline-code">prune_logs</span> tools shipped in Roka's MCP server against
+                <a href="https://github.com/logpai/loghub" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-[var(--text)]">LogHub</a> —
+                the standard academic corpus used in log-parsing research. 15 real systems, one 4,000-character budget, zero per-file tuning.
             </p>
         </div>
 
@@ -2984,15 +2956,15 @@
             <div class="grid sm:grid-cols-3">
                 <div class="bench-metric-card text-center">
                     <div class="text-3xl sm:text-4xl font-semibold mono">92.2%</div>
-                    <div class="text-xs text-muted mt-2">average lines removed</div>
+                    <div class="text-xs text-muted mt-2">Avg. lines removed (dedup + budget-fit) across 15 real log sources</div>
                 </div>
                 <div class="bench-metric-card text-center">
                     <div class="text-3xl sm:text-4xl font-semibold mono">69×</div>
-                    <div class="text-xs text-muted mt-2">average compression — 276K chars in → 4K chars out, per file</div>
+                    <div class="text-xs text-muted mt-2">Avg. compression ratio — 276K chars in → 4K chars out, per file</div>
                 </div>
                 <div class="bench-metric-card text-center">
-                    <div class="text-3xl sm:text-4xl font-semibold mono">11/11</div>
-                    <div class="text-xs text-muted mt-2">critical-error sources preserved</div>
+                    <div class="text-3xl sm:text-4xl font-semibold mono">11 / 11</div>
+                    <div class="text-xs text-muted mt-2">Log sources with real errors that still surfaced after pruning</div>
                 </div>
             </div>
         </div>
@@ -3001,7 +2973,7 @@
             <!-- Chart -->
             <div class="surface rounded-xl p-6">
                 <div class="flex items-center justify-between mb-1 flex-wrap gap-2">
-                    <span class="eyebrow">Lines removed</span>
+                    <span class="eyebrow">Log Compression — % lines removed</span>
                     <span class="text-xs text-faint">Hover to inspect</span>
                 </div>
                 <p class="text-xs text-muted mb-6">LogHub production datasets · dedup + 4,000-char budget fit, sorted low → high</p>
@@ -3148,7 +3120,7 @@
     <!-- Full research link -->
     <section class="max-w-6xl mx-auto px-5 pb-16 -mt-8 reveal">
         <div class="surface rounded-xl p-6 text-center">
-            <p class="text-sm text-muted mb-2">Methodology, raw data, and how critical errors survive the budget.</p>
+            <p class="text-sm text-muted mb-2">Full methodology, raw data, and a deeper look at context pruning for AI agents.</p>
             <a href="/research.html" class="text-sm font-medium underline underline-offset-2 hover:text-[var(--text)]">Read the full research →</a>
         </div>
     </section>
@@ -3156,8 +3128,8 @@
     <!-- Interactive Try It -->
     <section id="try" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-10">
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Paste your worst log.</h2>
-            <p class="text-muted text-sm">See what Roka removes, what it keeps, and how much context your agent actually needs.</p>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Try it now</h2>
+            <p class="text-muted text-sm">Paste a log dump, set your query and budget, and run the live pipeline.</p>
         </div>
 
         <div class="grid lg:grid-cols-12 gap-4">
@@ -3187,7 +3159,7 @@
                         <span class="text-xs text-faint uppercase tracking-wider">Raw context</span>
                         <span class="text-xs text-faint mono" id="charCounter">0 chars</span>
                     </div>
-                    <textarea id="inputText" class="lab-input w-full p-3 text-xs mono resize-none min-h-[280px]" placeholder="Paste the noisy log your agent should not have to read…"></textarea>
+                    <textarea id="inputText" class="lab-input w-full p-3 text-xs mono resize-none min-h-[280px]" placeholder="Paste logs, code, or prose…"></textarea>
                     <div class="flex gap-2 mt-3">
                         <button id="dropZone" type="button" class="btn-secondary flex-1 rounded-lg py-2 text-xs">Attach file</button>
                         <input type="file" id="fileInput" hidden accept=".txt,.log,.py,.js,.ts,.md,.json">
@@ -3227,7 +3199,7 @@
                 <div class="surface rounded-xl p-5 flex-1 flex flex-col min-h-[320px]">
                     <div class="text-xs text-faint uppercase tracking-wider mb-2">Pruned output</div>
                     <div id="outputArea" class="lab-input flex-1 p-3 text-xs mono overflow-y-auto whitespace-pre-wrap min-h-[240px] text-muted">
-                        // Run prune to see the context your agent would get…
+                        // Run prune to see optimized context…
                     </div>
                     <button id="copyButton" type="button" class="btn-secondary w-full mt-3 rounded-lg py-2 text-xs" disabled>Copy output</button>
                 </div>
@@ -3240,15 +3212,15 @@
     <section id="pricing" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-12">
             <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Pricing</h2>
-            <p class="text-muted text-sm max-w-2xl mx-auto">Try Roka locally. Bring it into your agent workflow when you're ready.</p>
+            <p class="text-muted text-sm max-w-2xl mx-auto">Start free, upgrade when logs get serious. No credit card for the CLI.</p>
         </div>
 
         <div class="grid md:grid-cols-3 gap-6 mb-16">
             <!-- Free Tier -->
             <div class="surface rounded-xl p-6 flex flex-col">
                 <div class="mb-4">
-                    <h3 class="font-semibold text-lg mb-1">Free</h3>
-                    <p class="text-xs text-muted">Try Roka locally</p>
+                    <h3 class="font-semibold text-lg mb-1">Free Tier</h3>
+                    <p class="text-xs text-muted">For developers exploring Roka</p>
                 </div>
                 <div class="mb-6">
                     <span class="text-3xl font-bold">$0</span><span class="text-sm text-muted">/forever</span>
@@ -3260,7 +3232,7 @@
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Critical error preservation (ERROR / FATAL / panic always kept)</li>
                 </ul>
                 <div class="flex gap-2 justify-end">
-                    <a href="/install.html" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium">Install Roka</a>
+                    <a href="#try" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium">Get Started</a>
                     <a href="https://github.com/Roka-Dev-Labs" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium" rel="noopener">View on GitHub</a>
                 </div>
             </div>
@@ -3269,8 +3241,8 @@
             <div class="surface rounded-xl p-6 flex flex-col pro-tier-card">
                 <span class="pro-tier-badge">Popular</span>
                 <div class="mb-4">
-                    <h3 class="font-semibold text-lg mb-1">Pro</h3>
-                    <p class="text-xs text-muted">Bring Roka into your agent workflow</p>
+                    <h3 class="font-semibold text-lg mb-1">Pro Tier</h3>
+                    <p class="text-xs text-muted">For developers & small teams serious about speed</p>
                 </div>
                 <p class="pro-tier-promo">Free for 3 months in exchange for product feedback</p>
                 <div class="mb-6">
@@ -3322,8 +3294,8 @@
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="color:var(--text-muted)"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
                     </div>
                     <div>
-                        <p class="text-sm font-semibold mb-1">Free — try Roka locally</p>
-                        <p class="text-xs" style="color:var(--text-muted)">Deduplication, fingerprinting, critical-error force-keep, and token-budget packing. Handles repetition. Works entirely offline, no account needed.</p>
+                        <p class="text-sm font-semibold mb-1">Free — structural patterns</p>
+                        <p class="text-xs" style="color:var(--text-muted)">Deduplication, fingerprinting, critical-error force-keep, and token-budget packing. Handles the repetition problem. Works entirely offline, no account needed.</p>
                     </div>
                 </div>
                 <div class="p-5 flex gap-4 items-start" style="background:var(--bg-card)">
@@ -3331,8 +3303,8 @@
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="color:var(--success)"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26A7 7 0 0 0 12 2m0 2a5 5 0 0 1 5 5 5 5 0 0 1-2.5 4.33V16h-5v-2.67A5 5 0 0 1 7 9a5 5 0 0 1 5-5m-1 13h2v2h-2v-2z"/></svg>
                     </div>
                     <div>
-                        <p class="text-sm font-semibold mb-1">Pro — agent workflow</p>
-                        <p class="text-xs" style="color:var(--text-muted)">Semantic re-ranking surfaces the evidence for your question. Ask "why did auth break?" — Pro ranks the relevant slice first. Plus MCP for crash-time context.</p>
+                        <p class="text-sm font-semibold mb-1">Pro — understands intent</p>
+                        <p class="text-xs" style="color:var(--text-muted)">Semantic re-ranking surfaces what matters to <em>your</em> query. Ask "why did auth break?" — Pro ranks the relevant slice first. Plus MCP servers for real-time crash detection.</p>
                     </div>
                 </div>
             </div>
@@ -3411,7 +3383,7 @@
             <div class="space-y-3" id="faqAccordion">
                 <div class="surface rounded-lg overflow-hidden">
                     <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
-                        <h4 class="font-medium text-sm">Why not just paste the log into the agent?</h4>
+                        <h4 class="font-medium text-sm">Why Roka instead of just uploading to Claude?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
@@ -3420,7 +3392,7 @@
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
                     <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
-                        <h4 class="font-medium text-sm">How is Roka different from generic retrieval?</h4>
+                        <h4 class="font-medium text-sm">Why is Roka better than semantic search (RAG)?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
@@ -3536,13 +3508,8 @@
     <!-- Terminal CTA -->
     <section class="max-w-6xl mx-auto px-5 py-20 reveal" aria-labelledby="cta-heading">
         <div class="cta-terminal">
-            <h2 id="cta-heading" class="cta-terminal-title">Stop making your agent read everything.</h2>
-            <p class="text-sm text-muted mb-6 max-w-lg">Give your coding agent the context it needs — and leave the noise behind.</p>
-            <a href="/install.html" class="cta-terminal-btn">Install Roka</a>
-            <div class="flex flex-wrap items-center justify-center gap-4 mt-4">
-                <a href="#try" class="text-xs font-medium" style="color:var(--text-muted)">Try it on a log</a>
-                <a href="https://github.com/Roka-Dev-Labs/roka" target="_blank" rel="noopener" class="text-xs font-medium" style="color:var(--text-muted)">View on GitHub</a>
-            </div>
+            <h2 id="cta-heading" class="cta-terminal-title">Try Roka now (it's free!!).</h2>
+            <a href="/install.html" class="cta-terminal-btn">Start now</a>
             <div class="cta-terminal-kev">
                 <button type="button" class="cta-terminal-kev-btn" id="kevAvatarBtn" aria-label="Enlarge Kev" aria-pressed="false" title="Kev approves">
                     <img src="/assets/images/kevin.png" alt="" width="28" height="28">
@@ -3562,7 +3529,7 @@
                         <img src="/assets/logos/logo-roka.png" alt="Roka" height="28" style="height:28px;width:auto;object-fit:contain;filter:var(--logo-filter)">
                     </div>
                     <p class="text-xs leading-relaxed" style="color:var(--text-muted); max-width:180px">
-                        The context layer for AI coding agents. Less noise, more useful debugging context.
+                        Prune your logs. Ship faster. Context-aware middleware for AI coding agents.
                     </p>
                     <!-- Social icons -->
                     <div class="social-card" aria-label="Social links">
@@ -3615,7 +3582,7 @@
 
                 <!-- Get Started -->
                 <div class="flex flex-col gap-3">
-                    <span class="text-[10px] font-semibold tracking-widest uppercase" style="color:var(--text-faint)">Install</span>
+                    <span class="text-[10px] font-semibold tracking-widest uppercase" style="color:var(--text-faint)">Get Started</span>
                     <nav class="flex flex-col gap-2.5">
                         <a href="#pricing" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Early Access</a>
                         <a href="login.html" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Sign In</a>
