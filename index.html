@@ -1180,14 +1180,13 @@
             transition: 0.25s linear;
             z-index: 1;
             content: "";
+            background-color: var(--bg-elevated);
         }
         .social-card::before {
             left: 0;
-            background-color: var(--border-strong);
         }
         .social-card::after {
             right: 0;
-            background-color: var(--text-faint);
         }
         .social-card:hover {
             border-color: var(--text-muted);
@@ -1197,11 +1196,9 @@
             z-index: -3;
         }
         .social-card:hover::before {
-            opacity: 0.35;
             transform: translateY(-100%);
         }
         .social-card:hover::after {
-            opacity: 0.35;
             transform: translateY(100%);
         }
         .social-card > span {
@@ -1221,9 +1218,11 @@
             transition: opacity 0.25s;
             z-index: 2;
             pointer-events: none;
+            background-color: var(--bg-elevated);
         }
         .social-card .social-link {
             position: relative;
+            z-index: 0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -3577,6 +3576,7 @@
                 <p class="text-xs text-muted mb-5">In exchange for a few honest answers about using Roka. We read every submission — this isn't a formality.</p>
 
                 <form id="feedbackForm" novalidate>
+                    <input type="text" name="website" id="fbHoney" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;width:0;opacity:0">
                     <div class="feedback-field">
                         <label for="fbContact">Email or GitHub username <span style="color:var(--term-green)">*</span></label>
                         <input type="text" id="fbContact" name="contact" placeholder="you@example.com or github-handle" autocomplete="email" required>
@@ -4684,12 +4684,26 @@
                 submitBtn.textContent = 'Submitting…';
 
                 try {
-                    const res = await fetch(`${FEEDBACK_API_BASE}/feedback/pro`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload),
-                        signal: AbortSignal.timeout(15000),
-                    });
+                    const emailPayload = { ...payload, website: form.website ? form.website.value : '' };
+                    const [proResult] = await Promise.allSettled([
+                        fetch(`${FEEDBACK_API_BASE}/feedback/pro`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload),
+                            signal: AbortSignal.timeout(15000),
+                        }),
+                        fetch('/api/feedback', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(emailPayload),
+                            signal: AbortSignal.timeout(15000),
+                        }),
+                    ]);
+
+                    if (proResult.status !== 'fulfilled') {
+                        throw proResult.reason || new Error('Request failed');
+                    }
+                    const res = proResult.value;
                     const data = await res.json().catch(() => ({}));
                     if (!res.ok) {
                         throw new Error(data.detail || `Request failed (HTTP ${res.status})`);
