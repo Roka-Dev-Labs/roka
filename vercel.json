@@ -44,16 +44,6 @@
       "dest": "/api/$1"
     },
     {
-      "src": "^/research\\.html$",
-      "status": 308,
-      "headers": { "Location": "/testing.html#research" }
-    },
-    {
-      "src": "^/research$",
-      "status": 308,
-      "headers": { "Location": "/testing.html#research" }
-    },
-    {
       "src": "^/favicon\\.svg$",
       "dest": "/assets/icons/favicon.svg"
     },
