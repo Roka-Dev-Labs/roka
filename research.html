@@ -106,11 +106,37 @@
         h2 { margin-top: 3.5rem; margin-bottom: 1rem; }
         h3 { margin-top: 2.25rem; margin-bottom: 0.75rem; }
 
-        .inline-code {
+        .inline-code,
+        p code,
+        li code,
+        .prose code {
             font-family: var(--font-mono);
-            font-size: 1em;
-            font-weight: 500;
-            letter-spacing: -0.01em;
+            font-size: 0.9em;
+            font-weight: 400;
+            letter-spacing: 0;
+            padding: 0;
+            margin: 0;
+            background: none;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            color: inherit;
+            line-height: inherit;
+            vertical-align: baseline;
+            display: inline;
+        }
+        p .inline-code,
+        li .inline-code,
+        p .mono,
+        li .mono,
+        .prose .mono,
+        .prose code {
+            color: inherit !important;
+            font-weight: 400;
+            background: none !important;
+            border: none !important;
+            padding: 0;
+            box-shadow: none;
         }
         .mono, code, pre, kbd, samp, .eyebrow, .bench-bar-value, .bench-axis-y, .bench-axis-x {
             font-family: var(--font-mono);
@@ -159,7 +185,6 @@
         .prose ul li::marker { color: var(--text-faint); }
         .prose h2 { font-size: 1.55rem; }
         .prose h3 { font-size: 1.15rem; color: var(--text); }
-        .prose code { font-size: 1em; padding: 2px 6px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 3px; color: var(--text); font-weight: 500; }
 
         /* Table of contents */
         .toc a {

@@ -125,11 +125,34 @@
         }
 
         .mono { font-family: var(--font-mono); font-weight: 400; }
-        .inline-code {
+        .inline-code,
+        p code,
+        li code {
             font-family: var(--font-mono);
-            font-size: 1em;
-            font-weight: 500;
-            letter-spacing: -0.01em;
+            font-size: 0.9em;
+            font-weight: 400;
+            letter-spacing: 0;
+            padding: 0;
+            margin: 0;
+            background: none;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            color: inherit;
+            line-height: inherit;
+            vertical-align: baseline;
+            display: inline;
+        }
+        p .inline-code,
+        li .inline-code,
+        p .mono,
+        li .mono {
+            color: inherit !important;
+            font-weight: 400;
+            background: none !important;
+            border: none !important;
+            padding: 0;
+            box-shadow: none;
         }
 
         /* Terminal / code / agent UI — same mono stack as trynia.ai */
