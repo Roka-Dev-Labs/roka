@@ -1014,6 +1014,18 @@
         .logo-animate {
             animation: logoSpin 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
+        .site-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1;
+        }
+        .site-brand img {
+            width: 2.25rem;
+            height: 2.25rem;
+        }
 
         /* From Uiverse.io by WhiteNervosa — site nav */
         .customCheckBoxHolder {
@@ -2222,12 +2234,12 @@
     <!-- Navigation -->
     <nav class="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--bg)]/80 backdrop-blur-xl">
         <div class="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
-            <button id="mobileMenuToggle" class="flex items-center gap-2.5 font-semibold text-base sm:hidden">
-                <img src="/assets/icons/favicon-32x32.png" alt="" class="w-7 h-7 logo-animate" width="28" height="28">
+            <button id="mobileMenuToggle" class="site-brand sm:hidden">
+                <img src="/assets/icons/favicon-32x32.png" alt="" class="logo-animate" width="36" height="36">
                 Roka
             </button>
-            <a href="#" class="hidden sm:flex items-center gap-2.5 font-semibold text-base">
-                <img src="/assets/icons/favicon-32x32.png" alt="" class="w-7 h-7 logo-animate" width="28" height="28">
+            <a href="#" class="site-brand hidden sm:flex">
+                <img src="/assets/icons/favicon-32x32.png" alt="" class="logo-animate" width="36" height="36">
                 Roka
             </a>
             <div class="customCheckBoxHolder hidden sm:flex" id="pillNav" style="width: 33rem; max-width: 100%;">
