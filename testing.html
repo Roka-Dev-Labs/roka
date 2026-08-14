@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,86 +29,101 @@
 
     <style>
         :root {
-            --bg: #ffffff;
-            --text: #111111;
-            --text-muted: #666666;
-            --text-faint: #999999;
-            --border: #e5e5e5;
-            --border-strong: #d4d4d4;
-            --accent-glow: rgba(0, 0, 0, 0.05);
-            --success: #10b981;
-            --danger: #ef4444;
-            --warn: #d97706;
-            --mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
-            --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
-            --bg-elevated: #f4f4f5;
-            --bg-card: #ffffff;
-            --accent: #18181b;
-            --grid-line: rgba(0, 0, 0, 0.05);
-        }
-
-        html.dark {
-            --bg: #0a0a0a;
-            --text: #f5f5f5;
-            --text-muted: #a3a3a3;
-            --text-faint: #737373;
-            --border: #262626;
-            --border-strong: #404040;
-            --accent-glow: rgba(255, 255, 255, 0.05);
+            --bg: #111111;
+            --text: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --text-faint: #71717a;
+            --border: #2a2a2a;
+            --border-strong: #3f3f46;
+            --accent-glow: rgba(255, 255, 255, 0.04);
             --success: #22c55e;
             --danger: #f87171;
             --warn: #fbbf24;
-            --bg-elevated: #111112;
-            --bg-card: #0e0e0f;
+            --bg-elevated: #181818;
+            --bg-card: #161616;
             --accent: #e4e4e7;
-            --grid-line: rgba(255, 255, 255, 0.045);
+            --grid-line: transparent;
+            --illust-blue: #7dd3fc;
+            --illust-amber: #fbbf24;
+            --illust-blue-bg: rgba(125, 211, 252, 0.12);
+            --illust-amber-bg: rgba(251, 191, 36, 0.12);
+            --figure-bg: #f7f4ea;
+            --figure-head: #c5dff0;
+            --figure-ink: #1a1a1a;
+            --mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
+            --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
+        }
+
+        html.light {
+            --bg: #fafafa;
+            --text: #18181b;
+            --text-muted: #52525b;
+            --text-faint: #a1a1aa;
+            --border: #e4e4e7;
+            --border-strong: #d4d4d8;
+            --accent-glow: rgba(0, 0, 0, 0.04);
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warn: #d97706;
+            --bg-elevated: #f4f4f5;
+            --bg-card: #ffffff;
+            --accent: #18181b;
+            --illust-blue: #0284c7;
+            --illust-amber: #d97706;
+            --illust-blue-bg: rgba(14, 165, 233, 0.12);
+            --illust-amber-bg: rgba(217, 119, 6, 0.12);
+            --figure-bg: #f7f4ea;
+            --figure-head: #c5dff0;
+            --figure-ink: #1a1a1a;
+            --mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
+            --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        html { font-size: 112.5%; }
+        html { font-size: 100%; }
 
         body {
             font-family: "Montserrat", sans-serif;
             font-optical-sizing: auto;
-            font-size: 1.05rem;
-            font-weight: 375;
+            font-size: 0.9375rem;
+            font-weight: 400;
             font-style: normal;
             letter-spacing: -0.01em;
             background: var(--bg);
             color: var(--text);
-            line-height: 1.65;
+            line-height: 1.7;
             -webkit-font-smoothing: antialiased;
             transition: background 0.3s, color 0.3s;
         }
 
-        h1, h2, h3 { font-weight: 400; letter-spacing: -0.03em; }
+        h1, h2, h3 { font-weight: 500; letter-spacing: -0.02em; }
 
         .container {
-            max-width: 72rem;
+            max-width: 52rem;
             margin: 0 auto;
-            padding: 2.5rem 1.25rem 4rem;
+            padding: 2rem 1.25rem 4rem;
         }
 
         h1 {
-            font-size: 2.25rem;
-            font-weight: 400;
-            margin-bottom: 0.85rem;
+            font-size: 1.65rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
             letter-spacing: -0.03em;
             color: var(--text);
         }
 
         @media (min-width: 640px) {
-            h1 { font-size: 2.75rem; }
+            h1 { font-size: 1.85rem; }
         }
 
         h2 {
-            font-size: 1.55rem;
-            font-weight: 400;
-            margin-bottom: 0.85rem;
+            font-size: 1.15rem;
+            font-weight: 500;
+            margin-bottom: 0.65rem;
         }
 
-        p { color: var(--text-muted); margin-bottom: 1.15rem; font-size: 1.05rem; }
+        p { color: var(--text-muted); margin-bottom: 0.9rem; font-size: 0.9375rem; }
 
         a { color: var(--text); }
 
@@ -165,10 +180,10 @@
 
         .back-link {
             display: inline-block;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.15rem;
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 1rem;
+            font-size: 0.8125rem;
         }
 
         .back-link:hover { color: var(--text); }
@@ -193,17 +208,18 @@
 
         .stat-value {
             font-family: inherit;
-            font-size: 1.85rem;
+            font-size: 1.35rem;
             font-weight: 500;
             letter-spacing: -0.03em;
             color: var(--text);
         }
 
         .stat-label {
-            font-size: 0.8125rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
-            letter-spacing: 0.01em;
-            margin-top: 0.35rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
         }
 
         .query-bar {
@@ -217,14 +233,14 @@
         }
 
         .query-bar strong {
-            font-size: 1rem;
+            font-size: 0.8125rem;
             font-weight: 500;
             color: var(--text);
         }
 
         .query-bar code {
             font-family: inherit;
-            font-size: 1.05rem;
+            font-size: 0.875rem;
             font-weight: inherit;
             color: inherit;
         }
@@ -282,12 +298,12 @@
             }
         }
 
-        .dataset-name { font-weight: 500; font-size: 1.05rem; }
-        .dataset-system { font-size: 0.9375rem; color: var(--text-muted); }
+        .dataset-name { font-weight: 500; font-size: 0.875rem; }
+        .dataset-system { font-size: 0.75rem; color: var(--text-muted); }
 
         .mono {
             font-family: inherit;
-            font-size: 0.9375rem;
+            font-size: 0.75rem;
         }
 
         .badge {
@@ -353,9 +369,9 @@
 
         .detail-section p,
         .detail-section li {
-            font-size: 1rem;
+            font-size: 0.8125rem;
             color: var(--text-muted);
-            line-height: 1.65;
+            line-height: 1.6;
         }
 
         .detail-section ul {
@@ -372,7 +388,7 @@
 
         .sample-output {
             font-family: inherit;
-            font-size: 0.9375rem;
+            font-size: 0.75rem;
             line-height: 1.6;
             padding: 0.875rem;
             border-radius: 8px;
@@ -388,7 +404,7 @@
 
         .footer-note {
             text-align: center;
-            font-size: 0.9375rem;
+            font-size: 0.75rem;
             color: var(--text-faint);
             margin-top: 2rem;
         }
@@ -400,17 +416,17 @@
         }
 
         .proof-section > h2 {
-            font-size: 1.55rem;
-            font-weight: 400;
-            letter-spacing: -0.03em;
-            margin-bottom: 0.85rem;
+            font-size: 1.15rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.65rem;
             color: var(--text);
         }
 
         .proof-lead {
-            font-size: 1.05rem;
-            max-width: 46rem;
-            margin-bottom: 2rem;
+            font-size: 0.9375rem;
+            max-width: 42rem;
+            margin-bottom: 1.5rem;
             line-height: 1.7;
         }
 
@@ -430,28 +446,34 @@
             padding: 1.35rem;
         }
         .proof-card-art {
-            height: 72px;
-            margin: -0.2rem -0.2rem 0.9rem;
+            height: 64px;
+            margin: -0.2rem -0.2rem 0.75rem;
             border-radius: 10px;
-            background: var(--accent-glow);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text);
+        }
+        .proof-card:nth-child(odd) .proof-card-art {
+            background: var(--illust-blue-bg);
+            color: var(--illust-blue);
+        }
+        .proof-card:nth-child(even) .proof-card-art {
+            background: var(--illust-amber-bg);
+            color: var(--illust-amber);
         }
         .proof-card-art svg { width: 64px; height: 44px; }
 
         .proof-card h3 {
-            font-size: 1.05rem;
+            font-size: 0.9rem;
             font-weight: 500;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             color: var(--text);
         }
 
         .proof-card p {
-            font-size: 1rem;
+            font-size: 0.8125rem;
             margin-bottom: 0;
-            line-height: 1.65;
+            line-height: 1.6;
         }
 
         .proof-steps {
@@ -479,30 +501,30 @@
         }
 
         .proof-step {
-            font-size: 1rem;
+            font-size: 0.8125rem;
             color: var(--text-muted);
             line-height: 1.55;
         }
 
         .proof-step strong {
             display: block;
-            font-size: 1.05rem;
+            font-size: 0.875rem;
             font-weight: 500;
             color: var(--text);
-            margin-bottom: 0.35rem;
+            margin-bottom: 0.25rem;
         }
 
         .proof-conclusion {
-            border-left: 3px solid var(--success);
-            padding: 1.15rem 1.35rem;
-            background: var(--accent-glow);
+            border-left: 3px solid var(--illust-blue);
+            padding: 0.9rem 1.1rem;
+            background: var(--illust-blue-bg);
             border-radius: 0 10px 10px 0;
         }
 
         .proof-conclusion p {
-            font-size: 1.05rem;
-            margin-bottom: 0.65rem;
-            line-height: 1.7;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.65;
         }
 
         .proof-conclusion p:last-child { margin-bottom: 0; }
@@ -523,41 +545,39 @@
             overflow: hidden;
         }
         .pipeline-art {
-            height: 88px;
-            margin: -0.25rem -0.25rem 0.9rem;
+            height: 72px;
+            margin: -0.25rem -0.25rem 0.75rem;
             border-radius: 10px;
-            background: var(--accent-glow);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text);
         }
-        .pipeline-art svg { width: 72px; height: 52px; }
+        .pipeline-card:nth-child(odd) .pipeline-art {
+            background: var(--illust-blue-bg);
+            color: var(--illust-blue);
+        }
+        .pipeline-card:nth-child(even) .pipeline-art {
+            background: var(--illust-amber-bg);
+            color: var(--illust-amber);
+        }
+        .pipeline-art svg { width: 64px; height: 44px; }
         .pipeline-card h3 {
-            font-size: 1.05rem;
+            font-size: 0.9rem;
             font-weight: 500;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.3rem;
             color: var(--text);
         }
         .pipeline-card p {
-            font-size: 0.98rem;
+            font-size: 0.78rem;
             margin-bottom: 0;
-            line-height: 1.55;
+            line-height: 1.5;
         }
 
         .hero-intro {
-            max-width: 46rem;
-            font-size: 1.12rem;
+            max-width: 40rem;
+            font-size: 0.9375rem;
             line-height: 1.7;
             color: var(--text-muted);
-        }
-
-        #particles {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
-            pointer-events: none;
         }
 
         .logo-animate { animation: logoSpin 3s ease-in-out; }
@@ -586,10 +606,10 @@
         }
         .research-jump {
             display: inline-block;
-            margin: 0 0 1.5rem;
+            margin: 0 0 1.15rem;
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 1rem;
+            font-size: 0.8125rem;
         }
         .research-jump:hover { color: var(--text); }
 
@@ -600,22 +620,24 @@
         }
         .research-kicker { margin-bottom: 0.65rem; }
         .research-section > h2.research-title {
-            font-size: 1.85rem;
-            margin-bottom: 0.75rem;
+            font-size: 1.35rem;
+            margin-bottom: 0.55rem;
         }
         .research-lede {
-            font-size: 1.08rem;
-            max-width: 46rem;
-            margin-bottom: 1.25rem;
+            font-size: 0.9375rem;
+            max-width: 42rem;
+            margin-bottom: 1rem;
             line-height: 1.7;
         }
         .research-meta {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.75rem 1.1rem;
+            gap: 0.5rem 0.9rem;
             color: var(--text-faint);
-            font-size: 0.95rem;
-            margin-bottom: 2rem;
+            font-size: 0.75rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
         }
         .research-layout {
             display: grid;
@@ -629,41 +651,41 @@
         @media (min-width: 960px) { .toc { display: flex; } }
         .toc a {
             display: block;
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
-            padding: 0.4rem 0.75rem;
+            padding: 0.3rem 0.65rem;
             border-left: 1px solid var(--border);
             text-decoration: none;
         }
         .toc a:hover, .toc a.active { color: var(--text); border-left-color: var(--text); }
 
         .prose h2 {
-            font-size: 1.45rem;
-            margin-top: 2.75rem;
-            margin-bottom: 0.85rem;
+            font-size: 1.1rem;
+            margin-top: 2rem;
+            margin-bottom: 0.65rem;
         }
         .prose h3 {
-            font-size: 1.15rem;
-            margin-top: 1.75rem;
-            margin-bottom: 0.6rem;
+            font-size: 0.95rem;
+            margin-top: 1.35rem;
+            margin-bottom: 0.45rem;
         }
-        .prose p { font-size: 1.05rem; line-height: 1.7; }
+        .prose p { font-size: 0.9375rem; line-height: 1.7; }
         .prose ul {
-            margin: 1rem 0 1.25rem 1.15rem;
+            margin: 0.75rem 0 1rem 1.05rem;
             color: var(--text-muted);
-            font-size: 1.05rem;
-            line-height: 1.7;
+            font-size: 0.9375rem;
+            line-height: 1.65;
         }
         .prose li { margin: 0.4rem 0; }
         .prose strong { color: var(--text); font-weight: 500; }
 
         .callout {
             border: 1px solid var(--border);
-            background: var(--bg-elevated);
+            background: var(--illust-amber-bg);
             border-radius: 10px;
-            padding: 1.05rem 1.2rem;
-            margin: 1.25rem 0;
-            font-size: 1.02rem;
+            padding: 0.9rem 1rem;
+            margin: 1rem 0;
+            font-size: 0.875rem;
             color: var(--text-muted);
         }
         .callout .callout-label {
@@ -681,9 +703,7 @@
             border-radius: 10px;
             padding: 1rem 1.15rem;
             overflow-x: auto;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: var(--text);
+            font-size: 0.8rem;
             margin: 1rem 0;
             font-family: inherit;
             white-space: pre-wrap;
@@ -706,8 +726,8 @@
         @media (min-width: 640px) {
             .bench-metric-card + .bench-metric-card { border-top: none; border-left: 1px solid var(--border); }
         }
-        .bench-metric-card .metric { font-size: 1.85rem; font-weight: 500; color: var(--text); }
-        .bench-metric-card .hint { font-size: 0.9rem; color: var(--text-muted); margin-top: 0.4rem; }
+        .bench-metric-card .metric { font-size: 1.35rem; font-weight: 500; color: var(--text); }
+        .bench-metric-card .hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; }
 
         .chart-card {
             border: 1px solid var(--border);
@@ -873,26 +893,29 @@
             background: linear-gradient(to bottom, transparent, var(--bg-elevated) 60%);
         }
 
-        .compare-table { width: 100%; font-size: 1rem; border-collapse: collapse; }
-        .compare-table th, .compare-table td { padding: 0.7rem 0.75rem; text-align: left; }
+        .compare-table { width: 100%; font-size: 0.8125rem; border-collapse: collapse; color: var(--figure-ink); }
+        .compare-table th, .compare-table td { padding: 0.55rem 0.7rem; text-align: left; }
         .compare-table thead th {
-            font-size: 0.8rem;
-            letter-spacing: 0.08em;
+            font-size: 0.7rem;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
-            color: var(--text-faint);
-            font-weight: 400;
-            background: var(--bg-elevated);
-            border-bottom: 1px solid var(--border);
+            color: var(--figure-ink);
+            font-weight: 600;
+            background: var(--figure-head);
+            border-bottom: none;
         }
-        .compare-table tbody tr { border-bottom: 1px solid var(--border); }
-        .compare-table .col-bad { color: var(--danger); }
-        .compare-table .col-good { color: var(--text); }
+        .compare-table tbody td { background: var(--figure-bg); }
+        .compare-table tbody tr { border-bottom: 1px solid rgba(0,0,0,0.06); }
+        .compare-table .col-bad { color: #b45309; }
+        .compare-table .col-good { color: var(--figure-ink); font-weight: 500; }
         .compare-table .text-right { text-align: right; }
         .compare-wrap {
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            background: var(--figure-bg);
+            border: none;
+            border-radius: 14px;
             overflow: hidden;
             margin: 1.5rem 0;
+            padding: 1rem;
         }
 
         .research-cta {
@@ -938,8 +961,6 @@
             </button>
         </div>
     </nav>
-
-    <canvas id="particles"></canvas>
 
     <div class="container">
         <a href="/index.html" class="back-link roka-back" data-back-host><span data-back-hijacker="active" aria-hidden="true"></span>← Back</a>
@@ -1798,6 +1819,7 @@
         const themeIconFill = document.getElementById('themeIconFill');
 
         function applyTheme(theme) {
+            html.classList.toggle('light', theme === 'light');
             html.classList.toggle('dark', theme === 'dark');
             themeLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
             themeIconFill.setAttribute('d', theme === 'dark'
@@ -1808,85 +1830,12 @@
             localStorage.setItem('theme', theme);
         }
 
-        const savedTheme = localStorage.getItem('roka-theme') || localStorage.getItem('theme') || 'light';
-        applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
+        const savedTheme = localStorage.getItem('roka-theme') || localStorage.getItem('theme') || 'dark';
+        applyTheme(savedTheme === 'light' ? 'light' : 'dark');
 
         themeToggle.addEventListener('click', () => {
             applyTheme(html.classList.contains('dark') ? 'light' : 'dark');
         });
-
-        // Particles
-        const canvas = document.getElementById('particles');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        const particleCount = 80;
-        const connectionDistance = 150;
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-                this.radius = Math.random() * 2 + 1;
-            }
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-            }
-            draw() {
-                const isDark = html.classList.contains('dark');
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.3)';
-                ctx.fill();
-            }
-        }
-
-        function initParticles() {
-            particles = [];
-            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
-        }
-
-        function drawConnections() {
-            const isDark = html.classList.contains('dark');
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < connectionDistance) {
-                        const opacity = (1 - distance / connectionDistance) * 0.3;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = isDark ? `rgba(255,255,255,${opacity})` : `rgba(0,0,0,${opacity})`;
-                        ctx.lineWidth = 1;
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            drawConnections();
-            requestAnimationFrame(animate);
-        }
-
-        resizeCanvas();
-        initParticles();
-        animate();
-        window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
-
 
         const chart = document.getElementById('benchChart');
         const benchLabel = document.getElementById('benchLabel');
