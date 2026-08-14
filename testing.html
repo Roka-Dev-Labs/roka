@@ -201,12 +201,17 @@
             gap: 0.75rem;
         }
 
-        .query-bar code,
+        .query-bar code {
+            font-family: inherit;
+            font-size: inherit;
+            font-weight: inherit;
+            color: inherit;
+        }
         p code,
         li code {
-            font-family: var(--mono);
-            font-size: 0.9em;
-            font-weight: 400;
+            font-family: inherit !important;
+            font-size: inherit !important;
+            font-weight: inherit !important;
             padding: 0;
             margin: 0;
             background: none;
@@ -544,7 +549,7 @@
         <section class="proof-section" aria-label="Why these benchmarks matter">
             <h2>What we did — and why it matters</h2>
             <p class="proof-lead">
-                Most log tools are demoed on tiny, hand-picked snippets. We didn't. We ran the same real-world command an engineer would use during an incident — <code style="font-family:var(--mono);font-size:0.8125rem;">roka prune --query "what broke"</code> — against every dataset in the
+                Most log tools are demoed on tiny, hand-picked snippets. We didn't. We ran the same real-world command an engineer would use during an incident — <code>roka prune --query "what broke"</code> — against every dataset in the
                 <a href="https://github.com/logpai/loghub" rel="noopener noreferrer">LogHub</a> benchmark suite. These are production logs from Android phones, supercomputers, cloud clusters, and SSH servers — not synthetic toy data.
             </p>
 
@@ -581,7 +586,7 @@
         </section>
 
         <p class="footer-note">
-            Benchmarks run via the Roka prune API on LogHub <code style="font-family:var(--mono);font-size:0.7rem;">*_2k.log</code> samples.
+            Benchmarks run via the Roka prune API on LogHub <code>*_2k.log</code> samples.
             Datasets © LogHub / logpai — used for research and evaluation.
         </p>
     </div>
@@ -927,7 +932,7 @@
                     <div class="detail-grid">
                         <div class="detail-section">
                             <h3>Log file</h3>
-                            <p><code style="font-family:var(--mono);font-size:0.8125rem;">${d.file}</code> from <a href="https://github.com/logpai/loghub/tree/master/${d.name}" rel="noopener noreferrer">logpai/loghub</a></p>
+                            <p><code>${d.file}</code> from <a href="https://github.com/logpai/loghub/tree/master/${d.name}" rel="noopener noreferrer">logpai/loghub</a></p>
                             <h3 style="margin-top:1rem;">About this log</h3>
                             <p>${d.about}</p>
                             <h3 style="margin-top:1rem;">Assessment</h3>

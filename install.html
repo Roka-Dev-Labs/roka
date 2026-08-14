@@ -128,32 +128,25 @@
         .mono { font-family: var(--font-mono); }
         .inline-code,
         p code,
-        li code {
-            font-family: var(--font-mono);
-            font-size: 0.9em;
-            font-weight: 400;
-            letter-spacing: 0;
-            padding: 0;
+        li code,
+        p .mono,
+        li .mono,
+        p .inline-code,
+        li .inline-code {
+            font-family: inherit !important;
+            font-size: inherit !important;
+            font-weight: inherit !important;
+            letter-spacing: inherit !important;
+            padding: 0 !important;
             margin: 0;
-            background: none;
-            border: none;
+            background: none !important;
+            border: none !important;
             border-radius: 0;
             box-shadow: none;
-            color: inherit;
+            color: inherit !important;
             line-height: inherit;
             vertical-align: baseline;
             display: inline;
-        }
-        p .inline-code,
-        li .inline-code,
-        p .mono,
-        li .mono {
-            color: inherit !important;
-            font-weight: 400;
-            background: none !important;
-            border: none !important;
-            padding: 0;
-            box-shadow: none;
         }
 
         .surface {
