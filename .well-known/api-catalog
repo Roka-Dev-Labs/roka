@@ -1,0 +1,49 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://api.roka-prune.com/",
+      "service-desc": [
+        {
+          "href": "https://www.roka-prune.com/openapi.json",
+          "type": "application/vnd.oai.openapi+json"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://www.roka-prune.com/docs/",
+          "type": "text/html"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://api.roka-prune.com/health",
+          "type": "application/json"
+        }
+      ]
+    },
+    {
+      "anchor": "https://www.roka-prune.com/api/feedback",
+      "service-desc": [
+        {
+          "href": "https://www.roka-prune.com/openapi.json",
+          "type": "application/vnd.oai.openapi+json"
+        }
+      ]
+    },
+    {
+      "anchor": "https://www.roka-prune.com/docs/mcp.html",
+      "service-doc": [
+        {
+          "href": "https://www.roka-prune.com/docs/mcp.html",
+          "type": "text/html"
+        }
+      ],
+      "service-meta": [
+        {
+          "href": "https://www.roka-prune.com/.well-known/mcp-server",
+          "type": "application/json"
+        }
+      ]
+    }
+  ]
+}

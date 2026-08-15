@@ -1,0 +1,39 @@
+{
+  "mcp_version": "2025-06-18",
+  "name": "roka-mcp",
+  "description": "Local MCP server that prunes noisy logs to the slice an AI coding agent needs. Agents launch it over stdio via npx; log text stays on the machine.",
+  "endpoint": "https://www.roka-prune.com/docs/mcp.html",
+  "transport": "stdio",
+  "command": "npx",
+  "args": ["-y", "roka-mcp", "serve"],
+  "package": {
+    "registry": "npm",
+    "name": "roka-mcp",
+    "version": "0.2.1"
+  },
+  "auth": {
+    "required": true,
+    "methods": ["apikey"],
+    "apikey_header": "Authorization",
+    "description": "Set ROKA_API_KEY or pass --api-key. Pro key required for connect, serve, and watch."
+  },
+  "capabilities": ["tools"],
+  "trust_class": "public",
+  "docs": "https://www.roka-prune.com/docs/mcp.html",
+  "contact": "https://www.roka-prune.com/",
+  "last_updated": "2026-08-15T00:00:00Z",
+  "tools_preview": [
+    {
+      "name": "prune_logs",
+      "description": "Prune raw log text already in the conversation."
+    },
+    {
+      "name": "prune_file",
+      "description": "Read a log file by path and prune it."
+    },
+    {
+      "name": "prune_tail",
+      "description": "Read the last N lines of a live log, then prune that slice."
+    }
+  ]
+}

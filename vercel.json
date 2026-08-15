@@ -30,6 +30,22 @@
       "use": "@vercel/static"
     },
     {
+      "src": "robots.txt",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "sitemap.xml",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "openapi.json",
+      "use": "@vercel/static"
+    },
+    {
+      "src": ".well-known/**",
+      "use": "@vercel/static"
+    },
+    {
       "src": "*.sh",
       "use": "@vercel/static"
     },
@@ -50,6 +66,46 @@
     {
       "src": "^/docs/?$",
       "dest": "/docs/index.html"
+    },
+    {
+      "src": "^/robots\\.txt$",
+      "dest": "/robots.txt",
+      "headers": {
+        "content-type": "text/plain; charset=utf-8",
+        "cache-control": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "^/sitemap\\.xml$",
+      "dest": "/sitemap.xml",
+      "headers": {
+        "content-type": "application/xml; charset=utf-8",
+        "cache-control": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "^/openapi\\.json$",
+      "dest": "/openapi.json",
+      "headers": {
+        "content-type": "application/vnd.oai.openapi+json; charset=utf-8",
+        "cache-control": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "^/\\.well-known/api-catalog$",
+      "dest": "/.well-known/api-catalog",
+      "headers": {
+        "content-type": "application/linkset+json; charset=utf-8",
+        "cache-control": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "^/\\.well-known/mcp-server$",
+      "dest": "/.well-known/mcp-server",
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "public, max-age=3600"
+      }
     },
     {
       "src": "^/favicon\\.svg$",
@@ -110,6 +166,7 @@
     {
       "src": "/(.*)",
       "headers": {
+        "link": "</openapi.json>; rel=\"service-desc\"; type=\"application/vnd.oai.openapi+json\", </.well-known/api-catalog>; rel=\"api-catalog\"; type=\"application/linkset+json\", </.well-known/mcp-server>; rel=\"mcp-server\"; type=\"application/json\"",
         "x-content-type-options": "nosniff",
         "x-frame-options": "DENY",
         "x-xss-protection": "1; mode=block",

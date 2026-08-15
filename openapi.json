@@ -1,0 +1,180 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Roka API",
+    "version": "1.0.0",
+    "description": "Prune noisy logs into a budgeted slice for AI coding agents. Hosted prune and account APIs live on api.roka-prune.com. Site-local routes (feedback) are served from www.roka-prune.com.",
+    "contact": {
+      "name": "Roka Dev Labs",
+      "url": "https://www.roka-prune.com/"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.roka-prune.com",
+      "description": "Hosted prune and account API"
+    },
+    {
+      "url": "https://www.roka-prune.com",
+      "description": "Marketing site and local route handlers"
+    }
+  ],
+  "tags": [
+    { "name": "prune" },
+    { "name": "account" },
+    { "name": "site" }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "servers": [{ "url": "https://api.roka-prune.com" }],
+        "tags": ["prune"],
+        "summary": "API health",
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "Service is reachable",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "additionalProperties": true }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/prune": {
+      "post": {
+        "servers": [{ "url": "https://api.roka-prune.com" }],
+        "tags": ["prune"],
+        "summary": "Prune log text to a token budget",
+        "operationId": "pruneLogs",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PruneRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pruned context",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PruneResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/status": {
+      "get": {
+        "servers": [{ "url": "https://api.roka-prune.com" }],
+        "tags": ["account"],
+        "summary": "Quota and plan status for an API key",
+        "operationId": "getStatus",
+        "security": [{ "ApiKeyAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Current usage",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": { "description": "Missing or invalid API key" }
+        }
+      }
+    },
+    "/api/feedback": {
+      "post": {
+        "servers": [{ "url": "https://www.roka-prune.com" }],
+        "tags": ["site"],
+        "summary": "Submit Pro feedback from the marketing site",
+        "operationId": "submitFeedback",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/FeedbackRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "ok": { "type": "boolean" } }
+                }
+              }
+            }
+          },
+          "400": { "description": "Missing required fields" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Roka Pro API key (rk_live_…)"
+      }
+    },
+    "schemas": {
+      "PruneRequest": {
+        "type": "object",
+        "required": ["text", "query"],
+        "properties": {
+          "text": { "type": "string", "description": "Raw log text" },
+          "query": { "type": "string", "description": "What to focus on" },
+          "budget": { "type": "integer", "minimum": 1, "description": "Token budget" },
+          "use_semantic": { "type": "boolean", "default": false },
+          "use_minification": { "type": "boolean", "default": false }
+        }
+      },
+      "PruneResponse": {
+        "type": "object",
+        "properties": {
+          "output": { "type": "string" },
+          "input_tokens": { "type": "integer" },
+          "output_tokens": { "type": "integer" },
+          "reduction": { "type": "string" },
+          "latency_ms": { "type": "number" }
+        }
+      },
+      "StatusResponse": {
+        "type": "object",
+        "properties": {
+          "tokens_used_this_month": { "type": "integer" },
+          "tokens_limit": { "type": "integer" },
+          "tokens_remaining": { "type": "integer" }
+        }
+      },
+      "FeedbackRequest": {
+        "type": "object",
+        "required": ["contact", "main_problem"],
+        "properties": {
+          "contact": { "type": "string" },
+          "main_problem": { "type": "string" },
+          "agents": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "array", "items": { "type": "string" } }
+            ]
+          },
+          "product_downsides": { "type": "string" },
+          "site_discomfort": { "type": "string" },
+          "satisfaction": { "type": "string" }
+        }
+      }
+    }
+  }
+}
