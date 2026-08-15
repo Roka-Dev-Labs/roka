@@ -2485,8 +2485,8 @@
             <canvas id="rokaCanvas"></canvas>
         </div>
 
-        <h1 class="hero-headline">Prune any log using one command.</h1>
-        <p class="hero-sub">Designed for AI agents. Collapse noise, rank relevance, pack to budget — before Claude ever sees it.</p>
+        <h1 class="hero-headline">the debugging layer for runtime data.</h1>
+        <p class="hero-sub">Turn runtime failures into context your agent can act on. Roka cuts repetitive output, preserves critical failures, and gives your agent a clear path to the fix.</p>
 
         <!-- Install / Agent panel -->
         <div class="agent-panel px-5 reveal visible">
@@ -3092,11 +3092,13 @@
     <section id="benchmark" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-10">
             <span class="eyebrow">Real benchmark — LogHub corpus</span>
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-3 mb-3">Tested on real production logs, not a cherry-picked demo</h2>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-3 mb-3">Benchmark</h2>
             <p class="text-muted text-sm max-w-2xl mx-auto">
-                We ran the exact <span class="mono inline-code">prune_file</span> / <span class="mono inline-code">prune_logs</span> tools shipped in Roka's MCP server against
-                <a href="https://github.com/logpai/loghub" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-[var(--text)]">LogHub</a> —
-                the standard academic corpus used in log-parsing research. 15 real systems, one 4,000-character budget, zero per-file tuning.
+                15 real-world log datasets from
+                <a href="https://github.com/logpai/loghub" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-[var(--text)]">LogHub</a>.
+                The exact <span class="mono inline-code">prune_file</span> / <span class="mono inline-code">prune_logs</span> tools shipped in Roka's MCP server.
+                One 4,000-character budget. Zero per-file tuning.
+                Roka removes the noise while keeping the failures an agent needs to debug.
             </p>
         </div>
 
