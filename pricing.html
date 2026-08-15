@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing — Roka</title>
+    <meta name="description" content="Roka Free is $0 forever. Pro is $20/month or $14/month billed yearly. Checkout is at /checkout via Paddle after you sign in.">
+    <meta property="og:title" content="Pricing — Roka">
+    <meta property="og:description" content="Roka Free is $0 forever. Pro is $20/month or $14/month billed yearly. Checkout is at /checkout via Paddle after you sign in.">
+    <meta property="og:image" content="https://www.roka-prune.com/assets/images/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://www.roka-prune.com/pricing">
+    <link rel="canonical" href="https://www.roka-prune.com/pricing">
+    <link rel="alternate" type="text/markdown" href="https://www.roka-prune.com/pricing.md">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://www.roka-prune.com/#organization",
+          "name": "Roka Labs",
+          "url": "https://www.roka-prune.com/"
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://www.roka-prune.com/pricing#webpage",
+          "url": "https://www.roka-prune.com/pricing",
+          "name": "Pricing — Roka",
+          "description": "Roka Free is $0 forever. Pro is $20/month or $14/month billed yearly. Checkout is at /checkout via Paddle after you sign in.",
+          "mainEntity": { "@id": "https://www.roka-prune.com/#product" }
+        },
+        {
+          "@type": ["SoftwareApplication", "Product"],
+          "@id": "https://www.roka-prune.com/#product",
+          "name": "Roka",
+          "description": "Context-pruning middleware that compresses production logs for AI coding agents.",
+          "url": "https://www.roka-prune.com/",
+          "image": "https://www.roka-prune.com/assets/images/og.png",
+          "brand": { "@id": "https://www.roka-prune.com/#organization" },
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "Linux, macOS, Windows",
+          "offers": {
+            "@type": "AggregateOffer",
+            "url": "https://www.roka-prune.com/pricing",
+            "priceCurrency": "USD",
+            "lowPrice": "0",
+            "highPrice": "20",
+            "offerCount": 3,
+            "offers": [
+              {
+                "@type": "Offer",
+                "name": "Free",
+                "price": "0",
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.roka-prune.com/pricing"
+              },
+              {
+                "@type": "Offer",
+                "name": "Pro",
+                "price": "20",
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.roka-prune.com/checkout"
+              },
+              {
+                "@type": "Offer",
+                "name": "Enterprise",
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.roka-prune.com/pricing",
+                "description": "Custom pricing. Email mukhamedjankydyrli@gmail.com."
+              }
+            ]
+          }
+        }
+      ]
+    }
+    </script>
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Roka">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pricing — Roka">
+    <meta name="twitter:description" content="Roka Free is $0 forever. Pro is $20/month or $14/month billed yearly. Checkout is at /checkout via Paddle after you sign in.">
+    <meta name="twitter:image" content="https://www.roka-prune.com/assets/images/og.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+    <link rel="stylesheet" href="/assets/fonts/montserrat.css">
+    <style>
+        :root { --bg:#fff; --text:#111; --muted:#666; --border:#e5e5e5; --btn:#0a0a0a; --btn-text:#fff; }
+        html.dark { --bg:#0a0a0a; --text:#f5f5f5; --muted:#a3a3a3; --border:#262626; --btn:#fafafa; --btn-text:#09090b; }
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body { font-family:"Montserrat",sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+        .nav { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; border-bottom:1px solid var(--border); }
+        .nav a { color:var(--text); text-decoration:none; font-weight:600; display:flex; align-items:center; gap:.5rem; }
+        .wrap { max-width:960px; margin:0 auto; padding:2.5rem 1.5rem 4rem; }
+        h1 { font-weight:400; letter-spacing:-.03em; font-size:2.25rem; margin-bottom:.5rem; }
+        .lede { color:var(--muted); margin-bottom:2rem; }
+        .grid { display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+        .card { border:1px solid var(--border); border-radius:12px; padding:1.5rem; display:flex; flex-direction:column; }
+        .card.pro { border-color:var(--text); }
+        h2 { font-size:1.15rem; font-weight:500; margin-bottom:.25rem; }
+        .price { font-size:1.75rem; margin:1rem 0; }
+        .price span { font-size:.9rem; color:var(--muted); }
+        ul { color:var(--muted); font-size:.9rem; margin:0 0 1.25rem; padding-left:1.1rem; flex:1; }
+        .btn { display:inline-block; text-align:center; background:var(--btn); color:var(--btn-text); text-decoration:none; border-radius:8px; padding:.6rem 1rem; font-size:.85rem; font-weight:500; }
+        .btn-ghost { background:transparent; color:var(--text); border:1px solid var(--border); }
+        .note { margin-top:2rem; font-size:.85rem; color:var(--muted); }
+        #themeToggle { background:none; border:1px solid var(--border); color:var(--muted); border-radius:8px; padding:.35rem .75rem; cursor:pointer; font:inherit; font-size:.75rem; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="/"><img src="/assets/icons/favicon-32x32.png" alt="Roka" width="28" height="28"> Roka</a>
+        <button id="themeToggle" type="button">Theme</button>
+    </nav>
+    <main class="wrap">
+        <h1>Pricing</h1>
+        <p class="lede">Start free. Pay for Pro at <a href="/checkout">/checkout</a>. Enterprise is custom.</p>
+        <div class="grid">
+            <article class="card">
+                <h2>Free</h2>
+                <p class="price">$0 <span>/forever</span></p>
+                <ul>
+                    <li>Local CLI, offline</li>
+                    <li>15K tokens lifetime per device</li>
+                    <li>Critical errors always kept</li>
+                    <li>No MCP connect</li>
+                </ul>
+                <a class="btn btn-ghost" href="/install.html">Install CLI</a>
+            </article>
+            <article class="card pro">
+                <h2>Pro</h2>
+                <p class="price">$20 <span>/month · or $14/month annual</span></p>
+                <ul>
+                    <li>500K tokens/month</li>
+                    <li>Web UI + REST API</li>
+                    <li>Semantic re-ranking</li>
+                    <li>MCP agent connect</li>
+                </ul>
+                <a class="btn" href="/checkout">Checkout</a>
+            </article>
+            <article class="card">
+                <h2>Enterprise</h2>
+                <p class="price">Custom</p>
+                <ul>
+                    <li>Unlimited tokens</li>
+                    <li>SSO / audit / integrations</li>
+                    <li>Custom SLAs</li>
+                </ul>
+                <a class="btn btn-ghost" href="mailto:mukhamedjankydyrli@gmail.com">Contact</a>
+            </article>
+        </div>
+        <p class="note">Checkout uses Paddle. You must sign in first. Quotas: <a href="/docs/pricing.html">docs</a>.</p>
+    </main>
+    <script>
+        const html = document.documentElement;
+        const btn = document.getElementById('themeToggle');
+        function apply(theme) {
+            html.classList.toggle('dark', theme === 'dark');
+            btn.textContent = theme === 'dark' ? 'Light' : 'Dark';
+            localStorage.setItem('roka-theme', theme);
+        }
+        apply((localStorage.getItem('roka-theme') || 'dark') === 'light' ? 'light' : 'dark');
+        btn.addEventListener('click', () => apply(html.classList.contains('dark') ? 'light' : 'dark'));
+    </script>
+</body>
+</html>

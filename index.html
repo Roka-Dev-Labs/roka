@@ -12,6 +12,139 @@
     <meta name="apple-mobile-web-app-title" content="Roka" />
     <link rel="manifest" href="/site.webmanifest" />
     <title>Roka: Prune your logs</title>
+    <meta name="description" content="Roka prunes noisy production logs into a budgeted slice for AI coding agents. One command, same pipeline for CLI, MCP, and the playground.">
+    <meta property="og:title" content="Roka: Prune your logs">
+    <meta property="og:description" content="Roka prunes noisy production logs into a budgeted slice for AI coding agents. One command, same pipeline for CLI, MCP, and the playground.">
+    <meta property="og:image" content="https://www.roka-prune.com/assets/images/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://www.roka-prune.com/">
+    <link rel="canonical" href="https://www.roka-prune.com/">
+    <link rel="alternate" type="text/markdown" href="https://www.roka-prune.com/index.md">
+    <link rel="describedby" type="text/markdown" href="https://www.roka-prune.com/llms.txt">
+    <link rel="alternate" type="text/markdown" title="Full markdown dump" href="https://www.roka-prune.com/llms-full.txt">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://www.roka-prune.com/#organization",
+          "name": "Roka Labs",
+          "alternateName": "Roka",
+          "url": "https://www.roka-prune.com/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.roka-prune.com/assets/logos/logo-roka.png"
+          },
+          "sameAs": [
+            "https://github.com/Roka-Dev-Labs",
+            "https://www.instagram.com/roka.app/"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://www.roka-prune.com/#website",
+          "name": "Roka",
+          "url": "https://www.roka-prune.com/",
+          "description": "Roka prunes noisy production logs into a budgeted slice for AI coding agents.",
+          "inLanguage": "en",
+          "publisher": {
+            "@id": "https://www.roka-prune.com/#organization"
+          }
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://www.roka-prune.com/#webpage",
+          "url": "https://www.roka-prune.com/",
+          "name": "Roka: Prune your logs",
+          "description": "Roka prunes noisy production logs into a budgeted slice for AI coding agents. One command, same pipeline for CLI, MCP, and the playground.",
+          "isPartOf": {
+            "@id": "https://www.roka-prune.com/#website"
+          },
+          "about": {
+            "@id": "https://www.roka-prune.com/#product"
+          },
+          "mainEntity": {
+            "@id": "https://www.roka-prune.com/#product"
+          },
+          "inLanguage": "en"
+        },
+        {
+          "@type": ["SoftwareApplication", "Product"],
+          "@id": "https://www.roka-prune.com/#product",
+          "name": "Roka",
+          "description": "Context-pruning middleware that compresses production logs for AI coding agents.",
+          "url": "https://www.roka-prune.com/",
+          "image": "https://www.roka-prune.com/assets/images/og.png",
+          "brand": {
+            "@id": "https://www.roka-prune.com/#organization"
+          },
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "Linux, macOS, Windows",
+          "offers": {
+            "@type": "AggregateOffer",
+            "url": "https://www.roka-prune.com/pricing",
+            "priceCurrency": "USD",
+            "lowPrice": "0",
+            "highPrice": "20",
+            "offerCount": 3,
+            "offers": [
+              {
+                "@type": "Offer",
+                "name": "Free",
+                "price": "0",
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.roka-prune.com/pricing",
+                "description": "Local CLI, 15K tokens lifetime per device, fingerprinting, critical-error force-keep. No MCP connect."
+              },
+              {
+                "@type": "Offer",
+                "name": "Pro",
+                "price": "20",
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.roka-prune.com/checkout",
+                "priceSpecification": [
+                  {
+                    "@type": "UnitPriceSpecification",
+                    "price": "20",
+                    "priceCurrency": "USD",
+                    "billingDuration": "P1M",
+                    "unitText": "month"
+                  },
+                  {
+                    "@type": "UnitPriceSpecification",
+                    "price": "14",
+                    "priceCurrency": "USD",
+                    "billingDuration": "P1M",
+                    "unitText": "month",
+                    "description": "Billed annually"
+                  }
+                ]
+              },
+              {
+                "@type": "Offer",
+                "name": "Enterprise",
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.roka-prune.com/pricing",
+                "description": "Custom pricing. Unlimited tokens, SSO / audit / integrations. Email mukhamedjankydyrli@gmail.com."
+              }
+            ]
+          }
+        }
+      ]
+    }
+    </script>
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Roka">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Roka: Prune your logs">
+    <meta name="twitter:description" content="Roka prunes noisy production logs into a budgeted slice for AI coding agents. One command, same pipeline for CLI, MCP, and the playground.">
+    <meta name="twitter:image" content="https://www.roka-prune.com/assets/images/og.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -2254,11 +2387,11 @@
     <nav class="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--bg)]/80 backdrop-blur-xl">
         <div class="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
             <button id="mobileMenuToggle" class="site-brand sm:hidden">
-                <img src="/assets/logos/logo-roka.png" alt="" class="logo-animate" width="36" height="36">
+                <img src="/assets/logos/logo-roka.png" alt="Roka" class="logo-animate" width="36" height="36">
                 Roka
             </button>
             <a href="#" class="site-brand hidden sm:flex">
-                <img src="/assets/logos/logo-roka.png" alt="" class="logo-animate" width="36" height="36">
+                <img src="/assets/logos/logo-roka.png" alt="Roka" class="logo-animate" width="36" height="36">
                 Roka
             </a>
             <div class="customCheckBoxHolder hidden sm:flex" id="pillNav" style="width: 33rem; max-width: 100%;">
@@ -2802,7 +2935,7 @@
                         <img
                             class="bento-media-thumb"
                             src="/media/log-compaction-poster.jpg?v=20260811c"
-                            alt=""
+                            alt="Log compaction"
                             loading="lazy"
                             decoding="async"
                         >
@@ -3275,7 +3408,7 @@
                 </ul>
                 <div class="flex gap-2 justify-end items-center">
                     <button type="button" id="proFeedbackBtn" class="btn-primary text-xs font-medium pro-tier-cta">GET FREE NOW</button>
-                    <a href="/login.html" class="Btn">
+                    <a href="/checkout" class="Btn">
                         Pay
                         <svg class="svgIcon" viewBox="0 0 576 512" aria-hidden="true"><path d="M512 80c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H512zm16 144V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V224H528zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24H248z"></path></svg>
                     </a>
@@ -3529,7 +3662,7 @@
             <a href="/install.html" class="cta-terminal-btn">Start now</a>
             <div class="cta-terminal-kev">
                 <button type="button" class="cta-terminal-kev-btn" id="kevAvatarBtn" aria-label="Enlarge Kev" aria-pressed="false" title="Kev approves">
-                    <img src="/assets/images/kevin.png" alt="" width="28" height="28">
+                    <img src="/assets/images/kevin.png" alt="Kev" width="28" height="28">
                 </button>
                 <span>(Kev approves.)</span>
             </div>

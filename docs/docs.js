@@ -51,7 +51,7 @@ function renderSidebar() {
 
   return `
     <a class="docs-brand" href="/docs/">
-      <img src="/assets/logos/logo-roka.png" alt="">
+      <img src="/assets/logos/logo-roka.png" alt="Roka">
       Roka Docs
     </a>
     ${groups}

@@ -1,0 +1,763 @@
+# Roka — full site dump
+> Concatenated markdown of all indexable pages for one-shot agent fetch.
+Canonical: https://www.roka-prune.com/llms-full.txt
+Index of links only: https://www.roka-prune.com/llms.txt
+
+
+---
+
+<!-- source: https://www.roka-prune.com/ -->
+
+# Roka
+
+Prune any log using one command.
+
+Designed for AI agents. Collapse noise, rank relevance, pack to a token budget — before the model ever sees it.
+
+- Site: https://www.roka-prune.com/
+- Docs: https://www.roka-prune.com/docs/
+- Install: https://www.roka-prune.com/install.html
+- Research: https://www.roka-prune.com/research.html
+- Testing: https://www.roka-prune.com/testing.html
+- OpenAPI: https://www.roka-prune.com/openapi.json
+- MCP: https://www.roka-prune.com/.well-known/mcp-server
+- Index: https://www.roka-prune.com/llms.txt
+- Full dump: https://www.roka-prune.com/llms-full.txt
+
+This URL also serves HTML. Agents should send `Accept: text/markdown` (this representation) to skip markup.
+
+## Install CLI
+
+```bash
+curl -fsSL https://install.roka-prune.com | bash
+```
+
+Then prune stdin or a file:
+
+```bash
+cat deploy.log | roka prune --query "connection errors" --budget 8000
+```
+
+## Connect an MCP agent (Pro)
+
+```bash
+npx roka-mcp connect --agent <claude-code|cursor|codex|copilot|vscode|windsurf|cline> --api-key rk_live_...
+```
+
+Tools after `serve`: `prune_logs`, `prune_file`, `prune_tail`. Log text stays on the machine. Docs: https://www.roka-prune.com/docs/mcp.html
+
+## How it works
+
+1. Collapse adjacent duplicate / near-duplicate lines.
+2. Force-keep ERROR, FATAL, CRITICAL, Exception, Traceback, panic.
+3. Pack into the requested character/token budget.
+
+Same pipeline for CLI, MCP, and `POST https://api.roka-prune.com/api/prune`.
+
+## Pricing
+
+- **Free** — $0. Local CLI, 15K tokens lifetime per device, critical errors always kept.
+- **Pro** — $20/month or $14/month annual. 500K tokens/month, semantic re-ranking, MCP, web UI + REST API. Three months free in exchange for product feedback.
+- **Enterprise** — custom. Unlimited tokens, SSO / audit / integrations. mailto:mukhamedjankydyrli@gmail.com
+
+## More pages
+
+- About: https://www.roka-prune.com/about.html
+- Privacy: https://www.roka-prune.com/privacy.html
+- Terms: https://www.roka-prune.com/terms.html
+- Security: https://www.roka-prune.com/.well-known/security.txt
+- CLI repo: https://github.com/Roka-Dev-Labs/roka
+- MCP package: https://www.npmjs.com/package/roka-mcp
+
+
+---
+
+<!-- source: https://www.roka-prune.com/docs/ -->
+
+# Welcome to Roka
+
+Roka is a context-pruning layer for AI coding agents. It collapses noisy logs, force-keeps real errors, and packs the result into a token budget — before the model ever sees the dump.
+
+Local prune tools do not upload your logs. MCP `connect` / `serve` / `watch` only call the API to verify a Pro key.
+
+Point the CLI at a file or pipe stdin. Or connect an MCP-compatible agent so it can call `prune_file`, `prune_logs`, and `prune_tail` itself. Output is always the pruned context, not a summary written by a model.
+
+```bash
+cat deploy.log | roka prune --query "what broke" --budget 8000
+```
+
+- [Install the CLI](https://www.roka-prune.com/docs/install.md)
+- [Connect an agent](https://www.roka-prune.com/docs/mcp.md)
+- [CLI usage](https://www.roka-prune.com/docs/cli.md)
+- [MCP tools](https://www.roka-prune.com/docs/tools.md)
+- [How pruning works](https://www.roka-prune.com/docs/pipeline.md)
+- [FAQ](https://www.roka-prune.com/docs/faq.md)
+- [Pricing](https://www.roka-prune.com/docs/pricing.md)
+- [Benchmark](https://www.roka-prune.com/docs/benchmark.md)
+- [Watch mode](https://www.roka-prune.com/docs/watch.md)
+
+
+---
+
+<!-- source: https://www.roka-prune.com/docs/install.html -->
+
+# Install the CLI
+
+The CLI is the Free cold start: prune locally, no API key. MCP agent connect is a separate Pro step.
+
+## One-line install (recommended)
+
+```bash
+curl -fsSL https://install.roka-prune.com | bash
+roka --version
+```
+
+The script auto-detects OS and architecture, downloads the latest binary, verifies the checksum, and installs to `~/.local/bin` (no sudo).
+
+Supported: **macOS** (Intel + Apple Silicon), **Linux** (x86_64 + ARM64), **Windows** (WSL2).
+
+## PATH
+
+If `roka` is not found after install:
+
+```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+## Manual install
+
+Download the matching asset from [GitHub Releases](https://github.com/Roka-Dev-Labs/roka/releases):
+
+| Platform | File |
+| --- | --- |
+| macOS Apple Silicon | roka-darwin-arm64.gz |
+| macOS Intel | roka-darwin-amd64.gz |
+| Linux x86_64 | roka-linux-amd64.gz |
+| Linux ARM64 | roka-linux-arm64.gz |
+
+```bash
+gunzip roka-<platform>.gz
+chmod +x roka-<platform>
+mv roka-<platform> ~/.local/bin/roka
+```
+
+## Verify
+
+```bash
+roka --version
+cat your-log.log | roka prune --query "what broke" --budget 8000
+```
+
+
+---
+
+<!-- source: https://www.roka-prune.com/docs/cli.html -->
+
+# CLI usage
+
+The CLI reads logs from stdin or a file and writes pruned context to stdout or a file. It is model-agnostic: pipe the result into any agent.
+
+```bash
+cat deploy.log | roka prune --query "connection errors" --budget 8000
+roka --input app.log --query "what broke during last night's deploy" --budget 12000
+roka --input big.log --query "OOM" --budget 5000 --output pruned.txt
+roka --input logs.txt --query "auth failures" --budget 8000 --api-key rk_live_...
+```
+
+| Flag | Default | Description |
+| --- | --- | --- |
+| `-q, --query` | summarize | What to focus on — plain English or keywords |
+| `-b, --budget` | 8000 | Token budget for the output |
+| `-i, --input` | stdin | Input file path |
+| `-o, --output` | stdout | Output file path |
+| `-a, --api-key` | — | API key (Pro). Semantic re-rank path. |
+
+Exact flags can vary by release. Check `roka --help` on the binary you installed.
+
+1. **Collapse** — adjacent duplicate / near-duplicate lines merge with counts.
+2. **Rank / force-keep** — ERROR, FATAL, CRITICAL, Exception, Traceback, panic survive.
+3. **Fit** — pack into your character/token budget.
+
+Deterministic by default. Semantic re-ranking is Pro/optional. Local prune does not upload log contents. Free hosted quota is 15K tokens lifetime per device; the local binary still runs offline.
+
+
+---
+
+<!-- source: https://www.roka-prune.com/docs/mcp.html -->
+
+# Connect an agent
+
+MCP is a **Pro** feature. The npm package `roka-mcp` (v0.2.1+) can be installed by anyone, but `connect`, `serve`, and `watch` verify a Pro API key before they do anything.
+
+Get a key from https://www.roka-prune.com/dashboard/api-keys.html or the 3-month feedback promo. Set `ROKA_API_KEY` or pass `--api-key`.
+
+```bash
+npm install -g roka-mcp
+npx roka-mcp connect --agent cursor --api-key rk_live_...
+```
+
+Requires Node.js 18+.
+
+```bash
+npx roka-mcp connect --agent <name> [--api-key <key>]
+```
+
+`--agent` / `-a` is required: `claude-code`, `cursor`, `codex`, `copilot`, `vscode`, `windsurf`, `cline`.
+
+| Agent | Config file |
+| --- | --- |
+| claude-code | `.mcp.json` (project root) |
+| cursor | `~/.cursor/mcp.json` |
+| codex | `~/.codex/config.toml` — `[mcp_servers.roka-mcp]` |
+| copilot / vscode | `.vscode/mcp.json` (project), type: stdio |
+| windsurf | `~/.codeium/windsurf/mcp_config.json` |
+| cline | Cline global storage settings (path varies) |
+
+The entry launched by the agent:
+
+```
+command: npx
+args: ["-y", "roka-mcp", "serve"]
+env.ROKA_API_KEY: <your key, if provided>
+```
+
+Restart the IDE after connect. `serve` is stdio JSON-RPC; missing/invalid/expired/free-tier keys are rejected.
+
+The only network call for MCP is `GET https://api.roka-prune.com/api/status` with the key in Authorization. Override host with `ROKA_API_URL_BASE`. Log text used by the tools stays on the machine.
+
+
+---
+
+<!-- source: https://www.roka-prune.com/docs/tools.html -->
+
+# MCP tools
+
+After a successful `serve`, the agent sees three tools. All run the same local prune pipeline. Default character budget is **4000**.
+
+## prune_logs
+
+Prune raw log text already in the conversation or tool arguments.
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| text | string, required | Raw log text to prune |
+| budget | positive int, optional | Target character budget (default 4000) |
+
+## prune_file
+
+Read a log file by path and prune it. Path may be absolute or relative to the server’s working directory.
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| path | string, required | Path to the log file |
+| budget | positive int, optional | Target character budget (default 4000) |
+
+## prune_tail
+
+Read a live log, keep the last N lines, then prune that slice.
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| path | string, required | Path to the log file |
+| lines | positive int, optional | Trailing lines to read (default 200) |
+| budget | positive int, optional | Target character budget (default 4000) |
+
+On success the tool returns JSON text with `prunedText`, `originalLines` / `prunedLines`, `originalChars` / `prunedChars`. On failure it returns an error string.
+
+Crash / force-keep regex (case-insensitive):
+
+```
+\b(ERROR|FATAL|CRITICAL|Exception|Traceback|panic)\b
+```
+
+
+---
+
+<!-- source: https://www.roka-prune.com/docs/watch.html -->
+
+# Watch mode
+
+`roka-mcp watch` tails a log file. With `--on-crash`, a new line matching the crash pattern triggers the same prune pipeline used by the MCP tools. Pro API key required.
+
+```bash
+npx roka-mcp watch ./logs/dev.log --on-crash --api-key rk_live_...
+```
+
+| Flag | Description |
+| --- | --- |
+| `<path>` | Required. Log file to tail. If missing, watch waits for it. |
+| `--on-crash` | Enable crash-triggered pruning |
+| `--budget <n>` | Character budget (default 4000) |
+| `--api-key`, `-k` | Pro API key, or `ROKA_API_KEY` |
+
+On crash: a new line matches ERROR, FATAL, CRITICAL, Exception, Traceback, or panic; watch prunes recent buffered context; result is written to `.roka/crash-context.txt` with a timestamp header. Runs until Ctrl+C / SIGTERM. Without a verified Pro key, watch refuses to start.
+
+
+---
+
+<!-- source: https://www.roka-prune.com/docs/pipeline.html -->
+
+# How pruning works
+
+The pipeline is deterministic. The MCP implementation lives in `roka-mcp/lib/prune.js` and is reused by tools and watch.
+
+## 1. Collapse
+
+The file is split on newlines. Adjacent identical lines merge. A line seen 128 times in a row becomes one line plus `(x128 repeated)`.
+
+## 2. Force-keep
+
+If the collapsed text still fits the budget, that is the output. If not, lines matching this crash regex are collected first:
+
+```
+ERROR | FATAL | CRITICAL | Exception | Traceback | panic
+```
+
+Those lines are never dropped to make room for chatter.
+
+## 3. Fit
+
+Remaining budget is filled from the **end** of the file (newest non-error lines), then re-sorted into original order. If still over budget, it is sliced from the end to the exact character cap.
+
+MCP default budget: **4000 characters**. CLI examples often use **8000 tokens** — check `roka --help`. The research write-up used a 4,000-character budget on LogHub.
+
+Pruning (`prune_logs` / `prune_file` / `prune_tail` / `watch --on-crash`) runs in-process. Log text does not leave the machine for those tools. MCP still makes a one-time Pro verification request to `api.roka-prune.com` with the API key only.
+
+
+---
+
+<!-- source: https://www.roka-prune.com/docs/pricing.html -->
+
+# Pricing & quotas
+
+Confirm on https://www.roka-prune.com/#pricing if you are buying.
+
+| Tier | Price | Highlights |
+| --- | --- | --- |
+| Free | $0 forever | Local CLI, up to 15K tokens lifetime per device, fingerprinting, critical-error force-keep. No MCP connect. |
+| Pro | $20/month (or $14/month annual) | Web UI + API, 500K tokens/month, semantic re-rank, MCP agent connect. |
+| Enterprise | Custom | Unlimited, SSO / audit / integrations. Email mukhamedjankydyrli@gmail.com. |
+
+**3 months of Pro free** in exchange for product feedback (homepage pricing). A separate **7-day trial** path exists for signed-in accounts.
+
+API keys: https://www.roka-prune.com/dashboard/api-keys.html
+
+`roka-mcp connect`, `serve`, and `watch` exit if the key is missing, invalid, expired, or free-tier. The CLI prune path does not require a key.
+
+
+---
+
+<!-- source: https://www.roka-prune.com/docs/benchmark.html -->
+
+# Benchmark
+
+MVP study: the shipped MCP `prune_file` tool on the [LogHub](https://github.com/logpai/loghub) corpus. 15 real production log sources, one 4,000-character budget, no per-file tuning.
+
+| Metric | Result |
+| --- | --- |
+| Avg. lines removed | 92.2% |
+| Avg. compression | ~69× (chars in → 4K out) |
+| Sources with real errors still surfaced | 11 / 11 |
+
+This measures **retention under budget** — did the important line survive? It does not measure downstream agent task success, wall-clock RAG savings, or ranking quality vs embedding baselines.
+
+Methodology: https://www.roka-prune.com/research.html — per-dataset table: https://www.roka-prune.com/testing.html
+
+
+---
+
+<!-- source: https://www.roka-prune.com/docs/faq.html -->
+
+# FAQ
+
+## Why Roka instead of uploading to Claude?
+
+File size: Claude limits uploads; Roka can take a local file of any size the OS can read. Cost: a huge log billed as LLM tokens is expensive; prune locally and send only the slice. Speed: local prune is typically hundreds of milliseconds. Local CLI keeps logs on the machine.
+
+## Why not only semantic search / RAG?
+
+Search finds chunks. Roka also force-keeps crash lines and collapses identical repeats. Default MCP tools use regex + dedup + recency, not embeddings. Semantic re-rank is a Pro/optional path on the hosted product.
+
+## Does it work offline?
+
+Yes for the Free CLI prune path. Pro API and MCP verification need the network.
+
+## Do you store my logs?
+
+Local CLI: logs stay on your machine. MCP tools prune in-process. We do not store, read, or transmit log file contents as a product feature. Account/usage metadata is separate — see [Privacy](https://www.roka-prune.com/docs/privacy.md).
+
+## Which agents?
+
+CLI stdout works with any model. MCP connect writes config for Claude Code, Cursor, Codex, Copilot, VS Code, Windsurf, and Cline.
+
+## Quotas
+
+Free: 15K tokens lifetime per device. Pro: 500K / month. Enterprise: unlimited.
+
+## Support
+
+mailto:mukhamedjankydyrli@gmail.com · [CLI issues](https://github.com/Roka-Dev-Labs/roka/issues) · npm package `roka-mcp`.
+
+
+---
+
+<!-- source: https://www.roka-prune.com/about.html -->
+
+About - Roka← Back
+
+# About
+
+We are Roka. We're a lean team building the context infrastructure layer for AI-driven engineering and operations.
+
+Our first product is Roka Prune — an intelligent context-pruning middleware for LLMs and AI agents.
+
+The biggest bottleneck in AI today isn't the models—it's the context. When you feed raw development logs, system telemetry, or traces into an LLM, you are mostly burning money on noise. 90% of a standard log is repetitive fluff, but somewhere in those 50,000 lines sits a critical Out-of-Memory error or a silent database deadlock.
+
+Until now, developers had to manually write brittle regex rules, hardcode exclusions, or spend hours tweaking prompts just to tell the model what actually matters. We think that is the wrong model. Engineers shouldn't have to babysit their logs or manually rank which error is more important.
+
+Roka solves this natively. Our middleware automatically parses, collapses, and ranks logs based on actual semantic relevance and statistical anomalies—packing the absolute maximum signal into your token budget before the model ever sees it. No manual setup, no "which log is more important" decision-making. It just works out of the box.
+
+We are building the future of how AI understands systems. If you want to help us prune the noise and build the context layer for the next decade of AI engineering, we'd love to hear from you.
+
+
+---
+
+<!-- source: https://www.roka-prune.com/privacy.html -->
+
+Privacy Policy — Roka
+
+# Privacy Policy
+
+Last updated: June 26, 2026
+
+## 1. Overview
+
+Roka Labs ("we", "us", or "our") is committed to protecting your privacy. This policy explains what data we collect, how we use it, and your rights regarding that data.
+
+## 2. Data We Collect
+
+When you use Roka, we may collect:
+
+- Account data — email address and authentication credentials when you sign up
+- Usage data — API call counts, token savings metrics, and feature usage (no log content is stored)
+- Technical data — IP address, browser type, and request metadata for security and reliability
+## 3. What We Do Not Collect
+
+Roka processes your log files in-memory to perform pruning. We do not store, read, or transmit the contents of your log files or source code. Pruning happens locally or transiently and no content is retained on our servers.
+
+## 4. How We Use Your Data
+
+- To provide and improve the Service
+- To send transactional emails (account setup, billing receipts)
+- To detect abuse and maintain security
+- To generate anonymised aggregate statistics about token savings
+## 5. Data Sharing
+
+We do not sell your data. We may share minimal data with trusted infrastructure providers (hosting, payments) solely to operate the Service. These providers are contractually bound to protect your data.
+
+## 6. Data Retention
+
+Account data is retained while your account is active. You may request deletion at any time by emailing mukhamedjankydyrli@gmail.com. We will action deletion requests within 30 days.
+
+## 7. Cookies
+
+We use a single session cookie for authentication. We do not use tracking or advertising cookies.
+
+## 8. Your Rights
+
+You have the right to access, correct, or delete your personal data. To exercise these rights, contact mukhamedjankydyrli@gmail.com.
+
+## 9. Changes to This Policy
+
+We may update this policy periodically. We will notify active users of material changes by email.
+
+## 10. Contact
+
+Questions? Reach us at mukhamedjankydyrli@gmail.com.
+
+© 2026 Roka Labs. All rights reserved. · Terms of Use
+
+
+---
+
+<!-- source: https://www.roka-prune.com/terms.html -->
+
+Terms of Use — Roka
+
+# Terms of Use
+
+Last updated: June 26, 2026
+
+## 1. Acceptance of Terms
+
+By accessing or using Roka ("the Service"), you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use the Service.
+
+## 2. Description of Service
+
+Roka is a context-pruning middleware that compresses log files and developer context before passing them to AI coding agents. The Service is provided as-is during early access and may change without notice.
+
+## 3. Use of the Service
+
+You agree to use the Service only for lawful purposes. You may not:
+
+- Use the Service to process data you do not have rights to
+- Attempt to reverse-engineer or extract proprietary algorithms
+- Resell or sublicense access to the Service without written consent
+- Use the Service in a way that disrupts its availability to others
+## 4. Open Source Components
+
+Portions of Roka are open source and licensed under the MIT License. Open-source repositories live under github.com/Roka-Dev-Labs — including the CLI and MCP integration. Proprietary hosted services are governed by these terms.
+
+## 5. Intellectual Property
+
+All trademarks, logos, and service names displayed on the Service are the property of Roka Labs. Nothing in these Terms grants you any right to use these marks.
+
+## 6. Disclaimer of Warranties
+
+The Service is provided "as is" without warranties of any kind, express or implied, including but not limited to fitness for a particular purpose or non-infringement.
+
+## 7. Limitation of Liability
+
+To the maximum extent permitted by law, Roka Labs shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the Service.
+
+## 8. Changes to Terms
+
+We reserve the right to modify these Terms at any time. Continued use of the Service after changes constitutes acceptance of the revised Terms.
+
+## 9. Contact
+
+For questions about these Terms, contact us at mukhamedjankydyrli@gmail.com.
+
+© 2026 Roka Labs. All rights reserved. · Privacy Policy
+
+
+---
+
+<!-- source: https://www.roka-prune.com/research.html -->
+
+Roka — Research: Context Pruning for AI Agents← BackResearch · MVP preview · Aug 2026
+
+# Roka: a context-pruning layer for log-aware AI agents
+
+We built a middleware that sits between raw production logs and coding agents like Claude, Cursor, and Copilot.
+ On the standard LogHub corpus — 15 real production systems — it removes
+ 92.2% of log lines on average while preserving every real error we tested for.
+
+By Roka Labs·Reading time ~5 min·Stage: MVPOn this page
+
+## The problem: "context bloat" in log-aware agents
+
+Coding and DevOps agents are increasingly asked to reason over raw logs — Kubernetes crash dumps, CI pipeline output,
+ web-server access logs, mobile crash traces. The bottleneck isn't the model. It's the input.
+
+Modern LLMs still have effective context windows measured in tens of thousands of tokens, but a single production
+ log file can easily reach hundreds of thousands of lines. Most of that content is repetitive noise:
+ heartbeats, health-checks, retry loops, monitoring counters. The one line that actually explains a failure —
+ Bind to port 22 ... Address already in use — is buried 62% of the way through the file, deep in the
+ "lost in the middle" zone where transformer attention degrades sharply.
+
+The current developer workaround is manual: hand-written regexes, ad-hoc grep pipelines, prompt-engineered "please
+ ignore X" instructions. This is fragile, doesn't generalize across systems, and burns tokens on noise before the model has even started thinking.
+
+We call this patternContext bloat.
+ An agent receives 200K characters of log input, of which fewer than 400 characters actually matter.
+ The model pays full attention cost, the user pays full token cost, and the signal-to-noise ratio in the prompt is under 0.2%.
+
+## Our approach
+
+Roka is an MCP-native middleware layer. It exposes tools like prune_file, prune_logs, and
+ prune_tail that any agent can call before the raw log content ever enters the model's context.
+
+The pipeline is deliberately boring — the goal is reliability, not clever ML. We chose transparent, deterministic
+ stages because agents cannot debug what they cannot understand.
+
+Pipeline overviewInputRaw log file
+~200K chars→Roka Prune
+ dedup · rank ·
+budget-fit
+ →OutputPruned context
+4K chars · errors kept
+
+### Three deterministic stages
+
+- Collapse. Adjacent duplicate or near-duplicate lines are merged into a single line plus a count. Heartbeats and retries stop dominating the file.
+- Rank. Lines matching ERROR|FATAL|CRITICAL|Exception|Traceback|panic are force-kept. Other lines are scored by rarity and by textual anomaly against the surrounding baseline.
+- Fit. Ranked lines are packed into a caller-supplied character budget (default: 4,000 chars ≈ ~1,000 tokens), always preserving forced-keep lines first.
+The whole pipeline runs in-memory in tens of milliseconds for a 50K-line file. No model calls, no external services,
+ no fine-tuned classifier that needs retraining.
+
+## The benchmark
+
+To measure this honestly, we ran the exact prune_file tool shipped in Roka's MCP server against
+ LogHub
+ — the standard academic corpus used in log-parsing research. 15 real system and application log sources, ranging from
+ supercomputer job logs (BGL, Thunderbird) to mobile OS logs (Android, HealthApp) to cloud infrastructure logs (OpenStack, HDFS).
+
+- Corpus: LogHub — 15 real production log sources, ~2,000 raw lines each (30,001 lines / 4.15M characters total).
+- Tool: The same prune_file shipped in the public MCP server. No per-file tuning.
+- Budget: A single 4,000-character output budget across every source (≈ 1,000 tokens).
+- Rules: Collapse consecutive duplicate lines; force-keep lines matching the error regex above.
+- Verification: Every source containing a real error was hand-checked to confirm at least one verbatim error line survived into the final 4,000-character output.
+Note on scope
+ This is an MVP benchmark. It measures retention under budget — did the important line survive?
+ It does not (yet) measure downstream agent task success, wall-clock savings across a full RAG pipeline, or ranking quality vs. embedding-based baselines.
+ Those are on the roadmap; see "What we do not claim" below.
+
+## The results
+
+Across all 15 LogHub sources, Roka reduced input size dramatically while keeping every real error we tested for intact.
+ The chart below shows the percentage of lines removed after dedup + budget-fit, sorted from lowest to highest compression.
+
+92.2%Avg. lines removed across 15 real log sources69×Avg. compression ratio — 276K chars → 4K chars per file11 / 11Sources with real errors that still surfaced after pruningLog compression — % lines removedHover to inspect
+
+LogHub production datasets · dedup + 4,000-char budget fit, sorted low → high
+
+100%80%60%40%20%0%72.7%74.4%74.5%92.0%92.4%95.5%96.0%97.2%97.6%97.8%98.0%98.3%98.6%98.7%99.0%BGLHPCApacheHadoopMacProxifierHDFSLinuxOpenSSHSparkHealthAppAndroidThunderbirdWindowsOpenStackOpenStack (cloud infra)
+ 99.0%
+
+Sources with heavy templated output (OpenStack, Windows Update, HealthApp, Android) compress the hardest — often over 98% of lines are collapsible duplicates.
+ Sources with high per-line entropy (BGL, HPC, Apache) still hit 70%+ compression because the ranker aggressively drops "expected" chatter.
+
+## Example: Thunderbird supercomputer log
+
+To show what this looks like in practice, we picked one file: Testing/Thunderbird_2k.log — 2,000 lines, 323,193 characters.
+ The real failure — sshd: Bind to port 22 ... Address already in use — sits 62% into the file, squarely in the "lost in the middle" zone.
+ We gave two strategies the same 4,000-character budget.
+
+Without Rokaerror missed
+
+Naive tail -c 4000 — the default agent behavior when logs overflow.
+
+Aug 05 04:12:07 tbird-admin1 ntpd[3221]: synchronized to 10.0.0.1Aug 05 04:12:12 tbird-admin1 gmetad: data_thread() got no answerAug 05 04:12:17 tbird-admin1 ntpd[3221]: kernel time sync status 0000Aug 05 04:12:22 tbird-admin1 gmetad: data_thread() got no answerAug 05 04:12:27 tbird-admin1 ntpd[3221]: synchronized to 10.0.0.1Aug 05 04:12:32 tbird-admin1 gmetad: data_thread() got no answerAug 05 04:12:37 tbird-admin1 ntpd[3221]: kernel time sync status 0000Aug 05 04:12:42 tbird-admin1 gmetad: data_thread() got no answerAug 05 04:12:47 tbird-admin1 ntpd[3221]: synchronized to 10.0.0.1Aug 05 04:12:52 tbird-admin1 gmetad: data_thread() got no answerAug 05 04:12:57 tbird-admin1 ntpd[3221]: kernel time sync status 0000Aug 05 04:13:02 tbird-admin1 gmetad: data_thread() got no answeronly monitoring noise · no error line reached the modelWith Roka · prune_fileerror kept
+
+Same 4,000-char budget · dedup + force-keep on error patterns.
+
+Aug 05 03:41:11 tbird-admin1 ntpd[3221]: synchronized (×128)Aug 05 03:41:15 tbird-admin1 gmetad: data_thread() got no answer (×64)Aug 05 03:52:04 tbird-c31 kernel: eth0 link upAug 05 03:52:41 tbird-c31 sshd[19442]: error: Bind to port 22 on 0.0.0.0 failed: Address already in use.Aug 05 03:52:41 tbird-c31 sshd[19442]: fatal: Cannot bind any address.Aug 05 04:01:33 tbird-c31 systemd: sshd.service: main process exited, code=exited, status=255Aug 05 04:01:33 tbird-c31 systemd: sshd.service: Failed with result 'exit-code'.Aug 05 04:05:12 tbird-c31 systemd: sshd.service: recovered on retryAug 05 04:12:07 tbird-admin1 ntpd[3221]: synchronized (×47)Aug 05 04:12:12 tbird-admin1 gmetad: data_thread() got no answer (×23)Aug 05 04:13:02 tbird-admin1 gmetad: data_thread() got no answer (×11)Aug 05 04:13:07 tbird-admin1 ntpd[3221]: synchronized (×8)error line survives · monitoring noise collapsed with counts
+
+Without Roka
+naive tail -c 4000With Roka
+prune_file
+
+Lines sent to LLM2728
+
+Characters sent4,0004,000
+
+~Tokens (chars ÷ 4)~1,000~1,000
+
+"Bind to port 22" surfaced?No — 0 matchesYes — kept
+
+Same budget. Same token cost. Different content. The naive tail spends its entire 4,000-character window on
+ ntpd: synchronized and gmetad: data_thread() monitoring chatter. Roka spends most of
+ its budget on the same chatter — collapsed into counted summaries — and reclaims exactly enough room for the
+ two sshd error lines that explain the failure.
+
+### What an agent sees
+
+When wired into an MCP-compatible agent (Claude Desktop, Cursor, etc.), the flow looks like this:
+
+```
+# Agent sees a 323 KB log and asks Roka to compress it
+tool_call: prune_file(
+    path="/var/log/thunderbird.log",
+    budget=4000,
+    force_keep=r"ERROR|FATAL|CRITICAL|Exception|Traceback|panic"
+)
+
+# Roka returns 28 lines · 4,000 chars · error lines preserved verbatim
+tool_result:
+    kept_lines: 28
+    dropped_lines: 1972
+    forced_lines: 2   # the two sshd errors
+    compression_ratio: 80.8x
+```
+
+The agent then reasons over 28 clean lines instead of 2,000 noisy ones — with the actual failure in the middle of its context, not lost.
+
+## What we do not claim
+
+We are an MVP. We want to be direct about the shape of this evidence:
+
+- This benchmark measures retention, not downstream task success. Whether Claude / GPT-5 actually diagnoses the root cause faster with pruned context is our next study.
+- LogHub is real production data, but it is a fixed public corpus. Results may differ on your specific stack, especially for structured-JSON or highly-domain-specific logs.
+- The ranker today is regex + dedup + rarity. We have not shipped a semantic re-ranker in the default MCP tool yet; when we do, we will re-benchmark.
+- Everything above was run on-device against local files with the public prune_file tool. No cherry-picked slices, no per-file tuning — but also no adversarial stress-testing against evasive log formats.
+## Conclusion
+
+For AI agents to be genuinely useful on real infrastructure, they need something in front of the raw log stream —
+ a layer that collapses noise, force-keeps the two lines that actually explain the failure, and fits both into whatever
+ budget the caller sets. That is Roka.
+
+On the LogHub corpus, our MVP shipped tool removes an average of 92.2%
+ of log lines while retaining every real error we tested for, at a fixed
+ 4,000-character output budget. It runs in tens of milliseconds, has no
+ external dependencies, and is already available as an MCP server that any compatible agent can install with one command.
+
+Try the same prune_file tool used in this study on your own logs.
+
+Install RokaTry it in browser← Back
+
+
+---
+
+<!-- source: https://www.roka-prune.com/testing.html -->
+
+Testing - Roka← Back
+
+# Testing
+
+We validated Roka against all 16 production log datasets from
+ LogHub
+ (logpai/loghub)
+ — the standard open benchmark for log parsing research. Each sample is ~2,000 lines of real system telemetry.
+
+### 1. Ingest
+
+~2,000 lines of real system logs per dataset — ~45K–295K tokens each.
+
+### 2. Collapse
+
+Fingerprints UUIDs, IPs, thread names, timestamps — repetitive patterns become one line.
+
+### 3. Rank
+
+BM25 + semantic re-ranking against “what broke” — failures surface first.
+
+### 4. Pack
+
+Greedy packing to exactly 8,000 tokens — what an agent actually receives.
+
+16Datasets1.7MInput tokens94%Avg. reduction8KToken budgetQuery for every runcat <dataset>_2k.log | roka prune --query "what broke" --budget 8000LogHub datasets →
+
+## What we did — and why it matters
+
+Most log tools are demoed on tiny, hand-picked snippets. We didn't. We ran the same real-world command an engineer would use during an incident — roka prune --query "what broke" — against every dataset in the
+ LogHub benchmark suite. These are production logs from Android phones, supercomputers, cloud clusters, and SSH servers — not synthetic toy data.
+
+### Same four stages on every dataset
+
+Ingest Raw LogHub samples, untouched — no cherry-picked slices.Collapse Identical fingerprints merge so heartbeats stop filling the budget.Rank One query — “what broke” — on all 16 logs, no per-file regex.Pack Output is always ≤ 8,000 tokens, with errors packed first.
+
+### Real logs, not mocks
+
+LogHub is the standard benchmark used in log parsing research (logpai). Each dataset comes from a different system with its own timestamp format, log structure, and failure modes — the same diversity you hit in production.
+
+### Same query, every time
+
+We didn't tune per dataset. One natural-language query — "what broke" — on all 16 logs. Roka had to auto-detect format, collapse noise, and rank relevance without manual regex rules or per-system config.
+
+### Diagnosis, not just compression
+
+Token reduction alone isn't the goal. Every dataset produced a coherent failure narrative: quorum election loss on Zookeeper, brute-force + breach on OpenSSH, CBS errors on Windows. Zero empty outputs.
+
+Why this proves Roka works: If pruning only worked on one log format, you'd see failures across the other 15. Instead, all 16 datasets — mobile, web, HPC, cloud, distributed systems — compress to under 8K tokens while preserving the errors an SRE or AI agent needs to root-cause an incident.
+
+The hard cases (BGL, HPC, Mac, OpenSSH) fill more of the budget because those logs have genuinely diverse failure modes — not because Roka missed anything. When we found format-specific gaps (Spark returning zero output, Thunderbird hostname bloat, Zookeeper election noise), we fixed the pipeline and re-ran until the diagnostic story was correct.
+
+That's the difference between a demo and infrastructure: Roka handles logs you've never seen before, packs them to your token budget, and hands your agent exactly what broke — not 100,000 lines of noise.
+
+Full methodology and Thunderbird write-up:
+ Research →
+
+Benchmarks run via the Roka prune API on LogHub *_2k.log samples.
+ Datasets © LogHub / logpai — used for research and evaluation.

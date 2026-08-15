@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout — Roka Pro</title>
+    <meta name="description" content="Pay for Roka Pro ($20/month or $14/month annual) with Paddle. Sign in, then open checkout on this page.">
+    <meta property="og:title" content="Checkout — Roka Pro">
+    <meta property="og:description" content="Pay for Roka Pro ($20/month or $14/month annual) with Paddle. Sign in, then open checkout on this page.">
+    <meta property="og:image" content="https://www.roka-prune.com/assets/images/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://www.roka-prune.com/checkout">
+    <link rel="canonical" href="https://www.roka-prune.com/checkout">
+    <link rel="alternate" type="text/markdown" href="https://www.roka-prune.com/checkout.md">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "@id": "https://www.roka-prune.com/checkout#webpage",
+          "url": "https://www.roka-prune.com/checkout",
+          "name": "Checkout — Roka Pro",
+          "description": "Pay for Roka Pro ($20/month or $14/month annual) with Paddle. Sign in, then open checkout on this page."
+        },
+        {
+          "@type": "Offer",
+          "name": "Roka Pro",
+          "url": "https://www.roka-prune.com/checkout",
+          "price": "20",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "itemOffered": { "@id": "https://www.roka-prune.com/#product" },
+          "priceSpecification": [
+            {
+              "@type": "UnitPriceSpecification",
+              "price": "20",
+              "priceCurrency": "USD",
+              "billingDuration": "P1M",
+              "unitText": "month"
+            },
+            {
+              "@type": "UnitPriceSpecification",
+              "price": "14",
+              "priceCurrency": "USD",
+              "billingDuration": "P1M",
+              "unitText": "month",
+              "description": "Billed annually at $168"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Roka">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Checkout — Roka Pro">
+    <meta name="twitter:description" content="Pay for Roka Pro ($20/month or $14/month annual) with Paddle. Sign in, then open checkout on this page.">
+    <meta name="twitter:image" content="https://www.roka-prune.com/assets/images/og.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+    <script src="/js/config.js"></script>
+    <link rel="stylesheet" href="/assets/fonts/montserrat.css">
+    <style>
+        :root { --bg:#fff; --text:#111; --muted:#666; --border:#e5e5e5; --btn:#0a0a0a; --btn-text:#fff; }
+        html.dark { --bg:#0a0a0a; --text:#f5f5f5; --muted:#a3a3a3; --border:#262626; --btn:#fafafa; --btn-text:#09090b; }
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body { font-family:"Montserrat",sans-serif; background:var(--bg); color:var(--text); line-height:1.6; min-height:100vh; }
+        .nav { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; border-bottom:1px solid var(--border); }
+        .nav a { color:var(--text); text-decoration:none; font-weight:600; display:flex; align-items:center; gap:.5rem; }
+        .wrap { max-width:520px; margin:0 auto; padding:2.5rem 1.5rem 4rem; }
+        h1 { font-weight:400; letter-spacing:-.03em; font-size:2rem; margin-bottom:.5rem; }
+        .lede, .status { color:var(--muted); font-size:.9rem; margin-bottom:1.25rem; }
+        .toggle { display:flex; gap:.5rem; margin-bottom:1.25rem; }
+        .toggle button { flex:1; background:transparent; border:1px solid var(--border); color:var(--text); border-radius:8px; padding:.5rem; cursor:pointer; font:inherit; }
+        .toggle button.active { background:var(--btn); color:var(--btn-text); }
+        .card { border:1px solid var(--border); border-radius:12px; padding:1.5rem; }
+        .price { font-size:2rem; margin:.5rem 0 1rem; }
+        .price span { font-size:.9rem; color:var(--muted); }
+        ul { color:var(--muted); font-size:.9rem; padding-left:1.1rem; margin-bottom:1.25rem; }
+        #payBtn { width:100%; background:var(--btn); color:var(--btn-text); border:0; border-radius:8px; padding:.75rem; font:inherit; font-weight:500; cursor:pointer; text-decoration:none; display:block; text-align:center; }
+        #payBtn:disabled { opacity:.55; cursor:not-allowed; }
+        #themeToggle { background:none; border:1px solid var(--border); color:var(--muted); border-radius:8px; padding:.35rem .75rem; cursor:pointer; font:inherit; font-size:.75rem; }
+        .links { margin-top:1.25rem; font-size:.85rem; color:var(--muted); }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="/"><img src="/assets/icons/favicon-32x32.png" alt="Roka" width="28" height="28"> Roka</a>
+        <button id="themeToggle" type="button">Theme</button>
+    </nav>
+    <main class="wrap">
+        <h1>Checkout</h1>
+        <p class="lede">Roka Pro via Paddle. Sign in, pick monthly or yearly, then pay. Plans: <a href="/pricing">/pricing</a>.</p>
+        <div class="toggle" role="group" aria-label="Billing interval">
+            <button type="button" id="billingMonthly" class="active">Monthly $20</button>
+            <button type="button" id="billingYearly">Yearly $14/mo</button>
+        </div>
+        <article class="card">
+            <h2>Pro</h2>
+            <p class="price"><span id="proPriceAmount">$20</span> <span id="proPriceNote">/month · billed monthly</span></p>
+            <ul>
+                <li>500K tokens/month</li>
+                <li>Web UI + REST API</li>
+                <li>Semantic re-ranking</li>
+                <li>MCP agent connect</li>
+            </ul>
+            <button type="button" id="payBtn" disabled>Loading checkout…</button>
+        </article>
+        <p class="status" id="checkoutStatus" aria-live="polite"></p>
+        <p class="links"><a href="/login.html?next=/checkout">Sign in</a> · <a href="mailto:mukhamedjankydyrli@gmail.com">Enterprise</a></p>
+    </main>
+    <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+    <script>
+        const html = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        function applyTheme(theme) {
+            html.classList.toggle('dark', theme === 'dark');
+            themeToggle.textContent = theme === 'dark' ? 'Light' : 'Dark';
+            localStorage.setItem('roka-theme', theme);
+        }
+        applyTheme((localStorage.getItem('roka-theme') || 'dark') === 'light' ? 'light' : 'dark');
+        themeToggle.addEventListener('click', () => applyTheme(html.classList.contains('dark') ? 'light' : 'dark'));
+
+        const API_BASE = window.ROKA_API_BASE || 'https://api.roka-prune.com';
+        const PADDLE_ENV = window.ROKA_PADDLE_ENV || 'sandbox';
+        const PADDLE_TOKEN = window.ROKA_PADDLE_CLIENT_TOKEN || '';
+        const PRICE_IDS = {
+            month: window.ROKA_PADDLE_PRICE_MONTHLY || '',
+            year: window.ROKA_PADDLE_PRICE_YEARLY || '',
+        };
+        const payBtn = document.getElementById('payBtn');
+        const checkoutStatus = document.getElementById('checkoutStatus');
+        let accessToken = localStorage.getItem('roka_access_token');
+        let currentUser = null;
+        let billingInterval = 'month';
+        let paddleReady = false;
+        let alreadyPro = false;
+
+        function setStatus(message) {
+            checkoutStatus.textContent = message || '';
+        }
+
+        function updateUI() {
+            const yearly = billingInterval === 'year';
+            document.getElementById('billingMonthly').classList.toggle('active', !yearly);
+            document.getElementById('billingYearly').classList.toggle('active', yearly);
+            document.getElementById('proPriceAmount').textContent = yearly ? '$14' : '$20';
+            document.getElementById('proPriceNote').textContent = yearly
+                ? '/month · billed yearly at $168'
+                : '/month · billed monthly';
+
+            if (alreadyPro) {
+                payBtn.textContent = 'You already have Pro';
+                payBtn.disabled = true;
+                return;
+            }
+            if (!accessToken) {
+                payBtn.textContent = 'Sign in to checkout';
+                payBtn.disabled = false;
+                return;
+            }
+            if (!paddleReady) {
+                payBtn.textContent = 'Loading checkout…';
+                payBtn.disabled = true;
+                return;
+            }
+            payBtn.textContent = yearly ? 'Pay Pro yearly' : 'Pay Pro monthly';
+            payBtn.disabled = false;
+        }
+
+        document.getElementById('billingMonthly').addEventListener('click', () => {
+            billingInterval = 'month';
+            updateUI();
+        });
+        document.getElementById('billingYearly').addEventListener('click', () => {
+            billingInterval = 'year';
+            updateUI();
+        });
+
+        async function loadUser() {
+            if (!accessToken) {
+                updateUI();
+                return;
+            }
+            try {
+                const response = await fetch(`${API_BASE}/auth/me`, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
+                if (!response.ok) {
+                    accessToken = null;
+                    localStorage.removeItem('roka_access_token');
+                    updateUI();
+                    return;
+                }
+                currentUser = await response.json();
+                alreadyPro = currentUser.tier === 'pro';
+            } catch (err) {
+                setStatus('Could not load account. You can still sign in.');
+            }
+            updateUI();
+        }
+
+        function initPaddle() {
+            if (!window.Paddle || !PADDLE_TOKEN || !PRICE_IDS.month || !PRICE_IDS.year) {
+                setStatus('Paddle checkout is not configured.');
+                return;
+            }
+            if (PADDLE_ENV === 'sandbox') {
+                Paddle.Environment.set('sandbox');
+            }
+            Paddle.Initialize({
+                token: PADDLE_TOKEN,
+                eventCallback: (event) => {
+                    if (event.name === 'checkout.completed') {
+                        setStatus('Payment successful — opening the dashboard…');
+                        window.setTimeout(() => { window.location.href = '/dashboard.html'; }, 1500);
+                    }
+                    if (event.name === 'checkout.error' || event.name === 'checkout.payment-error') {
+                        setStatus('Checkout failed. Try again or email mukhamedjankydyrli@gmail.com.');
+                    }
+                },
+            });
+            paddleReady = true;
+            updateUI();
+        }
+
+        payBtn.addEventListener('click', () => {
+            if (!accessToken) {
+                window.location.href = '/login.html?next=/checkout';
+                return;
+            }
+            if (!paddleReady || alreadyPro) return;
+            const priceId = PRICE_IDS[billingInterval];
+            const openOptions = {
+                items: [{ priceId, quantity: 1 }],
+                settings: {
+                    displayMode: 'overlay',
+                    variant: 'one-page',
+                    theme: html.classList.contains('dark') ? 'dark' : 'light',
+                    successUrl: 'https://www.roka-prune.com/dashboard.html',
+                },
+            };
+            if (currentUser && currentUser.email) {
+                openOptions.customer = { email: currentUser.email };
+                openOptions.settings.allowLogout = false;
+                openOptions.customData = {
+                    email: currentUser.email,
+                    user_id: String(currentUser.id || currentUser.user_id || ''),
+                    source: 'checkout',
+                };
+            }
+            try {
+                Paddle.Checkout.open(openOptions);
+            } catch (error) {
+                setStatus(error.message || 'Failed to open checkout.');
+            }
+        });
+
+        updateUI();
+        initPaddle();
+        loadUser();
+    </script>
+</body>
+</html>

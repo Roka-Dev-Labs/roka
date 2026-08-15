@@ -1,0 +1,29 @@
+# Roka
+> Roka prunes noisy production logs into a budgeted slice for AI coding agents.
+
+Local CLI prune needs no API key and does not upload logs. MCP `connect`, `serve`, and `watch` are Pro and only call the API to verify a key. Prefer these markdown files over HTML.
+
+## Docs
+- [Homepage](https://www.roka-prune.com/index.md): Product overview, install, MCP, pricing
+- [Welcome](https://www.roka-prune.com/docs/index.md): What Roka is and how to start
+- [Install CLI](https://www.roka-prune.com/docs/install.md): One-line installer, PATH, manual binaries
+- [CLI usage](https://www.roka-prune.com/docs/cli.md): Flags, stdin/file, query and budget
+- [Connect an agent](https://www.roka-prune.com/docs/mcp.md): roka-mcp for Claude Code, Cursor, Codex, Copilot, VS Code, Windsurf, Cline
+- [MCP tools](https://www.roka-prune.com/docs/tools.md): prune_logs, prune_file, prune_tail
+- [Watch mode](https://www.roka-prune.com/docs/watch.md): Tail a log and write crash context
+- [How pruning works](https://www.roka-prune.com/docs/pipeline.md): Collapse, force-keep, fit
+- [Pricing](https://www.roka-prune.com/pricing.md): Free, Pro, Enterprise — buy at /pricing
+- [Checkout](https://www.roka-prune.com/checkout.md): Paddle checkout for Pro
+- [Pricing (docs)](https://www.roka-prune.com/docs/pricing.md): Quotas and what Free cannot do
+- [Benchmark](https://www.roka-prune.com/docs/benchmark.md): LogHub MVP numbers and limits
+- [FAQ](https://www.roka-prune.com/docs/faq.md): Offline use, RAG vs prune, data handling
+- [OpenAPI](https://www.roka-prune.com/openapi.json): Hosted prune, health, status, feedback
+- [MCP server](https://www.roka-prune.com/.well-known/mcp-server): Discovery manifest for roka-mcp
+
+## Optional
+- [Full dump](https://www.roka-prune.com/llms-full.txt): All indexable pages concatenated into one markdown file
+- [Privacy](https://www.roka-prune.com/docs/privacy.md): What is collected; logs are not stored
+- [Terms](https://www.roka-prune.com/docs/terms.md): Acceptable use and liability
+- [Security](https://www.roka-prune.com/.well-known/security.txt): How to report vulnerabilities
+- [CLI repo](https://github.com/Roka-Dev-Labs/roka): Open-source CLI
+- [npm roka-mcp](https://www.npmjs.com/package/roka-mcp): MCP package

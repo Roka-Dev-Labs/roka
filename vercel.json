@@ -42,6 +42,18 @@
       "use": "@vercel/static"
     },
     {
+      "src": "*.md",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "llms.txt",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "llms-full.txt",
+      "use": "@vercel/static"
+    },
+    {
       "src": ".well-known/**",
       "use": "@vercel/static"
     },
@@ -68,10 +80,56 @@
       "dest": "/docs/index.html"
     },
     {
+      "src": "^/pricing/?$",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "dest": "/pricing.md",
+      "headers": {
+        "content-type": "text/markdown; charset=utf-8",
+        "content-location": "/pricing.md",
+        "vary": "Accept",
+        "cache-control": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "^/pricing/?$",
+      "dest": "/pricing.html"
+    },
+    {
+      "src": "^/checkout/?$",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "dest": "/checkout.md",
+      "headers": {
+        "content-type": "text/markdown; charset=utf-8",
+        "content-location": "/checkout.md",
+        "vary": "Accept",
+        "cache-control": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "^/checkout/?$",
+      "dest": "/checkout.html"
+    },
+    {
       "src": "^/robots\\.txt$",
       "dest": "/robots.txt",
       "headers": {
         "content-type": "text/plain; charset=utf-8",
+        "cache-control": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "^/llms\\.txt$",
+      "dest": "/llms.txt",
+      "headers": {
+        "content-type": "text/markdown; charset=utf-8",
+        "cache-control": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "^/llms-full\\.txt$",
+      "dest": "/llms-full.txt",
+      "headers": {
+        "content-type": "text/markdown; charset=utf-8",
         "cache-control": "public, max-age=3600"
       }
     },
@@ -104,6 +162,14 @@
       "dest": "/.well-known/mcp-server",
       "headers": {
         "content-type": "application/json; charset=utf-8",
+        "cache-control": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "^/\\.well-known/security\\.txt$",
+      "dest": "/.well-known/security.txt",
+      "headers": {
+        "content-type": "text/plain; charset=utf-8",
         "cache-control": "public, max-age=3600"
       }
     },
@@ -146,6 +212,33 @@
       }
     },
     {
+      "src": "^/$",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "dest": "/index.md",
+      "headers": {
+        "content-type": "text/markdown; charset=utf-8",
+        "content-location": "/index.md",
+        "vary": "Accept",
+        "cache-control": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "^/index\\.md$",
+      "dest": "/index.md",
+      "headers": {
+        "content-type": "text/markdown; charset=utf-8",
+        "cache-control": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "^/(.*)\\.md$",
+      "headers": {
+        "content-type": "text/markdown; charset=utf-8",
+        "cache-control": "public, max-age=3600"
+      },
+      "continue": true
+    },
+    {
       "src": "^/install\\.sh$",
       "headers": {
         "content-type": "text/x-shellscript; charset=utf-8",
@@ -166,7 +259,8 @@
     {
       "src": "/(.*)",
       "headers": {
-        "link": "</openapi.json>; rel=\"service-desc\"; type=\"application/vnd.oai.openapi+json\", </.well-known/api-catalog>; rel=\"api-catalog\"; type=\"application/linkset+json\", </.well-known/mcp-server>; rel=\"mcp-server\"; type=\"application/json\"",
+        "link": "</openapi.json>; rel=\"service-desc\"; type=\"application/vnd.oai.openapi+json\", </.well-known/api-catalog>; rel=\"api-catalog\"; type=\"application/linkset+json\", </.well-known/mcp-server>; rel=\"mcp-server\"; type=\"application/json\", </index.md>; rel=\"alternate\"; type=\"text/markdown\", </llms.txt>; rel=\"describedby\"; type=\"text/markdown\", </llms-full.txt>; rel=\"describedby\"; type=\"text/markdown\"",
+        "vary": "Accept",
         "x-content-type-options": "nosniff",
         "x-frame-options": "DENY",
         "x-xss-protection": "1; mode=block",
