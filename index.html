@@ -458,6 +458,141 @@
         }
         .pro-tier-cta:hover { opacity: 0.85; }
 
+        /* ── Pricing grid (plans + features in one block) ── */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            border: 1px solid var(--border-strong);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            max-width: 56rem;
+            margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+            .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        .pricing-plan {
+            display: flex;
+            flex-direction: column;
+            padding: 1.75rem 1.5rem 1.5rem;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+        }
+        @media (min-width: 768px) {
+            .pricing-plan:first-child { border-right: 1px solid var(--border); }
+        }
+        .pricing-plan--featured {
+            position: relative;
+            border-bottom: 1px solid var(--border);
+        }
+        .pricing-plan--featured.pro-tier-card {
+            border: none;
+            box-shadow: inset 0 0 0 1.5px var(--text);
+        }
+        .pricing-plan--enterprise {
+            grid-column: 1 / -1;
+            border-bottom: none;
+        }
+        @media (min-width: 768px) {
+            .pricing-plan--enterprise {
+                flex-direction: row;
+                align-items: stretch;
+                gap: 2rem;
+            }
+            .pricing-plan--enterprise .pricing-plan-main {
+                flex: 0 0 14rem;
+                border-right: 1px solid var(--border);
+                padding-right: 2rem;
+            }
+            .pricing-plan--enterprise .pricing-plan-features {
+                flex: 1;
+                border-top: none;
+                padding-top: 0;
+                margin-top: 0;
+            }
+            .pricing-plan--enterprise .pricing-feature-list {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.75rem 1.5rem;
+            }
+        }
+        .pricing-plan-label {
+            font-family: var(--font-mono);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+        .pricing-plan-price {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 0.35rem;
+        }
+        .pricing-plan-price span {
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+        .pricing-plan-tagline {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+            margin-bottom: 1.25rem;
+            min-height: 2.4em;
+        }
+        .pricing-plan-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .pricing-plan-actions .btn-secondary,
+        .pricing-plan-actions .btn-primary,
+        .pricing-plan-actions .Btn {
+            flex: 1 1 auto;
+            min-width: 7rem;
+            justify-content: center;
+        }
+        .pricing-plan-features {
+            border-top: 1px solid var(--border);
+            padding-top: 1.25rem;
+            margin-top: auto;
+        }
+        .pricing-feature-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+        .pricing-feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+        .pricing-feature-list li::before {
+            content: "✓";
+            flex-shrink: 0;
+            color: var(--success);
+            font-size: 0.75rem;
+            margin-top: 0.15rem;
+        }
+        .pricing-feature-list .pricing-feature-plus {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.15rem;
+        }
+        .pricing-feature-list .pricing-feature-plus::before { content: none; }
+
         /* ── Feedback modal ── */
         .feedback-modal-overlay {
             display: none;
@@ -1269,7 +1404,8 @@
         }
 
         /* Theme toggle — high contrast on both backgrounds */
-        .theme-toggle-btn {
+        .theme-toggle-btn,
+        .nav-login-btn {
             display: flex;
             align-items: center;
             gap: 0.45rem;
@@ -1284,10 +1420,14 @@
             border: 1px solid var(--border-strong);
             color: #f4f4f5;
             transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+            text-decoration: none;
+            white-space: nowrap;
         }
-        .theme-toggle-btn:hover {
+        .theme-toggle-btn:hover,
+        .nav-login-btn:hover {
             background: var(--accent-glow);
             border-color: var(--text-muted);
+            color: inherit;
         }
         .theme-toggle-btn svg {
             flex-shrink: 0;
@@ -1298,11 +1438,13 @@
         .theme-toggle-btn svg circle {
             stroke-width: 1.5;
         }
-        [data-theme="light"] .theme-toggle-btn {
+        [data-theme="light"] .theme-toggle-btn,
+        [data-theme="light"] .nav-login-btn {
             color: #09090b;
             border-color: rgba(0, 0, 0, 0.18);
         }
-        [data-theme="light"] .theme-toggle-btn:hover {
+        [data-theme="light"] .theme-toggle-btn:hover,
+        [data-theme="light"] .nav-login-btn:hover {
             border-color: rgba(0, 0, 0, 0.32);
         }
 
@@ -2394,7 +2536,7 @@
                 <img src="/assets/logos/logo-roka.png" alt="Roka" class="logo-animate" width="36" height="36">
                 Roka
             </a>
-            <div class="customCheckBoxHolder hidden sm:flex" id="pillNav" style="width: 33rem; max-width: 100%;">
+            <div class="customCheckBoxHolder hidden sm:flex" id="pillNav" style="width: 27rem; max-width: calc(100% - 18rem);">
                 <input class="customCheckBoxInput" id="nav-story" type="radio" name="siteNav" data-section="story">
                 <label class="customCheckBoxWrapper" for="nav-story" data-href="#story">
                     <div class="customCheckBox"><div class="inner">Showcase</div></div>
@@ -2425,7 +2567,8 @@
                     <div class="customCheckBox"><div class="inner">About</div></div>
                 </label>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 flex-shrink-0">
+                <a href="/login.html" id="navLoginBtn" class="nav-login-btn hidden sm:inline-flex">Login</a>
                 <button id="themeToggle" type="button"
                     class="theme-toggle-btn"
                     aria-label="Toggle theme">
@@ -2436,7 +2579,7 @@
                     <span id="themeLabel">Light</span>
                 </button>
                 <a href="/install.html"
-                   class="relative inline-flex items-center justify-center px-6 py-1.5 overflow-hidden tracking-tighter text-white bg-gray-800 rounded-md group text-[0.9375rem] font-semibold no-underline min-w-[5.75rem]">
+                   class="relative inline-flex items-center justify-center px-4 py-1.5 overflow-hidden tracking-tighter text-white bg-gray-800 rounded-md group text-[0.9375rem] font-semibold no-underline min-w-[5.25rem]">
                     <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-sky-500 rounded-full group-hover:w-44 group-hover:h-44"></span>
                     <span class="absolute bottom-0 left-0 h-full -ml-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-auto h-full opacity-100" viewBox="0 0 487 487" aria-hidden="true">
@@ -2466,6 +2609,7 @@
         <a href="#pricing" class="mobile-sidebar-link">Pricing</a>
         <a href="/docs/" class="mobile-sidebar-link">Docs</a>
         <a href="/install.html" class="mobile-sidebar-link">Install</a>
+        <a href="/login.html" class="mobile-sidebar-link" id="mobileLoginLink">Login</a>
         <div class="mt-auto pt-4 border-t border-[var(--border)]">
             <a href="https://www.instagram.com/roka.app/" target="_blank" rel="noopener noreferrer" class="mobile-sidebar-link flex items-center gap-2">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -2515,7 +2659,6 @@
 
             <!-- AI Agent mode: per-agent connect command (Pro — requires API key) -->
             <div class="mode-panel" data-mode-panel="agent">
-                <p class="text-xs text-muted mb-3">MCP is <span class="pro-badge" style="vertical-align:middle">Pro</span> — needs an API key. Free cold start: use <strong style="color:var(--text);font-weight:500">Terminal</strong> above, or <a href="#pricing" class="hover:text-[var(--text)] underline underline-offset-2">get 3 months of Pro for feedback</a>.</p>
                 <div class="agent-tabs" role="tablist">
                     <button type="button" class="agent-tab active" data-agent="claude" role="tab">Claude Code</button>
                     <button type="button" class="agent-tab" data-agent="cursor" role="tab">Cursor</button>
@@ -3091,8 +3234,7 @@
     <!-- Benchmark -->
     <section id="benchmark" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-10">
-            <span class="eyebrow">Real benchmark — LogHub corpus</span>
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-3 mb-3">Benchmark</h2>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Benchmark</h2>
             <p class="text-muted text-sm max-w-2xl mx-auto">
                 15 real-world log datasets from
                 <a href="https://github.com/logpai/loghub" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-[var(--text)]">LogHub</a>.
@@ -3364,168 +3506,78 @@
     <section id="pricing" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-12">
             <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Pricing</h2>
-            <p class="text-muted text-sm max-w-2xl mx-auto">Start free, upgrade when logs get serious. No credit card for the CLI.</p>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-6 mb-16">
-            <!-- Free Tier -->
-            <div class="surface rounded-xl p-6 flex flex-col">
-                <div class="mb-4">
-                    <h3 class="font-semibold text-lg mb-1">Free Tier</h3>
-                    <p class="text-xs text-muted">For developers exploring Roka</p>
+        <div class="pricing-grid mb-16">
+            <!-- Free -->
+            <div class="pricing-plan">
+                <div class="pricing-plan-main">
+                    <p class="pricing-plan-label">Free</p>
+                    <div class="pricing-plan-price">$0 <span>/ forever</span></div>
+                    <p class="pricing-plan-tagline">For developers exploring Roka</p>
+                    <div class="pricing-plan-actions">
+                        <a href="#try" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium">Get Started</a>
+                        <a href="https://github.com/Roka-Dev-Labs" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium" rel="noopener">View on GitHub</a>
+                    </div>
                 </div>
-                <div class="mb-6">
-                    <span class="text-3xl font-bold">$0</span><span class="text-sm text-muted">/forever</span>
-                </div>
-                <ul class="space-y-3 text-sm text-muted mb-6 flex-1">
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Local CLI tool (no cloud required)</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Up to 15K tokens lifetime per device</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Basic deduplication & fingerprinting</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Critical error preservation (ERROR / FATAL / panic always kept)</li>
-                </ul>
-                <div class="flex gap-2 justify-end">
-                    <a href="#try" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium">Get Started</a>
-                    <a href="https://github.com/Roka-Dev-Labs" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium" rel="noopener">View on GitHub</a>
+                <div class="pricing-plan-features">
+                    <ul class="pricing-feature-list">
+                        <li>15K tokens lifetime / device</li>
+                        <li>Local CLI — works offline, no account</li>
+                        <li>Critical error preservation (ERROR / FATAL / panic)</li>
+                        <li>Basic deduplication &amp; fingerprinting</li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- Pro Tier -->
-            <div class="surface rounded-xl p-6 flex flex-col pro-tier-card">
+            <!-- Pro -->
+            <div class="pricing-plan pricing-plan--featured pro-tier-card">
                 <span class="pro-tier-badge">Popular</span>
-                <div class="mb-4">
-                    <h3 class="font-semibold text-lg mb-1">Pro Tier</h3>
-                    <p class="text-xs text-muted">For developers & small teams serious about speed</p>
+                <div class="pricing-plan-main">
+                    <p class="pricing-plan-label">Pro</p>
+                    <div class="pricing-plan-price">$20 <span>/ month (or $14/month annual)</span></div>
+                    <p class="pricing-plan-tagline">For developers &amp; small teams serious about speed. Free for 3 months in exchange for product feedback.</p>
+                    <div class="pricing-plan-actions">
+                        <button type="button" id="proFeedbackBtn" class="btn-primary text-xs font-medium pro-tier-cta">GET FREE NOW</button>
+                        <a href="/checkout" class="Btn">
+                            Pay
+                            <svg class="svgIcon" viewBox="0 0 576 512" aria-hidden="true"><path d="M512 80c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H512zm16 144V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V224H528zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24H248z"></path></svg>
+                        </a>
+                    </div>
                 </div>
-                <p class="pro-tier-promo">Free for 3 months in exchange for product feedback</p>
-                <div class="mb-6">
-                    <span class="text-3xl font-bold">$20</span><span class="text-sm text-muted">/month (or $14/month annual)</span>
-                </div>
-                <ul class="space-y-3 text-sm text-muted mb-6 flex-1">
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Web UI + REST API</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> 500K tokens/month</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Semantic re-ranking (query-aware)</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> One-click agent integration (MCP)</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Natural language query understanding</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> MCP servers for Claude Code, Cursor &amp; Codex — auto-prune on crash</li>
-                </ul>
-                <div class="flex gap-2 justify-end items-center">
-                    <button type="button" id="proFeedbackBtn" class="btn-primary text-xs font-medium pro-tier-cta">GET FREE NOW</button>
-                    <a href="/checkout" class="Btn">
-                        Pay
-                        <svg class="svgIcon" viewBox="0 0 576 512" aria-hidden="true"><path d="M512 80c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H512zm16 144V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V224H528zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24H248z"></path></svg>
-                    </a>
+                <div class="pricing-plan-features">
+                    <ul class="pricing-feature-list">
+                        <li class="pricing-feature-plus">Everything in Free +</li>
+                        <li>500K tokens / month</li>
+                        <li>Web UI + REST API</li>
+                        <li>Semantic re-ranking</li>
+                        <li>Natural language queries</li>
+                        <li>One-click MCP integration</li>
+                        <li>Real-time crash-log MCP server</li>
+                    </ul>
                 </div>
             </div>
 
             <!-- Enterprise -->
-            <div class="surface rounded-xl p-6 flex flex-col">
-                <div class="mb-4">
-                    <h3 class="font-semibold text-lg mb-1">Enterprise</h3>
-                    <p class="text-xs text-muted">For teams & companies at scale</p>
-                </div>
-                <div class="mb-6">
-                    <span class="text-3xl font-bold">Custom</span><span class="text-sm text-muted"> pricing</span>
-                </div>
-                <ul class="space-y-3 text-sm text-muted mb-6 flex-1">
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Unlimited tokens</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Custom integrations (Splunk, DataDog, GitHub)</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Slack channel integration</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> SSO & audit logs</li>
-                </ul>
-                <div class="flex justify-end">
-                    <a href="mailto:mukhamedjankydyrli@gmail.com" class="btn-primary rounded-lg py-2 px-4 text-xs font-medium">Contact Sales</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Free vs Pro clarity callout -->
-        <div class="max-w-3xl mx-auto mb-12 rounded-xl overflow-hidden" style="border:1px solid var(--border-strong)">
-            <div class="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[var(--border)]">
-                <div class="p-5 flex gap-4 items-start" style="background:var(--bg-card)">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(255,255,255,0.06)">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="color:var(--text-muted)"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
-                    </div>
-                    <div>
-                        <p class="text-sm font-semibold mb-1">Free — structural patterns</p>
-                        <p class="text-xs" style="color:var(--text-muted)">Deduplication, fingerprinting, critical-error force-keep, and token-budget packing. Handles the repetition problem. Works entirely offline, no account needed.</p>
+            <div class="pricing-plan pricing-plan--enterprise">
+                <div class="pricing-plan-main">
+                    <p class="pricing-plan-label">Enterprise</p>
+                    <div class="pricing-plan-price">Custom <span>pricing</span></div>
+                    <p class="pricing-plan-tagline">For teams &amp; companies at scale</p>
+                    <div class="pricing-plan-actions">
+                        <a href="mailto:mukhamedjankydyrli@gmail.com" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium w-full text-center">Contact Sales</a>
                     </div>
                 </div>
-                <div class="p-5 flex gap-4 items-start" style="background:var(--bg-card)">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(255,255,255,0.08)">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="color:var(--success)"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26A7 7 0 0 0 12 2m0 2a5 5 0 0 1 5 5 5 5 0 0 1-2.5 4.33V16h-5v-2.67A5 5 0 0 1 7 9a5 5 0 0 1 5-5m-1 13h2v2h-2v-2z"/></svg>
-                    </div>
-                    <div>
-                        <p class="text-sm font-semibold mb-1">Pro — understands intent</p>
-                        <p class="text-xs" style="color:var(--text-muted)">Semantic re-ranking surfaces what matters to <em>your</em> query. Ask "why did auth break?" — Pro ranks the relevant slice first. Plus MCP servers for real-time crash detection.</p>
-                    </div>
+                <div class="pricing-plan-features">
+                    <ul class="pricing-feature-list">
+                        <li class="pricing-feature-plus">Everything in Pro +</li>
+                        <li>Unlimited tokens</li>
+                        <li>Full API access</li>
+                        <li>Custom integrations (Splunk, DataDog, GitHub)</li>
+                        <li>Slack channel integration</li>
+                        <li>SSO &amp; audit logs</li>
+                    </ul>
                 </div>
-            </div>
-        </div>
-
-        <!-- Feature Comparison Table -->
-        <div class="max-w-3xl mx-auto mt-12">
-            <h3 class="text-xl font-semibold tracking-tight mb-6 text-center">Feature Comparison</h3>
-            <div class="surface rounded-xl overflow-hidden">
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="border-b border-[var(--border)]">
-                            <th class="text-left p-3 text-xs text-faint uppercase tracking-wider">Feature</th>
-                            <th class="text-center p-3 text-xs text-faint uppercase tracking-wider">Free</th>
-                            <th class="text-center p-3 text-xs text-faint uppercase tracking-wider">Pro</th>
-                            <th class="text-center p-3 text-xs text-faint uppercase tracking-wider">Enterprise</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="border-b border-[var(--border)]">
-                            <td class="p-3 text-muted">Cost</td>
-                            <td class="p-3 text-center text-[var(--text)]">Free</td>
-                            <td class="p-3 text-center text-[var(--text)]">$20</td>
-                            <td class="p-3 text-center text-[var(--text)]">Custom</td>
-                        </tr>
-                        <tr class="border-b border-[var(--border)]">
-                            <td class="p-3 text-muted">Tokens</td>
-                            <td class="p-3 text-center text-[var(--text)]">15K lifetime / device</td>
-                            <td class="p-3 text-center text-[var(--text)]">500K / month</td>
-                            <td class="p-3 text-center text-[var(--text)]">∞</td>
-                        </tr>
-                        <tr class="border-b border-[var(--border)]">
-                            <td class="p-3 text-muted">Critical error preservation</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                        </tr>
-                        <tr class="border-b border-[var(--border)]">
-                            <td class="p-3 text-muted">API</td>
-                            <td class="p-3 text-center text-[var(--text)]">CLI</td>
-                            <td class="p-3 text-center text-[var(--text)]">REST</td>
-                            <td class="p-3 text-center text-[var(--text)]">Full</td>
-                        </tr>
-                        <tr class="border-b border-[var(--border)]">
-                            <td class="p-3 text-muted">Semantic</td>
-                            <td class="p-3 text-center text-[var(--text-muted)]">—</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                        </tr>
-                        <tr class="border-b border-[var(--border)]">
-                            <td class="p-3 text-muted">Natural language queries</td>
-                            <td class="p-3 text-center text-[var(--text-muted)]">—</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                        </tr>
-                        <tr class="border-b border-[var(--border)]">
-                            <td class="p-3 text-muted">One-click MCP integration</td>
-                            <td class="p-3 text-center text-[var(--text-muted)]">—</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                        </tr>
-                        <tr class="border-b border-[var(--border)]">
-                            <td class="p-3 text-muted">Real-time crash-log MCP server</td>
-                            <td class="p-3 text-center text-[var(--text-muted)]">—</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                            <td class="p-3 text-center text-[var(--success)]">✓</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
 
@@ -3881,6 +3933,22 @@
         themeToggle.addEventListener('click', () => {
             applyTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
         });
+
+        (function syncNavAuth() {
+            const loggedIn = Boolean(localStorage.getItem('roka_access_token'));
+            const loginBtn = document.getElementById('navLoginBtn');
+            const mobileLogin = document.getElementById('mobileLoginLink');
+            if (loggedIn) {
+                if (loginBtn) {
+                    loginBtn.textContent = 'Account';
+                    loginBtn.href = '/dashboard.html';
+                }
+                if (mobileLogin) {
+                    mobileLogin.textContent = 'Account';
+                    mobileLogin.href = '/dashboard.html';
+                }
+            }
+        })();
 
         // ── Hero: prune stream + letter animation ──────────────
         const LOG_SNIPPETS = [
