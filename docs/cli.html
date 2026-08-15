@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLI usage — Roka Docs</title>
+    <meta name="description" content="Roka CLI flags, stdin and file input, token budget, and Pro API key usage.">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+    <link rel="stylesheet" href="/assets/fonts/montserrat.css">
+    <link rel="stylesheet" href="/docs/docs.css">
+    <script src="/docs/docs.js" defer></script>
+</head>
+<body>
+    <div class="docs-top">
+        <a class="docs-brand" href="/docs/" style="padding:0">
+            <img src="/assets/logos/logo-roka.png" alt="" width="22" height="22">
+            Roka Docs
+        </a>
+        <div style="display:flex;gap:0.4rem">
+            <button type="button" class="icon-btn" id="navToggle">Menu</button>
+            <button type="button" class="icon-btn" id="themeToggle"><span id="themeLabel">Light</span></button>
+        </div>
+    </div>
+    <div class="docs-shell" id="docs-root" data-page="cli">
+        <aside class="docs-sidebar" id="docs-sidebar"></aside>
+        <main class="docs-main">
+            <p class="kicker">Get started</p>
+            <h1>CLI usage</h1>
+            <p class="lede">The CLI reads logs from stdin or a file and writes pruned context to stdout or a file. It is model-agnostic: pipe the result into any agent.</p>
+
+            <h2>Examples</h2>
+            <pre># Pipe from stdin
+cat deploy.log | roka prune --query "connection errors" --budget 8000
+
+# Point at a file
+roka --input app.log --query "what broke during last night's deploy" --budget 12000
+
+# Write output to a file
+roka --input big.log --query "OOM" --budget 5000 --output pruned.txt
+
+# Pro: API key for semantic ranking
+roka --input logs.txt --query "auth failures" --budget 8000 --api-key rk_live_...</pre>
+
+            <h2>Common flags</h2>
+            <table>
+                <thead><tr><th>Flag</th><th>Default</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td>-q, --query</td><td>summarize</td><td>What to focus on — plain English or keywords</td></tr>
+                    <tr><td>-b, --budget</td><td>8000</td><td>Token budget for the output</td></tr>
+                    <tr><td>-i, --input</td><td>stdin</td><td>Input file path</td></tr>
+                    <tr><td>-o, --output</td><td>stdout</td><td>Output file path</td></tr>
+                    <tr><td>-a, --api-key</td><td>—</td><td>API key (Pro). Semantic re-rank path.</td></tr>
+                </tbody>
+            </table>
+            <p>Exact flags can vary by release. Always check <code>roka --help</code> on the binary you installed.</p>
+
+            <h2>What you get</h2>
+            <ol class="steps">
+                <li><strong>Collapse</strong> — adjacent duplicate / near-duplicate lines merge with counts so heartbeats and retries stop dominating.</li>
+                <li><strong>Rank / force-keep</strong> — lines matching ERROR, FATAL, CRITICAL, Exception, Traceback, panic survive; other lines score by rarity / anomaly.</li>
+                <li><strong>Fit</strong> — pack into your character/token budget.</li>
+            </ol>
+            <p>Deterministic by default. Semantic re-ranking is Pro/optional. Local prune does not upload log contents.</p>
+
+            <div class="note">Free CLI quota on the hosted side is 15K tokens lifetime per device. The local binary still runs offline for pruning. See <a href="/docs/pricing.html">pricing</a>.</div>
+            <div class="docs-foot"><a href="/docs/install.html">← Install CLI</a><a href="/docs/mcp.html">Connect an agent →</a></div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How pruning works — Roka Docs</title>
+    <meta name="description" content="Collapse, force-keep, and budget-fit — the local prune pipeline used by CLI, MCP tools, and watch.">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+    <link rel="stylesheet" href="/assets/fonts/montserrat.css">
+    <link rel="stylesheet" href="/docs/docs.css">
+    <script src="/docs/docs.js" defer></script>
+</head>
+<body>
+    <div class="docs-top">
+        <a class="docs-brand" href="/docs/" style="padding:0">
+            <img src="/assets/logos/logo-roka.png" alt="" width="22" height="22">
+            Roka Docs
+        </a>
+        <div style="display:flex;gap:0.4rem">
+            <button type="button" class="icon-btn" id="navToggle">Menu</button>
+            <button type="button" class="icon-btn" id="themeToggle"><span id="themeLabel">Light</span></button>
+        </div>
+    </div>
+    <div class="docs-shell" id="docs-root" data-page="pipeline">
+        <aside class="docs-sidebar" id="docs-sidebar"></aside>
+        <main class="docs-main">
+            <p class="kicker">Concepts</p>
+            <h1>How pruning works</h1>
+            <p class="lede">The pipeline is deterministic on purpose. Agents cannot debug what they cannot inspect. The MCP implementation lives in <code>roka-mcp/lib/prune.js</code> and is reused by tools and watch.</p>
+
+            <h2>1. Collapse</h2>
+            <p>The file is split on newlines. Adjacent identical lines merge. A line seen 128 times in a row becomes one line plus <code>(x128 repeated)</code>. Heartbeats, NTP sync, and retry storms stop filling the budget.</p>
+
+            <h2>2. Force-keep</h2>
+            <p>If the collapsed text still fits the budget, that is the output. If not, lines matching the crash regex are collected first:</p>
+            <pre>ERROR | FATAL | CRITICAL | Exception | Traceback | panic</pre>
+            <p>Those lines are never dropped to make room for chatter.</p>
+
+            <h2>3. Fit</h2>
+            <p>Remaining budget is filled from the <strong>end</strong> of the file (newest non-error lines), then everything is re-sorted back into original order. If the result is still over budget, it is sliced from the end to the exact character cap.</p>
+            <p>MCP default budget: <strong>4000 characters</strong>. CLI default on the website examples is often <strong>8000 tokens</strong> — check <code>roka --help</code> for the binary you installed. The research write-up used a 4,000-character budget on LogHub.</p>
+
+            <h2>What stays local</h2>
+            <p>Pruning itself (<code>prune_logs</code> / <code>prune_file</code> / <code>prune_tail</code> / <code>watch --on-crash</code>) runs in-process. Log text does not leave the machine for those tools. MCP still makes a one-time Pro verification request to <code>api.roka-prune.com</code> with the API key only.</p>
+            <p>The hosted pruning engine (Rust) and backend are proprietary. This public docs site plus the <code>roka-mcp</code> npm package are what you configure as an agent.</p>
+            <div class="docs-foot"><a href="/docs/watch.html">← Watch mode</a><a href="/docs/pricing.html">Pricing →</a></div>
+        </main>
+    </div>
+</body>
+</html>

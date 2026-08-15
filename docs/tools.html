@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP tools — Roka Docs</title>
+    <meta name="description" content="prune_logs, prune_file, and prune_tail — arguments, defaults, and return shape.">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+    <link rel="stylesheet" href="/assets/fonts/montserrat.css">
+    <link rel="stylesheet" href="/docs/docs.css">
+    <script src="/docs/docs.js" defer></script>
+</head>
+<body>
+    <div class="docs-top">
+        <a class="docs-brand" href="/docs/" style="padding:0">
+            <img src="/assets/logos/logo-roka.png" alt="" width="22" height="22">
+            Roka Docs
+        </a>
+        <div style="display:flex;gap:0.4rem">
+            <button type="button" class="icon-btn" id="navToggle">Menu</button>
+            <button type="button" class="icon-btn" id="themeToggle"><span id="themeLabel">Light</span></button>
+        </div>
+    </div>
+    <div class="docs-shell" id="docs-root" data-page="tools">
+        <aside class="docs-sidebar" id="docs-sidebar"></aside>
+        <main class="docs-main">
+            <p class="kicker">MCP</p>
+            <h1>Tools</h1>
+            <p class="lede">After a successful <code>serve</code>, the agent sees three tools. All of them run the same local prune pipeline. Default character budget is <strong>4000</strong>.</p>
+
+            <h2>prune_logs</h2>
+            <p>Prune raw log text already in the conversation or tool arguments.</p>
+            <table>
+                <thead><tr><th>Argument</th><th>Type</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td>text</td><td>string, required</td><td>Raw log text to prune</td></tr>
+                    <tr><td>budget</td><td>positive int, optional</td><td>Target character budget (default 4000)</td></tr>
+                </tbody>
+            </table>
+
+            <h2>prune_file</h2>
+            <p>Read a log file by path and prune it. Path may be absolute or relative to the server’s working directory.</p>
+            <table>
+                <thead><tr><th>Argument</th><th>Type</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td>path</td><td>string, required</td><td>Path to the log file</td></tr>
+                    <tr><td>budget</td><td>positive int, optional</td><td>Target character budget (default 4000)</td></tr>
+                </tbody>
+            </table>
+
+            <h2>prune_tail</h2>
+            <p>Read a live log, keep the last N lines, then prune that slice. Useful when the file is still growing.</p>
+            <table>
+                <thead><tr><th>Argument</th><th>Type</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td>path</td><td>string, required</td><td>Path to the log file</td></tr>
+                    <tr><td>lines</td><td>positive int, optional</td><td>Trailing lines to read (default 200)</td></tr>
+                    <tr><td>budget</td><td>positive int, optional</td><td>Target character budget (default 4000)</td></tr>
+                </tbody>
+            </table>
+
+            <h2>Return value</h2>
+            <p>On success the tool returns JSON text with:</p>
+            <ul>
+                <li><code>prunedText</code> — the packed log</li>
+                <li><code>originalLines</code> / <code>prunedLines</code></li>
+                <li><code>originalChars</code> / <code>prunedChars</code></li>
+            </ul>
+            <p>On failure it returns an error string such as <code>prune_file failed for "…": …</code>.</p>
+
+            <h2>Crash / force-keep regex</h2>
+            <p>Lines matching this pattern are kept first when the collapsed text still exceeds the budget:</p>
+            <pre>\b(ERROR|FATAL|CRITICAL|Exception|Traceback|panic)\b</pre>
+            <p>Case-insensitive. Adjacent duplicate lines are collapsed to <code>line  (xN repeated)</code> before ranking.</p>
+            <div class="docs-foot"><a href="/docs/mcp.html">← Connect an agent</a><a href="/docs/watch.html">Watch mode →</a></div>
+        </main>
+    </div>
+</body>
+</html>

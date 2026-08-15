@@ -6,6 +6,10 @@
       "use": "@vercel/static"
     },
     {
+      "src": "docs/**/*",
+      "use": "@vercel/static"
+    },
+    {
       "src": "dashboard/**/*.html",
       "use": "@vercel/static"
     },
@@ -42,6 +46,10 @@
     {
       "src": "^/api/(.*)$",
       "dest": "/api/$1"
+    },
+    {
+      "src": "^/docs/?$",
+      "dest": "/docs/index.html"
     },
     {
       "src": "^/favicon\\.svg$",

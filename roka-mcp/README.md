@@ -127,7 +127,7 @@ point that check at a different host (e.g. for local development).
 ## Links
 
 - [Website](https://roka-prune.com)
-- [Install + MCP](https://roka-prune.com/install.html#mcp)
+- [Docs](https://roka-prune.com/docs/)
 - [Research (LogHub)](https://roka-prune.com/research.html)
 - [Pricing](https://roka-prune.com/#pricing)
 - [CLI install](https://github.com/Roka-Dev-Labs/roka#install)

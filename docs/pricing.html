@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing & quotas — Roka Docs</title>
+    <meta name="description" content="Roka Free, Pro, and Enterprise quotas, the feedback promo, and where to get an API key.">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+    <link rel="stylesheet" href="/assets/fonts/montserrat.css">
+    <link rel="stylesheet" href="/docs/docs.css">
+    <script src="/docs/docs.js" defer></script>
+</head>
+<body>
+    <div class="docs-top">
+        <a class="docs-brand" href="/docs/" style="padding:0">
+            <img src="/assets/logos/logo-roka.png" alt="" width="22" height="22">
+            Roka Docs
+        </a>
+        <div style="display:flex;gap:0.4rem">
+            <button type="button" class="icon-btn" id="navToggle">Menu</button>
+            <button type="button" class="icon-btn" id="themeToggle"><span id="themeLabel">Light</span></button>
+        </div>
+    </div>
+    <div class="docs-shell" id="docs-root" data-page="pricing">
+        <aside class="docs-sidebar" id="docs-sidebar"></aside>
+        <main class="docs-main">
+            <p class="kicker">Concepts</p>
+            <h1>Pricing &amp; quotas</h1>
+            <p class="lede">Numbers below match the live site. Confirm on <a href="/index.html#pricing">roka-prune.com/#pricing</a> if you are buying.</p>
+
+            <table>
+                <thead><tr><th>Tier</th><th>Price</th><th>Highlights</th></tr></thead>
+                <tbody>
+                    <tr><td>Free</td><td>$0 forever</td><td>Local CLI, up to 15K tokens lifetime per device, fingerprinting, critical-error force-keep. No MCP connect.</td></tr>
+                    <tr><td>Pro</td><td>$20/month (or $14/month annual on the pricing page)</td><td>Web UI + API, 500K tokens/month, semantic re-rank, MCP agent connect.</td></tr>
+                    <tr><td>Enterprise</td><td>Custom</td><td>Unlimited, SSO / audit / integrations. Email mukhamedjankydyrli@gmail.com.</td></tr>
+                </tbody>
+            </table>
+
+            <h2>Promo and trial</h2>
+            <ul>
+                <li><strong>3 months of Pro free</strong> in exchange for product feedback — start from the pricing section on the homepage.</li>
+                <li>A separate <strong>7-day trial</strong> path exists for signed-in accounts.</li>
+            </ul>
+            <p>API keys: <a href="/dashboard/api-keys.html">/dashboard/api-keys.html</a>. Upgrade: <a href="/dashboard/upgrade.html">/dashboard/upgrade.html</a>.</p>
+
+            <h2>What Free cannot do</h2>
+            <p><code>roka-mcp connect</code>, <code>serve</code>, and <code>watch</code> exit if the key is missing, invalid, expired, or free-tier. Install the CLI anyway — that path does not require a key.</p>
+            <div class="docs-foot"><a href="/docs/pipeline.html">← How pruning works</a><a href="/docs/benchmark.html">Benchmark →</a></div>
+        </main>
+    </div>
+</body>
+</html>

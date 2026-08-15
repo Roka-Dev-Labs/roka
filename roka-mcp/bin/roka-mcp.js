@@ -36,7 +36,7 @@ Examples:
   npx roka-mcp watch ./logs/dev.log --on-crash
 
 Run "roka-mcp <command> --help" for command-specific options.
-Docs: https://github.com/Roka-Dev-Labs/roka-mcp
+Docs: https://roka-prune.com/docs/
 `);
 }
 

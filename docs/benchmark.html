@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benchmark — Roka Docs</title>
+    <meta name="description" content="LogHub MVP benchmark: 92.2% lines removed, 69× compression, 11/11 errors retained.">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+    <link rel="stylesheet" href="/assets/fonts/montserrat.css">
+    <link rel="stylesheet" href="/docs/docs.css">
+    <script src="/docs/docs.js" defer></script>
+</head>
+<body>
+    <div class="docs-top">
+        <a class="docs-brand" href="/docs/" style="padding:0">
+            <img src="/assets/logos/logo-roka.png" alt="" width="22" height="22">
+            Roka Docs
+        </a>
+        <div style="display:flex;gap:0.4rem">
+            <button type="button" class="icon-btn" id="navToggle">Menu</button>
+            <button type="button" class="icon-btn" id="themeToggle"><span id="themeLabel">Light</span></button>
+        </div>
+    </div>
+    <div class="docs-shell" id="docs-root" data-page="benchmark">
+        <aside class="docs-sidebar" id="docs-sidebar"></aside>
+        <main class="docs-main">
+            <p class="kicker">Concepts</p>
+            <h1>Benchmark</h1>
+            <p class="lede">MVP study: the shipped MCP <code>prune_file</code> tool on the <a href="https://github.com/logpai/loghub">LogHub</a> corpus. 15 real production log sources, one 4,000-character budget, no per-file tuning.</p>
+
+            <table>
+                <thead><tr><th>Metric</th><th>Result</th></tr></thead>
+                <tbody>
+                    <tr><td>Avg. lines removed</td><td>92.2%</td></tr>
+                    <tr><td>Avg. compression</td><td>~69× (chars in → 4K out)</td></tr>
+                    <tr><td>Sources with real errors still surfaced</td><td>11 / 11</td></tr>
+                </tbody>
+            </table>
+
+            <h2>What this measures</h2>
+            <p><strong>Retention under budget</strong> — did the important line survive? It does not measure downstream agent task success, wall-clock RAG savings, or ranking quality vs embedding baselines.</p>
+            <p>Full methodology, Thunderbird before/after, and explicit non-claims: <a href="/research.html">research.html</a>. Per-dataset table: <a href="/testing.html">testing.html</a>.</p>
+            <div class="docs-foot"><a href="/docs/pricing.html">← Pricing</a><a href="/docs/faq.html">FAQ →</a></div>
+        </main>
+    </div>
+</body>
+</html>

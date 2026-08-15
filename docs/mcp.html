@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect an agent — Roka Docs</title>
+    <meta name="description" content="Register roka-mcp with Claude Code, Cursor, Codex, Copilot, Windsurf, VS Code, or Cline.">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+    <link rel="stylesheet" href="/assets/fonts/montserrat.css">
+    <link rel="stylesheet" href="/docs/docs.css">
+    <script src="/docs/docs.js" defer></script>
+</head>
+<body>
+    <div class="docs-top">
+        <a class="docs-brand" href="/docs/" style="padding:0">
+            <img src="/assets/logos/logo-roka.png" alt="" width="22" height="22">
+            Roka Docs
+        </a>
+        <div style="display:flex;gap:0.4rem">
+            <button type="button" class="icon-btn" id="navToggle">Menu</button>
+            <button type="button" class="icon-btn" id="themeToggle"><span id="themeLabel">Light</span></button>
+        </div>
+    </div>
+    <div class="docs-shell" id="docs-root" data-page="mcp">
+        <aside class="docs-sidebar" id="docs-sidebar"></aside>
+        <main class="docs-main">
+            <p class="kicker">MCP</p>
+            <h1>Connect an agent</h1>
+            <p class="lede">MCP is a <strong>Pro</strong> feature. The npm package <code>roka-mcp</code> (v0.2.1+) can be installed by anyone, but <code>connect</code>, <code>serve</code>, and <code>watch</code> verify a Pro API key before they do anything.</p>
+
+            <div class="note">Get a key from the <a href="/dashboard/api-keys.html">API keys dashboard</a>, or via the <a href="/index.html#pricing">3-month feedback promo</a>. Then set <code>ROKA_API_KEY</code> or pass <code>--api-key</code>.</div>
+
+            <h2>Install the package</h2>
+            <pre>npm install -g roka-mcp
+# or one-shot:
+npx roka-mcp connect --agent cursor --api-key rk_live_...</pre>
+            <p>Requires Node.js 18+. Package name on npm: <code>roka-mcp</code>.</p>
+
+            <h2>connect</h2>
+            <p>Registers roka-mcp as an MCP server in the agent’s real config file. Idempotent: running it again updates the existing entry in place and does not wipe unrelated servers.</p>
+            <pre>npx roka-mcp connect --agent &lt;name&gt; [--api-key &lt;key&gt;]</pre>
+            <table>
+                <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td>--agent, -a</td><td>Required. One of: claude-code, cursor, codex, copilot, vscode, windsurf, cline</td></tr>
+                    <tr><td>--api-key, -k</td><td>Pro API key, or set ROKA_API_KEY</td></tr>
+                </tbody>
+            </table>
+
+            <h2>Where config is written</h2>
+            <table>
+                <thead><tr><th>Agent</th><th>Config file</th></tr></thead>
+                <tbody>
+                    <tr><td>claude-code</td><td>.mcp.json (project root)</td></tr>
+                    <tr><td>cursor</td><td>~/.cursor/mcp.json</td></tr>
+                    <tr><td>codex</td><td>~/.codex/config.toml — [mcp_servers.roka-mcp]</td></tr>
+                    <tr><td>copilot / vscode</td><td>.vscode/mcp.json (project), type: stdio</td></tr>
+                    <tr><td>windsurf</td><td>~/.codeium/windsurf/mcp_config.json</td></tr>
+                    <tr><td>cline</td><td>Cline global storage settings (path varies by host editor/OS; logged on run)</td></tr>
+                </tbody>
+            </table>
+            <p>The entry launched by the agent is:</p>
+            <pre>command: npx
+args: ["-y", "roka-mcp", "serve"]
+env.ROKA_API_KEY: &lt;your key, if provided&gt;</pre>
+            <p><strong>Restart the IDE</strong> after connect so it reloads MCP servers.</p>
+
+            <h2>Examples</h2>
+            <pre>npx roka-mcp connect --agent claude-code --api-key rk_live_...
+npx roka-mcp connect --agent cursor --api-key rk_live_...
+npx roka-mcp connect --agent codex --api-key rk_live_...
+npx roka-mcp connect --agent copilot --api-key rk_live_...
+
+export ROKA_API_KEY=rk_live_...
+npx roka-mcp connect --agent cursor</pre>
+
+            <h2>serve (default)</h2>
+            <p>Starts the MCP server on stdio. This is what the agent launches after connect. You normally do not run it by hand. If you do, it prints a banner on stderr (stdout stays clean for JSON-RPC).</p>
+            <pre>npx roka-mcp@latest
+# equivalent:
+npx roka-mcp serve</pre>
+            <p>Missing, invalid, expired, or free-tier keys are rejected: serve will not start tools.</p>
+
+            <h2>Verification call</h2>
+            <p>The only network call this package makes for MCP is a check against <code>https://api.roka-prune.com/api/status</code> with the key in the Authorization header. Set <code>ROKA_API_URL_BASE</code> to point that check at another host (local development). Log text used by the tools stays on the machine.</p>
+            <div class="docs-foot"><a href="/docs/cli.html">← CLI usage</a><a href="/docs/tools.html">Tools →</a></div>
+        </main>
+    </div>
+</body>
+</html>

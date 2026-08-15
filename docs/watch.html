@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch mode — Roka Docs</title>
+    <meta name="description" content="Tail a log file with roka-mcp watch and write pruned crash context to .roka/crash-context.txt.">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+    <link rel="stylesheet" href="/assets/fonts/montserrat.css">
+    <link rel="stylesheet" href="/docs/docs.css">
+    <script src="/docs/docs.js" defer></script>
+</head>
+<body>
+    <div class="docs-top">
+        <a class="docs-brand" href="/docs/" style="padding:0">
+            <img src="/assets/logos/logo-roka.png" alt="" width="22" height="22">
+            Roka Docs
+        </a>
+        <div style="display:flex;gap:0.4rem">
+            <button type="button" class="icon-btn" id="navToggle">Menu</button>
+            <button type="button" class="icon-btn" id="themeToggle"><span id="themeLabel">Light</span></button>
+        </div>
+    </div>
+    <div class="docs-shell" id="docs-root" data-page="watch">
+        <aside class="docs-sidebar" id="docs-sidebar"></aside>
+        <main class="docs-main">
+            <p class="kicker">MCP</p>
+            <h1>Watch mode</h1>
+            <p class="lede"><code>roka-mcp watch</code> tails a log file. With <code>--on-crash</code>, a new line matching the crash pattern triggers the same prune pipeline used by the MCP tools. Pro API key required.</p>
+
+            <pre>npx roka-mcp watch ./logs/dev.log --on-crash --api-key rk_live_...</pre>
+
+            <h2>Flags</h2>
+            <table>
+                <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td>&lt;path&gt;</td><td>Required. Log file to tail. If it does not exist yet, watch waits for it to be created.</td></tr>
+                    <tr><td>--on-crash</td><td>Enable crash-triggered pruning</td></tr>
+                    <tr><td>--budget &lt;n&gt;</td><td>Character budget for pruned output (default 4000)</td></tr>
+                    <tr><td>--api-key, -k</td><td>Pro API key, or ROKA_API_KEY</td></tr>
+                </tbody>
+            </table>
+
+            <h2>What happens on crash</h2>
+            <ol class="steps">
+                <li>A new line matches ERROR, FATAL, CRITICAL, Exception, Traceback, or panic.</li>
+                <li>Watch prunes the recently buffered context with the same local engine as the tools.</li>
+                <li>Result is written to <code>.roka/crash-context.txt</code> (directory created if needed), with a timestamp header.</li>
+            </ol>
+            <p>Runs in the foreground until Ctrl+C / SIGTERM.</p>
+            <div class="note">Without a verified Pro key, watch refuses to start tailing — same gate as connect and serve.</div>
+            <div class="docs-foot"><a href="/docs/tools.html">← Tools</a><a href="/docs/pipeline.html">How pruning works →</a></div>
+        </main>
+    </div>
+</body>
+</html>

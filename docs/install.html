@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Install CLI — Roka Docs</title>
+    <meta name="description" content="Install the Roka CLI with the one-line installer or a manual binary from GitHub Releases.">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+    <link rel="stylesheet" href="/assets/fonts/montserrat.css">
+    <link rel="stylesheet" href="/docs/docs.css">
+    <script src="/docs/docs.js" defer></script>
+</head>
+<body>
+    <div class="docs-top">
+        <a class="docs-brand" href="/docs/" style="padding:0">
+            <img src="/assets/logos/logo-roka.png" alt="" width="22" height="22">
+            Roka Docs
+        </a>
+        <div style="display:flex;gap:0.4rem">
+            <button type="button" class="icon-btn" id="navToggle">Menu</button>
+            <button type="button" class="icon-btn" id="themeToggle"><span id="themeLabel">Light</span></button>
+        </div>
+    </div>
+    <div class="docs-shell" id="docs-root" data-page="install">
+        <aside class="docs-sidebar" id="docs-sidebar"></aside>
+        <main class="docs-main">
+            <p class="kicker">Get started</p>
+            <h1>Install the CLI</h1>
+            <p class="lede">The CLI is the Free cold start: prune locally, no API key. MCP agent connect is a separate Pro step.</p>
+
+            <h2>One-line install (recommended)</h2>
+            <pre>curl -fsSL https://install.roka-prune.com | bash
+roka --version</pre>
+            <p>The script auto-detects OS and architecture, downloads the latest binary, verifies the checksum, and installs to <code>~/.local/bin</code> (no sudo).</p>
+            <p>Supported: <strong>macOS</strong> (Intel + Apple Silicon), <strong>Linux</strong> (x86_64 + ARM64), <strong>Windows</strong> (WSL2).</p>
+
+            <h2>PATH</h2>
+            <p>If <code>roka</code> is not found after install, add <code>~/.local/bin</code> to PATH:</p>
+            <pre>echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc</pre>
+
+            <h2>Manual install</h2>
+            <p>Download the matching asset from <a href="https://github.com/Roka-Dev-Labs/roka/releases">GitHub Releases</a>. Names match the installer:</p>
+            <table>
+                <thead><tr><th>Platform</th><th>File</th></tr></thead>
+                <tbody>
+                    <tr><td>macOS Apple Silicon</td><td>roka-darwin-arm64.gz</td></tr>
+                    <tr><td>macOS Intel</td><td>roka-darwin-amd64.gz</td></tr>
+                    <tr><td>Linux x86_64</td><td>roka-linux-amd64.gz</td></tr>
+                    <tr><td>Linux ARM64</td><td>roka-linux-arm64.gz</td></tr>
+                </tbody>
+            </table>
+            <pre>gunzip roka-&lt;platform&gt;.gz
+chmod +x roka-&lt;platform&gt;
+mv roka-&lt;platform&gt; ~/.local/bin/roka</pre>
+
+            <h2>Verify</h2>
+            <pre>roka --version
+cat your-log.log | roka prune --query "what broke" --budget 8000</pre>
+            <p>Need the interactive install UI? Use the <a href="/install.html">install page</a>.</p>
+            <div class="docs-foot"><a href="/docs/">← Welcome</a><a href="/docs/cli.html">CLI usage →</a></div>
+        </main>
+    </div>
+</body>
+</html>

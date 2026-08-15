@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ — Roka Docs</title>
+    <meta name="description" content="Common questions about Roka: offline use, quotas, Claude vs Roka, RAG, and data handling.">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+    <link rel="stylesheet" href="/assets/fonts/montserrat.css">
+    <link rel="stylesheet" href="/docs/docs.css">
+    <script src="/docs/docs.js" defer></script>
+</head>
+<body>
+    <div class="docs-top">
+        <a class="docs-brand" href="/docs/" style="padding:0">
+            <img src="/assets/logos/logo-roka.png" alt="" width="22" height="22">
+            Roka Docs
+        </a>
+        <div style="display:flex;gap:0.4rem">
+            <button type="button" class="icon-btn" id="navToggle">Menu</button>
+            <button type="button" class="icon-btn" id="themeToggle"><span id="themeLabel">Light</span></button>
+        </div>
+    </div>
+    <div class="docs-shell" id="docs-root" data-page="faq">
+        <aside class="docs-sidebar" id="docs-sidebar"></aside>
+        <main class="docs-main">
+            <p class="kicker">Concepts</p>
+            <h1>FAQ</h1>
+
+            <h2>Why Roka instead of uploading to Claude?</h2>
+            <p>File size: Claude limits uploads; Roka can take a local file of any size the OS can read. Cost: a huge log billed as LLM tokens is expensive; prune locally and send only the slice. Speed: local prune is typically hundreds of milliseconds, not a full upload round-trip. Local CLI keeps logs on the machine.</p>
+
+            <h2>Why not only semantic search / RAG?</h2>
+            <p>Search finds chunks. Roka also force-keeps crash lines and collapses identical repeats so 1,000 identical warnings become one counted line. Default MCP tools use regex + dedup + recency, not embeddings. Semantic re-rank is a Pro/optional path on the hosted product.</p>
+
+            <h2>Does it work offline?</h2>
+            <p>Yes for the Free CLI prune path. Pro API and MCP verification need the network.</p>
+
+            <h2>Do you store my logs?</h2>
+            <p>Local CLI: logs stay on your machine. MCP tools prune in-process. Privacy policy: we do not store, read, or transmit log file contents as a product feature; pruning is local or transient. Account/usage metadata is separate — see <a href="/docs/privacy.html">Privacy</a>.</p>
+
+            <h2>Which agents?</h2>
+            <p>CLI stdout works with any model. MCP connect writes config for Claude Code, Cursor, Codex, Copilot, VS Code, Windsurf, and Cline.</p>
+
+            <h2>Quotas</h2>
+            <p>Free: 15K tokens lifetime per device. Pro: 500K / month. Enterprise: unlimited. Processing time on the marketing site is cited around 312ms for a ~50K-token dump; large files scale roughly linearly.</p>
+
+            <h2>Production workflows</h2>
+            <p>Yes — pipe CLI output in CI or have the agent call prune_file on incident dumps. Treat this as early-access software (see Terms).</p>
+
+            <h2>Support</h2>
+            <p><a href="mailto:mukhamedjankydyrli@gmail.com">mukhamedjankydyrli@gmail.com</a> · <a href="https://github.com/Roka-Dev-Labs/roka/issues">CLI issues</a> · source for MCP: GitHub org Roka-Dev-Labs (package still published on npm as roka-mcp).</p>
+            <div class="docs-foot"><a href="/docs/benchmark.html">← Benchmark</a><a href="/docs/privacy.html">Privacy →</a></div>
+        </main>
+    </div>
+</body>
+</html>

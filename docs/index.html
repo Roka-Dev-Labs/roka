@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome — Roka Docs</title>
+    <meta name="description" content="Roka documentation — install the CLI, connect MCP agents, and prune logs to a token budget.">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+    <link rel="stylesheet" href="/assets/fonts/montserrat.css">
+    <link rel="stylesheet" href="/docs/docs.css">
+    <script src="/docs/docs.js" defer></script>
+</head>
+<body>
+    <div class="docs-top">
+        <a class="docs-brand" href="/docs/" style="padding:0">
+            <img src="/assets/logos/logo-roka.png" alt="" width="22" height="22">
+            Roka Docs
+        </a>
+        <div style="display:flex;gap:0.4rem">
+            <button type="button" class="icon-btn" id="navToggle">Menu</button>
+            <button type="button" class="icon-btn" id="themeToggle"><span id="themeLabel">Light</span></button>
+        </div>
+    </div>
+    <div class="docs-shell" id="docs-root" data-page="welcome">
+        <aside class="docs-sidebar" id="docs-sidebar"></aside>
+        <main class="docs-main">
+            <p class="kicker">Documentation</p>
+            <h1>Welcome to Roka</h1>
+            <p class="lede">Roka is a context-pruning layer for AI coding agents. It collapses noisy logs, force-keeps real errors, and packs the result into a token budget — before the model ever sees the dump.</p>
+
+            <div class="note blue">Local prune tools do not upload your logs. MCP <code>connect</code> / <code>serve</code> / <code>watch</code> only call the API to verify a Pro key.</div>
+
+            <h2>What Roka is</h2>
+            <p>Point the CLI at a file or pipe stdin. Or connect an MCP-compatible agent so it can call <code>prune_file</code>, <code>prune_logs</code>, and <code>prune_tail</code> itself. Output is always the pruned context, not a summary written by a model.</p>
+            <pre>cat deploy.log | roka prune --query "what broke" --budget 8000</pre>
+
+            <h2>Get started</h2>
+            <div class="card-grid">
+                <a class="card" href="/docs/install.html">
+                    <h3>Install the CLI</h3>
+                    <p>One-line install for macOS, Linux, and Windows (WSL2). No sudo. Checksum-verified binary.</p>
+                </a>
+                <a class="card" href="/docs/mcp.html">
+                    <h3>Connect an agent</h3>
+                    <p>Pro: register roka-mcp with Claude Code, Cursor, Codex, Copilot, Windsurf, VS Code, or Cline.</p>
+                </a>
+                <a class="card" href="/docs/cli.html">
+                    <h3>CLI usage</h3>
+                    <p>Flags, stdin/file/output, query + budget, and the Free vs Pro path.</p>
+                </a>
+                <a class="card" href="/docs/tools.html">
+                    <h3>MCP tools</h3>
+                    <p>Exact tool names, arguments, defaults, and what the agent gets back.</p>
+                </a>
+                <a class="card" href="/docs/pipeline.html">
+                    <h3>How pruning works</h3>
+                    <p>Collapse → rank / force-keep → fit. Crash regex, default budget, what stays local.</p>
+                </a>
+                <a class="card" href="/docs/faq.html">
+                    <h3>FAQ</h3>
+                    <p>Offline use, quotas, Claude uploads vs Roka, RAG, data retention.</p>
+                </a>
+            </div>
+
+            <h2>Quick links</h2>
+            <ul>
+                <li><a href="/docs/pricing.html">Pricing &amp; quotas</a> — Free $0 / Pro $20/mo / Enterprise custom</li>
+                <li><a href="/docs/benchmark.html">Benchmark</a> — LogHub MVP numbers and limits of the claim</li>
+                <li><a href="/docs/watch.html">Watch mode</a> — tail a log, prune on crash into <code>.roka/crash-context.txt</code></li>
+                <li><a href="/docs/privacy.html">Privacy</a> and <a href="/docs/terms.html">Terms</a></li>
+                <li><a href="/research.html">Research write-up</a> · <a href="/testing.html">Testing datasets</a> · <a href="mailto:mukhamedjankydyrli@gmail.com">Support</a></li>
+            </ul>
+            <div class="docs-foot"><span></span><a href="/docs/install.html">Install CLI →</a></div>
+        </main>
+    </div>
+</body>
+</html>

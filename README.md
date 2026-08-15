@@ -46,7 +46,7 @@ npx roka-mcp connect --agent copilot --api-key rk_live_...
 ```
 
 Or set `ROKA_API_KEY` and omit `--api-key`. Restart the IDE after connect.  
-Free cold start (no key): install the CLI above. Full MCP docs: [roka-mcp README](https://github.com/Roka-Dev-Labs/roka-mcp).
+Free cold start (no key): install the CLI above. Full docs: [roka-prune.com/docs](https://roka-prune.com/docs/).
 
 ---
 

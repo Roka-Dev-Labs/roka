@@ -84,4 +84,4 @@ Watch mode:
 npx roka-mcp watch ./logs/dev.log --on-crash --api-key rk_live_...
 ```
 
-Free cold start (no key): use the CLI install above. More detail: [roka-mcp on GitHub](https://github.com/Roka-Dev-Labs/roka-mcp) · [Install page MCP section](https://roka-prune.com/install.html#mcp).
+Free cold start (no key): use the CLI install above. Docs: [roka-prune.com/docs](https://roka-prune.com/docs/) · [Install page MCP section](https://roka-prune.com/install.html#mcp).
