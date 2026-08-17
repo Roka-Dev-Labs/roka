@@ -1319,10 +1319,17 @@
             margin: 0;
             display: flex;
             align-items: center;
+            width: 34rem;
+            max-width: min(34rem, calc(100vw - 22rem));
+            flex-shrink: 1;
         }
         .customCheckBoxWrapper {
             flex: 1 1 0;
             min-width: 0;
+        }
+        .customCheckBoxWrapper:first-of-type {
+            flex: 1.35 1 0;
+            min-width: 5.75rem;
         }
         .customCheckBox {
             width: 100%;
@@ -1330,7 +1337,7 @@
             overflow: hidden;
             cursor: pointer;
             user-select: none;
-            padding: 2px 8px;
+            padding: 2px 12px;
             background-color: rgba(0, 0, 0, 0.16);
             border-radius: 0;
             color: rgba(255, 255, 255, 0.82);
@@ -1338,7 +1345,7 @@
             transition-duration: 300ms;
             transition-property: color, background-color, box-shadow;
             display: flex;
-            height: 36px;
+            height: 40px;
             align-items: center;
             box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px 1px 1px 0px;
             outline: none;
@@ -1352,7 +1359,7 @@
         }
         .customCheckBox .inner {
             font-family: inherit;
-            font-size: 0.875rem;
+            font-size: 0.9375rem;
             font-weight: 600;
             letter-spacing: -0.01em;
             pointer-events: none;
@@ -2536,7 +2543,8 @@
                 <img src="/assets/logos/logo-roka.png" alt="Roka" class="logo-animate" width="36" height="36">
                 Roka
             </a>
-            <div class="customCheckBoxHolder hidden sm:flex" id="pillNav" style="width: 27rem; max-width: calc(100% - 18rem);">
+            <div class="nav-actions ml-auto flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <div class="customCheckBoxHolder hidden sm:flex" id="pillNav">
                 <input class="customCheckBoxInput" id="nav-story" type="radio" name="siteNav" data-section="story">
                 <label class="customCheckBoxWrapper" for="nav-story" data-href="#story">
                     <div class="customCheckBox"><div class="inner">Showcase</div></div>
@@ -2594,6 +2602,7 @@
                     <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-200"></span>
                     <span class="relative">Install</span>
                 </a>
+            </div>
             </div>
         </div>
     </nav>

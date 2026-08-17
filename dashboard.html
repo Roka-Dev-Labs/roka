@@ -481,12 +481,13 @@
                 tierBadge.textContent = user.tier.toUpperCase();
                 tierBadge.className = 'tier-badge ' + user.tier;
 
-                if (user.is_trial_active && user.trial_ends_at) {
+                if (user.is_trial_active && user.tier === 'trial' && user.trial_ends_at) {
                     const trialEnds = new Date(user.trial_ends_at);
                     const now = new Date();
                     const daysLeft = Math.ceil((trialEnds - now) / (1000 * 60 * 60 * 24));
                     
-                    if (daysLeft > 0) {
+                    // Only show for feedback-promo trials (90 days), not old auto 7-day trials
+                    if (daysLeft > 14) {
                         document.getElementById('trialCountdown').classList.remove('hidden');
                         document.getElementById('daysRemaining').textContent = daysLeft;
                     }
