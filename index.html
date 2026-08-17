@@ -1315,21 +1315,41 @@
         }
 
         /* From Uiverse.io by WhiteNervosa — site nav */
+        .nav-desktop {
+            display: none;
+        }
+        @media (min-width: 640px) {
+            .nav-desktop {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+                align-items: center;
+                gap: 1rem;
+                width: 100%;
+                height: 3.5rem;
+            }
+            .nav-desktop-brand {
+                justify-self: start;
+            }
+            .nav-desktop-actions {
+                justify-self: end;
+            }
+        }
         .customCheckBoxHolder {
-            margin: 0;
+            margin: 0 auto;
             display: flex;
             align-items: center;
             width: 34rem;
-            max-width: min(34rem, calc(100vw - 22rem));
-            flex-shrink: 1;
+            max-width: min(34rem, calc(100vw - 24rem));
+            flex-shrink: 0;
+            justify-self: center;
         }
         .customCheckBoxWrapper {
             flex: 1 1 0;
             min-width: 0;
         }
         .customCheckBoxWrapper:first-of-type {
-            flex: 1.35 1 0;
-            min-width: 5.75rem;
+            flex: 1.22 1 0;
+            min-width: 6.5rem;
         }
         .customCheckBox {
             width: 100%;
@@ -1337,7 +1357,7 @@
             overflow: hidden;
             cursor: pointer;
             user-select: none;
-            padding: 2px 12px;
+            padding: 2px 14px;
             background-color: rgba(0, 0, 0, 0.16);
             border-radius: 0;
             color: rgba(255, 255, 255, 0.82);
@@ -1347,9 +1367,9 @@
             display: flex;
             height: 40px;
             align-items: center;
+            justify-content: center;
             box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px 1px 1px 0px;
             outline: none;
-            justify-content: center;
             min-width: 0;
         }
         .customCheckBox:hover {
@@ -1368,6 +1388,8 @@
             transition-property: transform;
             transform: translateY(0px);
             white-space: nowrap;
+            width: 100%;
+            text-align: center;
         }
         .customCheckBox:hover .inner {
             transform: translateY(-2px);
@@ -2534,75 +2556,90 @@
 
     <!-- Navigation -->
     <nav class="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--bg)]/80 backdrop-blur-xl">
-        <div class="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
+        <div class="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between sm:block sm:h-auto">
             <button id="mobileMenuToggle" class="site-brand sm:hidden">
                 <img src="/assets/logos/logo-roka.png" alt="Roka" class="logo-animate" width="36" height="36">
                 Roka
             </button>
-            <a href="#" class="site-brand hidden sm:flex">
-                <img src="/assets/logos/logo-roka.png" alt="Roka" class="logo-animate" width="36" height="36">
-                Roka
-            </a>
-            <div class="nav-actions ml-auto flex items-center gap-2 sm:gap-3 flex-shrink-0">
-            <div class="customCheckBoxHolder hidden sm:flex" id="pillNav">
-                <input class="customCheckBoxInput" id="nav-story" type="radio" name="siteNav" data-section="story">
-                <label class="customCheckBoxWrapper" for="nav-story" data-href="#story">
-                    <div class="customCheckBox"><div class="inner">Showcase</div></div>
-                </label>
-
-                <input class="customCheckBoxInput" id="nav-testing" type="radio" name="siteNav" data-section="testing">
-                <label class="customCheckBoxWrapper" for="nav-testing" data-href="/testing.html">
-                    <div class="customCheckBox"><div class="inner">Testing</div></div>
-                </label>
-
-                <input class="customCheckBoxInput" id="nav-mcp" type="radio" name="siteNav" data-section="mcp">
-                <label class="customCheckBoxWrapper" for="nav-mcp" data-href="#mcp">
-                    <div class="customCheckBox"><div class="inner">MCP</div></div>
-                </label>
-
-                <input class="customCheckBoxInput" id="nav-features" type="radio" name="siteNav" data-section="features">
-                <label class="customCheckBoxWrapper" for="nav-features" data-href="#features">
-                    <div class="customCheckBox"><div class="inner">Features</div></div>
-                </label>
-
-                <input class="customCheckBoxInput" id="nav-pricing" type="radio" name="siteNav" data-section="pricing">
-                <label class="customCheckBoxWrapper" for="nav-pricing" data-href="#pricing">
-                    <div class="customCheckBox"><div class="inner">Pricing</div></div>
-                </label>
-
-                <input class="customCheckBoxInput" id="nav-about" type="radio" name="siteNav" data-section="about">
-                <label class="customCheckBoxWrapper" for="nav-about" data-href="/about.html">
-                    <div class="customCheckBox"><div class="inner">About</div></div>
-                </label>
-            </div>
-            <div class="flex items-center gap-2 flex-shrink-0">
-                <a href="/login.html" id="navLoginBtn" class="nav-login-btn hidden sm:inline-flex">Login</a>
-                <button id="themeToggle" type="button"
+            <div class="flex items-center gap-2 sm:hidden">
+                <button id="themeToggleMobile" type="button"
                     class="theme-toggle-btn"
                     aria-label="Toggle theme">
-                    <svg id="themeIcon" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                         <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5"/>
-                        <path id="themeIconFill" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
+                        <path class="theme-icon-fill-mobile" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
                     </svg>
-                    <span id="themeLabel">Light</span>
+                    <span class="theme-label-mobile">Light</span>
                 </button>
                 <a href="/install.html"
-                   class="relative inline-flex items-center justify-center px-4 py-1.5 overflow-hidden tracking-tighter text-white bg-gray-800 rounded-md group text-[0.9375rem] font-semibold no-underline min-w-[5.25rem]">
-                    <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-sky-500 rounded-full group-hover:w-44 group-hover:h-44"></span>
-                    <span class="absolute bottom-0 left-0 h-full -ml-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-auto h-full opacity-100" viewBox="0 0 487 487" aria-hidden="true">
-                            <path fill-opacity=".1" fill-rule="nonzero" fill="#FFF" d="M0 .3c67 2.1 134.1 4.3 186.3 37 52.2 32.7 89.6 95.8 112.8 150.6 23.2 54.8 32.3 101.4 61.2 149.9 28.9 48.4 77.7 98.8 126.4 149.2H0V.3z"></path>
-                        </svg>
-                    </span>
-                    <span class="absolute top-0 right-0 w-12 h-full -mr-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="object-cover w-full h-full" viewBox="0 0 487 487" aria-hidden="true">
-                            <path fill-opacity=".1" fill-rule="nonzero" fill="#FFF" d="M487 486.7c-66.1-3.6-132.3-7.3-186.3-37s-95.9-85.3-126.2-137.2c-30.4-51.8-49.3-99.9-76.5-151.4C70.9 109.6 35.6 54.8.3 0H487v486.7z"></path>
-                        </svg>
-                    </span>
-                    <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-200"></span>
+                   class="relative inline-flex items-center justify-center px-3 py-1.5 overflow-hidden tracking-tighter text-white bg-gray-800 rounded-md group text-sm font-semibold no-underline">
                     <span class="relative">Install</span>
                 </a>
             </div>
+            <div class="nav-desktop">
+                <a href="#" class="site-brand nav-desktop-brand hidden sm:flex">
+                    <img src="/assets/logos/logo-roka.png" alt="Roka" class="logo-animate" width="36" height="36">
+                    Roka
+                </a>
+                <div class="customCheckBoxHolder" id="pillNav">
+                    <input class="customCheckBoxInput" id="nav-story" type="radio" name="siteNav" data-section="story">
+                    <label class="customCheckBoxWrapper" for="nav-story" data-href="#story">
+                        <div class="customCheckBox"><div class="inner">Showcase</div></div>
+                    </label>
+
+                    <input class="customCheckBoxInput" id="nav-testing" type="radio" name="siteNav" data-section="testing">
+                    <label class="customCheckBoxWrapper" for="nav-testing" data-href="/testing.html">
+                        <div class="customCheckBox"><div class="inner">Testing</div></div>
+                    </label>
+
+                    <input class="customCheckBoxInput" id="nav-mcp" type="radio" name="siteNav" data-section="mcp">
+                    <label class="customCheckBoxWrapper" for="nav-mcp" data-href="#mcp">
+                        <div class="customCheckBox"><div class="inner">MCP</div></div>
+                    </label>
+
+                    <input class="customCheckBoxInput" id="nav-features" type="radio" name="siteNav" data-section="features">
+                    <label class="customCheckBoxWrapper" for="nav-features" data-href="#features">
+                        <div class="customCheckBox"><div class="inner">Features</div></div>
+                    </label>
+
+                    <input class="customCheckBoxInput" id="nav-pricing" type="radio" name="siteNav" data-section="pricing">
+                    <label class="customCheckBoxWrapper" for="nav-pricing" data-href="#pricing">
+                        <div class="customCheckBox"><div class="inner">Pricing</div></div>
+                    </label>
+
+                    <input class="customCheckBoxInput" id="nav-about" type="radio" name="siteNav" data-section="about">
+                    <label class="customCheckBoxWrapper" for="nav-about" data-href="/about.html">
+                        <div class="customCheckBox"><div class="inner">About</div></div>
+                    </label>
+                </div>
+                <div class="nav-desktop-actions flex items-center gap-2 flex-shrink-0">
+                    <a href="/login.html" id="navLoginBtn" class="nav-login-btn inline-flex">Login</a>
+                    <button id="themeToggle" type="button"
+                        class="theme-toggle-btn"
+                        aria-label="Toggle theme">
+                        <svg id="themeIcon" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                            <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5"/>
+                            <path id="themeIconFill" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
+                        </svg>
+                        <span id="themeLabel">Light</span>
+                    </button>
+                    <a href="/install.html"
+                       class="relative inline-flex items-center justify-center px-4 py-1.5 overflow-hidden tracking-tighter text-white bg-gray-800 rounded-md group text-[0.9375rem] font-semibold no-underline min-w-[5.25rem]">
+                        <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-sky-500 rounded-full group-hover:w-44 group-hover:h-44"></span>
+                        <span class="absolute bottom-0 left-0 h-full -ml-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-auto h-full opacity-100" viewBox="0 0 487 487" aria-hidden="true">
+                                <path fill-opacity=".1" fill-rule="nonzero" fill="#FFF" d="M0 .3c67 2.1 134.1 4.3 186.3 37 52.2 32.7 89.6 95.8 112.8 150.6 23.2 54.8 32.3 101.4 61.2 149.9 28.9 48.4 77.7 98.8 126.4 149.2H0V.3z"></path>
+                            </svg>
+                        </span>
+                        <span class="absolute top-0 right-0 w-12 h-full -mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="object-cover w-full h-full" viewBox="0 0 487 487" aria-hidden="true">
+                                <path fill-opacity=".1" fill-rule="nonzero" fill="#FFF" d="M487 486.7c-66.1-3.6-132.3-7.3-186.3-37s-95.9-85.3-126.2-137.2c-30.4-51.8-49.3-99.9-76.5-151.4C70.9 109.6 35.6 54.8.3 0H487v486.7z"></path>
+                            </svg>
+                        </span>
+                        <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-200"></span>
+                        <span class="relative">Install</span>
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
@@ -3914,6 +3951,9 @@
         const themeToggle    = document.getElementById('themeToggle');
         const themeLabel     = document.getElementById('themeLabel');
         const themeIconFill  = document.getElementById('themeIconFill');
+        const themeToggleMobile = document.getElementById('themeToggleMobile');
+        const themeLabelMobile = document.querySelector('.theme-label-mobile');
+        const themeIconFillMobile = document.querySelector('.theme-icon-fill-mobile');
 
         // Kev avatar enlarge toggle
         const kevAvatarBtn = document.getElementById('kevAvatarBtn');
@@ -3927,19 +3967,27 @@
 
         function applyTheme(theme) {
             html.dataset.theme = theme;
-            themeLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
-            // dark mode → left half filled (switch to light); light mode → right half filled (switch to dark)
-            themeIconFill.setAttribute('d', theme === 'dark'
+            const label = theme === 'dark' ? 'Light' : 'Dark';
+            const iconPath = theme === 'dark'
                 ? 'M6 1 A5 5 0 0 0 6 11 Z'
-                : 'M6 1 A5 5 0 0 1 6 11 Z');
-            themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+                : 'M6 1 A5 5 0 0 1 6 11 Z';
+            const ariaLabel = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+            if (themeLabel) themeLabel.textContent = label;
+            if (themeIconFill) themeIconFill.setAttribute('d', iconPath);
+            if (themeToggle) themeToggle.setAttribute('aria-label', ariaLabel);
+            if (themeLabelMobile) themeLabelMobile.textContent = label;
+            if (themeIconFillMobile) themeIconFillMobile.setAttribute('d', iconPath);
+            if (themeToggleMobile) themeToggleMobile.setAttribute('aria-label', ariaLabel);
             localStorage.setItem('roka-theme', theme);
         }
 
         const savedTheme = localStorage.getItem('roka-theme');
         if (savedTheme) applyTheme(savedTheme);
 
-        themeToggle.addEventListener('click', () => {
+        themeToggle?.addEventListener('click', () => {
+            applyTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
+        });
+        themeToggleMobile?.addEventListener('click', () => {
             applyTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
         });
 
