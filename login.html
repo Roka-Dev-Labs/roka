@@ -351,7 +351,7 @@
             justify-content: center;
             gap: 1.6rem;
             opacity: 1;
-            transition: opacity 0.7s ease;
+            transition: opacity 0.22s ease;
         }
 
         .welcome-splash.fade {
@@ -370,9 +370,9 @@
 
         .welcome-splash h1 {
             color: #fff;
-            font-size: clamp(2.4rem, 6vw, 3.4rem);
-            font-weight: 800;
-            letter-spacing: -0.04em;
+            font-size: clamp(1.75rem, 4.5vw, 2.25rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
         }
 
         @keyframes welcomeSpin {
@@ -634,8 +634,8 @@
             const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             welcomeSplash.classList.remove('hidden');
             welcomeSplash.setAttribute('aria-hidden', 'false');
-            const hold = reduced ? 700 : 2100;
-            const fade = reduced ? 200 : 700;
+            const hold = 700;
+            const fade = 220;
             setTimeout(() => {
                 welcomeSplash.classList.add('fade');
                 revealForm();
