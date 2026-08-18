@@ -7,22 +7,29 @@
  * settings already in the file.
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import * as fs from "node:fs/promises";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { verifyProAccess, printVerificationError } from "./verify.js";
 
-const SERVER_KEY = "roka-mcp";
+export const SERVER_KEY = "roka-mcp";
 const API_KEY_DASHBOARD_URL = "https://roka-prune.com/dashboard/api-keys.html";
 
-function ensureDirFor(filePath) {
-  const dir = dirname(filePath);
-  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+function isPlainObject(value) {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
-function readJson(filePath) {
-  if (!existsSync(filePath)) return {};
-  const raw = readFileSync(filePath, "utf8").trim();
+async function readText(filePath, io = fs) {
+  try {
+    return await io.readFile(filePath, "utf8");
+  } catch (err) {
+    if (err && err.code === "ENOENT") return "";
+    throw err;
+  }
+}
+
+async function readJson(filePath, io = fs) {
+  const raw = (await readText(filePath, io)).trim();
   if (!raw) return {};
   try {
     return JSON.parse(raw);
@@ -31,44 +38,64 @@ function readJson(filePath) {
   }
 }
 
-function writeJson(filePath, data) {
-  ensureDirFor(filePath);
-  writeFileSync(filePath, `${JSON.stringify(data, null, 2)}\n`, "utf8");
+async function writeJson(filePath, data, io = fs) {
+  await io.mkdir(dirname(filePath), { recursive: true });
+  await io.writeFile(filePath, `${JSON.stringify(data, null, 2)}\n`, "utf8");
 }
 
-function buildServerEntry(apiKey, extra = {}) {
+export function buildServerEntry(apiKey, extra = {}) {
   const entry = { command: "npx", args: ["-y", "roka-mcp", "serve"], ...extra };
   if (apiKey) entry.env = { ...(extra.env || {}), ROKA_API_KEY: apiKey };
   return entry;
 }
 
+function mergeNamedServers(existingMap, apiKey, extra = {}) {
+  const servers = isPlainObject(existingMap) ? { ...existingMap } : {};
+  const previous = isPlainObject(servers[SERVER_KEY]) ? servers[SERVER_KEY] : {};
+  servers[SERVER_KEY] = { ...previous, ...buildServerEntry(apiKey, extra) };
+  return servers;
+}
+
 /** Claude Code (.mcp.json), Cursor (mcp.json), Windsurf (mcp_config.json) all use { mcpServers: { name: {...} } }. */
-function writeMcpServersJson(filePath, apiKey) {
-  const data = readJson(filePath);
-  if (!data.mcpServers || typeof data.mcpServers !== "object") data.mcpServers = {};
-  data.mcpServers[SERVER_KEY] = buildServerEntry(apiKey);
-  writeJson(filePath, data);
+async function writeMcpServersJson(filePath, apiKey, io = fs) {
+  const data = await readJson(filePath, io);
+  data.mcpServers = mergeNamedServers(data.mcpServers, apiKey);
+  await writeJson(filePath, data, io);
+  return data;
 }
 
 /** VS Code / Copilot use { servers: { name: { type: "stdio", ... } } }. */
-function writeVSCodeMcpJson(filePath, apiKey) {
-  const data = readJson(filePath);
-  if (!data.servers || typeof data.servers !== "object") data.servers = {};
-  data.servers[SERVER_KEY] = buildServerEntry(apiKey, { type: "stdio" });
-  writeJson(filePath, data);
+async function writeVSCodeMcpJson(filePath, apiKey, io = fs) {
+  const data = await readJson(filePath, io);
+  data.servers = mergeNamedServers(data.servers, apiKey, { type: "stdio" });
+  await writeJson(filePath, data, io);
+  return data;
 }
 
 /** Cline stores extra UI-only fields (disabled/autoApprove) alongside the server entry. */
-function writeClineJson(filePath, apiKey) {
-  const data = readJson(filePath);
-  if (!data.mcpServers || typeof data.mcpServers !== "object") data.mcpServers = {};
-  const existing = data.mcpServers[SERVER_KEY] || {};
+async function writeClineJson(filePath, apiKey, io = fs) {
+  const data = await readJson(filePath, io);
+  const existing = isPlainObject(data.mcpServers?.[SERVER_KEY]) ? data.mcpServers[SERVER_KEY] : {};
+  data.mcpServers = mergeNamedServers(data.mcpServers, apiKey);
   data.mcpServers[SERVER_KEY] = {
-    ...buildServerEntry(apiKey),
+    ...data.mcpServers[SERVER_KEY],
     disabled: existing.disabled ?? false,
     autoApprove: existing.autoApprove ?? [],
   };
-  writeJson(filePath, data);
+  await writeJson(filePath, data, io);
+  return data;
+}
+
+function buildCodexPayload(apiKey) {
+  const entry = { command: "npx", args: ["-y", "roka-mcp", "serve"] };
+  if (apiKey) entry.env = { ROKA_API_KEY: apiKey };
+  return { mcp_servers: { [SERVER_KEY]: entry } };
+}
+
+function serializeCodexBlock(apiKey) {
+  const lines = [`[mcp_servers.${SERVER_KEY}]`, `command = "npx"`, `args = ["-y", "roka-mcp", "serve"]`];
+  if (apiKey) lines.push(`env = { ROKA_API_KEY = "${apiKey}" }`);
+  return lines.join("\n");
 }
 
 /**
@@ -76,13 +103,9 @@ function writeClineJson(filePath, apiKey) {
  * We avoid pulling in a TOML dependency by doing a targeted text
  * replace/append of just our own table, leaving the rest of the file intact.
  */
-function writeCodexToml(filePath, apiKey) {
-  ensureDirFor(filePath);
-  const lines = [`[mcp_servers.${SERVER_KEY}]`, `command = "npx"`, `args = ["-y", "roka-mcp", "serve"]`];
-  if (apiKey) lines.push(`env = { ROKA_API_KEY = "${apiKey}" }`);
-  const block = lines.join("\n");
-
-  const existing = existsSync(filePath) ? readFileSync(filePath, "utf8") : "";
+async function writeCodexToml(filePath, apiKey, io = fs) {
+  const block = serializeCodexBlock(apiKey);
+  const existing = await readText(filePath, io);
   const headerRe = new RegExp(`\\[mcp_servers\\.${SERVER_KEY}\\][^]*?(?=\\n\\[|$)`);
 
   let updated;
@@ -96,14 +119,16 @@ function writeCodexToml(filePath, apiKey) {
     updated = `${existing}\n\n${block}`;
   }
   if (!updated.endsWith("\n")) updated += "\n";
-  writeFileSync(filePath, updated, "utf8");
+  await io.mkdir(dirname(filePath), { recursive: true });
+  await io.writeFile(filePath, updated, "utf8");
+  return buildCodexPayload(apiKey);
 }
 
-function defaultClinePath() {
+function defaultClinePath(home = homedir()) {
   const plat = process.platform;
   if (plat === "darwin") {
     return join(
-      homedir(),
+      home,
       "Library",
       "Application Support",
       "Code",
@@ -115,11 +140,11 @@ function defaultClinePath() {
     );
   }
   if (plat === "win32") {
-    const appData = process.env.APPDATA || join(homedir(), "AppData", "Roaming");
+    const appData = process.env.APPDATA || join(home, "AppData", "Roaming");
     return join(appData, "Code", "User", "globalStorage", "saoudrizwan.claude-dev", "settings", "cline_mcp_settings.json");
   }
   return join(
-    homedir(),
+    home,
     ".config",
     "Code",
     "User",
@@ -131,8 +156,8 @@ function defaultClinePath() {
 }
 
 /**
- * Supported agents. `describe` resolves the config path (given cwd);
- * `write` merges our server entry into that file.
+ * Supported agents. `describe` resolves the config path (given cwd, home);
+ * `write` merges our server entry into that file without wiping other keys.
  */
 export const AGENTS = {
   "claude-code": {
@@ -142,12 +167,12 @@ export const AGENTS = {
   },
   cursor: {
     label: "Cursor",
-    describe: () => join(homedir(), ".cursor", "mcp.json"),
+    describe: (_cwd, home = homedir()) => join(home, ".cursor", "mcp.json"),
     write: writeMcpServersJson,
   },
   codex: {
     label: "Codex",
-    describe: () => join(homedir(), ".codex", "config.toml"),
+    describe: (_cwd, home = homedir()) => join(home, ".codex", "config.toml"),
     write: writeCodexToml,
   },
   copilot: {
@@ -162,18 +187,36 @@ export const AGENTS = {
   },
   windsurf: {
     label: "Windsurf",
-    describe: () => join(homedir(), ".codeium", "windsurf", "mcp_config.json"),
+    describe: (_cwd, home = homedir()) => join(home, ".codeium", "windsurf", "mcp_config.json"),
     write: writeMcpServersJson,
   },
   cline: {
     label: "Cline",
-    describe: () => defaultClinePath(),
+    describe: (_cwd, home = homedir()) => defaultClinePath(home),
     write: writeClineJson,
     note:
       "Cline's config path depends on your host editor (VS Code, Cursor, ...) and OS. " +
       "If this file isn't picked up, open Cline's MCP settings UI and check the path shown there.",
   },
 };
+
+export function agentConfigPath(agent, { cwd = process.cwd(), home = homedir() } = {}) {
+  const agentConf = AGENTS[agent];
+  if (!agentConf) throw new Error(`unknown agent "${agent}"`);
+  return agentConf.describe(cwd, home);
+}
+
+/**
+ * Merge roka-mcp into the agent's config and write it via fs/promises.
+ * Existing unrelated keys and other MCP servers are preserved.
+ */
+export async function integrateMcp(agent, apiKey, { cwd = process.cwd(), home = homedir(), fs: io = fs } = {}) {
+  const agentConf = AGENTS[agent];
+  if (!agentConf) throw new Error(`unknown agent "${agent}"`);
+  const filePath = agentConf.describe(cwd, home);
+  const payload = await agentConf.write(filePath, apiKey, io);
+  return { path: filePath, payload };
+}
 
 function printConnectHelp() {
   console.error(`
@@ -253,7 +296,7 @@ export async function connectCommand(args) {
 
   const filePath = agentConf.describe(process.cwd());
   try {
-    agentConf.write(filePath, apiKey);
+    await agentConf.write(filePath, apiKey);
   } catch (err) {
     console.error(`[roka-mcp] connect: failed to update ${agentConf.label} config at ${filePath}`);
     console.error(`  ${err.message}`);

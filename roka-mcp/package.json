@@ -16,7 +16,8 @@
     "node": ">=18"
   },
   "scripts": {
-    "start": "node bin/roka-mcp.js serve"
+    "start": "node bin/roka-mcp.js serve",
+    "test": "node --test test/connect.test.js"
   },
   "keywords": [
     "mcp",
