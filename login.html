@@ -460,7 +460,7 @@
                     <div class="signup-fields-inner">
                         <div class="form-group">
                             <label for="phone">Phone number <span class="optional">(Optional)</span></label>
-                            <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="Enter your phone number">
+                            <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="+60 12 345 6789" maxlength="20">
                         </div>
                     </div>
                 </div>
@@ -582,6 +582,50 @@
             document.getElementById('togglePassword').setAttribute('aria-label', show ? 'Hide password' : 'Show password');
         });
 
+        const phoneInput = document.getElementById('phone');
+
+        function phoneDigits(value) {
+            return String(value || '').replace(/\D/g, '').slice(0, 15);
+        }
+
+        function formatPhoneDisplay(value) {
+            const digits = phoneDigits(value);
+            const hadPlus = String(value || '').includes('+');
+            if (!digits) return hadPlus ? '+' : '';
+            const parts = [];
+            for (let i = 0; i < digits.length; i += 3) {
+                parts.push(digits.slice(i, i + 3));
+            }
+            return '+' + parts.join(' ');
+        }
+
+        function formatPhoneE164(value) {
+            const digits = phoneDigits(value);
+            return digits ? `+${digits}` : '';
+        }
+
+        phoneInput.addEventListener('focus', () => {
+            if (!phoneInput.value.trim()) phoneInput.value = '+';
+        });
+
+        phoneInput.addEventListener('blur', () => {
+            if (phoneInput.value.trim() === '+') phoneInput.value = '';
+        });
+
+        phoneInput.addEventListener('input', () => {
+            const formatted = formatPhoneDisplay(phoneInput.value);
+            phoneInput.value = formatted;
+            phoneInput.setSelectionRange(formatted.length, formatted.length);
+        });
+
+        phoneInput.addEventListener('keydown', (e) => {
+            if (e.key !== 'Backspace') return;
+            if (phoneDigits(phoneInput.value).length === 0) {
+                e.preventDefault();
+                phoneInput.value = '';
+            }
+        });
+
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -597,7 +641,7 @@
                     payload.first_name = document.getElementById('firstName').value.trim();
                     payload.last_name = document.getElementById('lastName').value.trim();
                     payload.username = document.getElementById('username').value.trim();
-                    payload.phone = document.getElementById('phone').value.trim();
+                    payload.phone = formatPhoneE164(document.getElementById('phone').value);
                 }
                 const response = await fetch(`${API_BASE}${endpoint}`, {
                     method: 'POST',
