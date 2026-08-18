@@ -60,21 +60,9 @@
     {
       "src": "*.sh",
       "use": "@vercel/static"
-    },
-    {
-      "src": "*.mp4",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
     }
   ],
   "routes": [
-    {
-      "src": "^/api/(.*)$",
-      "dest": "/api/$1"
-    },
     {
       "src": "^/docs/?$",
       "dest": "/docs/index.html"

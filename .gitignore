@@ -62,3 +62,6 @@ Log Compaction Video.mp4
 # Staging copies of other public repos (push separately)
 public-repos/
 .vercel
+
+# Duplicate Aider skill copies
+.aider-desk/

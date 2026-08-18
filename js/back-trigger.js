@@ -1,17 +1,8 @@
 /**
- * BackTrigger — vanilla port of
- * https://framer.com/m/BackTrigger-WT4I.js@hlpJPt86PDl5gp2oJAoK
- *
- * Place an invisible marker inside a Back control:
- *   <a href="/" class="roka-back" data-back-host>
- *     <span data-back-hijacker="active" aria-hidden="true"></span>
- *     ← Back
- *   </a>
- *
- * Clicks on the host call history.back(), falling back to the host href (or "/").
+ * Back-link helper: clicks on `.roka-back` call history.back(),
+ * falling back to the host href (or "/").
  */
 (function () {
-  // Invisible marker styling (matches Framer BackTrigger)
   var style = document.createElement("style");
   style.textContent =
     '[data-back-hijacker="active"]{position:absolute;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;z-index:-1;background:transparent}' +

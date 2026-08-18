@@ -288,13 +288,10 @@
         .terminal-title,
         .terminal-preview,
         .terminal-preview-label,
-        .mt-terminal,
         .agent-panel,
         .agent-label,
         .agent-tab,
-        .install-tab,
         .mode-tab,
-        .cmd-block,
         .cmd-row,
         .cmd-row code,
         .cmd-btn,
@@ -354,7 +351,6 @@
             transform: translateY(-1px);
         }
 
-        /* From Uiverse.io by vinodjangid07 — Pay (matched to GET FREE NOW) */
         .pro-tier-cta {
             height: 40px;
             border-radius: 0 !important;
@@ -419,7 +415,6 @@
             transition-duration: .3s;
         }
 
-        /* ── Pro Tier highlight (black / minimal) ── */
         .pro-tier-card {
             position: relative;
             border: 1.5px solid var(--text);
@@ -458,7 +453,7 @@
         }
         .pro-tier-cta:hover { opacity: 0.85; }
 
-        /* ── Pricing grid (plans + features in one block) ── */
+        /* Pricing grid */
         .pricing-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -593,7 +588,7 @@
         }
         .pricing-feature-list .pricing-feature-plus::before { content: none; }
 
-        /* ── Feedback modal ── */
+        /* Feedback modal */
         .feedback-modal-overlay {
             display: none;
             position: fixed;
@@ -716,15 +711,13 @@
             margin-top: 0.75rem;
         }
 
-        /* ── Developer Minimal: flatten radius on cards/blocks/buttons ── */
         .surface.rounded-xl,
         .surface.rounded-lg,
         .surface.rounded-2xl,
         .btn-primary.rounded-full,
         .btn-secondary.rounded-full,
         .btn-primary.rounded-lg,
-        .btn-secondary.rounded-lg,
-        .feature-card.rounded-xl {
+        .btn-secondary.rounded-lg {
             border-radius: 4px;
         }
         .compress-badge { border-radius: 4px; }
@@ -918,16 +911,6 @@
         .mock-terminal .term-info { color: var(--text-muted); }
         .mock-terminal .term-dim { color: var(--text-faint); }
 
-        .feature-card:hover {
-            border-color: var(--border-strong);
-            transform: translateY(-2px);
-        }
-
-        .feature-card {
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-
-        /* Magic UI–style Bento Grid for Features */
         .bento-grid {
             display: grid;
             width: 100%;
@@ -960,7 +943,6 @@
         }
         @media (min-width: 1024px) {
             .bento-card { min-height: 22rem; }
-            /* Magic UI spans: wide-narrow / narrow-wide / three equal */
             .bento-card--span-2 { grid-column: span 2; }
         }
         [data-theme="dark"] .bento-card {
@@ -1084,7 +1066,6 @@
             background: rgba(255,255,255,.98);
         }
 
-        /* Features video lightbox — tryania-style shell */
         .bento-video-overlay {
             position: fixed;
             inset: 0;
@@ -1314,7 +1295,6 @@
             filter: var(--logo-filter);
         }
 
-        /* From Uiverse.io by WhiteNervosa — site nav */
         .nav-desktop {
             display: none;
         }
@@ -1527,8 +1507,6 @@
             }
         }
 
-        /* Footer social reveal card (Uiverse-inspired) */
-        /* Footer social reveal card — From Uiverse.io by dovatgabriel */
         .social-card svg {
             height: 16px;
             width: 16px;
@@ -1754,7 +1732,7 @@
         .terminal-preview .tp-danger { color: var(--danger); }
         .terminal-preview .tp-warn { color: #fbbf24; }
 
-        /* ── terminal-loader chrome (story / MCP / showcase demos) ── */
+        /* Terminal chrome */
         @keyframes blinkCursor {
             50% { border-right-color: transparent; }
         }
@@ -1904,7 +1882,7 @@
             min-height: 11rem;
         }
 
-        /* ── Orbit scene ─────────────────────────────────── */
+        /* Orbit scene */
         .orbit-scene {
             position: relative;
             width: 360px; height: 360px;
@@ -1978,7 +1956,6 @@
             .orb-4 { transform: rotate(240deg) translateY(-140px) rotate(-240deg); }
             .orb-5 { transform: rotate(300deg) translateY(-140px) rotate(-300deg); }
         }
-        /* ── End orbit ───────────────────────────────────── */
 
         @media (prefers-reduced-motion: reduce) {
             .hero-noise-burst { display: none !important; }
@@ -1997,7 +1974,7 @@
             .story-viz-label { display: none; }
         }
 
-        /* ── Agent panel ── */
+        /* Agent panel */
         .hero-headline {
             font-size: clamp(2.1rem, 5.5vw, 3.25rem);
             font-weight: 400;
@@ -2110,8 +2087,7 @@
             background: var(--bg-elevated);
             margin-bottom: 14px;
         }
-        .agent-tab,
-        .install-tab {
+        .agent-tab {
             font-family: var(--font-mono);
             font-size: 12.5px;
             font-weight: 500;
@@ -2123,24 +2099,13 @@
             cursor: pointer;
             transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
         }
-        .agent-tab:hover, .install-tab:hover { color: var(--text-muted); }
-        .agent-tab.active,
-        .install-tab.active {
+        .agent-tab:hover { color: var(--text-muted); }
+        .agent-tab.active {
             color: var(--text);
             background: var(--bg-card);
             border-color: var(--border-strong);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
         }
-        .cmd-block {
-            display: none;
-            padding: 1.1rem 1.35rem;
-            background: var(--bg);
-            border: 1px solid var(--term-border);
-            border-radius: 10px;
-            transition: background-color 0.35s ease, border-color 0.35s ease;
-        }
-        .cmd-block:hover { border-color: var(--border-strong); }
-        .cmd-block.active { display: block; }
         .cmd-row {
             display: flex;
             align-items: center;
@@ -2272,7 +2237,7 @@
             border: 1px solid rgba(248, 113, 113, 0.3);
         }
 
-        /* ── Story rows ── */
+        /* Story rows */
         .story-section { padding: 4rem 1.25rem; }
         .story-row {
             display: grid;
@@ -2334,7 +2299,6 @@
         .story-viz-badge.error { color: var(--danger); border-color: rgba(255,107,122,0.4); }
         .story-viz-badge.ok { color: var(--term-ok); border-color: rgba(61,214,140,0.4); }
 
-        /* MagicUI sequential lines — body lives inside terminal-loader */
         .mt-line { min-height: 1.5em; }
         .mt-cursor {
             display: inline-block;
@@ -2916,7 +2880,6 @@
                 <span class="mono text-xs font-bold mt-1" style="color:var(--success)">roka</span>
             </div>
 
-            <!-- Claude Code — 0° -->
             <div class="orbit-item orb-0" title="Claude Code">
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:#cc5200;padding:10px">
                     <img src="/assets/logos/logo-claude.png" alt="Claude" width="36" height="36" style="object-fit:contain;filter:brightness(10)">
@@ -2924,7 +2887,6 @@
                 <span class="orbit-tooltip">Claude Code</span>
             </div>
 
-            <!-- Cursor — 60° -->
             <div class="orbit-item orb-1" title="Cursor">
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:#fff;padding:8px">
                     <img src="/assets/logos/logo-cursor.png" alt="Cursor" width="40" height="40" style="object-fit:contain">
@@ -2932,7 +2894,6 @@
                 <span class="orbit-tooltip">Cursor</span>
             </div>
 
-            <!-- ChatGPT — 120° -->
             <div class="orbit-item orb-2" title="ChatGPT">
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:#fff;padding:10px">
                     <img src="/assets/logos/logo-chatgpt.png" alt="ChatGPT" width="36" height="36" style="object-fit:contain">
@@ -2940,7 +2901,6 @@
                 <span class="orbit-tooltip">ChatGPT</span>
             </div>
 
-            <!-- GitHub Copilot — 180° -->
             <div class="orbit-item orb-3" title="GitHub Copilot">
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:#fff;padding:10px">
                     <img src="/assets/logos/logo-copilot.png" alt="GitHub Copilot" width="36" height="36" style="object-fit:contain">
@@ -2948,7 +2908,6 @@
                 <span class="orbit-tooltip">GitHub Copilot</span>
             </div>
 
-            <!-- Gemini — 240° -->
             <div class="orbit-item orb-4" title="Google Gemini">
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:#fff;padding:8px">
                     <img src="/assets/logos/logo-gemini.png" alt="Gemini" width="40" height="40" style="object-fit:contain">
@@ -2956,7 +2915,6 @@
                 <span class="orbit-tooltip">Google Gemini</span>
             </div>
 
-            <!-- Roka (self) — 300° : показывает что roka сам тоже агент/CLI -->
             <div class="orbit-item orb-5" title="Any LLM via stdout">
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:var(--bg-elevated);border:1.5px solid var(--border-strong)">
                     <svg width="24" height="24" viewBox="0 0 40 40" fill="none" stroke="var(--text-muted)" stroke-width="2.2">
@@ -2968,7 +2926,6 @@
             </div>
         </div>
 
-        <!-- Command -->
         <div class="text-center mt-12">
             <p class="text-xs text-faint mb-3">Hover the icons to see agent names · Pro MCP connect (API key required):</p>
             <div class="inline-block bg-[var(--bg)] border border-[var(--border-strong)] rounded-lg px-6 py-3 mono text-sm">
@@ -2978,11 +2935,10 @@
         </div>
     </section>
 
-    <!-- Niche MCP Servers -->
     <section id="mcp" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-10">
             <div class="flex items-center justify-center gap-3 mb-4">
-                <span class="eyebrow">If you use Claude Code or Cursor — read this</span>
+                <span class="eyebrow">If you use Claude Code, Cursor, Gemini, Codex, or Copilot — read this</span>
                 <span class="pro-badge">Pro</span>
             </div>
             <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-4 max-w-3xl mx-auto">Your dev server crashes. Your agent already has the fix in context.</h2>
@@ -3946,7 +3902,6 @@
     </div>
 
     <script>
-        // ── Theme ──────────────────────────────────────────────
         const html = document.documentElement;
         const themeToggle    = document.getElementById('themeToggle');
         const themeLabel     = document.getElementById('themeLabel');
@@ -3955,7 +3910,6 @@
         const themeLabelMobile = document.querySelector('.theme-label-mobile');
         const themeIconFillMobile = document.querySelector('.theme-icon-fill-mobile');
 
-        // Kev avatar enlarge toggle
         const kevAvatarBtn = document.getElementById('kevAvatarBtn');
         if (kevAvatarBtn) {
             kevAvatarBtn.addEventListener('click', () => {
@@ -4007,7 +3961,7 @@
             }
         })();
 
-        // ── Hero: prune stream + letter animation ──────────────
+        // Hero prune stream
         const LOG_SNIPPETS = [
             'WARN pool retry 50ms', 'INFO login 192.168.x', 'DEBUG heartbeat ok',
             'TRACE span_id=abc…', 'WARN pool retry 51ms', 'INFO session start',
@@ -4026,7 +3980,7 @@
             stream.appendChild(el);
         }
 
-        // ── ASCII Art ROKA canvas ──────────────────────────────
+        // ASCII ROKA canvas
         (function () {
             const canvas = document.getElementById('rokaCanvas');
             if (!canvas) return;
@@ -4173,14 +4127,13 @@
             });
         })();
 
-        // ── Scroll reveal ──────────────────────────────────────
+        // Scroll reveal
         const reveals = document.querySelectorAll('.reveal');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('visible'); });
         }, { threshold: 0.08 });
         reveals.forEach((el) => observer.observe(el));
 
-        // ── Prune API (existing functionality) ─────────────────
         const API_BASE = window.ROKA_API_BASE || 'https://api.roka-prune.com';
         const API_PRUNE = `${API_BASE}/api/prune`;
 
@@ -4388,7 +4341,7 @@
             els.statusConsole.textContent = `// ${msg}`;
         }
 
-        // ── FAQ Accordion ──────────────────────────────────────
+        // FAQ accordion
         const faqToggles = document.querySelectorAll('.faq-toggle');
         faqToggles.forEach(toggle => {
             toggle.addEventListener('click', () => {
@@ -4401,7 +4354,7 @@
             });
         });
 
-        // ── Demo Animation ──────────────────────────────────────
+        // Demo animation
         let demoCurrentStage = 1;
         const demoTotalStages = 6;
         const demoStageDurations = [5000, 5000, 5000, 15000, 15000, 15000];
@@ -4459,7 +4412,7 @@
             demoObserver.observe(demoAnimation);
         }
 
-        // ── Benchmark Chart ──────────────────────────────────────
+        // Benchmark chart
         const benchChart = document.getElementById('benchChart');
         const benchLabel = document.getElementById('benchLabel');
         const benchValue = document.getElementById('benchValue');
@@ -4475,7 +4428,6 @@
             });
         }
 
-        // ── Mobile Sidebar ──────────────────────────────────────
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         const mobileSidebar = document.getElementById('mobileSidebar');
         const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
@@ -4503,7 +4455,6 @@
             link.addEventListener('click', closeMobileSidebar);
         });
 
-        // ── Segmented nav (Uiverse customCheckBox style) ──────────
         (function initPillNav() {
             const nav = document.getElementById('pillNav');
             if (!nav) return;
@@ -4529,10 +4480,8 @@
             }
 
             wrappers.forEach(label => {
-                label.addEventListener('click', (e) => {
-                    // Let the radio check, then navigate
+                label.addEventListener('click', () => {
                     const href = label.getAttribute('data-href');
-                    // Delay so :checked paints before hash scroll / navigation
                     setTimeout(() => go(href), 0);
                 });
             });
@@ -4556,7 +4505,6 @@
             }
         })();
 
-        // ── Hero animations (handled by canvas above) ──
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         // Terminal / AI Agent mode switch
@@ -4577,14 +4525,6 @@
             });
         });
 
-        // Install (package manager) tabs
-        document.querySelectorAll('.install-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                const pm = tab.dataset.pm;
-                document.querySelectorAll('.install-tab').forEach(t => t.classList.toggle('active', t === tab));
-                document.querySelectorAll('.cmd-btn[data-pm-panel]').forEach(p => p.classList.toggle('active', p.dataset.pmPanel === pm));
-            });
-        });
         const COPY_ICON = '<svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
         const COPIED_ICON = '<svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
         document.querySelectorAll('.cmd-copy').forEach(btn => {
@@ -4617,8 +4557,6 @@
             });
         });
 
-        // o
-
         // Live stat ticker
         const heroLiveStat = document.getElementById('heroLiveStat');
         if (heroLiveStat && !prefersReducedMotion) {
@@ -4630,11 +4568,7 @@
             }, 2200);
         }
 
-        // ── Story terminals: MagicUI-style sequential animation ──
-        // Ports the behavior of the Magic UI `Terminal` component
-        // (AnimatedSpan + TypingAnimation, played in strict sequence,
-        // looping while the row is in view) to plain DOM/CSS.
-        function createMagicTerminal(container, opts = {}) {
+        function createStoryTerminal(container, opts = {}) {
             const loopDelay = opts.loopDelay ?? 1500;
             const items = Array.from(container.querySelectorAll('.mt-line')).map((el) => ({
                 el,
@@ -4714,10 +4648,10 @@
             };
         }
 
-        function initMagicTerminal(id, options) {
+        function initStoryTerminal(id, options) {
             const container = document.getElementById(id);
             if (!container || prefersReducedMotion) return;
-            const terminal = createMagicTerminal(container, options);
+            const terminal = createStoryTerminal(container, options);
             const target = container.closest('.story-viz') || container;
             const obs = new IntersectionObserver((entries) => {
                 if (entries[0].isIntersecting) terminal.start();
@@ -4728,7 +4662,7 @@
 
         const vizBadgeError = document.getElementById('vizBadgeError');
         const vizBadgeOk = document.getElementById('vizBadgeOk');
-        initMagicTerminal('mtError500', {
+        initStoryTerminal('mtError500', {
             loopDelay: 1600,
             onReset: () => {
                 if (vizBadgeError) vizBadgeError.style.opacity = '1';
@@ -4741,8 +4675,8 @@
                 }
             },
         });
-        initMagicTerminal('mtCrash', { loopDelay: 1800 });
-        initMagicTerminal('mtQuery', { loopDelay: 1800 });
+        initStoryTerminal('mtCrash', { loopDelay: 1800 });
+        initStoryTerminal('mtQuery', { loopDelay: 1800 });
 
         // motion (harmless if cards no longer depend on .playing)
         const showcaseCards = document.querySelectorAll('.showcase-card');
@@ -4759,7 +4693,6 @@
     </script>
 
     <script>
-        // ── Features bento: native MP4 hover preview + lightbox (tryania-style) ──
         (() => {
             const triggers = document.querySelectorAll('.bento-media.has-video');
             const overlay = document.getElementById('bentoVideoOverlay');
@@ -4945,7 +4878,7 @@
     </script>
 
     <script>
-        // ── "Pro free for feedback" modal ──────────────────────
+        // Feedback promo modal
         (() => {
             const FEEDBACK_API_BASE = window.ROKA_API_BASE || 'https://api.roka-prune.com';
             const openBtn = document.getElementById('proFeedbackBtn');
