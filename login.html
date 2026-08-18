@@ -88,13 +88,18 @@
             --accent: #ffffff;
         }
 
-        html { color-scheme: dark; }
+        html {
+            font-size: 112.5%;
+            color-scheme: dark;
+        }
 
         body {
             font-family: "Montserrat", sans-serif;
             font-optical-sizing: auto;
-            font-weight: 600;
-            letter-spacing: -0.02em;
+            font-weight: 375;
+            font-style: normal;
+            letter-spacing: -0.01em;
+            line-height: 1.65;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
@@ -138,7 +143,7 @@
 
         .card h1 {
             font-size: 1.45rem;
-            font-weight: 800;
+            font-weight: 500;
             text-align: center;
             letter-spacing: -0.03em;
             line-height: 1.2;
@@ -147,7 +152,7 @@
         .card .subtitle {
             color: var(--text-muted);
             font-size: 0.9rem;
-            font-weight: 600;
+            font-weight: 375;
             text-align: center;
             margin: 0.45rem 0 1.5rem;
         }
@@ -171,7 +176,7 @@
             background: #1c1c1c;
             color: var(--text);
             font-size: 0.95rem;
-            font-weight: 700;
+            font-weight: 500;
             text-decoration: none;
             transition: border-color 0.2s ease, background 0.2s ease;
         }
@@ -190,7 +195,7 @@
             gap: 0.75rem;
             color: var(--text-muted);
             font-size: 0.8rem;
-            font-weight: 700;
+            font-weight: 500;
             margin-bottom: 1.15rem;
         }
 
@@ -209,13 +214,13 @@
             align-items: baseline;
             justify-content: space-between;
             font-size: 0.86rem;
-            font-weight: 700;
+            font-weight: 500;
             margin-bottom: 0.4rem;
         }
 
         .form-group label .optional {
             color: var(--text-muted);
-            font-weight: 600;
+            font-weight: 375;
             font-size: 0.78rem;
         }
 
@@ -228,10 +233,10 @@
             color: var(--text);
             font-family: inherit;
             font-size: 0.92rem;
-            font-weight: 600;
+            font-weight: 375;
         }
 
-        .form-group input::placeholder { color: #6b6b6b; font-weight: 500; }
+        .form-group input::placeholder { color: #6b6b6b; font-weight: 375; }
 
         .form-group input:focus {
             outline: none;
@@ -301,7 +306,7 @@
             cursor: pointer;
             font-family: inherit;
             font-size: 0.95rem;
-            font-weight: 800;
+            font-weight: 500;
             letter-spacing: -0.02em;
             transition: opacity 0.2s ease, transform 0.15s ease;
         }
@@ -315,13 +320,13 @@
             text-align: center;
             margin-top: 1.15rem;
             font-size: 0.86rem;
-            font-weight: 600;
+            font-weight: 375;
             color: var(--text-muted);
         }
 
         .toggle-link a {
             color: var(--text);
-            font-weight: 800;
+            font-weight: 500;
             text-decoration: none;
         }
 
@@ -334,7 +339,7 @@
             border-radius: 10px;
             margin-bottom: 1rem;
             font-size: 0.84rem;
-            font-weight: 600;
+            font-weight: 375;
             text-align: center;
         }
 
@@ -371,8 +376,8 @@
         .welcome-splash h1 {
             color: #fff;
             font-size: clamp(1.75rem, 4.5vw, 2.25rem);
-            font-weight: 400;
-            letter-spacing: -0.02em;
+            font-weight: 375;
+            letter-spacing: -0.01em;
         }
 
         @keyframes welcomeSpin {
