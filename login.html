@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-mode="login">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -76,178 +76,111 @@
     <script src="/js/console-egg.js" defer></script>
     <link rel="stylesheet" href="/assets/fonts/montserrat.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg: #ffffff;
-            --text: #0a0a0a;
-            --text-muted: #666666;
-            --border: #e5e5e5;
-            --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.1);
-            --surface: #f5f5f5;
+            --bg: #000000;
+            --card: #141414;
+            --text: #ffffff;
+            --text-muted: #a1a1a1;
+            --border: #2e2e2e;
+            --input: #1a1a1a;
+            --accent: #ffffff;
         }
 
-        html.dark {
-            --bg: #0a0a0a;
-            --text: #ededed;
-            --text-muted: #888888;
-            --border: #262626;
-            --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.15);
-            --surface: #171717;
-        }
+        html { color-scheme: dark; }
 
         body {
             font-family: "Montserrat", sans-serif;
             font-optical-sizing: auto;
-            font-weight: 375;
-            font-style: normal;
-            letter-spacing: -0.01em;
+            font-weight: 600;
+            letter-spacing: -0.02em;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 1.5rem 1rem;
         }
 
         .login-container {
             width: 100%;
-            max-width: 400px;
-            padding: 2rem;
+            max-width: 440px;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.55s ease, transform 0.55s ease;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.625rem;
-            font-weight: 600;
-            font-size: 1.25rem;
-            margin-bottom: 2rem;
-            justify-content: center;
+        .login-container.ready {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .card {
-            background: var(--surface);
+            background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
+            border-radius: 18px;
+            padding: 2rem 1.75rem 1.5rem;
+        }
+
+        .card-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .card-logo img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
         }
 
         .card h1 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+            font-size: 1.45rem;
+            font-weight: 800;
             text-align: center;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
         }
 
-        .card p {
+        .card .subtitle {
             color: var(--text-muted);
-            font-size: 0.875rem;
+            font-size: 0.9rem;
+            font-weight: 600;
             text-align: center;
-            margin-bottom: 2rem;
+            margin: 0.45rem 0 1.5rem;
         }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: var(--bg);
-            color: var(--text);
-            font-size: 0.875rem;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 0.75rem 1.5rem;
-            cursor: pointer;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s;
-            width: 100%;
-        }
-
-        .btn-primary:hover {
-            opacity: 0.9;
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .toggle-link {
-            text-align: center;
-            margin-top: 1.5rem;
-            font-size: 0.875rem;
-        }
-
-        .toggle-link a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .toggle-link a:hover {
-            text-decoration: underline;
-        }
-
-        .oauth-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-            margin-bottom: 1.25rem;
+        .oauth-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.7rem;
+            margin-bottom: 1.15rem;
         }
 
         .oauth-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.6rem;
-            width: 100%;
-            padding: 0.7rem 1rem;
-            border-radius: 6px;
+            gap: 0.55rem;
+            min-height: 46px;
+            padding: 0.7rem 0.85rem;
+            border-radius: 10px;
             border: 1px solid var(--border);
-            background: var(--bg);
+            background: #1c1c1c;
             color: var(--text);
-            font-size: 0.875rem;
-            font-weight: 500;
+            font-size: 0.95rem;
+            font-weight: 700;
             text-decoration: none;
-            cursor: pointer;
-            transition: border-color 0.15s ease, background 0.15s ease;
+            transition: border-color 0.2s ease, background 0.2s ease;
         }
 
-        .oauth-btn:hover {
-            border-color: var(--text-muted);
-        }
+        .oauth-btn:hover { border-color: #555; background: #222; }
 
         .oauth-btn svg {
-            width: 16px;
-            height: 16px;
+            width: 22px;
+            height: 22px;
             flex-shrink: 0;
         }
 
@@ -256,8 +189,9 @@
             align-items: center;
             gap: 0.75rem;
             color: var(--text-muted);
-            font-size: 0.75rem;
-            margin-bottom: 1.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 1.15rem;
         }
 
         .oauth-divider::before,
@@ -268,77 +202,279 @@
             background: var(--border);
         }
 
-        .error {
-            background: #fee2e2;
-            color: #dc2626;
-            padding: 0.75rem;
+        .form-group { margin-bottom: 0.9rem; }
+
+        .form-group label {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            font-size: 0.86rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-group label .optional {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.78rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.78rem 0.9rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--input);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        .form-group input::placeholder { color: #6b6b6b; font-weight: 500; }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #6b6b6b;
+        }
+
+        .name-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.7rem;
+        }
+
+        .password-wrap { position: relative; }
+
+        .password-wrap input { padding-right: 2.75rem; }
+
+        .password-toggle {
+            position: absolute;
+            right: 0.55rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border-radius: 6px;
-            margin-bottom: 1.5rem;
-            font-size: 0.875rem;
+        }
+
+        .password-toggle:hover { color: var(--text); }
+
+        .password-toggle svg { width: 18px; height: 18px; }
+
+        .signup-fields {
+            display: grid;
+            grid-template-rows: 0fr;
+            opacity: 0;
+            margin-top: 0;
+            transition: grid-template-rows 0.38s ease, opacity 0.28s ease, margin 0.38s ease;
+        }
+
+        html[data-mode="signup"] .signup-fields {
+            grid-template-rows: 1fr;
+            opacity: 1;
+            margin-top: 0;
+        }
+
+        .signup-fields-inner { overflow: hidden; }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            width: 100%;
+            min-height: 46px;
+            margin-top: 0.55rem;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            padding: 0.8rem 1.25rem;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            transition: opacity 0.2s ease, transform 0.15s ease;
+        }
+
+        .btn-primary:hover { opacity: 0.92; }
+        .btn-primary:active { transform: translateY(1px); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-primary .arrow { font-size: 1.05rem; line-height: 1; }
+
+        .toggle-link {
+            text-align: center;
+            margin-top: 1.15rem;
+            font-size: 0.86rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .toggle-link a {
+            color: var(--text);
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .toggle-link a:hover { text-decoration: underline; }
+
+        .error {
+            background: rgba(220, 38, 38, 0.16);
+            color: #fca5a5;
+            padding: 0.7rem 0.85rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-size: 0.84rem;
+            font-weight: 600;
             text-align: center;
         }
 
-        .hidden {
-            display: none;
+        .hidden { display: none; }
+
+        .welcome-splash {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.6rem;
+            opacity: 1;
+            transition: opacity 0.7s ease;
         }
 
-        @keyframes logoSpin {
-            0% { transform: rotate(0deg) scale(1); opacity: 0; }
-            50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
-            100% { transform: rotate(360deg) scale(1); opacity: 1; }
+        .welcome-splash.fade {
+            opacity: 0;
+            pointer-events: none;
         }
 
-        .logo-animate {
-            animation: logoSpin 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        .welcome-splash.hidden { display: none; }
+
+        .welcome-logo {
+            width: 148px;
+            height: 148px;
+            object-fit: contain;
+            animation: welcomeSpin 1.35s linear infinite;
+        }
+
+        .welcome-splash h1 {
+            color: #fff;
+            font-size: clamp(2.4rem, 6vw, 3.4rem);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+        }
+
+        @keyframes welcomeSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .welcome-logo { animation: none; }
+            .login-container,
+            .signup-fields,
+            .welcome-splash { transition: none; }
+        }
+
+        @media (max-width: 420px) {
+            .name-row, .oauth-row { grid-template-columns: 1fr; }
+            .card { padding: 1.5rem 1.15rem 1.25rem; }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="logo">
-            <img src="/assets/icons/favicon-32x32.png" alt="Roka" class="logo-animate" width="28" height="28">
-            Roka
-        </div>
+    <div class="welcome-splash hidden" id="welcomeSplash" aria-hidden="true">
+        <img src="/assets/logos/logo-roka.png" alt="" class="welcome-logo" width="148" height="148">
+        <h1>Welcome!</h1>
+    </div>
 
+    <div class="login-container" id="loginContainer">
         <div class="card">
-            <h1 id="formTitle">Login</h1>
-            <p id="formSubtitle">Welcome back to Roka</p>
+            <a href="/" class="card-logo" aria-label="Roka home">
+                <img src="/assets/logos/logo-roka.png" alt="Roka" width="36" height="36">
+            </a>
+            <h1 id="formTitle">Sign in</h1>
+            <p class="subtitle" id="formSubtitle">Welcome back to Roka</p>
 
             <div id="error" class="error hidden"></div>
 
-            <div class="oauth-stack">
+            <div class="oauth-row">
                 <a class="oauth-btn" id="githubOAuth" href="#">
-                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.2-3.3-.1-.3-.5-1.6.1-3.2 0 0 1-.3 3.4 1.2a11.7 11.7 0 0 1 6.2 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.6.3 2.9.1 3.2.8.9 1.2 2 1.2 3.3 0 4.7-2.8 5.7-5.5 6 .4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/></svg>
-                    Continue with GitHub
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.757-1.333-1.757-1.09-.745.083-.73.083-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.809 1.305 3.495.998.108-.776.418-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.468-2.381 1.236-3.221-.123-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.5 11.5 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.61-2.807 5.625-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                    GitHub
                 </a>
                 <a class="oauth-btn" id="googleOAuth" href="#">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path fill="#EA4335" d="M12 10.2v3.6h5.1c-.2 1.2-1.5 3.6-5.1 3.6-3.1 0-5.6-2.5-5.6-5.6S8.9 6.2 12 6.2c1.7 0 2.9.7 3.6 1.3l2.4-2.4C16.4 3.7 14.4 2.8 12 2.8 6.9 2.8 2.8 6.9 2.8 12S6.9 21.2 12 21.2c5.3 0 8.8-3.7 8.8-8.9 0-.6-.1-1-.2-1.5H12z"/>
-                        <path fill="#4285F4" d="M12 10.2v3.6h5.1c-.2 1.2-1.5 3.6-5.1 3.6-3.1 0-5.6-2.5-5.6-5.6 0-.9.2-1.7.6-2.4l-3.2-2.5C2.8 8.2 2.2 10 2.2 12c0 5.1 4.1 9.2 9.8 9.2 5.3 0 8.8-3.7 8.8-8.9 0-.6-.1-1-.2-1.5H12z" opacity=".15"/>
-                        <path fill="#FBBC05" d="M6.9 14.2 3.7 16.7C4.9 19.1 8.2 21.2 12 21.2c2.4 0 4.4-.8 5.9-2.1l-2.9-2.2c-.8.6-1.8.9-3 .9-2.3 0-4.2-1.5-4.9-3.6z"/>
-                        <path fill="#34A853" d="M12 6.2c1.7 0 2.9.7 3.6 1.3l2.4-2.4C16.4 3.7 14.4 2.8 12 2.8 8.2 2.8 4.9 4.9 3.7 7.3l3.2 2.5C7.8 7.7 9.7 6.2 12 6.2z"/>
-                        <path fill="#4285F4" d="M20.8 12.3c0-.6-.1-1-.2-1.5H12v3.6h5.1c-.3 1.3-1.2 2.5-2.5 3.2l2.9 2.2c1.8-1.6 3.3-4 3.3-7.5z"/>
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                     </svg>
-                    Continue with Google
+                    Google
                 </a>
             </div>
-            <div class="oauth-divider">or email</div>
+            <div class="oauth-divider">or</div>
 
             <form id="authForm">
+                <div class="signup-fields" id="signupFields">
+                    <div class="signup-fields-inner">
+                        <div class="name-row">
+                            <div class="form-group">
+                                <label for="firstName">First name</label>
+                                <input type="text" id="firstName" name="first_name" autocomplete="given-name" placeholder="First name">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Surname</label>
+                                <input type="text" id="lastName" name="last_name" autocomplete="family-name" placeholder="Surname">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" autocomplete="username" placeholder="Username">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" required placeholder="you@example.com">
+                    <label for="email">Email address</label>
+                    <input type="email" id="email" required autocomplete="email" placeholder="Enter your email">
+                </div>
+
+                <div class="signup-fields">
+                    <div class="signup-fields-inner">
+                        <div class="form-group">
+                            <label for="phone">Phone number <span class="optional">(Optional)</span></label>
+                            <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="Enter your phone number">
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" required placeholder="••••••••">
+                    <div class="password-wrap">
+                        <input type="password" id="password" required autocomplete="current-password" placeholder="Enter your password" minlength="8">
+                        <button type="button" class="password-toggle" id="togglePassword" aria-label="Show password">
+                            <svg id="eyeOpen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg id="eyeClosed" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 19c-6.5 0-10-7-10-7a17.3 17.3 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c6.5 0 10 7 10 7a17.4 17.4 0 0 1-3.16 4.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        </button>
+                    </div>
                 </div>
-                <button type="submit" class="btn-primary" id="submitBtn">Login</button>
+                <button type="submit" class="btn-primary" id="submitBtn">Continue <span class="arrow" aria-hidden="true">▸</span></button>
             </form>
 
             <div class="toggle-link">
                 <span id="toggleText">Don't have an account? </span>
-                <a href="#" id="toggleLink">Sign up</a>
+                <a href="?mode=signup" id="toggleLink">Sign up</a>
             </div>
         </div>
     </div>
@@ -353,6 +489,10 @@
         const toggleText = document.getElementById('toggleText');
         const toggleLink = document.getElementById('toggleLink');
         const errorDiv = document.getElementById('error');
+        const welcomeSplash = document.getElementById('welcomeSplash');
+        const loginContainer = document.getElementById('loginContainer');
+        const signupInputs = ['firstName', 'lastName', 'username'].map((id) => document.getElementById(id));
+        const passwordInput = document.getElementById('password');
         const params = new URLSearchParams(window.location.search);
         const nextParam = params.get('next') || '';
         const safeNext = (nextParam.startsWith('/') && !nextParam.startsWith('//') && !nextParam.includes('\\'))
@@ -383,55 +523,81 @@
             localStorage.setItem('roka_access_token', oauthToken);
             window.location.replace(safeNext);
         }
-        function applyMode() {
-            if (isLoginMode) {
-                formTitle.textContent = 'Login';
-                formSubtitle.textContent = 'Welcome back to Roka';
-                submitBtn.textContent = 'Login';
-                toggleText.textContent = "Don't have an account? ";
-                toggleLink.textContent = 'Sign up';
-            } else {
-                formTitle.textContent = 'Sign up';
-                formSubtitle.textContent = 'Create your Roka account';
-                submitBtn.textContent = 'Sign up';
-                toggleText.textContent = 'Already have an account? ';
-                toggleLink.textContent = 'Login';
-            }
+
+        function applyMode(animate) {
+            document.documentElement.dataset.mode = isLoginMode ? 'login' : 'signup';
+            formTitle.textContent = isLoginMode ? 'Sign in' : 'Create your account';
+            formSubtitle.textContent = isLoginMode
+                ? 'Welcome back to Roka'
+                : 'Welcome! Please fill in the details to get started.';
+            toggleText.textContent = isLoginMode ? "Don't have an account? " : 'Already have an account? ';
+            toggleLink.textContent = isLoginMode ? 'Sign up' : 'Sign in';
+            toggleLink.setAttribute('href', isLoginMode ? '?mode=signup' : '?mode=login');
+            passwordInput.autocomplete = isLoginMode ? 'current-password' : 'new-password';
+            signupInputs.forEach((input) => {
+                input.required = !isLoginMode;
+            });
+            if (!animate) return;
+            formTitle.style.opacity = '0';
+            formSubtitle.style.opacity = '0';
+            requestAnimationFrame(() => {
+                formTitle.style.transition = 'opacity 0.28s ease';
+                formSubtitle.style.transition = 'opacity 0.28s ease';
+                formTitle.style.opacity = '1';
+                formSubtitle.style.opacity = '1';
+            });
         }
 
-        function toggleMode() {
-            isLoginMode = !isLoginMode;
-            applyMode();
+        function toggleMode(nextIsLogin) {
+            isLoginMode = nextIsLogin;
+            applyMode(true);
             if (!oauthError) errorDiv.classList.add('hidden');
+            const next = new URLSearchParams(window.location.search);
+            if (isLoginMode) next.delete('mode');
+            else next.set('mode', 'signup');
+            const qs = next.toString();
+            history.replaceState(null, '', window.location.pathname + (qs ? `?${qs}` : ''));
         }
 
         if (params.get('mode') === 'signup') {
             isLoginMode = false;
-            applyMode();
         }
+        applyMode(false);
 
         toggleLink.addEventListener('click', (e) => {
             e.preventDefault();
-            toggleMode();
+            toggleMode(!isLoginMode);
+        });
+
+        document.getElementById('togglePassword').addEventListener('click', () => {
+            const show = passwordInput.type === 'password';
+            passwordInput.type = show ? 'text' : 'password';
+            document.getElementById('eyeOpen').classList.toggle('hidden', show);
+            document.getElementById('eyeClosed').classList.toggle('hidden', !show);
+            document.getElementById('togglePassword').setAttribute('aria-label', show ? 'Hide password' : 'Show password');
         });
 
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
+
+            const email = document.getElementById('email').value.trim();
+            const password = passwordInput.value;
             submitBtn.disabled = true;
             errorDiv.classList.add('hidden');
 
             try {
                 const endpoint = isLoginMode ? '/auth/login' : '/auth/signup';
+                const payload = { email, password };
+                if (!isLoginMode) {
+                    payload.first_name = document.getElementById('firstName').value.trim();
+                    payload.last_name = document.getElementById('lastName').value.trim();
+                    payload.username = document.getElementById('username').value.trim();
+                    payload.phone = document.getElementById('phone').value.trim();
+                }
                 const response = await fetch(`${API_BASE}${endpoint}`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, password })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
                 });
 
                 const raw = await response.text();
@@ -459,6 +625,40 @@
                 submitBtn.disabled = false;
             }
         });
+
+        function revealForm() {
+            loginContainer.classList.add('ready');
+        }
+
+        function playWelcome() {
+            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            welcomeSplash.classList.remove('hidden');
+            welcomeSplash.setAttribute('aria-hidden', 'false');
+            const hold = reduced ? 700 : 2100;
+            const fade = reduced ? 200 : 700;
+            setTimeout(() => {
+                welcomeSplash.classList.add('fade');
+                revealForm();
+                setTimeout(() => {
+                    welcomeSplash.classList.add('hidden');
+                    welcomeSplash.setAttribute('aria-hidden', 'true');
+                }, fade);
+            }, hold);
+        }
+
+        if (!oauthToken) {
+            const wantsWelcome = params.get('welcome') === '1' || params.get('from') === 'nav';
+            if (wantsWelcome) {
+                const clean = new URLSearchParams(params);
+                clean.delete('welcome');
+                clean.delete('from');
+                const qs = clean.toString();
+                history.replaceState(null, '', window.location.pathname + (qs ? `?${qs}` : '') + window.location.hash);
+                playWelcome();
+            } else {
+                revealForm();
+            }
+        }
     </script>
 </body>
 </html>
