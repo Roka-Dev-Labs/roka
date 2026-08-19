@@ -453,141 +453,6 @@
         }
         .pro-tier-cta:hover { opacity: 0.85; }
 
-        /* Pricing grid */
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            border: 1px solid var(--border-strong);
-            border-radius: 0.75rem;
-            overflow: hidden;
-            max-width: 56rem;
-            margin: 0 auto;
-        }
-        @media (min-width: 768px) {
-            .pricing-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        .pricing-plan {
-            display: flex;
-            flex-direction: column;
-            padding: 1.75rem 1.5rem 1.5rem;
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border);
-        }
-        @media (min-width: 768px) {
-            .pricing-plan:first-child { border-right: 1px solid var(--border); }
-        }
-        .pricing-plan--featured {
-            position: relative;
-            border-bottom: 1px solid var(--border);
-        }
-        .pricing-plan--featured.pro-tier-card {
-            border: none;
-            box-shadow: inset 0 0 0 1.5px var(--text);
-        }
-        .pricing-plan--enterprise {
-            grid-column: 1 / -1;
-            border-bottom: none;
-        }
-        @media (min-width: 768px) {
-            .pricing-plan--enterprise {
-                flex-direction: row;
-                align-items: stretch;
-                gap: 2rem;
-            }
-            .pricing-plan--enterprise .pricing-plan-main {
-                flex: 0 0 14rem;
-                border-right: 1px solid var(--border);
-                padding-right: 2rem;
-            }
-            .pricing-plan--enterprise .pricing-plan-features {
-                flex: 1;
-                border-top: none;
-                padding-top: 0;
-                margin-top: 0;
-            }
-            .pricing-plan--enterprise .pricing-feature-list {
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 0.75rem 1.5rem;
-            }
-        }
-        .pricing-plan-label {
-            font-family: var(--font-mono);
-            font-size: 0.6875rem;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 0.75rem;
-        }
-        .pricing-plan-price {
-            font-size: 2rem;
-            font-weight: 600;
-            letter-spacing: -0.03em;
-            line-height: 1.1;
-            margin-bottom: 0.35rem;
-        }
-        .pricing-plan-price span {
-            font-size: 0.875rem;
-            font-weight: 400;
-            color: var(--text-muted);
-        }
-        .pricing-plan-tagline {
-            font-size: 0.8125rem;
-            color: var(--text-muted);
-            line-height: 1.45;
-            margin-bottom: 1.25rem;
-            min-height: 2.4em;
-        }
-        .pricing-plan-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-        .pricing-plan-actions .btn-secondary,
-        .pricing-plan-actions .btn-primary,
-        .pricing-plan-actions .Btn {
-            flex: 1 1 auto;
-            min-width: 7rem;
-            justify-content: center;
-        }
-        .pricing-plan-features {
-            border-top: 1px solid var(--border);
-            padding-top: 1.25rem;
-            margin-top: auto;
-        }
-        .pricing-feature-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 0.65rem;
-        }
-        .pricing-feature-list li {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.5rem;
-            font-size: 0.8125rem;
-            color: var(--text-muted);
-            line-height: 1.45;
-        }
-        .pricing-feature-list li::before {
-            content: "✓";
-            flex-shrink: 0;
-            color: var(--success);
-            font-size: 0.75rem;
-            margin-top: 0.15rem;
-        }
-        .pricing-feature-list .pricing-feature-plus {
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: var(--text);
-            margin-bottom: 0.15rem;
-        }
-        .pricing-feature-list .pricing-feature-plus::before { content: none; }
-
         /* Feedback modal */
         .feedback-modal-overlay {
             display: none;
@@ -3510,75 +3375,74 @@
             <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Pricing</h2>
         </div>
 
-        <div class="pricing-grid mb-16">
+        <div class="grid md:grid-cols-3 gap-6 mb-16">
             <!-- Free -->
-            <div class="pricing-plan">
-                <div class="pricing-plan-main">
-                    <p class="pricing-plan-label">Free</p>
-                    <div class="pricing-plan-price">$0 <span>/ forever</span></div>
-                    <p class="pricing-plan-tagline">For developers exploring Roka</p>
-                    <div class="pricing-plan-actions">
-                        <a href="#try" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium">Get Started</a>
-                        <a href="https://github.com/Roka-Dev-Labs" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium" rel="noopener">View on GitHub</a>
-                    </div>
+            <div class="surface rounded-xl p-6 flex flex-col">
+                <div class="mb-4">
+                    <h3 class="font-semibold text-lg mb-1">Free</h3>
+                    <p class="text-xs text-muted">For developers exploring Roka</p>
                 </div>
-                <div class="pricing-plan-features">
-                    <ul class="pricing-feature-list">
-                        <li>15K tokens lifetime / device</li>
-                        <li>Local CLI — works offline, no account</li>
-                        <li>Critical error preservation (ERROR / FATAL / panic)</li>
-                        <li>Basic deduplication &amp; fingerprinting</li>
-                    </ul>
+                <div class="mb-6">
+                    <span class="text-3xl font-bold">$0</span><span class="text-sm text-muted">/forever</span>
+                </div>
+                <ul class="space-y-3 text-sm text-muted mb-6 flex-1">
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Local CLI — works offline, no account</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> 15K tokens lifetime / device</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Basic deduplication &amp; fingerprinting</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Critical error preservation (ERROR / FATAL / panic)</li>
+                </ul>
+                <div class="flex gap-2 justify-end">
+                    <a href="#try" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium">Get Started</a>
+                    <a href="https://github.com/Roka-Dev-Labs" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium" rel="noopener">View on GitHub</a>
                 </div>
             </div>
 
             <!-- Pro -->
-            <div class="pricing-plan pricing-plan--featured pro-tier-card">
+            <div class="surface rounded-xl p-6 flex flex-col pro-tier-card">
                 <span class="pro-tier-badge">Popular</span>
-                <div class="pricing-plan-main">
-                    <p class="pricing-plan-label">Pro</p>
-                    <div class="pricing-plan-price">$20 <span>/ month (or $14/month annual)</span></div>
-                    <p class="pricing-plan-tagline">For developers &amp; small teams serious about speed. Free for 3 months in exchange for product feedback.</p>
-                    <div class="pricing-plan-actions">
-                        <button type="button" id="proFeedbackBtn" class="btn-primary text-xs font-medium pro-tier-cta">GET FREE NOW</button>
-                        <a href="/checkout" class="Btn">
-                            Pay
-                            <svg class="svgIcon" viewBox="0 0 576 512" aria-hidden="true"><path d="M512 80c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H512zm16 144V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V224H528zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24H248z"></path></svg>
-                        </a>
-                    </div>
+                <div class="mb-4">
+                    <h3 class="font-semibold text-lg mb-1">Pro</h3>
+                    <p class="text-xs text-muted">For developers &amp; small teams serious about speed</p>
                 </div>
-                <div class="pricing-plan-features">
-                    <ul class="pricing-feature-list">
-                        <li class="pricing-feature-plus">Everything in Free +</li>
-                        <li>500K tokens / month</li>
-                        <li>Web UI + REST API</li>
-                        <li>Semantic re-ranking</li>
-                        <li>Natural language queries</li>
-                        <li>One-click MCP integration</li>
-                        <li>Real-time crash-log MCP server</li>
-                    </ul>
+                <p class="pro-tier-promo">Free for 3 months in exchange for product feedback</p>
+                <div class="mb-6">
+                    <span class="text-3xl font-bold">$20</span><span class="text-sm text-muted">/month (or $14/month annual)</span>
+                </div>
+                <ul class="space-y-3 text-sm text-muted mb-6 flex-1">
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Everything in Free</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Web UI + REST API</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> 500K tokens / month</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Semantic re-ranking</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> One-click MCP integration</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Real-time crash-log MCP server</li>
+                </ul>
+                <div class="flex gap-2 justify-end items-center">
+                    <button type="button" id="proFeedbackBtn" class="btn-primary text-xs font-medium pro-tier-cta">GET FREE NOW</button>
+                    <a href="/checkout" class="Btn">
+                        Pay
+                        <svg class="svgIcon" viewBox="0 0 576 512" aria-hidden="true"><path d="M512 80c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H512zm16 144V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V224H528zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24H248z"></path></svg>
+                    </a>
                 </div>
             </div>
 
             <!-- Enterprise -->
-            <div class="pricing-plan pricing-plan--enterprise">
-                <div class="pricing-plan-main">
-                    <p class="pricing-plan-label">Enterprise</p>
-                    <div class="pricing-plan-price">Custom <span>pricing</span></div>
-                    <p class="pricing-plan-tagline">For teams &amp; companies at scale</p>
-                    <div class="pricing-plan-actions">
-                        <a href="mailto:mukhamedjankydyrli@gmail.com" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium w-full text-center">Contact Sales</a>
-                    </div>
+            <div class="surface rounded-xl p-6 flex flex-col">
+                <div class="mb-4">
+                    <h3 class="font-semibold text-lg mb-1">Enterprise</h3>
+                    <p class="text-xs text-muted">For teams &amp; companies at scale</p>
                 </div>
-                <div class="pricing-plan-features">
-                    <ul class="pricing-feature-list">
-                        <li class="pricing-feature-plus">Everything in Pro +</li>
-                        <li>Unlimited tokens</li>
-                        <li>Full API access</li>
-                        <li>Custom integrations (Splunk, DataDog, GitHub)</li>
-                        <li>Slack channel integration</li>
-                        <li>SSO &amp; audit logs</li>
-                    </ul>
+                <div class="mb-6">
+                    <span class="text-3xl font-bold">Custom</span><span class="text-sm text-muted"> pricing</span>
+                </div>
+                <ul class="space-y-3 text-sm text-muted mb-6 flex-1">
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Everything in Pro</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Unlimited tokens</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Custom integrations (Splunk, DataDog, GitHub)</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Slack channel integration</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> SSO &amp; audit logs</li>
+                </ul>
+                <div class="flex justify-end">
+                    <a href="mailto:mukhamedjankydyrli@gmail.com" class="btn-primary rounded-lg py-2 px-4 text-xs font-medium">Contact Sales</a>
                 </div>
             </div>
         </div>
