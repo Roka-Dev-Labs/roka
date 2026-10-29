@@ -3,87 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pricing — Roka</title>
-    <meta name="description" content="Roka Free is $0 forever. Pro is $20/month or $14/month billed yearly. Checkout is at /checkout via Paddle after you sign in.">
-    <meta property="og:title" content="Pricing — Roka">
-    <meta property="og:description" content="Roka Free is $0 forever. Pro is $20/month or $14/month billed yearly. Checkout is at /checkout via Paddle after you sign in.">
+    <title>Usage limits — Roka</title>
+    <meta name="description" content="Roka is free with usage limits. No subscription or payment required.">
+    <meta property="og:title" content="Usage limits — Roka">
+    <meta property="og:description" content="Roka is free with usage limits. No subscription or payment required.">
     <meta property="og:image" content="https://www.roka-prune.com/assets/images/og.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:url" content="https://www.roka-prune.com/pricing">
     <link rel="canonical" href="https://www.roka-prune.com/pricing">
     <link rel="alternate" type="text/markdown" href="https://www.roka-prune.com/pricing.md">
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Organization",
-          "@id": "https://www.roka-prune.com/#organization",
-          "name": "Roka Labs",
-          "url": "https://www.roka-prune.com/"
-        },
-        {
-          "@type": "WebPage",
-          "@id": "https://www.roka-prune.com/pricing#webpage",
-          "url": "https://www.roka-prune.com/pricing",
-          "name": "Pricing — Roka",
-          "description": "Roka Free is $0 forever. Pro is $20/month or $14/month billed yearly. Checkout is at /checkout via Paddle after you sign in.",
-          "mainEntity": { "@id": "https://www.roka-prune.com/#product" }
-        },
-        {
-          "@type": ["SoftwareApplication", "Product"],
-          "@id": "https://www.roka-prune.com/#product",
-          "name": "Roka",
-          "description": "Context-pruning middleware that compresses production logs for AI coding agents.",
-          "url": "https://www.roka-prune.com/",
-          "image": "https://www.roka-prune.com/assets/images/og.png",
-          "brand": { "@id": "https://www.roka-prune.com/#organization" },
-          "applicationCategory": "DeveloperApplication",
-          "operatingSystem": "Linux, macOS, Windows",
-          "offers": {
-            "@type": "AggregateOffer",
-            "url": "https://www.roka-prune.com/pricing",
-            "priceCurrency": "USD",
-            "lowPrice": "0",
-            "highPrice": "20",
-            "offerCount": 3,
-            "offers": [
-              {
-                "@type": "Offer",
-                "name": "Free",
-                "price": "0",
-                "priceCurrency": "USD",
-                "availability": "https://schema.org/InStock",
-                "url": "https://www.roka-prune.com/pricing"
-              },
-              {
-                "@type": "Offer",
-                "name": "Pro",
-                "price": "20",
-                "priceCurrency": "USD",
-                "availability": "https://schema.org/InStock",
-                "url": "https://www.roka-prune.com/checkout"
-              },
-              {
-                "@type": "Offer",
-                "name": "Enterprise",
-                "priceCurrency": "USD",
-                "availability": "https://schema.org/InStock",
-                "url": "https://www.roka-prune.com/pricing",
-                "description": "Custom pricing. Email mukhamedjankydyrli@gmail.com."
-              }
-            ]
-          }
-        }
-      ]
-    }
-    </script>
+
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Roka">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Pricing — Roka">
-    <meta name="twitter:description" content="Roka Free is $0 forever. Pro is $20/month or $14/month billed yearly. Checkout is at /checkout via Paddle after you sign in.">
+    <meta name="twitter:title" content="Usage limits — Roka">
+    <meta name="twitter:description" content="Roka is free with usage limits. No subscription or payment required.">
     <meta name="twitter:image" content="https://www.roka-prune.com/assets/images/og.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
     <link rel="stylesheet" href="/assets/fonts/montserrat.css">
@@ -116,43 +51,18 @@
         <button id="themeToggle" type="button">Theme</button>
     </nav>
     <main class="wrap">
-        <h1>Pricing</h1>
-        <p class="lede">Start free. Pay for Pro at <a href="/checkout">/checkout</a>. Enterprise is custom.</p>
-        <div class="grid">
-            <article class="card">
-                <h2>Free</h2>
-                <p class="price">$0 <span>/forever</span></p>
-                <ul>
-                    <li>Local CLI, offline</li>
-                    <li>15K tokens lifetime per device</li>
-                    <li>Critical errors always kept</li>
-                    <li>No MCP connect</li>
-                </ul>
-                <a class="btn btn-ghost" href="/install.html">Install CLI</a>
-            </article>
-            <article class="card pro">
-                <h2>Pro</h2>
-                <p class="price">$20 <span>/month · or $14/month annual</span></p>
-                <ul>
-                    <li>500K tokens/month</li>
-                    <li>Web UI + REST API</li>
-                    <li>Semantic re-ranking</li>
-                    <li>MCP agent connect</li>
-                </ul>
-                <a class="btn" href="/checkout">Checkout</a>
-            </article>
-            <article class="card">
-                <h2>Enterprise</h2>
-                <p class="price">Custom</p>
-                <ul>
-                    <li>Unlimited tokens</li>
-                    <li>SSO / audit / integrations</li>
-                    <li>Custom SLAs</li>
-                </ul>
-                <a class="btn btn-ghost" href="mailto:mukhamedjankydyrli@gmail.com">Contact</a>
-            </article>
-        </div>
-        <p class="note">Checkout uses Paddle. You must sign in first. Quotas: <a href="/docs/pricing.html">docs</a>.</p>
+        <h1>Free, with usage limits</h1>
+        <p class="lede">Roka is free. No subscription or payment required.</p>
+        <article class="card">
+            <h2>Usage limits</h2>
+            <ul>
+                <li>Local CLI: 15K tokens lifetime per device; works offline.</li>
+                <li>Hosted API: up to 500K tokens/month, depending on your API key.</li>
+                <li>MCP requires a valid API key with the appropriate access.</li>
+            </ul>
+            <a class="btn" href="/install.html">Get started free</a>
+            <a class="btn btn-ghost" href="/dashboard.html">View your usage</a>
+        </article>
     </main>
     <script>
         const html = document.documentElement;

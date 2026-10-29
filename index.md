@@ -44,13 +44,16 @@ Tools after `serve`: `prune_logs`, `prune_file`, `prune_tail`. Log text stays on
 
 Same pipeline for CLI, MCP, and `POST https://api.roka-prune.com/api/prune`.
 
-## Pricing
+## Free usage & limits
 
-Plans: https://www.roka-prune.com/pricing · Checkout: https://www.roka-prune.com/checkout
+Roka is free with usage limits. No subscription or payment is required.
 
-- **Free** — $0. Local CLI, 15K tokens lifetime per device, critical errors always kept.
-- **Pro** — $20/month or $14/month annual. 500K tokens/month, semantic re-ranking, MCP, web UI + REST API. Three months free in exchange for product feedback.
-- **Enterprise** — custom. Unlimited tokens, SSO / audit / integrations. mailto:mukhamedjankydyrli@gmail.com
+- Local CLI: 15K tokens lifetime per device; works offline without an account.
+- Hosted API: up to 500K tokens per month, depending on your API key.
+- MCP requires a valid API key with the appropriate access.
+
+Check your dashboard for your current quota and remaining usage: https://www.roka-prune.com/dashboard.html
+API keys: https://www.roka-prune.com/dashboard/api-keys.html
 
 ## More pages
 

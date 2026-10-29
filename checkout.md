@@ -1,9 +1,10 @@
-# Checkout
+# Free usage & limits
 
-Transact here: https://www.roka-prune.com/checkout
+Roka is free with usage limits. No subscription or payment is required.
 
-Pro is $20/month USD or $14/month billed annually ($168/year). Checkout runs in Paddle overlay after you sign in at https://www.roka-prune.com/login.html?next=/checkout
+- Local CLI: 15K tokens lifetime per device; works offline without an account.
+- Hosted API: up to 500K tokens per month, depending on your API key.
+- MCP requires a valid API key with the appropriate access.
 
-- Pricing: https://www.roka-prune.com/pricing
-- Signed-in billing: https://www.roka-prune.com/dashboard/upgrade.html
-- Enterprise: mailto:mukhamedjankydyrli@gmail.com
+Check your dashboard for your current quota and remaining usage: https://www.roka-prune.com/dashboard.html
+API keys: https://www.roka-prune.com/dashboard/api-keys.html

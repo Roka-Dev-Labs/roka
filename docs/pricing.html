@@ -3,118 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pricing & quotas — Roka Docs</title>
-    <meta name="description" content="Roka Free, Pro, and Enterprise quotas, the three-month feedback promo, where to get an API key, and what the hosted prune path uses versus local CLI pruning.">
-    <meta property="og:title" content="Pricing & quotas — Roka Docs">
-    <meta property="og:description" content="Roka Free, Pro, and Enterprise quotas, the three-month feedback promo, where to get an API key, and what the hosted prune path uses versus local CLI pruning.">
+    <title>Usage limits — Roka Docs</title>
+    <meta name="description" content="Roka is free with usage limits. Check your dashboard for current quotas.">
+    <meta property="og:title" content="Usage limits — Roka Docs">
+    <meta property="og:description" content="Roka is free with usage limits. Check your dashboard for current quotas.">
     <meta property="og:image" content="https://www.roka-prune.com/assets/images/og.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:url" content="https://www.roka-prune.com/docs/pricing.html">
     <link rel="canonical" href="https://www.roka-prune.com/docs/pricing.html">
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Organization",
-          "@id": "https://www.roka-prune.com/#organization",
-          "name": "Roka Labs",
-          "alternateName": "Roka",
-          "url": "https://www.roka-prune.com/",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://www.roka-prune.com/assets/logos/logo-roka.png"
-          },
-          "sameAs": [
-            "https://github.com/Roka-Dev-Labs",
-            "https://www.instagram.com/roka.app/"
-          ]
-        },
-        {
-          "@type": "WebSite",
-          "@id": "https://www.roka-prune.com/#website",
-          "name": "Roka",
-          "url": "https://www.roka-prune.com/",
-          "description": "Roka prunes noisy production logs into a budgeted slice for AI coding agents.",
-          "inLanguage": "en",
-          "publisher": {
-            "@id": "https://www.roka-prune.com/#organization"
-          }
-        },
-        {
-          "@type": "WebPage",
-          "@id": "https://www.roka-prune.com/docs/pricing.html#webpage",
-          "url": "https://www.roka-prune.com/docs/pricing.html",
-          "name": "Pricing & quotas \u2014 Roka Docs",
-          "description": "Roka Free, Pro, and Enterprise quotas, the three-month feedback promo, where to get an API key, and what the hosted prune path uses versus local CLI pruning.",
-          "isPartOf": {
-            "@id": "https://www.roka-prune.com/#website"
-          },
-          "about": {
-            "@id": "https://www.roka-prune.com/#product"
-          },
-          "mainEntity": {
-            "@id": "https://www.roka-prune.com/#product"
-          },
-          "inLanguage": "en"
-        },
-        {
-          "@type": ["SoftwareApplication", "Product"],
-          "@id": "https://www.roka-prune.com/#product",
-          "name": "Roka",
-          "description": "Context-pruning middleware that compresses production logs for AI coding agents.",
-          "url": "https://www.roka-prune.com/",
-          "image": "https://www.roka-prune.com/assets/images/og.png",
-          "brand": {
-            "@id": "https://www.roka-prune.com/#organization"
-          },
-          "applicationCategory": "DeveloperApplication",
-          "operatingSystem": "Linux, macOS, Windows",
-          "offers": {
-            "@type": "AggregateOffer",
-            "url": "https://www.roka-prune.com/pricing",
-            "priceCurrency": "USD",
-            "lowPrice": "0",
-            "highPrice": "20",
-            "offerCount": 3,
-            "offers": [
-              {
-                "@type": "Offer",
-                "name": "Free",
-                "price": "0",
-                "priceCurrency": "USD",
-                "availability": "https://schema.org/InStock",
-                "url": "https://www.roka-prune.com/pricing"
-              },
-              {
-                "@type": "Offer",
-                "name": "Pro",
-                "price": "20",
-                "priceCurrency": "USD",
-                "availability": "https://schema.org/InStock",
-                "url": "https://www.roka-prune.com/checkout"
-              },
-              {
-                "@type": "Offer",
-                "name": "Enterprise",
-                "priceCurrency": "USD",
-                "availability": "https://schema.org/InStock",
-                "url": "https://www.roka-prune.com/pricing",
-                "description": "Custom pricing."
-              }
-            ]
-          }
-        }
-      ]
-    }
-    </script>
+
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Roka">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Pricing & quotas — Roka Docs">
-    <meta name="twitter:description" content="Roka Free, Pro, and Enterprise quotas, the three-month feedback promo, where to get an API key, and what the hosted prune path uses versus local CLI pruning.">
+    <meta name="twitter:title" content="Usage limits — Roka Docs">
+    <meta name="twitter:description" content="Roka is free with usage limits. Check your dashboard for current quotas.">
     <meta name="twitter:image" content="https://www.roka-prune.com/assets/images/og.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
     <link rel="stylesheet" href="/assets/fonts/montserrat.css">
@@ -136,27 +40,10 @@
         <aside class="docs-sidebar" id="docs-sidebar"></aside>
         <main class="docs-main">
             <p class="kicker">Concepts</p>
-            <h1>Pricing &amp; quotas</h1>
-            <p class="lede">Numbers below match the live site. Buy at <a href="/pricing">/pricing</a> and <a href="/checkout">/checkout</a>.</p>
-
-            <table>
-                <thead><tr><th>Tier</th><th>Price</th><th>Highlights</th></tr></thead>
-                <tbody>
-                    <tr><td>Free</td><td>$0 forever</td><td>Local CLI, up to 15K tokens lifetime per device, fingerprinting, critical-error force-keep. No MCP connect.</td></tr>
-                    <tr><td>Pro</td><td>$20/month (or $14/month annual on the pricing page)</td><td>Web UI + API, 500K tokens/month, semantic re-rank, MCP agent connect.</td></tr>
-                    <tr><td>Enterprise</td><td>Custom</td><td>Unlimited, SSO / audit / integrations. Email mukhamedjankydyrli@gmail.com.</td></tr>
-                </tbody>
-            </table>
-
-            <h2>Promo and trial</h2>
-            <ul>
-                <li><strong>3 months of Pro free</strong> in exchange for product feedback — start from the pricing section on the homepage.</li>
-                <li>A separate <strong>7-day trial</strong> path exists for signed-in accounts.</li>
-            </ul>
-            <p>API keys: <a href="/dashboard/api-keys.html">/dashboard/api-keys.html</a>. Upgrade: <a href="/dashboard/upgrade.html">/dashboard/upgrade.html</a>.</p>
-
-            <h2>What Free cannot do</h2>
-            <p><code>roka-mcp connect</code>, <code>serve</code>, and <code>watch</code> exit if the key is missing, invalid, expired, or free-tier. Install the CLI anyway — that path does not require a key.</p>
+            <h1>Free usage &amp; limits</h1>
+            <p class="lede">Roka is free with usage limits. No payment required.</p>
+            <ul><li>Local CLI: 15K tokens lifetime per device.</li><li>Hosted API: up to 500K tokens/month, depending on your API key.</li><li>MCP requires a valid API key with the appropriate access.</li></ul>
+            <p>Check <a href="/dashboard.html">your dashboard</a> for remaining usage. <a href="/dashboard/api-keys.html">Manage API keys</a>.</p>
             <div class="docs-foot"><a href="/docs/pipeline.html">← How pruning works</a><a href="/docs/benchmark.html">Benchmark →</a></div>
         </main>
     </div>

@@ -19,7 +19,7 @@ const NAV = [
     label: "Concepts",
     items: [
       { href: "/docs/pipeline.html", id: "pipeline", title: "How pruning works" },
-      { href: "/docs/pricing.html", id: "pricing", title: "Pricing & quotas" },
+      { href: "/docs/pricing.html", id: "pricing", title: "Usage limits" },
       { href: "/docs/benchmark.html", id: "benchmark", title: "Benchmark" },
       { href: "/docs/faq.html", id: "faq", title: "FAQ" },
     ],

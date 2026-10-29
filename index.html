@@ -23,121 +23,77 @@
     <link rel="alternate" type="text/markdown" href="https://www.roka-prune.com/index.md">
     <link rel="describedby" type="text/markdown" href="https://www.roka-prune.com/llms.txt">
     <link rel="alternate" type="text/markdown" title="Full markdown dump" href="https://www.roka-prune.com/llms-full.txt">
-    <script type="application/ld+json">
+    <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Organization",
-          "@id": "https://www.roka-prune.com/#organization",
-          "name": "Roka Labs",
-          "alternateName": "Roka",
-          "url": "https://www.roka-prune.com/",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://www.roka-prune.com/assets/logos/logo-roka.png"
-          },
-          "sameAs": [
-            "https://github.com/Roka-Dev-Labs",
-            "https://www.instagram.com/roka.app/"
-          ]
-        },
-        {
-          "@type": "WebSite",
-          "@id": "https://www.roka-prune.com/#website",
-          "name": "Roka",
-          "url": "https://www.roka-prune.com/",
-          "description": "Roka prunes noisy production logs into a budgeted slice for AI coding agents.",
-          "inLanguage": "en",
-          "publisher": {
-            "@id": "https://www.roka-prune.com/#organization"
-          }
-        },
-        {
-          "@type": "WebPage",
-          "@id": "https://www.roka-prune.com/#webpage",
-          "url": "https://www.roka-prune.com/",
-          "name": "Roka: Prune your logs",
-          "description": "Roka prunes noisy production logs into a budgeted slice for AI coding agents. One command, same pipeline for CLI, MCP, and the playground.",
-          "isPartOf": {
-            "@id": "https://www.roka-prune.com/#website"
-          },
-          "about": {
-            "@id": "https://www.roka-prune.com/#product"
-          },
-          "mainEntity": {
-            "@id": "https://www.roka-prune.com/#product"
-          },
-          "inLanguage": "en"
-        },
-        {
-          "@type": ["SoftwareApplication", "Product"],
-          "@id": "https://www.roka-prune.com/#product",
-          "name": "Roka",
-          "description": "Context-pruning middleware that compresses production logs for AI coding agents.",
-          "url": "https://www.roka-prune.com/",
-          "image": "https://www.roka-prune.com/assets/images/og.png",
-          "brand": {
-            "@id": "https://www.roka-prune.com/#organization"
-          },
-          "applicationCategory": "DeveloperApplication",
-          "operatingSystem": "Linux, macOS, Windows",
-          "offers": {
-            "@type": "AggregateOffer",
-            "url": "https://www.roka-prune.com/pricing",
-            "priceCurrency": "USD",
-            "lowPrice": "0",
-            "highPrice": "20",
-            "offerCount": 3,
-            "offers": [
-              {
-                "@type": "Offer",
-                "name": "Free",
-                "price": "0",
-                "priceCurrency": "USD",
-                "availability": "https://schema.org/InStock",
-                "url": "https://www.roka-prune.com/pricing",
-                "description": "Local CLI, 15K tokens lifetime per device, fingerprinting, critical-error force-keep. No MCP connect."
-              },
-              {
-                "@type": "Offer",
-                "name": "Pro",
-                "price": "20",
-                "priceCurrency": "USD",
-                "availability": "https://schema.org/InStock",
-                "url": "https://www.roka-prune.com/checkout",
-                "priceSpecification": [
-                  {
-                    "@type": "UnitPriceSpecification",
-                    "price": "20",
-                    "priceCurrency": "USD",
-                    "billingDuration": "P1M",
-                    "unitText": "month"
-                  },
-                  {
-                    "@type": "UnitPriceSpecification",
-                    "price": "14",
-                    "priceCurrency": "USD",
-                    "billingDuration": "P1M",
-                    "unitText": "month",
-                    "description": "Billed annually"
-                  }
-                ]
-              },
-              {
-                "@type": "Offer",
-                "name": "Enterprise",
-                "priceCurrency": "USD",
-                "availability": "https://schema.org/InStock",
-                "url": "https://www.roka-prune.com/pricing",
-                "description": "Custom pricing. Unlimited tokens, SSO / audit / integrations. Email mukhamedjankydyrli@gmail.com."
-              }
-            ]
-          }
-        }
+      "@type": "Organization",
+      "@id": "https://www.roka-prune.com/#organization",
+      "name": "Roka Labs",
+      "alternateName": "Roka",
+      "url": "https://www.roka-prune.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.roka-prune.com/assets/logos/logo-roka.png"
+      },
+      "sameAs": [
+        "https://github.com/Roka-Dev-Labs",
+        "https://www.instagram.com/roka.app/"
       ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.roka-prune.com/#website",
+      "name": "Roka",
+      "url": "https://www.roka-prune.com/",
+      "description": "Roka prunes noisy production logs into a budgeted slice for AI coding agents.",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://www.roka-prune.com/#organization"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://www.roka-prune.com/#webpage",
+      "url": "https://www.roka-prune.com/",
+      "name": "Roka: Prune your logs",
+      "description": "Roka prunes noisy production logs into a budgeted slice for AI coding agents. One command, same pipeline for CLI, MCP, and the playground.",
+      "isPartOf": {
+        "@id": "https://www.roka-prune.com/#website"
+      },
+      "about": {
+        "@id": "https://www.roka-prune.com/#product"
+      },
+      "mainEntity": {
+        "@id": "https://www.roka-prune.com/#product"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": [
+        "SoftwareApplication",
+        "Product"
+      ],
+      "@id": "https://www.roka-prune.com/#product",
+      "name": "Roka",
+      "description": "Context-pruning middleware that compresses production logs for AI coding agents.",
+      "url": "https://www.roka-prune.com/",
+      "image": "https://www.roka-prune.com/assets/images/og.png",
+      "brand": {
+        "@id": "https://www.roka-prune.com/#organization"
+      },
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Linux, macOS, Windows",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "description": "Free with usage limits",
+        "url": "https://www.roka-prune.com/#pricing"
+      }
     }
-    </script>
+  ]
+}</script>
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Roka">
@@ -768,7 +724,6 @@
         .log-collapsed { color: var(--term-ok); }
         .log-dim { opacity: 0.35; }
 
-        /* Semantic colors inside static mock terminals */
         .mock-terminal .term-err { color: var(--danger); font-weight: 600; }
         .mock-terminal .term-crit { color: var(--danger); font-weight: 700; }
         .mock-terminal .term-warn { color: #fbbf24; }
@@ -2433,7 +2388,7 @@
 
                     <input class="customCheckBoxInput" id="nav-pricing" type="radio" name="siteNav" data-section="pricing">
                     <label class="customCheckBoxWrapper" for="nav-pricing" data-href="#pricing">
-                        <div class="customCheckBox"><div class="inner">Pricing</div></div>
+                        <div class="customCheckBox"><div class="inner">Usage limits</div></div>
                     </label>
 
                     <input class="customCheckBoxInput" id="nav-about" type="radio" name="siteNav" data-section="about">
@@ -2481,7 +2436,7 @@
         <a href="/testing.html" class="mobile-sidebar-link">Testing</a>
         <a href="#mcp" class="mobile-sidebar-link">MCP</a>
         <a href="#features" class="mobile-sidebar-link">Features</a>
-        <a href="#pricing" class="mobile-sidebar-link">Pricing</a>
+        <a href="#pricing" class="mobile-sidebar-link">Usage limits</a>
         <a href="/docs/" class="mobile-sidebar-link">Docs</a>
         <a href="/install.html" class="mobile-sidebar-link">Install</a>
         <a href="/login.html?welcome=1" class="mobile-sidebar-link" id="mobileLoginLink">Login</a>
@@ -2717,7 +2672,7 @@
                     </tr>
                     <tr class="hover:bg-[var(--accent-glow)] transition-colors">
                         <td class="p-4 text-muted">Price</td>
-                        <td class="p-4 text-center font-semibold text-[var(--text)]">Free / $20 Pro</td>
+                        <td class="p-4 text-center font-semibold text-[var(--text)]">Free with limits</td>
                         <td class="p-4 text-center text-[var(--text-muted)]">Pay per token</td>
                         <td class="p-4 text-center text-[var(--text-muted)]">Complex setup</td>
                     </tr>
@@ -2792,11 +2747,11 @@
         </div>
 
         <div class="text-center mt-12">
-            <p class="text-xs text-faint mb-3">Hover the icons to see agent names · Pro MCP connect (API key required):</p>
+            <p class="text-xs text-faint mb-3">Hover the icons to see agent names · MCP connect (valid API key required):</p>
             <div class="inline-block bg-[var(--bg)] border border-[var(--border-strong)] rounded-lg px-6 py-3 mono text-sm">
                 npx roka-mcp connect --agent <span style="color:var(--success)">&lt;claude-code&nbsp;|&nbsp;cursor&nbsp;|&nbsp;…&gt;</span> --api-key rk_live_...
             </div>
-            <p class="text-xs text-faint mt-3"><a href="#pricing" class="hover:text-[var(--text-muted)] transition underline underline-offset-2">Get a Pro key</a> (3 months free for feedback) · free CLI: use Terminal install above</p>
+            <p class="text-xs text-faint mt-3"><a href="#pricing" class="hover:text-[var(--text-muted)] transition underline underline-offset-2">Get an API key</a> (usage limits apply) · free CLI: use Terminal install above</p>
         </div>
     </section>
 
@@ -2804,7 +2759,7 @@
         <div class="text-center mb-10">
             <div class="flex items-center justify-center gap-3 mb-4">
                 <span class="eyebrow">If you use Claude Code, Cursor, Gemini, Codex, or Copilot — read this</span>
-                <span class="pro-badge">Pro</span>
+                <span class="pro-badge">Free</span>
             </div>
             <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-4 max-w-3xl mx-auto">Your dev server crashes. Your agent already has the fix in context.</h2>
             <p class="text-muted text-sm max-w-2xl mx-auto leading-relaxed">Roka runs as an MCP server next to your local dev server, watching logs in real time. The moment something crashes, it runs the same prune pipeline — collapse repetition, preserve the exception, rank, pack to budget — and hands Claude Code or Cursor exactly the slice of context needed to debug. No copy-pasting stack traces. No blowing the context window on thousands of lines of noise.</p>
@@ -2839,7 +2794,7 @@
 
         <div class="text-center">
             <a href="#pricing" class="btn-primary rounded-full px-6 py-2.5 text-sm font-medium">One-click MCP install</a>
-            <p class="text-xs text-faint mt-3 mono">Pro feature · <a href="#pricing" class="hover:text-[var(--text-muted)] transition underline underline-offset-2">see pricing</a></p>
+            <p class="text-xs text-faint mt-3 mono">API key required · <a href="#pricing" class="hover:text-[var(--text-muted)] transition underline underline-offset-2">see usage limits</a></p>
         </div>
     </section>
 
@@ -3372,78 +3327,20 @@
     <!-- Pricing -->
     <section id="pricing" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-12">
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Pricing</h2>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Free, with usage limits</h2>
+            <p class="text-sm text-muted">Use Roka for free. No subscription or payment required.</p>
         </div>
-
-        <div class="grid md:grid-cols-3 gap-6 mb-16">
-            <!-- Free -->
-            <div class="surface rounded-xl p-6 flex flex-col">
-                <div class="mb-4">
-                    <h3 class="font-semibold text-lg mb-1">Free</h3>
-                    <p class="text-xs text-muted">For developers exploring Roka</p>
-                </div>
-                <div class="mb-6">
-                    <span class="text-3xl font-bold">$0</span><span class="text-sm text-muted">/forever</span>
-                </div>
-                <ul class="space-y-3 text-sm text-muted mb-6 flex-1">
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Local CLI — works offline, no account</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> 15K tokens lifetime / device</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Basic deduplication &amp; fingerprinting</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Critical error preservation (ERROR / FATAL / panic)</li>
-                </ul>
-                <div class="flex gap-2 justify-end">
-                    <a href="#try" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium">Get Started</a>
-                    <a href="https://github.com/Roka-Dev-Labs" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium" rel="noopener">View on GitHub</a>
-                </div>
-            </div>
-
-            <!-- Pro -->
-            <div class="surface rounded-xl p-6 flex flex-col pro-tier-card">
-                <span class="pro-tier-badge">Popular</span>
-                <div class="mb-4">
-                    <h3 class="font-semibold text-lg mb-1">Pro</h3>
-                    <p class="text-xs text-muted">For developers &amp; small teams serious about speed</p>
-                </div>
-                <p class="pro-tier-promo">Free for 3 months in exchange for product feedback</p>
-                <div class="mb-6">
-                    <span class="text-3xl font-bold">$20</span><span class="text-sm text-muted">/month (or $14/month annual)</span>
-                </div>
-                <ul class="space-y-3 text-sm text-muted mb-6 flex-1">
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Everything in Free</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Web UI + REST API</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> 500K tokens / month</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Semantic re-ranking</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> One-click MCP integration</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Real-time crash-log MCP server</li>
-                </ul>
-                <div class="flex gap-2 justify-end items-center">
-                    <button type="button" id="proFeedbackBtn" class="btn-primary text-xs font-medium pro-tier-cta">GET FREE NOW</button>
-                    <a href="/checkout" class="Btn">
-                        Pay
-                        <svg class="svgIcon" viewBox="0 0 576 512" aria-hidden="true"><path d="M512 80c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H512zm16 144V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V224H528zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24H248z"></path></svg>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Enterprise -->
-            <div class="surface rounded-xl p-6 flex flex-col">
-                <div class="mb-4">
-                    <h3 class="font-semibold text-lg mb-1">Enterprise</h3>
-                    <p class="text-xs text-muted">For teams &amp; companies at scale</p>
-                </div>
-                <div class="mb-6">
-                    <span class="text-3xl font-bold">Custom</span><span class="text-sm text-muted"> pricing</span>
-                </div>
-                <ul class="space-y-3 text-sm text-muted mb-6 flex-1">
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Everything in Pro</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Unlimited tokens</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Custom integrations (Splunk, DataDog, GitHub)</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Slack channel integration</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> SSO &amp; audit logs</li>
-                </ul>
-                <div class="flex justify-end">
-                    <a href="mailto:mukhamedjankydyrli@gmail.com" class="btn-primary rounded-lg py-2 px-4 text-xs font-medium">Contact Sales</a>
-                </div>
+        <div class="surface rounded-xl p-6 max-w-3xl mx-auto mb-16">
+            <h3 class="font-semibold text-lg mb-4">Know your limits</h3>
+            <ul class="space-y-3 text-sm text-muted mb-6">
+                <li>Local CLI: 15K tokens lifetime per device. Works offline without an account.</li>
+                <li>Hosted API access: up to 500K tokens per month, depending on your API key.</li>
+                <li>MCP requires a valid API key. Check your dashboard for available access and remaining quota.</li>
+                <li>Critical errors are always preserved.</li>
+            </ul>
+            <div class="flex flex-wrap gap-3">
+                <a href="/install.html" class="btn-primary rounded-lg py-2 px-4 text-xs font-medium">Get started free</a>
+                <a href="/dashboard/api-keys.html" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium">Manage API keys</a>
             </div>
         </div>
 
@@ -3471,11 +3368,11 @@
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
                     <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
-                        <h4 class="font-medium text-sm">What's the difference between Free and Pro?</h4>
+                        <h4 class="font-medium text-sm">Is Roka free?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Free: Local CLI tool, 15K tokens lifetime per device, basic deduplication, and critical error preservation (ERROR / FATAL / panic always kept) — $0 forever.<br><br>Pro: Web UI + API, 500K tokens/month, semantic re-ranking, MCP agent connect. $20/month — or get 3 months free in exchange for product feedback.<br><br>Most developers use Free for occasional debugging. Teams and on-call engineers use Pro.</p>
+                        <p class="text-sm text-muted">Yes. Roka is free with usage limits. The local CLI works offline; hosted API and MCP access require a valid API key. Check your dashboard for your available quota.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -3484,7 +3381,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Yes. The CLI tool (Free tier) works entirely offline. Pro tier requires internet for API calls.</p>
+                        <p class="text-sm text-muted">Yes. The CLI tool (Free tier) works entirely offline. Hosted API access requires internet.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -3493,7 +3390,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">No. Local CLI: logs stay on your machine. Pro/API: we process them in-flight and delete after 24 hours. We don't index, train on, or store your data.<br><br>Your logs are yours.</p>
+                        <p class="text-sm text-muted">No. Local CLI: logs stay on your machine. Hosted API: we process them in-flight and delete after 24 hours. We don't index, train on, or store your data.<br><br>Your logs are yours.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -3520,7 +3417,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Free: 15K tokens lifetime per device.<br><br>Pro: 500K tokens/month.<br><br>Enterprise: Unlimited. Custom SLAs.</p>
+                        <p class="text-sm text-muted">Local CLI: 15K tokens lifetime per device.<br><br>Hosted API: up to 500K tokens/month, depending on your API key. Check your dashboard for your current quota.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -3538,17 +3435,17 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Local CLI / MCP prune tools: your machine, your data — pruning does not upload logs.<br><br>Pro cloud / API: TLS in transit; we don't train on your logs. Formal compliance (SOC 2, SSO, residency) is on the Enterprise roadmap — email us if you need a security questionnaire.</p>
+                        <p class="text-sm text-muted">Local CLI / MCP prune tools: your machine, your data — pruning does not upload logs.<br><br>Hosted API: TLS in transit; we don't train on your logs. Formal compliance (SOC 2, SSO, residency) is on the Enterprise roadmap — email us if you need a security questionnaire.</p>
                     </div>
                 </div>
 
                 <div class="surface rounded-lg overflow-hidden">
                     <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
-                        <h4 class="font-medium text-sm">When should I upgrade to Pro?</h4>
+                        <h4 class="font-medium text-sm">What happens when I reach a limit?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">We're early — no fake conversion stats. Free is the local CLI with a 15K token lifetime ceiling per device, fingerprinting, and critical-error force-keep — $0 forever. Upgrade to Pro when you need MCP agent connect, semantic re-ranking, higher limits, or the web/API. Occasional debugging usually stays free; daily CI / on-call use is where Pro pays for itself.</p>
+                        <p class="text-sm text-muted">Requests are subject to your device or API key quota. Monthly quotas reset each month; the device lifetime quota does not reset. Check your dashboard for remaining usage.</p>
                     </div>
                 </div>
 
@@ -3632,7 +3529,7 @@
                     <span class="text-[10px] font-semibold tracking-widest uppercase" style="color:var(--text-faint)">Product</span>
                     <nav class="flex flex-col gap-2.5">
                         <a href="#features" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Product</a>
-                        <a href="#pricing" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Pricing</a>
+                        <a href="#pricing" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Usage limits</a>
                         <a href="https://github.com/Roka-Dev-Labs/roka/releases" target="_blank" rel="noopener" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Changelog</a>
                         <a href="#mcp" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Integrations</a>
                         <a href="https://github.com/Roka-Dev-Labs" target="_blank" rel="noopener" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Open Source</a>
@@ -3691,76 +3588,6 @@
                 <div class="eyebrow" id="bentoVideoEyebrow">Feature demo</div>
                 <h3 id="bentoVideoTitle"></h3>
                 <p id="bentoVideoDesc"></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- "Pro free for feedback" modal -->
-    <div class="feedback-modal-overlay" id="feedbackModalOverlay" role="dialog" aria-modal="true" aria-labelledby="feedbackModalTitle">
-        <div class="feedback-modal" style="position:relative">
-            <button type="button" class="feedback-modal-close" id="feedbackModalClose" aria-label="Close">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-            </button>
-
-            <div id="feedbackFormView">
-                <h3 id="feedbackModalTitle" class="text-lg font-semibold mb-1">Get 3 months of Pro, free</h3>
-                <p class="text-xs text-muted mb-5">In exchange for a few honest answers about using Roka. We read every submission — this isn't a formality.</p>
-
-                <form id="feedbackForm" novalidate>
-                    <input type="text" name="website" id="fbHoney" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;width:0;opacity:0">
-                    <div class="feedback-field">
-                        <label for="fbContact">Email or GitHub username <span style="color:var(--term-green)">*</span></label>
-                        <input type="text" id="fbContact" name="contact" placeholder="you@example.com or github-handle" autocomplete="email" required>
-                    </div>
-
-                    <div class="feedback-field">
-                        <label>Which stack / agent do you use?</label>
-                        <div class="feedback-agent-options">
-                            <label><input type="checkbox" name="agent" value="cursor"> Cursor</label>
-                            <label><input type="checkbox" name="agent" value="claude-code"> Claude Code</label>
-                            <label><input type="checkbox" name="agent" value="mcp"> MCP (other agent)</label>
-                            <label><input type="checkbox" name="agent" value="cli-only"> CLI only, no agent</label>
-                        </div>
-                    </div>
-
-                    <div class="feedback-field">
-                        <label for="fbMainProblem">What's the biggest problem you have with context / log noise right now? <span style="color:var(--term-green)">*</span></label>
-                        <textarea id="fbMainProblem" name="main_problem" rows="2" placeholder="e.g. crashes get buried under retry spam before my agent ever sees the real error" required></textarea>
-                    </div>
-
-                    <div class="feedback-field">
-                        <label for="fbDownsides">What's missing or annoying in Roka itself — what should we fix or build first?</label>
-                        <textarea id="fbDownsides" name="product_downsides" rows="2" placeholder="be blunt — bugs, missing features, confusing output, wrong defaults…"></textarea>
-                    </div>
-
-                    <div class="feedback-field">
-                        <label for="fbSiteDiscomfort">Did anything on this website feel confusing, broken, or off? <span class="hint">(if yes, where)</span></label>
-                        <textarea id="fbSiteDiscomfort" name="site_discomfort" rows="2" placeholder="a specific page, button, or step is most useful"></textarea>
-                    </div>
-
-                    <div class="feedback-field">
-                        <label for="fbSatisfaction">Where does Roka fall short for you — or where did it fully deliver?</label>
-                        <textarea id="fbSatisfaction" name="satisfaction" rows="2" placeholder="what worked well enough that you'd keep using it as-is"></textarea>
-                    </div>
-
-                    <p class="feedback-error" id="feedbackError"></p>
-
-                    <div class="flex gap-2 justify-end">
-                        <button type="button" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium" id="feedbackCancelBtn">Cancel</button>
-                        <button type="submit" class="btn-primary rounded-lg py-2 px-4 text-xs font-medium pro-tier-cta" id="feedbackSubmitBtn">Submit &amp; Get Pro Access</button>
-                    </div>
-                </form>
-            </div>
-
-            <div id="feedbackSuccessView" class="feedback-success" style="display:none">
-                <h3 class="text-lg font-semibold mb-1">You're in — Pro unlocked</h3>
-                <p class="text-xs text-muted" id="feedbackSuccessSub">Free for 3 months. Save this key — it won't be shown again on this device.</p>
-                <div class="key-box" id="feedbackApiKey">rk_live_...</div>
-                <div class="flex gap-2 justify-center mb-2">
-                    <button type="button" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium" id="feedbackCopyKeyBtn">Copy key</button>
-                    <button type="button" class="btn-primary rounded-lg py-2 px-4 text-xs font-medium" id="feedbackDoneBtn">Done</button>
-                </div>
-                <div class="connect-cmd" id="feedbackConnectCmd">npx roka-mcp connect --agent cursor --api-key rk_live_...</div>
             </div>
         </div>
     </div>
@@ -4139,7 +3966,7 @@
                 }
 
                 const data = await readJsonResponse(response);
-                
+
                 currentPrunedText = data.output;
                 els.outputArea.textContent = currentPrunedText;
                 els.copyButton.disabled = false;
@@ -4182,7 +4009,7 @@
 2026-06-21 06:11:15 INFO [Auth] User logged in from 10.0.0.12
 2026-06-21 06:11:20 INFO [Cache] Cache miss for key: user_session_12345`;
             const sampleQuery = "what broke during last night's deploy?";
-            
+
             els.inputText.value = sampleLog;
             els.queryInput.value = sampleQuery;
             els.charCounter.textContent = `${sampleLog.length} chars`;
@@ -4211,7 +4038,7 @@
             toggle.addEventListener('click', () => {
                 const content = toggle.nextElementSibling;
                 const icon = toggle.querySelector('.faq-icon');
-                
+
                 content.classList.toggle('open');
                 icon.textContent = content.classList.contains('open') ? '−' : '+';
                 icon.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
@@ -4742,135 +4569,7 @@
     </script>
 
     <script>
-        // Feedback promo modal
-        (() => {
-            const FEEDBACK_API_BASE = window.ROKA_API_BASE || 'https://api.roka-prune.com';
-            const openBtn = document.getElementById('proFeedbackBtn');
-            const overlay = document.getElementById('feedbackModalOverlay');
-            const closeBtn = document.getElementById('feedbackModalClose');
-            const cancelBtn = document.getElementById('feedbackCancelBtn');
-            const form = document.getElementById('feedbackForm');
-            const errorEl = document.getElementById('feedbackError');
-            const submitBtn = document.getElementById('feedbackSubmitBtn');
-            const formView = document.getElementById('feedbackFormView');
-            const successView = document.getElementById('feedbackSuccessView');
-            const successSub = document.getElementById('feedbackSuccessSub');
-            const apiKeyEl = document.getElementById('feedbackApiKey');
-            const connectCmdEl = document.getElementById('feedbackConnectCmd');
-            const copyKeyBtn = document.getElementById('feedbackCopyKeyBtn');
-            const doneBtn = document.getElementById('feedbackDoneBtn');
-            if (!openBtn || !overlay || !form) return;
 
-            function showError(message) {
-                errorEl.textContent = message;
-                errorEl.style.display = message ? 'block' : 'none';
-            }
-
-            function openModal() {
-                overlay.classList.add('open');
-                formView.style.display = '';
-                successView.style.display = 'none';
-                showError('');
-                document.body.style.overflow = 'hidden';
-            }
-
-            function closeModal() {
-                overlay.classList.remove('open');
-                document.body.style.overflow = '';
-            }
-
-            openBtn.addEventListener('click', openModal);
-            closeBtn.addEventListener('click', closeModal);
-            cancelBtn.addEventListener('click', closeModal);
-            doneBtn.addEventListener('click', closeModal);
-            overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
-            });
-
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                showError('');
-
-                const contact = form.contact.value.trim();
-                const mainProblem = form.main_problem.value.trim();
-                if (!contact) {
-                    showError('Email or GitHub username is required.');
-                    form.contact.focus();
-                    return;
-                }
-                if (!mainProblem) {
-                    showError('Tell us the biggest problem you run into — that\u2019s the point of the trade.');
-                    form.main_problem.focus();
-                    return;
-                }
-
-                const agents = Array.from(form.querySelectorAll('input[name="agent"]:checked')).map((el) => el.value);
-                const payload = {
-                    contact,
-                    agents,
-                    main_problem: mainProblem,
-                    product_downsides: form.product_downsides.value.trim(),
-                    site_discomfort: form.site_discomfort.value.trim(),
-                    satisfaction: form.satisfaction.value.trim(),
-                };
-
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Submitting…';
-
-                try {
-                    const emailPayload = { ...payload, website: form.website ? form.website.value : '' };
-                    const [proResult] = await Promise.allSettled([
-                        fetch(`${FEEDBACK_API_BASE}/feedback/pro`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload),
-                            signal: AbortSignal.timeout(15000),
-                        }),
-                        fetch('/api/feedback', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(emailPayload),
-                            signal: AbortSignal.timeout(15000),
-                        }),
-                    ]);
-
-                    if (proResult.status !== 'fulfilled') {
-                        throw proResult.reason || new Error('Request failed');
-                    }
-                    const res = proResult.value;
-                    const data = await res.json().catch(() => ({}));
-                    if (!res.ok) {
-                        throw new Error(data.detail || `Request failed (HTTP ${res.status})`);
-                    }
-
-                    apiKeyEl.textContent = data.api_key || '';
-                    connectCmdEl.textContent = `npx roka-mcp connect --agent cursor --api-key ${data.api_key || ''}`;
-                    const endsAt = data.trial_ends_at ? new Date(data.trial_ends_at) : null;
-                    successSub.textContent = endsAt && !Number.isNaN(endsAt.getTime())
-                        ? `Free until ${endsAt.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}. Save this key — it won't be shown again on this device.`
-                        : 'Free for 3 months. Save this key — it won\u2019t be shown again on this device.';
-
-                    formView.style.display = 'none';
-                    successView.style.display = '';
-                } catch (err) {
-                    showError(err.message || 'Something went wrong — please try again.');
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Submit & Get Pro Access';
-                }
-            });
-
-            copyKeyBtn.addEventListener('click', () => {
-                const key = apiKeyEl.textContent.trim();
-                if (!key) return;
-                navigator.clipboard.writeText(key).then(() => {
-                    const original = copyKeyBtn.textContent;
-                    copyKeyBtn.textContent = 'Copied!';
-                    setTimeout(() => { copyKeyBtn.textContent = original; }, 1500);
-                });
-            });
-        })();
     </script>
 </body>
 </html>

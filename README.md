@@ -36,7 +36,7 @@ Manual install and PATH notes: [INSTALLATION.md](INSTALLATION.md).
 
 MCP is a **Pro** feature. The `roka-mcp` package is on npm (`npx roka-mcp@latest`), but `connect` / `serve` / `watch` require a Pro API key — without one the command exits instead of writing config.
 
-Get a key via the [3-month feedback promo](https://roka-prune.com/#pricing) or the [dashboard](https://roka-prune.com/dashboard/api-keys.html), then:
+Get a key via the [API key dashboard](https://roka-prune.com/dashboard/api-keys.html) or the [dashboard](https://roka-prune.com/dashboard/api-keys.html), then:
 
 ```bash
 npx roka-mcp connect --agent claude-code --api-key rk_live_...
@@ -106,19 +106,16 @@ We're early — the study measures **retention under budget**, not downstream ag
 
 ---
 
-## Pricing (summary)
+## Free usage & limits
 
-Matches the live API quotas (Free = 15K tokens lifetime per device; Pro = 500K / month):
+Roka is free with usage limits. No subscription or payment is required.
 
-| Tier | Price | Highlights |
-|------|-------|------------|
-| **Free** | $0 | Local CLI, up to 15K tokens lifetime per device, fingerprinting, critical-error force-keep |
-| **Pro** | $20/mo | Web UI + API, 500K tokens/month, semantic re-rank, MCP agent connect |
-| **Enterprise** | Custom | Unlimited, SSO / audit / integrations — [contact](mailto:mukhamedjankydyrli@gmail.com) |
+- Local CLI: 15K tokens lifetime per device; works offline without an account.
+- Hosted API: up to 500K tokens per month, depending on your API key.
+- MCP requires a valid API key with the appropriate access.
 
-Promo: **3 months of Pro free** in exchange for product feedback ([pricing page](https://roka-prune.com/#pricing)). A separate 7-day trial path also exists for signed-in accounts.
-
-Details: [roka-prune.com/#pricing](https://roka-prune.com/#pricing).
+Check your dashboard for your current quota and remaining usage: https://www.roka-prune.com/dashboard.html
+API keys: https://www.roka-prune.com/dashboard/api-keys.html
 
 ---
 

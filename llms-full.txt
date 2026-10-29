@@ -54,11 +54,16 @@ Tools after `serve`: `prune_logs`, `prune_file`, `prune_tail`. Log text stays on
 
 Same pipeline for CLI, MCP, and `POST https://api.roka-prune.com/api/prune`.
 
-## Pricing
+## Free usage & limits
 
-- **Free** — $0. Local CLI, 15K tokens lifetime per device, critical errors always kept.
-- **Pro** — $20/month or $14/month annual. 500K tokens/month, semantic re-ranking, MCP, web UI + REST API. Three months free in exchange for product feedback.
-- **Enterprise** — custom. Unlimited tokens, SSO / audit / integrations. mailto:mukhamedjankydyrli@gmail.com
+Roka is free with usage limits. No subscription or payment is required.
+
+- Local CLI: 15K tokens lifetime per device; works offline without an account.
+- Hosted API: up to 500K tokens per month, depending on your API key.
+- MCP requires a valid API key with the appropriate access.
+
+Check your dashboard for your current quota and remaining usage: https://www.roka-prune.com/dashboard.html
+API keys: https://www.roka-prune.com/dashboard/api-keys.html
 
 ## More pages
 
@@ -329,24 +334,16 @@ Pruning (`prune_logs` / `prune_file` / `prune_tail` / `watch --on-crash`) runs i
 
 <!-- source: https://www.roka-prune.com/docs/pricing.html -->
 
-# Pricing & quotas
+# Free usage & limits
 
-Confirm on https://www.roka-prune.com/#pricing if you are buying.
+Roka is free with usage limits. No subscription or payment is required.
 
-| Tier | Price | Highlights |
-| --- | --- | --- |
-| Free | $0 forever | Local CLI, up to 15K tokens lifetime per device, fingerprinting, critical-error force-keep. No MCP connect. |
-| Pro | $20/month (or $14/month annual) | Web UI + API, 500K tokens/month, semantic re-rank, MCP agent connect. |
-| Enterprise | Custom | Unlimited, SSO / audit / integrations. Email mukhamedjankydyrli@gmail.com. |
+- Local CLI: 15K tokens lifetime per device; works offline without an account.
+- Hosted API: up to 500K tokens per month, depending on your API key.
+- MCP requires a valid API key with the appropriate access.
 
-**3 months of Pro free** in exchange for product feedback (homepage pricing). A separate **7-day trial** path exists for signed-in accounts.
-
+Check your dashboard for your current quota and remaining usage: https://www.roka-prune.com/dashboard.html
 API keys: https://www.roka-prune.com/dashboard/api-keys.html
-
-`roka-mcp connect`, `serve`, and `watch` exit if the key is missing, invalid, expired, or free-tier. The CLI prune path does not require a key.
-
-
----
 
 <!-- source: https://www.roka-prune.com/docs/benchmark.html -->
 
