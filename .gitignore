@@ -7,12 +7,15 @@ __pycache__/
 
 # Rust — source and build (private; only binaries are distributed)
 src/
+!dashboard-app/src/
+!dashboard-app/src/**
 Cargo.toml
 Cargo.lock
 target/
 
 # Node
 node_modules/
+dashboard-app/dist/
 
 # Environment & secrets
 *.env

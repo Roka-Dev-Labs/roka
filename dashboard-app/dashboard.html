@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Roka</title>
+    <meta name="description" content="Your Roka dashboard: see plan tier, trial status, and monthly token usage for Pro API keys used by the CLI, playground, and roka-mcp server.">
+    <meta property="og:title" content="Dashboard — Roka">
+    <meta property="og:description" content="Your Roka dashboard: see plan tier, trial status, and monthly token usage for Pro API keys used by the CLI, playground, and roka-mcp server.">
+    <meta property="og:image" content="https://www.roka-prune.com/assets/images/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://www.roka-prune.com/dashboard.html">
+    <link rel="canonical" href="https://www.roka-prune.com/dashboard.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Roka">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Dashboard — Roka">
+    <meta name="twitter:description" content="Your Roka dashboard: see plan tier, trial status, and monthly token usage for Pro API keys used by the CLI, playground, and roka-mcp server.">
+    <meta name="twitter:image" content="https://www.roka-prune.com/assets/images/og.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png" />
+    <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg" />
+    <link rel="shortcut icon" href="/assets/icons/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Roka" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="stylesheet" href="/assets/fonts/montserrat.css">
+    <script src="/js/config.js"></script>
+    <script src="/js/console-egg.js" defer></script>
+    <script>
+        (function () {
+            var theme = localStorage.getItem('roka-theme') === 'light' ? 'light' : 'dark';
+            document.documentElement.classList.toggle('dark', theme === 'dark');
+            localStorage.setItem('roka-theme', theme);
+        })();
+    </script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="/src/entries/overview.jsx"></script>
+</body>
+</html>

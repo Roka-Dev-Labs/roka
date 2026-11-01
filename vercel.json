@@ -2,7 +2,43 @@
   "version": 2,
   "builds": [
     {
-      "src": "*.html",
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "pricing.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "checkout.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "research.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "install.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "login.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "about.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "testing.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "terms.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "privacy.html",
       "use": "@vercel/static"
     },
     {
@@ -10,8 +46,11 @@
       "use": "@vercel/static"
     },
     {
-      "src": "dashboard/**/*.html",
-      "use": "@vercel/static"
+      "src": "dashboard-app/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     },
     {
       "src": "js/**/*",
