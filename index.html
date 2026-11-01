@@ -89,7 +89,7 @@
         "price": "0",
         "priceCurrency": "USD",
         "description": "Free with usage limits",
-        "url": "https://www.roka-prune.com/#pricing"
+        "url": "https://www.roka-prune.com/#mcp"
       }
     }
   ]
@@ -2386,11 +2386,6 @@
                         <div class="customCheckBox"><div class="inner">Features</div></div>
                     </label>
 
-                    <input class="customCheckBoxInput" id="nav-pricing" type="radio" name="siteNav" data-section="pricing">
-                    <label class="customCheckBoxWrapper" for="nav-pricing" data-href="#pricing">
-                        <div class="customCheckBox"><div class="inner">Usage limits</div></div>
-                    </label>
-
                     <input class="customCheckBoxInput" id="nav-about" type="radio" name="siteNav" data-section="about">
                     <label class="customCheckBoxWrapper" for="nav-about" data-href="/about.html">
                         <div class="customCheckBox"><div class="inner">About</div></div>
@@ -2436,7 +2431,6 @@
         <a href="/testing.html" class="mobile-sidebar-link">Testing</a>
         <a href="#mcp" class="mobile-sidebar-link">MCP</a>
         <a href="#features" class="mobile-sidebar-link">Features</a>
-        <a href="#pricing" class="mobile-sidebar-link">Usage limits</a>
         <a href="/docs/" class="mobile-sidebar-link">Docs</a>
         <a href="/install.html" class="mobile-sidebar-link">Install</a>
         <a href="/login.html?welcome=1" class="mobile-sidebar-link" id="mobileLoginLink">Login</a>
@@ -2460,18 +2454,18 @@
         </div>
 
         <h1 class="hero-headline">the debugging layer for runtime data.</h1>
-        <p class="hero-sub">Turn runtime failures into context your agent can act on. Roka cuts repetitive output, preserves critical failures, and gives your agent a clear path to the fix.</p>
+        <p class="hero-sub">Connect Roka to your AI agent for free. It automatically prunes noisy runtime output under the hood, preserves critical failures, and gives your agent the context to fix them.</p>
 
         <!-- Install / Agent panel -->
         <div class="agent-panel px-5 reveal visible">
             <div class="agent-panel-top">
                 <span class="agent-label">INSTALL ROKA</span>
                 <div class="mode-tabs" role="tablist" id="modeTabs">
-                    <button type="button" class="mode-tab active" data-mode="terminal" role="tab">
+                    <button type="button" class="mode-tab" data-mode="terminal" role="tab">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
                         Terminal
                     </button>
-                    <button type="button" class="mode-tab" data-mode="agent" role="tab">
+                    <button type="button" class="mode-tab active" data-mode="agent" role="tab">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16.01"/><line x1="16" y1="16" x2="16" y2="16.01"/></svg>
                         AI Agent
                     </button>
@@ -2479,7 +2473,7 @@
             </div>
 
             <!-- Terminal mode: CLI installer -->
-            <div class="mode-panel active" data-mode-panel="terminal">
+            <div class="mode-panel" data-mode-panel="terminal">
                 <p class="text-xs text-muted mb-3">Install the local <span class="mono inline-code" style="color:var(--text)">roka</span> CLI — detects OS and architecture automatically.</p>
                 <button type="button" class="cmd-btn active" data-copy="curl -fsSL https://install.roka-prune.com | bash" aria-label="Copy command">
                     <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>curl -fsSL https://install.roka-prune.com | bash</span>
@@ -2487,8 +2481,8 @@
                 </button>
             </div>
 
-            <!-- AI Agent mode: per-agent connect command (Pro — requires API key) -->
-            <div class="mode-panel" data-mode-panel="agent">
+            <!-- AI Agent mode: per-agent connect command (free MCP connection) -->
+            <div class="mode-panel active" data-mode-panel="agent">
                 <div class="agent-tabs" role="tablist">
                     <button type="button" class="agent-tab active" data-agent="claude" role="tab">Claude Code</button>
                     <button type="button" class="agent-tab" data-agent="cursor" role="tab">Cursor</button>
@@ -2751,7 +2745,7 @@
             <div class="inline-block bg-[var(--bg)] border border-[var(--border-strong)] rounded-lg px-6 py-3 mono text-sm">
                 npx roka-mcp connect --agent <span style="color:var(--success)">&lt;claude-code&nbsp;|&nbsp;cursor&nbsp;|&nbsp;…&gt;</span> --api-key rk_live_...
             </div>
-            <p class="text-xs text-faint mt-3"><a href="#pricing" class="hover:text-[var(--text-muted)] transition underline underline-offset-2">Get an API key</a> (usage limits apply) · free CLI: use Terminal install above</p>
+            <p class="text-xs text-faint mt-3">Connect once. Your agent handles log pruning automatically under the hood.</p>
         </div>
     </section>
 
@@ -2793,8 +2787,8 @@
         </div>
 
         <div class="text-center">
-            <a href="#pricing" class="btn-primary rounded-full px-6 py-2.5 text-sm font-medium">One-click MCP install</a>
-            <p class="text-xs text-faint mt-3 mono">API key required · <a href="#pricing" class="hover:text-[var(--text-muted)] transition underline underline-offset-2">see usage limits</a></p>
+            <a href="#mcp" class="btn-primary rounded-full px-6 py-2.5 text-sm font-medium">Connect your agent — free</a>
+            <p class="text-xs text-faint mt-3 mono">Free MCP connection · automatic pruning · usage limits apply</p>
         </div>
     </section>
 
@@ -2847,7 +2841,7 @@
             <div class="showcase-card" data-showcase="install">
                 <div class="terminal-loader">
                     <div class="terminal-header">
-                        <div class="terminal-title">One-click MCP install</div>
+                        <div class="terminal-title">Connect your agent — free</div>
                         <div class="terminal-controls">
                             <div class="control close"></div>
                             <div class="control minimize"></div>
@@ -3325,25 +3319,7 @@
     </section>
 
     <!-- Pricing -->
-    <section id="pricing" class="max-w-6xl mx-auto px-5 py-24 reveal">
-        <div class="text-center mb-12">
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Free, with usage limits</h2>
-            <p class="text-sm text-muted">Use Roka for free. No subscription or payment required.</p>
-        </div>
-        <div class="surface rounded-xl p-6 max-w-3xl mx-auto mb-16">
-            <h3 class="font-semibold text-lg mb-4">Know your limits</h3>
-            <ul class="space-y-3 text-sm text-muted mb-6">
-                <li>Local CLI: 15K tokens lifetime per device. Works offline without an account.</li>
-                <li>Hosted API access: up to 500K tokens per month, depending on your API key.</li>
-                <li>MCP requires a valid API key. Check your dashboard for available access and remaining quota.</li>
-                <li>Critical errors are always preserved.</li>
-            </ul>
-            <div class="flex flex-wrap gap-3">
-                <a href="/install.html" class="btn-primary rounded-lg py-2 px-4 text-xs font-medium">Get started free</a>
-                <a href="/dashboard/api-keys.html" class="btn-secondary rounded-lg py-2 px-4 text-xs font-medium">Manage API keys</a>
-            </div>
-        </div>
-
+    <section id="faq" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <!-- FAQ -->
         <div class="max-w-3xl mx-auto pt-12">
             <h3 class="text-xl font-semibold tracking-tight mb-6 text-center">FAQ</h3>
@@ -3372,7 +3348,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Yes. Roka is free with usage limits. The local CLI works offline; hosted API and MCP access require a valid API key. Check your dashboard for your available quota.</p>
+                        <p class="text-sm text-muted">Yes. Roka and MCP connection are free, with usage limits. Connect your agent once, and it handles log pruning automatically under the hood. You do not need to prune logs by hand.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -3529,7 +3505,6 @@
                     <span class="text-[10px] font-semibold tracking-widest uppercase" style="color:var(--text-faint)">Product</span>
                     <nav class="flex flex-col gap-2.5">
                         <a href="#features" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Product</a>
-                        <a href="#pricing" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Usage limits</a>
                         <a href="https://github.com/Roka-Dev-Labs/roka/releases" target="_blank" rel="noopener" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Changelog</a>
                         <a href="#mcp" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Integrations</a>
                         <a href="https://github.com/Roka-Dev-Labs" target="_blank" rel="noopener" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Open Source</a>
@@ -3551,7 +3526,7 @@
                 <div class="flex flex-col gap-3">
                     <span class="text-[10px] font-semibold tracking-widest uppercase" style="color:var(--text-faint)">Get Started</span>
                     <nav class="flex flex-col gap-2.5">
-                        <a href="#pricing" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Early Access</a>
+                        <a href="#mcp" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Early Access</a>
                         <a href="login.html?welcome=1" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Sign In</a>
                         <a href="mailto:mukhamedjankydyrli@gmail.com" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Contact</a>
                     </nav>
@@ -4183,7 +4158,7 @@
             else setActive('story');
 
             if (!path.includes('testing.html') && !path.includes('about.html')) {
-                const sectionIds = ['story', 'mcp', 'features', 'pricing'];
+                const sectionIds = ['story', 'mcp', 'features'];
                 const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
                 if (sections.length) {
                     const spy = new IntersectionObserver((entries) => {
