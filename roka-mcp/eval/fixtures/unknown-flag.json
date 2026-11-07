@@ -1,0 +1,13 @@
+{
+  "id": "unknown-flag",
+  "query": "unknown flag on the deploy command",
+  "budget": 300,
+  "gold": "deploy: unknown flag --confg",
+  "notes": "Typo in CLI flag. Healthcheck ERROR lines at the end are noise.",
+  "prefix": { "line": "INFO pulling image registry.local/app:9", "count": 18 },
+  "middle": [
+    "deploy: unknown flag --confg",
+    "deploy: usage: deploy --config path"
+  ],
+  "suffix": { "line": "ERROR healthcheck failed: connection reset", "count": 30 }
+}

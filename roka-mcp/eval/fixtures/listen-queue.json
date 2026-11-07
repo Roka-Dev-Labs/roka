@@ -1,0 +1,13 @@
+{
+  "id": "listen-queue",
+  "query": "nginx could not listen on 8080",
+  "budget": 300,
+  "gold": "nginx: bind() to 0.0.0.0:8080 failed (98: Address already in use)",
+  "notes": "nginx bind failure without crash keywords. Panic-looking ERROR lines are from a sidecar.",
+  "prefix": { "line": "INFO worker started", "count": 16 },
+  "middle": [
+    "nginx: bind() to 0.0.0.0:8080 failed (98: Address already in use)",
+    "nginx: still listening on 0.0.0.0:80"
+  ],
+  "suffix": { "line": "ERROR sidecar panic recovered", "count": 28 }
+}

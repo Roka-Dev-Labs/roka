@@ -46,7 +46,7 @@ export function createServer() {
     {
       title: "Prune log text",
       description:
-        "Prune raw log text: collapse repeated lines, keep error/exception lines, pack to a character budget.",
+        "Prune raw log text: collapse repeated lines, keep crash/query evidence, pack to a character budget. Optional query scores lines so the task, not only recency, decides what stays.",
       inputSchema: {
         text: z.string().describe("Raw log text to prune"),
         budget: z
@@ -55,11 +55,17 @@ export function createServer() {
           .positive()
           .optional()
           .describe(`Target character budget (default ${DEFAULT_BUDGET})`),
+        query: z
+          .string()
+          .optional()
+          .describe("Task or question to score lines against (plain English or keywords)"),
       },
     },
-    async ({ text, budget }) => {
+    async ({ text, budget, query }) => {
       try {
-        return textResult(pruneText(text, budget ?? DEFAULT_BUDGET));
+        return textResult(
+          pruneText(text, budget ?? DEFAULT_BUDGET, query ? { query } : {})
+        );
       } catch (err) {
         return errorResult(`prune_logs failed: ${err.message}`);
       }

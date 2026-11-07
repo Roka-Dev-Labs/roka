@@ -1,0 +1,13 @@
+{
+  "id": "oom-cgroup",
+  "query": "what killed the java worker",
+  "budget": 320,
+  "gold": "Memory cgroup out of memory: Killed process 4421 (java-worker)",
+  "notes": "OOM killer line is the cause. Recent ERROR db timeouts are unrelated.",
+  "prefix": { "line": "INFO gc young generation 12ms", "count": 20 },
+  "middle": [
+    "Memory cgroup out of memory: Killed process 4421 (java-worker)",
+    "kernel: oom_reaper: reaped process 4421"
+  ],
+  "suffix": { "line": "ERROR db timeout after 5000ms", "count": 35 }
+}

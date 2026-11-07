@@ -1,0 +1,13 @@
+{
+  "id": "sshd-bind",
+  "query": "why did sshd fail to bind port",
+  "budget": 280,
+  "gold": "sshd: Bind to port 22: Address already in use",
+  "notes": "Cause has no ERROR/FATAL keyword. Trailing ERROR retries are misleading.",
+  "prefix": { "line": "INFO heartbeat ok", "count": 25 },
+  "middle": [
+    "sshd: Bind to port 22: Address already in use",
+    "sshd: exiting"
+  ],
+  "suffix": { "line": "ERROR retry connection refused", "count": 40 }
+}
