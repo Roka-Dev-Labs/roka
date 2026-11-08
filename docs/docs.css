@@ -44,6 +44,7 @@ html, body {
     letter-spacing: -0.01em;
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.75s ease, color 0.75s ease;
 }
 
 a { color: var(--text); }
@@ -62,6 +63,7 @@ a { color: var(--text); }
     background: var(--bg-sidebar);
     border-right: 1px solid var(--border);
     padding: 1.15rem 0.9rem 2.5rem;
+    transition: background-color 0.75s ease, border-color 0.75s ease, color 0.75s ease;
 }
 
 .docs-brand {
@@ -93,7 +95,7 @@ a { color: var(--text); }
     padding: 0.38rem 0.55rem;
     border-radius: 7px;
 }
-.nav-link:hover { color: var(--text); background: var(--accent-soft); }
+.nav-link:hover { color: var(--text); background: var(--hover-fade, rgba(255, 255, 255, 0.08)); }
 .nav-link.active {
     color: var(--text);
     background: var(--accent-soft);
@@ -110,6 +112,7 @@ a { color: var(--text); }
     top: 0;
     background: var(--bg);
     z-index: 20;
+    transition: background-color 0.75s ease, border-color 0.75s ease, color 0.75s ease;
 }
 
 .docs-main {
@@ -284,6 +287,10 @@ td:first-child { color: var(--text); }
     font: inherit;
     font-size: 0.78rem;
     cursor: pointer;
+}
+.icon-btn:hover {
+    color: var(--text);
+    background: var(--hover-fade, rgba(255, 255, 255, 0.08));
 }
 
 @media (max-width: 860px) {

@@ -142,7 +142,8 @@
             --text-muted: #71717a;
             --text-faint: #52525b;
             --accent: #2b5fc9;
-            --accent-glow: rgba(43, 95, 201, 0.08);
+            --accent-glow: rgba(255, 255, 255, 0.07);
+            --hover-fade: rgba(255, 255, 255, 0.08);
             --signal: #2b5fc9;
             --signal-dim: rgba(43, 95, 201, 0.10);
             --hero-glow: transparent;
@@ -173,7 +174,8 @@
             --text-muted: #52525b;
             --text-faint: #a1a1aa;
             --accent: #1d4ed8;
-            --accent-glow: rgba(29, 78, 216, 0.08);
+            --accent-glow: rgba(0, 0, 0, 0.05);
+            --hover-fade: rgba(0, 0, 0, 0.055);
             --signal: #1d4ed8;
             --signal-dim: rgba(29, 78, 216, 0.08);
             --hero-glow: transparent;
@@ -206,7 +208,7 @@
             font-style: normal;
             letter-spacing: -0.01em;
             line-height: 1.65;
-            transition: background 0.35s ease, color 0.35s ease;
+            transition: background-color 0.75s ease, color 0.75s ease;
         }
 
         /* Soften Tailwind weight utilities — Montserrat reads better light */
@@ -289,7 +291,7 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             box-shadow: none;
-            transition: background 0.35s ease, border-color 0.35s ease;
+            transition: background-color 0.75s ease, border-color 0.75s ease, color 0.75s ease;
         }
 
         .text-muted { color: var(--text-muted); }
@@ -310,8 +312,8 @@
             box-shadow: none;
             transition: background 0.2s ease, transform 0.15s ease;
         }
-        .btn-secondary:hover {
-            background: var(--accent-glow);
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--hover-fade);
         }
 
         .pro-tier-cta {
@@ -454,7 +456,7 @@
             align-items: center;
             justify-content: center;
         }
-        .feedback-modal-close:hover { color: var(--text); background: var(--accent-glow); }
+        .feedback-modal-close:hover { color: var(--text); background: var(--hover-fade); }
         .feedback-field { margin-bottom: 1.1rem; }
         .feedback-field label {
             display: block;
@@ -571,10 +573,18 @@
                 linear-gradient(to bottom, rgba(9, 9, 11, 0.38) 0%, rgba(9, 9, 11, 0.7) 58%, var(--bg) 100%),
                 url("/assets/images/testing-atmosphere.jpg") center 38% / cover no-repeat;
         }
-        [data-theme="light"] .hero-atmosphere {
+        .hero-atmosphere::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.75s ease;
             background:
                 linear-gradient(to bottom, rgba(250, 250, 250, 0.22) 0%, rgba(250, 250, 250, 0.72) 62%, var(--bg) 100%),
                 url("/assets/images/testing-atmosphere-light.jpg") center 46% / cover no-repeat;
+        }
+        [data-theme="light"] .hero-atmosphere::before {
+            opacity: 1;
         }
         .hero-atmosphere::after {
             content: "";
@@ -1146,11 +1156,20 @@
             border: 1px solid var(--border);
             color: var(--text);
             border-radius: 4px;
-            transition: border-color 0.2s;
+            overflow: visible;
+            transition: border-color 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease, outline-color 0.22s ease;
         }
-        .lab-input:focus {
-            outline: none;
-            border-color: var(--border-strong);
+        .lab-input:hover:not(:focus) {
+            background: var(--hover-fade);
+        }
+        .lab-input:focus,
+        .lab-input:focus-visible,
+        .lab-input:active,
+        .lab-input.is-on {
+            outline: 1px solid var(--text);
+            outline-offset: 0;
+            border-color: var(--text);
+            box-shadow: inset 0 0 0 1px var(--text);
         }
 
         .custom-checkbox {
@@ -2410,7 +2429,7 @@
             transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
         }
         .cmd-copy .copy-icon { width: 14px; height: 14px; display: block; }
-        .cmd-copy:hover { color: var(--text); border-color: var(--border-strong); background: var(--accent-glow); }
+        .cmd-copy:hover { color: var(--text); border-color: var(--border-strong); background: var(--hover-fade); }
         .cmd-copy.copied { color: var(--term-green); border-color: var(--term-green); }
 
         /* Big click-to-copy command button — nia-style */
@@ -2702,7 +2721,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            transition: background 0.35s ease, border-color 0.35s ease;
+            transition: background-color 0.75s ease, border-color 0.75s ease, color 0.75s ease;
         }
         .cta-terminal-title {
             font-family: var(--font-mono);
@@ -2744,7 +2763,7 @@
             color: var(--text-faint);
         }
     </style>
-    <link rel="stylesheet" href="/assets/css/press.css">
+    <link rel="stylesheet" href="/assets/css/press.css?v=fade2">
 </head>
 <body class="antialiased">
 
@@ -3662,7 +3681,7 @@
     <section class="max-w-6xl mx-auto px-5 pb-16 -mt-8 reveal">
         <div class="surface rounded-xl p-6 text-center">
             <p class="text-sm text-muted mb-2">Full methodology, raw data, and a deeper look at context pruning for AI agents.</p>
-            <a href="/research.html" class="text-sm font-medium underline underline-offset-2 hover:text-[var(--text)]">Read the full research →</a>
+            <a href="/research.html" class="research-link text-sm font-medium underline underline-offset-2 hover:text-[var(--text)]">Read the full research →</a>
         </div>
     </section>
 
@@ -3677,7 +3696,7 @@
             <div class="lg:col-span-7 flex flex-col gap-4">
                 <div class="surface rounded-xl p-5">
                     <label class="text-xs text-faint uppercase tracking-wider mb-2 block">Query / intent</label>
-                    <input type="text" id="queryInput" class="lab-input w-full px-3 py-2 text-sm" placeholder="e.g. what broke during last night's deploy?">
+                    <input type="text" id="queryInput" class="lab-input w-full px-3 py-2 text-sm" placeholder="e.g. what broke during last night's deploy?" onfocus="this.classList.add('is-on')" onblur="this.classList.remove('is-on')">
                     <div class="flex justify-between mt-4 mb-2">
                         <span class="text-xs text-faint">Token budget</span>
                         <span class="text-xs font-medium mono" id="budgetValue">8,000</span>
@@ -3700,7 +3719,7 @@
                         <span class="text-xs text-faint uppercase tracking-wider">Raw context</span>
                         <span class="text-xs text-faint mono" id="charCounter">0 chars</span>
                     </div>
-                    <textarea id="inputText" class="lab-input w-full p-3 text-xs mono resize-none min-h-[280px]" placeholder="Paste logs, code, or prose…"></textarea>
+                    <textarea id="inputText" class="lab-input w-full p-3 text-xs mono resize-none min-h-[280px]" placeholder="Paste logs, code, or prose…" onfocus="this.classList.add('is-on')" onblur="this.classList.remove('is-on')"></textarea>
                     <div class="flex gap-2 mt-3">
                         <button id="dropZone" type="button" class="btn-secondary flex-1 rounded-lg py-2 text-xs">Attach file</button>
                         <input type="file" id="fileInput" hidden accept=".txt,.log,.py,.js,.ts,.md,.json">
@@ -3756,7 +3775,7 @@
             <h3 class="text-xl font-semibold tracking-tight mb-6 text-center">FAQ</h3>
             <div class="space-y-3" id="faqAccordion">
                 <div class="surface rounded-lg overflow-hidden">
-                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--hover-fade)] transition">
                         <h4 class="font-medium text-sm">Why Roka instead of just uploading to Claude?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
@@ -3765,7 +3784,7 @@
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
-                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--hover-fade)] transition">
                         <h4 class="font-medium text-sm">Why is Roka better than semantic search (RAG)?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
@@ -3774,7 +3793,7 @@
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
-                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--hover-fade)] transition">
                         <h4 class="font-medium text-sm">Is Roka free?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
@@ -3783,7 +3802,7 @@
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
-                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--hover-fade)] transition">
                         <h4 class="font-medium text-sm">Does Roka work offline?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
@@ -3792,7 +3811,7 @@
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
-                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--hover-fade)] transition">
                         <h4 class="font-medium text-sm">Do you store or analyze my logs?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
@@ -3801,7 +3820,7 @@
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
-                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--hover-fade)] transition">
                         <h4 class="font-medium text-sm">How long does processing take?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
@@ -3810,7 +3829,7 @@
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
-                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--hover-fade)] transition">
                         <h4 class="font-medium text-sm">Can I use Roka with tools other than Claude?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
@@ -3819,7 +3838,7 @@
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
-                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--hover-fade)] transition">
                         <h4 class="font-medium text-sm">Is there a limit to how many logs I can process?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
@@ -3828,7 +3847,7 @@
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
-                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--hover-fade)] transition">
                         <h4 class="font-medium text-sm">Can I use Roka in production workflows?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
@@ -3837,7 +3856,7 @@
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
-                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--hover-fade)] transition">
                         <h4 class="font-medium text-sm">What about security / compliance?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
@@ -3847,7 +3866,7 @@
                 </div>
 
                 <div class="surface rounded-lg overflow-hidden">
-                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--hover-fade)] transition">
                         <h4 class="font-medium text-sm">What happens when I reach a limit?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
@@ -3857,7 +3876,7 @@
                 </div>
 
                 <div class="surface rounded-lg overflow-hidden">
-                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--hover-fade)] transition">
                         <h4 class="font-medium text-sm">How does Roka handle very large logs — 500 MB or more?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
@@ -3867,7 +3886,7 @@
                 </div>
 
                 <div class="surface rounded-lg overflow-hidden">
-                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--accent-glow)] transition">
+                    <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--hover-fade)] transition">
                         <h4 class="font-medium text-sm">Does semantic ranking use Roka's models or my AI provider's?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
