@@ -141,7 +141,24 @@
             color: var(--text);
             line-height: 1.7;
             -webkit-font-smoothing: antialiased;
-            transition: background 0.3s, color 0.3s;
+            transition: color 0.3s;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background:
+                linear-gradient(to bottom, rgba(17, 17, 17, 0.62), rgba(17, 17, 17, 0.78)),
+                url("/assets/images/testing-atmosphere.jpg") center 42% / cover no-repeat;
+        }
+
+        html.light body::before {
+            background:
+                linear-gradient(to bottom, rgba(250, 250, 250, 0.82), rgba(250, 250, 250, 0.9)),
+                url("/assets/images/testing-atmosphere.jpg") center 42% / cover no-repeat;
         }
 
         h1, h2, h3 { font-weight: 500; letter-spacing: -0.02em; }
@@ -175,7 +192,7 @@
         a { color: var(--text); }
 
         .surface {
-            background: var(--bg);
+            background: color-mix(in srgb, var(--bg) 88%, transparent);
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 1.5rem;
@@ -188,6 +205,8 @@
             align-items: center;
             justify-content: space-between;
             gap: 1rem;
+            background: color-mix(in srgb, var(--bg) 78%, transparent);
+            backdrop-filter: blur(10px);
         }
 
         .nav-logo {
@@ -287,6 +306,7 @@
             border: 1px solid var(--border);
             border-radius: 10px;
             text-align: center;
+            background: color-mix(in srgb, var(--bg-card) 88%, transparent);
         }
 
         .stat-value {
@@ -361,6 +381,7 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             overflow: hidden;
+            background: color-mix(in srgb, var(--bg-card) 90%, transparent);
             transition: border-color 0.2s;
         }
 
@@ -527,7 +548,7 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 1.15rem 1.2rem;
-            background: var(--bg-card);
+            background: color-mix(in srgb, var(--bg-card) 90%, transparent);
         }
 
         .proof-card h3 {
@@ -548,6 +569,7 @@
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 2rem;
+            background: color-mix(in srgb, var(--bg-card) 90%, transparent);
         }
 
         .proof-steps h3 {
@@ -584,7 +606,7 @@
         .proof-conclusion {
             border-left: 2px solid var(--border-strong);
             padding: 0.9rem 1.1rem;
-            background: var(--bg-card);
+            background: color-mix(in srgb, var(--bg-card) 90%, transparent);
             border-radius: 0 8px 8px 0;
         }
 
@@ -608,7 +630,7 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 1.05rem 1.1rem 1.15rem;
-            background: var(--bg-card);
+            background: color-mix(in srgb, var(--bg-card) 88%, transparent);
         }
         .pipeline-card h3 {
             font-size: 0.9rem;
