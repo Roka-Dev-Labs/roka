@@ -1896,79 +1896,130 @@
             min-height: 11rem;
         }
 
-        /* Orbit scene */
-        .orbit-scene {
+        /* Agent hub — static hexagon, logos sit on the ring */
+        .agent-orbit {
+            --orbit-size: min(400px, calc(100vw - 2.5rem));
+            --orbit-r: calc(var(--orbit-size) * 0.375);
+            --node: clamp(52px, calc(var(--orbit-size) * 0.16), 64px);
             position: relative;
-            width: 360px; height: 360px;
+            width: var(--orbit-size);
+            height: var(--orbit-size);
             margin: 0 auto;
         }
-        .orbit-dashed {
+        .agent-orbit-ring {
             position: absolute;
             inset: 0;
-            border-radius: 50%;
-            border: 1px dashed var(--border-strong);
+            width: 100%;
+            height: 100%;
             pointer-events: none;
+            color: var(--border-strong);
         }
-        .orbit-center {
+        .agent-orbit-ring circle {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.25;
+            vector-effect: non-scaling-stroke;
+        }
+        .agent-orbit-hub {
             position: absolute;
-            top: 50%; left: 50%;
+            top: 50%;
+            left: 50%;
+            width: clamp(76px, 22%, 88px);
+            height: clamp(76px, 22%, 88px);
             transform: translate(-50%, -50%);
-            width: 96px; height: 96px;
             border-radius: 50%;
             background: var(--bg-card);
-            border: 2px solid var(--border-strong);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            gap: 2px;
-            z-index: 10;
-            box-shadow: 0 0 40px rgba(255,255,255,0.08);
+            border: 1px solid var(--border-strong);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            box-shadow: 0 0 0 8px var(--bg);
         }
-        .orbit-item {
+        .agent-orbit-hub img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            filter: var(--logo-filter);
+        }
+        .agent-node {
             position: absolute;
-            top: 50%; left: 50%;
-            margin: -28px 0 0 -28px;
-            width: 56px; height: 56px;
+            top: calc(50% + sin(var(--a)) * var(--orbit-r) - var(--node) / 2);
+            left: calc(50% + cos(var(--a)) * var(--orbit-r) - var(--node) / 2);
+            width: var(--node);
+            height: var(--node);
+            padding: 0;
+            border: 1px solid rgba(0, 0, 0, 0.06);
             border-radius: 16px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: default;
-            transition: transform 0.2s ease;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 3;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+            transform: scale(1);
+            transform-origin: center;
+            appearance: none;
+            -webkit-appearance: none;
         }
-        .orbit-item:hover { z-index: 20; }
-        /* Per-item orbit keyframes — angle θ, radius 140px */
-        @keyframes orb0   { from{transform:rotate(0deg)   translateY(-140px) rotate(0deg)  } to{transform:rotate(360deg) translateY(-140px) rotate(-360deg)  }}
-        @keyframes orb60  { from{transform:rotate(60deg)  translateY(-140px) rotate(-60deg) } to{transform:rotate(420deg) translateY(-140px) rotate(-420deg) }}
-        @keyframes orb120 { from{transform:rotate(120deg) translateY(-140px) rotate(-120deg)} to{transform:rotate(480deg) translateY(-140px) rotate(-480deg)}}
-        @keyframes orb180 { from{transform:rotate(180deg) translateY(-140px) rotate(-180deg)} to{transform:rotate(540deg) translateY(-140px) rotate(-540deg)}}
-        @keyframes orb240 { from{transform:rotate(240deg) translateY(-140px) rotate(-240deg)} to{transform:rotate(600deg) translateY(-140px) rotate(-600deg)}}
-        @keyframes orb300 { from{transform:rotate(300deg) translateY(-140px) rotate(-300deg)} to{transform:rotate(660deg) translateY(-140px) rotate(-660deg)}}
-        .orb-0 { animation: orb0   18s linear infinite; }
-        .orb-1 { animation: orb60  18s linear infinite; }
-        .orb-2 { animation: orb120 18s linear infinite; }
-        .orb-3 { animation: orb180 18s linear infinite; }
-        .orb-4 { animation: orb240 18s linear infinite; }
-        .orb-5 { animation: orb300 18s linear infinite; }
-        .orbit-tooltip {
+        .agent-node img,
+        .agent-node svg {
+            width: 58%;
+            height: 58%;
+            object-fit: contain;
+            pointer-events: none;
+        }
+        .agent-node-name {
             position: absolute;
-            bottom: -22px;
-            left: 50%; transform: translateX(-50%);
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) translate(calc(cos(var(--a)) * 46px), calc(sin(var(--a)) * 46px));
             white-space: nowrap;
             font-size: 10px;
-            color: var(--text-faint);
+            font-weight: 500;
+            letter-spacing: 0.02em;
             font-family: var(--font-mono);
+            color: var(--text-muted);
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.2s;
+            transition: opacity 0.18s ease;
         }
-        .orbit-item:hover .orbit-tooltip { opacity: 1; }
-
-        @media (prefers-reduced-motion: reduce) {
-            .orb-0,.orb-1,.orb-2,.orb-3,.orb-4,.orb-5 { animation: none !important; }
-            .orb-0 { transform: rotate(0deg)   translateY(-140px) rotate(0deg); }
-            .orb-1 { transform: rotate(60deg)  translateY(-140px) rotate(-60deg); }
-            .orb-2 { transform: rotate(120deg) translateY(-140px) rotate(-120deg); }
-            .orb-3 { transform: rotate(180deg) translateY(-140px) rotate(-180deg); }
-            .orb-4 { transform: rotate(240deg) translateY(-140px) rotate(-240deg); }
-            .orb-5 { transform: rotate(300deg) translateY(-140px) rotate(-300deg); }
+        .agent-node:hover,
+        .agent-node:focus-visible {
+            z-index: 5;
+            outline: none;
+        }
+        .agent-node:hover .agent-node-name,
+        .agent-node:focus .agent-node-name,
+        .agent-node:focus-visible .agent-node-name {
+            opacity: 1;
+        }
+        @media (prefers-reduced-motion: no-preference) {
+            .agent-node {
+                transition-property: transform, box-shadow;
+                transition-duration: 0.38s, 0.2s;
+                transition-timing-function:
+                    linear(0, 0.218 2.1%, 0.862 12.3%, 1.114 20.5%, 1.114 22.7%, 1.011 32.6%, 0.977 38.4%, 0.989 44.5%, 1.001 52.3%, 1),
+                    ease;
+            }
+            @media (hover: hover) and (pointer: fine) {
+                .agent-node:hover {
+                    transform: scale(1.08);
+                    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+                }
+            }
+            .agent-node:active {
+                transform: scale(0.94);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+            }
+        }
+        [data-theme="light"] .agent-orbit-hub {
+            box-shadow: 0 0 0 8px var(--bg);
+        }
+        [data-theme="light"] .agent-node {
+            border-color: rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -1978,6 +2029,7 @@
             .prune-line { animation: none !important; display: none; }
             .orbit-float { animation: none !important; }
             .orbit-chip { transition: none !important; }
+            .agent-node { transition: none !important; }
             .tl-typing,
             .sc-type {
                 animation: none !important;
@@ -2965,65 +3017,44 @@
             <p class="text-muted text-sm max-w-xl mx-auto">One command. Same pruning pipeline, any IDE or chat interface.</p>
         </div>
 
-        <!-- Orbit scene -->
-        <div class="orbit-scene">
-            <!-- dashed orbit ring -->
-            <div class="orbit-dashed"></div>
-
-            <!-- center badge -->
-            <div class="orbit-center">
-                <img src="/assets/logos/logo-roka.png" alt="Roka" width="38" height="38" style="border-radius:8px">
-                <span class="mono text-xs font-bold mt-1" style="color:var(--success)">roka</span>
+        <div class="agent-orbit">
+            <svg class="agent-orbit-ring" viewBox="0 0 400 400" aria-hidden="true">
+                <circle cx="200" cy="200" r="150"/>
+            </svg>
+            <div class="agent-orbit-hub">
+                <img src="/assets/logos/logo-roka.png" alt="">
             </div>
-
-            <div class="orbit-item orb-0" title="Claude Code">
-                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:#cc5200;padding:10px">
-                    <img src="/assets/logos/logo-claude.png" alt="Claude" width="36" height="36" style="object-fit:contain;filter:brightness(10)">
-                </div>
-                <span class="orbit-tooltip">Claude Code</span>
-            </div>
-
-            <div class="orbit-item orb-1" title="Cursor">
-                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:#fff;padding:8px">
-                    <img src="/assets/logos/logo-cursor.png" alt="Cursor" width="40" height="40" style="object-fit:contain">
-                </div>
-                <span class="orbit-tooltip">Cursor</span>
-            </div>
-
-            <div class="orbit-item orb-2" title="ChatGPT">
-                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:#fff;padding:10px">
-                    <img src="/assets/logos/logo-chatgpt.png" alt="ChatGPT" width="36" height="36" style="object-fit:contain">
-                </div>
-                <span class="orbit-tooltip">ChatGPT</span>
-            </div>
-
-            <div class="orbit-item orb-3" title="GitHub Copilot">
-                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:#fff;padding:10px">
-                    <img src="/assets/logos/logo-copilot.png" alt="GitHub Copilot" width="36" height="36" style="object-fit:contain">
-                </div>
-                <span class="orbit-tooltip">GitHub Copilot</span>
-            </div>
-
-            <div class="orbit-item orb-4" title="Google Gemini">
-                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:#fff;padding:8px">
-                    <img src="/assets/logos/logo-gemini.png" alt="Gemini" width="40" height="40" style="object-fit:contain">
-                </div>
-                <span class="orbit-tooltip">Google Gemini</span>
-            </div>
-
-            <div class="orbit-item orb-5" title="Any LLM via stdout">
-                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:var(--bg-elevated);border:1.5px solid var(--border-strong)">
-                    <svg width="24" height="24" viewBox="0 0 40 40" fill="none" stroke="var(--text-muted)" stroke-width="2.2">
-                        <polyline points="8,14 15,21 8,28" stroke-linecap="round" stroke-linejoin="round"/>
-                        <line x1="19" y1="27" x2="33" y2="27" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <span class="orbit-tooltip">Any LLM / stdout</span>
-            </div>
+            <button type="button" class="agent-node" style="--a: -90deg" aria-label="Claude Code">
+                <img src="/assets/logos/logo-claude.png" alt="">
+                <span class="agent-node-name">Claude Code</span>
+            </button>
+            <button type="button" class="agent-node" style="--a: -30deg" aria-label="Cursor">
+                <img src="/assets/logos/logo-cursor.png" alt="">
+                <span class="agent-node-name">Cursor</span>
+            </button>
+            <button type="button" class="agent-node" style="--a: 30deg" aria-label="ChatGPT">
+                <img src="/assets/logos/logo-chatgpt.png" alt="">
+                <span class="agent-node-name">ChatGPT</span>
+            </button>
+            <button type="button" class="agent-node" style="--a: 90deg" aria-label="GitHub Copilot">
+                <img src="/assets/logos/logo-copilot.png" alt="">
+                <span class="agent-node-name">GitHub Copilot</span>
+            </button>
+            <button type="button" class="agent-node" style="--a: 150deg" aria-label="Google Gemini">
+                <img src="/assets/logos/logo-gemini.png" alt="">
+                <span class="agent-node-name">Gemini</span>
+            </button>
+            <button type="button" class="agent-node" style="--a: 210deg" aria-label="Any LLM via stdout">
+                <svg viewBox="0 0 40 40" fill="none" stroke="#18181b" stroke-width="2.2" aria-hidden="true">
+                    <polyline points="8,14 15,21 8,28" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="19" y1="27" x2="33" y2="27" stroke-linecap="round"/>
+                </svg>
+                <span class="agent-node-name">stdout</span>
+            </button>
         </div>
 
         <div class="text-center mt-12">
-            <p class="text-xs text-faint mb-3">Hover the icons to see agent names · MCP connect (valid API key required):</p>
+            <p class="text-xs text-faint mb-3">MCP connect (valid API key required):</p>
             <div class="inline-block bg-[var(--bg)] border border-[var(--border-strong)] rounded-lg px-6 py-3 mono text-sm">
                 npx roka-mcp connect --agent <span style="color:var(--success)">&lt;claude-code&nbsp;|&nbsp;cursor&nbsp;|&nbsp;…&gt;</span> --api-key rk_live_...
             </div>
