@@ -11,10 +11,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="Roka" />
     <link rel="manifest" href="/site.webmanifest" />
-    <title>Roka: Prune your logs</title>
-    <meta name="description" content="Roka prunes noisy production logs into a budgeted slice for AI coding agents. One command, same pipeline for CLI, MCP, and the playground.">
-    <meta property="og:title" content="Roka: Prune your logs">
-    <meta property="og:description" content="Roka prunes noisy production logs into a budgeted slice for AI coding agents. One command, same pipeline for CLI, MCP, and the playground.">
+    <title>Roka — the right logs. not the whole log.</title>
+    <meta name="description" content="Roka selects the log lines an AI coding agent needs — crash evidence, query matches, and why they stayed. Local, inspectable, budgeted.">
+    <meta property="og:title" content="Roka — the right logs. not the whole log.">
+    <meta property="og:description" content="Roka selects the log lines an AI coding agent needs — crash evidence, query matches, and why they stayed. Local, inspectable, budgeted.">
     <meta property="og:image" content="https://www.roka-prune.com/assets/images/og.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -46,7 +46,7 @@
       "@id": "https://www.roka-prune.com/#website",
       "name": "Roka",
       "url": "https://www.roka-prune.com/",
-      "description": "Roka prunes noisy production logs into a budgeted slice for AI coding agents.",
+      "description": "Roka selects the log lines an AI coding agent needs — inspectable, local, budgeted.",
       "inLanguage": "en",
       "publisher": {
         "@id": "https://www.roka-prune.com/#organization"
@@ -57,7 +57,7 @@
       "@id": "https://www.roka-prune.com/#webpage",
       "url": "https://www.roka-prune.com/",
       "name": "Roka: Prune your logs",
-      "description": "Roka prunes noisy production logs into a budgeted slice for AI coding agents. One command, same pipeline for CLI, MCP, and the playground.",
+      "description": "The right logs. Not the whole log. Inspectable log selection for AI coding agents.",
       "isPartOf": {
         "@id": "https://www.roka-prune.com/#website"
       },
@@ -76,7 +76,7 @@
       ],
       "@id": "https://www.roka-prune.com/#product",
       "name": "Roka",
-      "description": "Context-pruning middleware that compresses production logs for AI coding agents.",
+      "description": "Selects relevant log lines for AI coding agents. Query-aware, inspectable, local.",
       "url": "https://www.roka-prune.com/",
       "image": "https://www.roka-prune.com/assets/images/og.png",
       "brand": {
@@ -98,8 +98,8 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Roka">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Roka: Prune your logs">
-    <meta name="twitter:description" content="Roka prunes noisy production logs into a budgeted slice for AI coding agents. One command, same pipeline for CLI, MCP, and the playground.">
+    <meta name="twitter:title" content="Roka — the right logs. not the whole log.">
+    <meta name="twitter:description" content="Roka selects the log lines an AI coding agent needs — crash evidence, query matches, and why they stayed. Local, inspectable, budgeted.">
     <meta name="twitter:image" content="https://www.roka-prune.com/assets/images/og.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -128,6 +128,10 @@
         }
     </style>
     <style>
+        @view-transition {
+            navigation: auto;
+        }
+
         :root {
             --bg: #0a0a0a;
             --bg-elevated: #111112;
@@ -137,14 +141,16 @@
             --text: #e4e4e7;
             --text-muted: #71717a;
             --text-faint: #52525b;
-            --accent: #e4e4e7;
-            --accent-glow: rgba(255, 255, 255, 0.06);
-            --hero-glow: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(255,255,255,0.07), transparent 70%);
+            --accent: #e8c547;
+            --accent-glow: rgba(232, 197, 71, 0.08);
+            --signal: #e8c547;
+            --signal-dim: rgba(232, 197, 71, 0.12);
+            --hero-glow: transparent;
             --btn-primary-bg: #fafafa;
             --btn-primary-text: #09090b;
             --btn-secondary-bg: transparent;
             --btn-secondary-text: #fafafa;
-            --success: #e4e4e7;
+            --success: #e8c547;
             --term-ok: #3dd68c;
             --danger: #ff6b7a;
             --term-result: #5b9fff;
@@ -166,9 +172,11 @@
             --text: #09090b;
             --text-muted: #52525b;
             --text-faint: #a1a1aa;
-            --accent: #18181b;
-            --accent-glow: rgba(0, 0, 0, 0.04);
-            --hero-glow: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,0,0,0.04), transparent 70%);
+            --accent: #b45309;
+            --accent-glow: rgba(180, 83, 9, 0.08);
+            --signal: #b45309;
+            --signal-dim: rgba(180, 83, 9, 0.1);
+            --hero-glow: transparent;
             --btn-primary-bg: #09090b;
             --btn-primary-text: #fafafa;
             --btn-secondary-text: #09090b;
@@ -556,7 +564,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            padding: 4.5rem 1.25rem 4.5rem;
+            padding: 2.25rem 1.25rem 2.5rem;
         }
 
         /* Subtle grid texture behind the hero (fades out toward edges) */
@@ -1121,7 +1129,7 @@
         @media (min-width: 640px) {
             .nav-desktop {
                 display: grid;
-                grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+                grid-template-columns: auto minmax(0, 1fr) auto;
                 align-items: center;
                 gap: 1rem;
                 width: 100%;
@@ -1132,14 +1140,22 @@
             }
             .nav-desktop-actions {
                 justify-self: end;
+                position: relative;
+                z-index: 2;
+                background: var(--bg);
             }
+        }
+        @media (max-width: 1100px) {
+            .customCheckBoxHolder { display: none; }
         }
         .customCheckBoxHolder {
             margin: 0 auto;
             display: flex;
             align-items: center;
-            width: 34rem;
-            max-width: min(34rem, calc(100vw - 24rem));
+            width: 100%;
+            max-width: 30rem;
+            min-width: 0;
+            overflow: hidden;
             flex-shrink: 0;
             justify-self: center;
         }
@@ -1157,7 +1173,7 @@
             overflow: hidden;
             cursor: pointer;
             user-select: none;
-            padding: 2px 14px;
+            padding: 2px 10px;
             background-color: rgba(0, 0, 0, 0.16);
             border-radius: 0;
             color: rgba(255, 255, 255, 0.82);
@@ -1798,11 +1814,11 @@
         .hero-headline {
             font-size: clamp(2.1rem, 5.5vw, 3.25rem);
             font-weight: 400;
-            letter-spacing: -0.035em;
+            letter-spacing: -0.04em;
             text-align: center;
             z-index: 10;
-            max-width: 30rem;
-            line-height: 1.15;
+            max-width: 36rem;
+            line-height: 1.12;
         }
         .hero-sub {
             font-size: 1.125rem;
@@ -1810,9 +1826,9 @@
             color: var(--text-muted);
             text-align: center;
             z-index: 10;
-            max-width: 28rem;
+            max-width: 34rem;
             margin-top: 0.75rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.25rem;
             line-height: 1.55;
         }
         .hero-live-stat {
@@ -1823,7 +1839,92 @@
             margin-top: 1rem;
             letter-spacing: 0.04em;
         }
-        .hero-live-stat span { color: var(--success); }
+        .hero-live-stat span { color: var(--signal); }
+
+        .prune-stream { opacity: 0.18; }
+
+        .evidence {
+            width: min(52rem, calc(100% - 2.5rem));
+            margin: 0 auto 2rem;
+            position: relative;
+            z-index: 10;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left;
+        }
+        .evidence-head {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem 1.25rem;
+            align-items: baseline;
+            justify-content: space-between;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border);
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.02em;
+        }
+        .evidence-head .q { color: var(--text-muted); }
+        .evidence-head .q em {
+            font-style: normal;
+            color: var(--signal);
+        }
+        .evidence-meta { color: var(--text-faint); }
+        .evidence-cols,
+        .evidence-row {
+            display: grid;
+            grid-template-columns: 4.5rem minmax(0, 1fr) minmax(7rem, 11rem);
+            gap: 0.75rem;
+            padding: 0.45rem 1rem;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            line-height: 1.45;
+            border-bottom: 1px solid var(--border);
+        }
+        .evidence-cols {
+            color: var(--text-faint);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 10px;
+            background: var(--bg-elevated);
+        }
+        .evidence-row:last-child { border-bottom: none; }
+        .evidence-row.kept {
+            background: var(--signal-dim);
+            box-shadow: inset 2px 0 0 var(--signal);
+        }
+        .evidence-row.dropped { color: var(--text-faint); }
+        .evidence-tag {
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding-top: 0.1rem;
+        }
+        .evidence-row.kept .evidence-tag { color: var(--signal); }
+        .evidence-line { color: var(--text); overflow-wrap: anywhere; }
+        .evidence-row.dropped .evidence-line {
+            color: var(--text-faint);
+            text-decoration: line-through;
+            text-decoration-color: var(--border-strong);
+        }
+        .evidence-why { color: var(--text-muted); }
+        .evidence-foot {
+            padding: 0.7rem 1rem;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-faint);
+            border-top: 1px solid var(--border);
+        }
+        @media (max-width: 640px) {
+            .evidence-cols,
+            .evidence-row {
+                grid-template-columns: 4.2rem minmax(0, 1fr);
+            }
+            .evidence-cols span:last-child,
+            .evidence-why { grid-column: 2; }
+        }
 
         .roka-letter.scrambling {
             animation: none !important;
@@ -2288,51 +2389,11 @@
             opacity: 0.92;
             transform: translateY(-1px);
         }
-        .cta-terminal-kev {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
+        .cta-terminal-note {
             margin-top: 1.35rem;
-        }
-        .cta-terminal-kev-btn {
-            display: inline-flex;
-            padding: 0;
-            border: 0;
-            background: transparent;
-            cursor: pointer;
-            border-radius: 9999px;
-            line-height: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .cta-terminal-kev-btn:focus-visible {
-            outline: 2px solid var(--text-faint);
-            outline-offset: 3px;
-        }
-        .cta-terminal-kev img {
-            width: 28px;
-            height: 28px;
-            border-radius: 9999px;
-            object-fit: cover;
-            object-position: center 12%;
-            border: 1px solid var(--border-strong);
-            flex-shrink: 0;
-            transition: width 0.35s cubic-bezier(.34,1.4,.64,1),
-                        height 0.35s cubic-bezier(.34,1.4,.64,1),
-                        box-shadow 0.3s ease,
-                        border-color 0.3s ease;
-        }
-        .cta-terminal-kev-btn.is-big img {
-            width: 120px;
-            height: 120px;
-            border-color: var(--text-faint);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
-        }
-        .cta-terminal-kev span {
             font-family: var(--font-mono);
             font-size: 12px;
             color: var(--text-faint);
-            transition: color 0.35s ease;
         }
     </style>
 </head>
@@ -2385,14 +2446,9 @@
                     <label class="customCheckBoxWrapper" for="nav-features" data-href="#features">
                         <div class="customCheckBox"><div class="inner">Features</div></div>
                     </label>
-
-                    <input class="customCheckBoxInput" id="nav-about" type="radio" name="siteNav" data-section="about">
-                    <label class="customCheckBoxWrapper" for="nav-about" data-href="/about.html">
-                        <div class="customCheckBox"><div class="inner">About</div></div>
-                    </label>
                 </div>
                 <div class="nav-desktop-actions flex items-center gap-2 flex-shrink-0">
-                    <a href="/login.html?welcome=1" id="navLoginBtn" class="nav-login-btn inline-flex">Login</a>
+                    <a href="/login.html" id="navLoginBtn" class="nav-login-btn inline-flex">Login</a>
                     <button id="themeToggle" type="button"
                         class="theme-toggle-btn"
                         aria-label="Toggle theme">
@@ -2403,20 +2459,8 @@
                         <span id="themeLabel">Light</span>
                     </button>
                     <a href="/install.html"
-                       class="relative inline-flex items-center justify-center px-4 py-1.5 overflow-hidden tracking-tighter text-white bg-gray-800 rounded-md group text-[0.9375rem] font-semibold no-underline min-w-[5.25rem]">
-                        <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-sky-500 rounded-full group-hover:w-44 group-hover:h-44"></span>
-                        <span class="absolute bottom-0 left-0 h-full -ml-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-auto h-full opacity-100" viewBox="0 0 487 487" aria-hidden="true">
-                                <path fill-opacity=".1" fill-rule="nonzero" fill="#FFF" d="M0 .3c67 2.1 134.1 4.3 186.3 37 52.2 32.7 89.6 95.8 112.8 150.6 23.2 54.8 32.3 101.4 61.2 149.9 28.9 48.4 77.7 98.8 126.4 149.2H0V.3z"></path>
-                            </svg>
-                        </span>
-                        <span class="absolute top-0 right-0 w-12 h-full -mr-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="object-cover w-full h-full" viewBox="0 0 487 487" aria-hidden="true">
-                                <path fill-opacity=".1" fill-rule="nonzero" fill="#FFF" d="M487 486.7c-66.1-3.6-132.3-7.3-186.3-37s-95.9-85.3-126.2-137.2c-30.4-51.8-49.3-99.9-76.5-151.4C70.9 109.6 35.6 54.8.3 0H487v486.7z"></path>
-                            </svg>
-                        </span>
-                        <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-200"></span>
-                        <span class="relative">Install</span>
+                       class="btn-primary inline-flex items-center justify-center px-4 py-1.5 text-[0.9375rem] font-medium no-underline min-w-[5.25rem] rounded-md">
+                        Install
                     </a>
                 </div>
             </div>
@@ -2433,7 +2477,7 @@
         <a href="#features" class="mobile-sidebar-link">Features</a>
         <a href="/docs/" class="mobile-sidebar-link">Docs</a>
         <a href="/install.html" class="mobile-sidebar-link">Install</a>
-        <a href="/login.html?welcome=1" class="mobile-sidebar-link" id="mobileLoginLink">Login</a>
+        <a href="/login.html" class="mobile-sidebar-link" id="mobileLoginLink">Login</a>
         <div class="mt-auto pt-4 border-t border-[var(--border)]">
             <a href="https://www.instagram.com/roka.app/" target="_blank" rel="noopener noreferrer" class="mobile-sidebar-link flex items-center gap-2">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -2449,12 +2493,45 @@
         <div class="hero-glow"></div>
         <div class="prune-stream" id="pruneStream" aria-hidden="true"></div>
 
-        <div class="roka-canvas-wrap mb-5" id="rokaWord" aria-label="roka" style="perspective:900px">
+        <div class="roka-canvas-wrap mb-5" id="rokaWord" aria-label="roka" hidden style="perspective:900px">
             <canvas id="rokaCanvas"></canvas>
         </div>
 
-        <h1 class="hero-headline">the debugging layer for runtime data.</h1>
-        <p class="hero-sub">Connect Roka to your AI agent for free. It automatically prunes noisy runtime output under the hood, preserves critical failures, and gives your agent the context to fix them.</p>
+        <h1 class="hero-headline">the right logs. not the whole log.</h1>
+        <p class="hero-sub">Roka selects the lines an agent needs from a noisy dump. Each kept line has a reason. Local by default. No black box.</p>
+
+        <section id="evidence" class="evidence" aria-label="Example prune with keep and drop reasons">
+            <div class="evidence-head">
+                <span class="q">query <em>why did sshd fail to bind port</em></span>
+                <span class="evidence-meta">budget 280 chars · vs recency and tail</span>
+            </div>
+            <div class="evidence-cols" aria-hidden="true">
+                <span>status</span>
+                <span>line</span>
+                <span>why</span>
+            </div>
+            <div class="evidence-row kept">
+                <span class="evidence-tag">kept</span>
+                <span class="evidence-line">sshd: Bind to port 22: Address already in use</span>
+                <span class="evidence-why">query · sshd, bind, port</span>
+            </div>
+            <div class="evidence-row kept">
+                <span class="evidence-tag">kept</span>
+                <span class="evidence-line">sshd: exiting</span>
+                <span class="evidence-why">query · sshd</span>
+            </div>
+            <div class="evidence-row dropped">
+                <span class="evidence-tag">dropped</span>
+                <span class="evidence-line">INFO heartbeat ok 14</span>
+                <span class="evidence-why">no query match</span>
+            </div>
+            <div class="evidence-row dropped">
+                <span class="evidence-tag">dropped</span>
+                <span class="evidence-line">ERROR retry connection refused 31</span>
+                <span class="evidence-why">crash keyword, not the question</span>
+            </div>
+            <div class="evidence-foot">Fixture sshd-bind · recency and naive tail miss the bind line · query keeps it. We do not claim the agent then solves the incident.</div>
+        </section>
 
         <!-- Install / Agent panel -->
         <div class="agent-panel px-5 reveal visible">
@@ -2508,13 +2585,12 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-3 mt-4">
-                <a href="/install.html" class="btn-primary rounded-full px-5 py-2 text-sm font-medium">Get Started Free</a>
+                <a href="/install.html" class="btn-primary rounded-full px-5 py-2 text-sm font-medium">Install</a>
                 <a href="/docs/" class="btn-secondary rounded-full px-5 py-2 text-sm font-medium">Read the Docs</a>
-                <a href="#story" class="text-xs font-medium" style="color:var(--text-muted)">See it work →</a>
             </div>
         </div>
 
-        <p class="hero-live-stat z-10" id="heroLiveStat">// <span>48,204</span> lines ingested · <span>−94%</span> noise removed · <span>312ms</span></p>
+        <p class="hero-live-stat z-10" id="heroLiveStat">// <span>query</span> outranks recency · <span>crash lines</span> kept whole · tail is the baseline we beat</p>
     </section>
 
     <!-- Motion story -->
@@ -2553,8 +2629,8 @@
         <div class="story-row reverse">
             <div class="story-copy">
                 <div class="eyebrow mb-3">Crash → context</div>
-                <h3>Your dev server crashes. Your agent already knows.</h3>
-                <p>roka-mcp watches dev.log in real time. On crash it prunes 12,400 lines down to 1.1K tokens and hands Claude Code exactly the slice it needs — no copy-paste, no blown context window.</p>
+                <h3>Crash in the log. Slice on disk.</h3>
+                <p>roka-mcp tails a file and, on a crash pattern, writes a budgeted slice to <span class="mono">.roka/crash-context.txt</span>. Collapse repeats, keep the exception, pack to budget. Local. No copy-paste of the whole dump.</p>
             </div>
             <div class="story-viz" data-viz="crash">
                 <div class="terminal-loader" aria-label="Animation: crash detected, prune, handoff to agent">
@@ -2577,9 +2653,9 @@
 
         <div class="story-row">
             <div class="story-copy">
-                <div class="eyebrow mb-3">Natural language</div>
-                <h3>Ask in plain English. Get ranked output.</h3>
-                <p>Type what you care about — "what broke during last night's deploy?" — and Roka re-ranks chunks against intent, not just keywords. Semantic re-ranking surfaces the fatal error first.</p>
+                <div class="eyebrow mb-3">Query scoring</div>
+                <h3>Ask a question. Recency is not the ranking.</h3>
+                <p>Pass a query. Whole-word matches outrank later noise — including misleading ERROR lines that do not answer the question. Each kept line reports the terms that matched.</p>
             </div>
             <div class="story-viz" data-viz="query">
                 <div class="terminal-loader" aria-label="Animation: natural language query re-ranking log output">
@@ -2606,8 +2682,8 @@
     <!-- Comparison table -->
     <section id="vs-upload" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-12">
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">same logs. smarter context.</h2>
-            <p class="text-muted text-sm">Why Roka beats just uploading to Claude directly.</p>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">the slice, not the dump.</h2>
+            <p class="text-muted text-sm">What you can inspect. Not a token-savings pitch.</p>
         </div>
         <div class="max-w-3xl mx-auto surface rounded-2xl overflow-hidden">
             <table class="w-full text-sm">
@@ -2635,19 +2711,19 @@
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                     </tr>
                     <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
-                        <td class="p-4 text-muted">90% token reduction</td>
+                        <td class="p-4 text-muted">Query-aware keep vs naive tail</td>
                         <td class="p-4 text-center text-[var(--success)]">✓</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">— <span class="text-xs">(partial)</span></td>
                     </tr>
                     <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
-                        <td class="p-4 text-muted">312ms processing</td>
+                        <td class="p-4 text-muted">Keep / drop reasons you can read</td>
                         <td class="p-4 text-center text-[var(--success)]">✓</td>
-                        <td class="p-4 text-center text-[var(--text-faint)]">— <span class="text-xs">(10s+)</span></td>
+                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                     </tr>
                     <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
-                        <td class="p-4 text-muted">Critical error always preserved</td>
+                        <td class="p-4 text-muted">Crash lines packed first; overage reported</td>
                         <td class="p-4 text-center text-[var(--success)]">✓</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
                         <td class="p-4 text-center text-[var(--text-faint)]">—</td>
@@ -2745,7 +2821,7 @@
             <div class="inline-block bg-[var(--bg)] border border-[var(--border-strong)] rounded-lg px-6 py-3 mono text-sm">
                 npx roka-mcp connect --agent <span style="color:var(--success)">&lt;claude-code&nbsp;|&nbsp;cursor&nbsp;|&nbsp;…&gt;</span> --api-key rk_live_...
             </div>
-            <p class="text-xs text-faint mt-3">Connect once. Your agent handles log pruning automatically under the hood.</p>
+            <p class="text-xs text-faint mt-3">Connect once. The agent calls prune; you can inspect what stayed.</p>
         </div>
     </section>
 
@@ -2755,8 +2831,8 @@
                 <span class="eyebrow">If you use Claude Code, Cursor, Gemini, Codex, or Copilot — read this</span>
                 <span class="pro-badge">Free</span>
             </div>
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-4 max-w-3xl mx-auto">Your dev server crashes. Your agent already has the fix in context.</h2>
-            <p class="text-muted text-sm max-w-2xl mx-auto leading-relaxed">Roka runs as an MCP server next to your local dev server, watching logs in real time. The moment something crashes, it runs the same prune pipeline — collapse repetition, preserve the exception, rank, pack to budget — and hands Claude Code or Cursor exactly the slice of context needed to debug. No copy-pasting stack traces. No blowing the context window on thousands of lines of noise.</p>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-4 max-w-3xl mx-auto">Your agent should see the failure, not the heartbeat.</h2>
+            <p class="text-muted text-sm max-w-2xl mx-auto leading-relaxed">Roka runs beside the log file. On crash it collapses repeats, keeps the exception, packs to a character budget, and returns the slice — with reasons. Log text stays on the machine. We measure whether the cause line survived, not whether the model then finished the ticket.</p>
             <div class="flex flex-wrap justify-center items-center gap-x-8 gap-y-3 mt-6 text-xs text-muted">
                 <span class="flex items-center gap-1.5"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--success)]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Works with your AI Agent</span>
                 <span class="flex items-center gap-1.5"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--success)]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>One command to connect</span>
@@ -2795,8 +2871,8 @@
     <!-- Motion showcase -->
     <section id="showcase" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-10">
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">See it happen</h2>
-            <p class="text-muted text-sm max-w-xl mx-auto">Four moments that define Roka — noise to signal, crash to fix, install to debug.</p>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">See the slice</h2>
+            <p class="text-muted text-sm max-w-xl mx-auto">Collapse, crash keep, connect, query. Same pipeline each time.</p>
         </div>
 
         <div class="showcase-grid">
@@ -2861,7 +2937,7 @@
             <div class="showcase-card" data-showcase="query">
                 <div class="terminal-loader">
                     <div class="terminal-header">
-                        <div class="terminal-title">Natural language query</div>
+                        <div class="terminal-title">Query scoring</div>
                         <div class="terminal-controls">
                             <div class="control close"></div>
                             <div class="control minimize"></div>
@@ -2882,8 +2958,8 @@
     <!-- Features -->
     <section id="features" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-12">
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Built for real context, not toy demos</h2>
-            <p class="text-muted text-sm max-w-2xl mx-auto">Roka is a pruning middleware: ingest logs, code, or prose, detect structure, score relevance to your query, and deliver exactly what fits the budget.</p>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Built to be inspected</h2>
+            <p class="text-muted text-sm max-w-2xl mx-auto">Ingest a log, score it against a question, pack to a budget. You can see what stayed, what went, and why.</p>
         </div>
 
         <div class="bento-grid">
@@ -2943,8 +3019,8 @@
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
                     <div class="mono text-xs text-faint">03</div>
-                    <h3>BM25 + semantic rank</h3>
-                    <p>Fast lexical scoring with BM25Okapi, then optional sentence-transformer re-ranking so chunks match your query intent.</p>
+                    <h3>Query scoring you can read</h3>
+                    <p>Whole-word terms, sorted, deterministic. Each kept line lists matched terms and a reason: query, crash, neighbor, or recency.</p>
                 </div>
             </div>
 
@@ -2956,8 +3032,8 @@
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
                     <div class="mono text-xs text-faint">04</div>
-                    <h3>Token budget packer</h3>
-                    <p>Greedy packing with exact tiktoken counts (cl100k_base). Source diversity cap prevents one file from hogging the budget.</p>
+                    <h3>Budget packer</h3>
+                    <p>Packs kept lines to a character budget. A crash line that does not fit is kept whole and the overage is reported — never silently exceeded.</p>
                 </div>
             </div>
 
@@ -2987,7 +3063,7 @@
                 </div>
             </div>
 
-            <!-- 07 Natural language queries -->
+            <!-- 07 Query scoring -->
             <div class="bento-card">
                 <div class="bento-card-bg" aria-hidden="true">
                     <div class="bento-media is-empty" data-video-slot="natural-language-queries"></div>
@@ -2995,8 +3071,8 @@
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
                     <div class="mono text-xs text-faint">07</div>
-                    <h3>Natural language queries</h3>
-                    <p>Ask in plain English what you care about — Roka ranks chunks against intent, not just keywords.</p>
+                    <h3>Query you can replay</h3>
+                    <p>Whole-word terms, sorted, deterministic. A later ERROR that does not match the question can lose to an earlier cause line.</p>
                 </div>
             </div>
         </div>
@@ -3011,36 +3087,36 @@
     <!-- Use Cases -->
     <section id="use-cases" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-12">
-            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Use Cases</h2>
-            <p class="text-muted text-sm max-w-2xl mx-auto">Beyond logs — Roka optimizes context for incident investigation, RAG pipelines, and code review at scale.</p>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Where it sits</h2>
+            <p class="text-muted text-sm max-w-2xl mx-auto">A log tool. Select the lines, show why, stay next to the file.</p>
         </div>
 
         <div class="grid md:grid-cols-3 gap-6">
             <div class="surface rounded-xl p-6">
-                <h3 class="font-semibold text-lg mb-3">Incident Investigation</h3>
-                <p class="text-sm text-muted mb-4">Compress incident dumps and error traces into AI-ready summaries.</p>
+                <h3 class="font-semibold text-lg mb-3">Noisy dump, one question</h3>
+                <p class="text-sm text-muted mb-4">Pass a query. Whole-word matches outrank later heartbeat and misleading ERROR lines.</p>
                 <ul class="space-y-2 text-sm text-muted">
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Collapse redundant stack traces and log repetition</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Preserve critical error context and panic messages</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Feed compressed incident timeline to Claude for root cause analysis</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Score each line against the question</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Keep cause lines even when they are not at the tail</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Drop ERROR that does not answer the query</li>
                 </ul>
             </div>
             <div class="surface rounded-xl p-6">
-                <h3 class="font-semibold text-lg mb-3">RAG & Knowledge Base Optimization</h3>
-                <p class="text-sm text-muted mb-4">Prune your document corpus before ingesting into retrieval pipelines.</p>
+                <h3 class="font-semibold text-lg mb-3">Crash beside the file</h3>
+                <p class="text-sm text-muted mb-4">roka-mcp tails a log, collapses repeats, packs a budgeted slice with reasons.</p>
                 <ul class="space-y-2 text-sm text-muted">
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Strip boilerplate, comments, and redundant sections from code files</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Collapse similar documents and de-duplicate content</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Pack only high-relevance chunks into your vector index</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Collapse adjacent duplicate lines</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Pack crash lines whole; report budget overage</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Write <span class="mono">.roka/crash-context.txt</span> locally</li>
                 </ul>
             </div>
             <div class="surface rounded-xl p-6">
-                <h3 class="font-semibold text-lg mb-3">Code Review at Scale</h3>
-                <p class="text-sm text-muted mb-4">Review massive pull requests by compressing diff context.</p>
+                <h3 class="font-semibold text-lg mb-3">Inspect the slice</h3>
+                <p class="text-sm text-muted mb-4">Every kept line carries a reason: query, crash, neighbor, or recency.</p>
                 <ul class="space-y-2 text-sm text-muted">
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Strip whitespace and reformatting noise from diffs</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Collapse repetitive changes across similar files</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Summarize only the critical logic changes for faster review</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Compare against naive tail on the same budget</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Replay the same query; scoring is deterministic</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Fail open on binary or bad input</li>
                 </ul>
             </div>
         </div>
@@ -3184,7 +3260,7 @@
                     Same file, same 4,000-character budget, two strategies. <span class="mono inline-code" style="color:var(--text)">Testing/Thunderbird_2k.log</span>
                     — 2,000 lines, 323,193 characters. The real failure —
                     <span class="mono inline-code" style="color:var(--text)">sshd: Bind to port 22 ... Address already in use</span>
-                    — sits 62% into the file, squarely "lost in the middle."
+                    — sits 62% into the file, so a tail cut misses it.
                 </p>
                 <div class="mt-4 rounded-lg overflow-hidden border border-[var(--border)]">
                     <table class="w-full text-xs">
@@ -3255,7 +3331,7 @@
                     <div class="flex gap-4 mt-4 text-xs text-muted">
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="checkbox" id="useSemanticCheckbox" class="custom-checkbox" checked>
-                            Semantic reranking
+                            Semantic rank (hosted)
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="checkbox" id="useMinificationCheckbox" class="custom-checkbox">
@@ -3294,7 +3370,7 @@
                             <div class="text-sm font-semibold mono" id="statOutput">—</div>
                         </div>
                         <div class="rounded-lg p-3 bg-[var(--bg)] border border-[var(--border)]">
-                            <div class="text-[10px] text-faint mb-1">Saved</div>
+                            <div class="text-[10px] text-faint mb-1">Dropped</div>
                             <div class="text-sm font-semibold mono text-[var(--term-green)]" id="statCompression">—</div>
                         </div>
                     </div>
@@ -3330,7 +3406,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Three reasons:<br><br>1. File size: Claude limits files to ~100MB. Roka handles unlimited size.<br><br>2. Cost: A 500K token log file costs ~$2 in Claude API. Roka processes it locally for free, then sends only the 50K tokens that matter. 10x cheaper at scale.<br><br>3. Speed: Roka processes in 312ms. Upload + Claude = 10+ seconds.<br><br>Plus: Roka runs locally (your logs stay on your machine). Claude needs an upload every time.</p>
+                        <p class="text-sm text-muted">Upload hits model file-size and context limits. Roka sits next to the file: collapse repeats, keep crash and query lines, pack to a budget, return the slice with reasons. Local CLI and MCP prune tools do not upload the dump. We do not claim a dollar savings — we measure whether the cause line survived versus a naive tail.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -3339,7 +3415,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Semantic search finds relevant chunks. Roka does that PLUS:<br><br>- Critical preservation: Never collapses PANIC, OOM, auth errors, or stack traces. These always make it through.<br><br>- Pattern fingerprinting: Treats 1,000 identical "Connection pool warning" messages as one, not spam.<br><br>- Dependency awareness: Understands your code's architecture, so it ranks errors in the critical path higher.<br><br>Result: Claude gets 70% less data, 100% more useful data.</p>
+                        <p class="text-sm text-muted">Retrieval finds similar chunks. Roka is a log prune: collapse adjacent duplicates, pack crash lines whole, score remaining lines against a query with whole-word terms. Each kept line reports why (query, crash, neighbor, recency). ERROR is not ground truth — a later ERROR that does not match the question can be dropped.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -3348,7 +3424,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Yes. Roka and MCP connection are free, with usage limits. Connect your agent once, and it handles log pruning automatically under the hood. You do not need to prune logs by hand.</p>
+                        <p class="text-sm text-muted">Yes. Roka and MCP connection are free, with usage limits. Connect your agent once; it can call prune without you pasting the dump by hand.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -3375,7 +3451,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Average: 312ms for 50K token dumps.<br><br>Larger files scale linearly. A 500K dump typically takes 3-5 seconds including semantic re-ranking.</p>
+                        <p class="text-sm text-muted">Hosted CLI, measured on a 2021 M1 MacBook Pro: about 312ms for a 50K-token dump. Larger files scale roughly linearly. Semantic rank on the hosted path adds time; MCP query scoring is deterministic whole-word matching, not embeddings.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -3431,7 +3507,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Roka streams the file in chunks so memory usage stays flat regardless of file size. Benchmarks on a 2021 M1 MacBook Pro:<br><br>• 50K tokens → ~312ms<br>• 500K tokens → ~3–5s (with semantic re-ranking)<br>• 5M tokens → ~25–40s (BM25 only, semantic disabled)<br><br>For very large files we recommend using --no-semantic for speed, or splitting by time window first. There is no hard size limit.</p>
+                        <p class="text-sm text-muted">The hosted CLI streams in chunks so memory stays flat. Benchmarks on a 2021 M1 MacBook Pro:<br><br>• 50K tokens → ~312ms<br>• 500K tokens → ~3–5s (hosted semantic rank on)<br>• 5M tokens → ~25–40s (semantic off)<br><br>For very large files, disable semantic rank or split by time window. MCP prune is character-budgeted and fail-open on binary input. There is no hard size limit on the CLI path.</p>
                     </div>
                 </div>
 
@@ -3441,7 +3517,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Roka's own models, running locally on your machine. Semantic re-ranking uses sentence-transformers (open weights, ~80MB) bundled into the binary — no API calls, no data leaves your machine during pruning.<br><br>Your logs are never sent to OpenAI, Anthropic, or any third party as part of the pruning step. Only the pruned output goes to your AI provider — and only when you explicitly pipe it there.</p>
+                        <p class="text-sm text-muted">Two paths. Hosted CLI can optionally run local sentence-transformers (~80MB, open weights) for semantic rank — no API call during prune. MCP <span class="mono">prune_logs</span> / <span class="mono">prune_file</span> use deterministic whole-word query scoring, not embeddings. Reasons are query, crash, neighbor, or recency.<br><br>Local prune tools do not upload logs. Only the slice you send reaches your model, and only when you pipe it there.</p>
                     </div>
                 </div>
             </div>
@@ -3451,14 +3527,9 @@
     <!-- Terminal CTA -->
     <section class="max-w-6xl mx-auto px-5 py-20 reveal" aria-labelledby="cta-heading">
         <div class="cta-terminal">
-            <h2 id="cta-heading" class="cta-terminal-title">Try Roka now (it's free!!).</h2>
-            <a href="/install.html" class="cta-terminal-btn">Start now</a>
-            <div class="cta-terminal-kev">
-                <button type="button" class="cta-terminal-kev-btn" id="kevAvatarBtn" aria-label="Enlarge Kev" aria-pressed="false" title="Kev approves">
-                    <img src="/assets/images/kevin.png" alt="Kev" width="28" height="28">
-                </button>
-                <span>(Kev approves.)</span>
-            </div>
+            <h2 id="cta-heading" class="cta-terminal-title">Install and prune a log.</h2>
+            <a href="/install.html" class="cta-terminal-btn">Install</a>
+            <p class="cta-terminal-note">CLI, MCP, or the playground. Same idea: a slice with reasons.</p>
         </div>
     </section>
 
@@ -3472,7 +3543,7 @@
                         <img src="/assets/logos/logo-roka.png" alt="Roka" height="28" style="height:28px;width:auto;object-fit:contain;filter:var(--logo-filter)">
                     </div>
                     <p class="text-xs leading-relaxed" style="color:var(--text-muted); max-width:180px">
-                        Prune your logs. Ship faster. Context-aware middleware for AI coding agents.
+                        The right lines, with reasons. CLI, MCP, or the playground.
                     </p>
                     <!-- Social icons -->
                     <div class="social-card" aria-label="Social links">
@@ -3527,7 +3598,7 @@
                     <span class="text-[10px] font-semibold tracking-widest uppercase" style="color:var(--text-faint)">Get Started</span>
                     <nav class="flex flex-col gap-2.5">
                         <a href="#mcp" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Early Access</a>
-                        <a href="login.html?welcome=1" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Sign In</a>
+                        <a href="login.html" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Sign In</a>
                         <a href="mailto:mukhamedjankydyrli@gmail.com" class="text-xs transition-colors hover:opacity-80" style="color:var(--text-muted)">Contact</a>
                     </nav>
                 </div>
@@ -3575,15 +3646,6 @@
         const themeToggleMobile = document.getElementById('themeToggleMobile');
         const themeLabelMobile = document.querySelector('.theme-label-mobile');
         const themeIconFillMobile = document.querySelector('.theme-icon-fill-mobile');
-
-        const kevAvatarBtn = document.getElementById('kevAvatarBtn');
-        if (kevAvatarBtn) {
-            kevAvatarBtn.addEventListener('click', () => {
-                const big = kevAvatarBtn.classList.toggle('is-big');
-                kevAvatarBtn.setAttribute('aria-pressed', String(big));
-                kevAvatarBtn.setAttribute('aria-label', big ? 'Shrink Kev' : 'Enlarge Kev');
-            });
-        }
 
         function applyTheme(theme) {
             html.dataset.theme = theme;
@@ -3649,7 +3711,8 @@
         // ASCII ROKA canvas
         (function () {
             const canvas = document.getElementById('rokaCanvas');
-            if (!canvas) return;
+            const wrapEl = document.getElementById('rokaWord');
+            if (!canvas || (wrapEl && wrapEl.hidden)) return;
             const ctx = canvas.getContext('2d');
 
             // Pixel bitmaps: 8 rows × 7 cols per letter

@@ -1,8 +1,8 @@
 # Roka
 
-Prune any log using one command.
+The right logs. Not the whole log.
 
-Designed for AI agents. Collapse noise, rank relevance, pack to a token budget — before the model ever sees it.
+Select the lines an AI agent needs from a noisy dump — crash evidence, query matches, packed to a budget. Local. Inspectable.
 
 - Site: https://www.roka-prune.com/
 - Docs: https://www.roka-prune.com/docs/
@@ -39,10 +39,10 @@ Tools after `serve`: `prune_logs`, `prune_file`, `prune_tail`. Log text stays on
 ## How it works
 
 1. Collapse adjacent duplicate / near-duplicate lines.
-2. Force-keep ERROR, FATAL, CRITICAL, Exception, Traceback, panic.
-3. Pack into the requested character/token budget.
+2. Score remaining lines against an optional query (whole-word terms). Crash lines pack first; a later ERROR that does not match the question can be dropped.
+3. Pack into the requested character budget. If a protected line exceeds the budget it is kept whole and the overage is reported.
 
-Same pipeline for CLI, MCP, and `POST https://api.roka-prune.com/api/prune`.
+Same idea for CLI, MCP, and `POST https://api.roka-prune.com/api/prune`. MCP prune is inspectable: each kept line has a reason (query, crash, neighbor, recency).
 
 ## Free usage & limits
 

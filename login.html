@@ -86,6 +86,7 @@
             --border: #2e2e2e;
             --input: #1a1a1a;
             --accent: #ffffff;
+            --signal: #e8c547;
         }
 
         html {
@@ -109,17 +110,25 @@
             padding: 1.5rem 1rem;
         }
 
+        @view-transition {
+            navigation: auto;
+        }
+
         .login-container {
             width: 100%;
             max-width: 440px;
-            opacity: 0;
-            transform: translateY(12px);
-            transition: opacity 0.55s ease, transform 0.55s ease;
+            animation: loginIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
 
-        .login-container.ready {
-            opacity: 1;
-            transform: translateY(0);
+        @keyframes loginIn {
+            from {
+                opacity: 0;
+                transform: translateY(24px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .card {
@@ -132,12 +141,12 @@
         .card-logo {
             display: flex;
             justify-content: center;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.35rem;
         }
 
         .card-logo img {
-            width: 36px;
-            height: 36px;
+            width: 64px;
+            height: 64px;
             object-fit: contain;
         }
 
@@ -240,7 +249,7 @@
 
         .form-group input:focus {
             outline: none;
-            border-color: #6b6b6b;
+            border-color: var(--signal);
         }
 
         .name-row {
@@ -345,51 +354,9 @@
 
         .hidden { display: none; }
 
-        .welcome-splash {
-            position: fixed;
-            inset: 0;
-            z-index: 50;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.6rem;
-            opacity: 1;
-            transition: opacity 0.22s ease;
-        }
-
-        .welcome-splash.fade {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .welcome-splash.hidden { display: none; }
-
-        .welcome-logo {
-            width: 148px;
-            height: 148px;
-            object-fit: contain;
-            animation: welcomeSpin 1.35s linear infinite;
-        }
-
-        .welcome-splash h1 {
-            color: #fff;
-            font-size: clamp(1.75rem, 4.5vw, 2.25rem);
-            font-weight: 375;
-            letter-spacing: -0.01em;
-        }
-
-        @keyframes welcomeSpin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
         @media (prefers-reduced-motion: reduce) {
-            .welcome-logo { animation: none; }
-            .login-container,
-            .signup-fields,
-            .welcome-splash { transition: none; }
+            .login-container { animation: none; }
+            .signup-fields { transition: none; }
         }
 
         @media (max-width: 420px) {
@@ -399,15 +366,10 @@
     </style>
 </head>
 <body>
-    <div class="welcome-splash hidden" id="welcomeSplash" aria-hidden="true">
-        <img src="/assets/logos/logo-roka.png" alt="" class="welcome-logo" width="148" height="148">
-        <h1>Welcome!</h1>
-    </div>
-
     <div class="login-container" id="loginContainer">
         <div class="card">
             <a href="/" class="card-logo" aria-label="Roka home">
-                <img src="/assets/logos/logo-roka.png" alt="Roka" width="36" height="36">
+                <img src="/assets/logos/logo-roka.png" alt="Roka" width="64" height="64">
             </a>
             <h1 id="formTitle">Sign in</h1>
             <p class="subtitle" id="formSubtitle">Welcome back to Roka</p>
@@ -494,8 +456,6 @@
         const toggleText = document.getElementById('toggleText');
         const toggleLink = document.getElementById('toggleLink');
         const errorDiv = document.getElementById('error');
-        const welcomeSplash = document.getElementById('welcomeSplash');
-        const loginContainer = document.getElementById('loginContainer');
         const signupInputs = ['firstName', 'lastName', 'username'].map((id) => document.getElementById(id));
         const passwordInput = document.getElementById('password');
         const params = new URLSearchParams(window.location.search);
@@ -675,37 +635,13 @@
             }
         });
 
-        function revealForm() {
-            loginContainer.classList.add('ready');
-        }
-
-        function playWelcome() {
-            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            welcomeSplash.classList.remove('hidden');
-            welcomeSplash.setAttribute('aria-hidden', 'false');
-            const hold = 700;
-            const fade = 220;
-            setTimeout(() => {
-                welcomeSplash.classList.add('fade');
-                revealForm();
-                setTimeout(() => {
-                    welcomeSplash.classList.add('hidden');
-                    welcomeSplash.setAttribute('aria-hidden', 'true');
-                }, fade);
-            }, hold);
-        }
-
         if (!oauthToken) {
-            const wantsWelcome = params.get('welcome') === '1' || params.get('from') === 'nav';
-            if (wantsWelcome) {
-                const clean = new URLSearchParams(params);
+            const clean = new URLSearchParams(params);
+            if (clean.has('welcome') || clean.has('from')) {
                 clean.delete('welcome');
                 clean.delete('from');
                 const qs = clean.toString();
                 history.replaceState(null, '', window.location.pathname + (qs ? `?${qs}` : '') + window.location.hash);
-                playWelcome();
-            } else {
-                revealForm();
             }
         }
     </script>
