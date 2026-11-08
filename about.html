@@ -120,7 +120,7 @@
             background: var(--bg);
             color: var(--text);
             line-height: 1.65;
-            transition: background-color 0.75s ease, color 0.75s ease;
+            transition: background-color 0.35s ease, color 0.35s ease;
         }
 
         h1, h2, h3 { font-weight: 400; letter-spacing: -0.03em; }
@@ -237,7 +237,8 @@
         }
 
     </style>
-    <link rel="stylesheet" href="/assets/css/press.css?v=fade2">
+    <link rel="stylesheet" href="/assets/css/press.css?v=fade3">
+    <script src="/assets/js/reveal.js" defer></script>
 </head>
 <body>
     <nav class="nav">
@@ -245,7 +246,7 @@
             <img src="/assets/icons/favicon-32x32.png" alt="Roka" class="logo-animate" width="28" height="28">
             Roka
         </a>
-        <button id="themeToggle" type="button" aria-label="Toggle theme">
+        <button id="themeToggle" type="button" class="btn-secondary" aria-label="Toggle theme">
             <svg id="themeIcon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style="flex-shrink:0">
                 <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.25"/>
                 <path id="themeIconFill" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
@@ -262,7 +263,7 @@
         <h1>About</h1>
         <p>We are Roka. We're a lean team building the context infrastructure layer for AI-driven engineering and operations.</p>
 
-        <div class="surface">
+        <div class="surface reveal">
             <p>Our first product is Roka Prune — an intelligent context-pruning middleware for LLMs and AI agents.</p>
 
             <p>The biggest bottleneck in AI today isn't the models—it's the context. When you feed raw development logs, system telemetry, or traces into an LLM, you are mostly burning money on noise. 90% of a standard log is repetitive fluff, but somewhere in those 50,000 lines sits a critical Out-of-Memory error or a silent database deadlock.</p>

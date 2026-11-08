@@ -208,7 +208,7 @@
             font-style: normal;
             letter-spacing: -0.01em;
             line-height: 1.65;
-            transition: background-color 0.75s ease, color 0.75s ease;
+            transition: background-color 0.35s ease, color 0.35s ease;
         }
 
         /* Soften Tailwind weight utilities — Montserrat reads better light */
@@ -291,7 +291,7 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             box-shadow: none;
-            transition: background-color 0.75s ease, border-color 0.75s ease, color 0.75s ease;
+            transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease;
         }
 
         .text-muted { color: var(--text-muted); }
@@ -578,7 +578,7 @@
             position: absolute;
             inset: 0;
             opacity: 0;
-            transition: opacity 0.75s ease;
+            transition: opacity 0.35s ease;
             background:
                 linear-gradient(to bottom, rgba(250, 250, 250, 0.22) 0%, rgba(250, 250, 250, 0.72) 62%, var(--bg) 100%),
                 url("/assets/images/testing-atmosphere-light.jpg") center 46% / cover no-repeat;
@@ -1155,21 +1155,23 @@
             background: var(--bg);
             border: 1px solid var(--border);
             color: var(--text);
-            border-radius: 4px;
+            border-radius: 6px;
             overflow: visible;
-            transition: border-color 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease, outline-color 0.22s ease;
+            transition:
+                border-color 0.45s cubic-bezier(0.22, 1.5, 0.36, 1),
+                box-shadow 0.45s cubic-bezier(0.22, 1.5, 0.36, 1),
+                background-color 0.3s ease;
         }
-        .lab-input:hover:not(:focus) {
+        .lab-input:hover:not(:focus):not(.is-on) {
             background: var(--hover-fade);
         }
         .lab-input:focus,
         .lab-input:focus-visible,
         .lab-input:active,
         .lab-input.is-on {
-            outline: 1px solid var(--text);
-            outline-offset: 0;
-            border-color: var(--text);
-            box-shadow: inset 0 0 0 1px var(--text);
+            outline: none;
+            border-color: color-mix(in srgb, var(--text) 32%, var(--border));
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--text) 10%, transparent);
         }
 
         .custom-checkbox {
@@ -2721,7 +2723,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            transition: background-color 0.75s ease, border-color 0.75s ease, color 0.75s ease;
+            transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease;
         }
         .cta-terminal-title {
             font-family: var(--font-mono);
@@ -2763,7 +2765,7 @@
             color: var(--text-faint);
         }
     </style>
-    <link rel="stylesheet" href="/assets/css/press.css?v=fade2">
+    <link rel="stylesheet" href="/assets/css/press.css?v=fade3">
 </head>
 <body class="antialiased">
 

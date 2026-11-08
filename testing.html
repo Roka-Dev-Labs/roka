@@ -141,7 +141,7 @@
             color: var(--text);
             line-height: 1.7;
             -webkit-font-smoothing: antialiased;
-            transition: background-color 0.75s ease, color 0.75s ease;
+            transition: background-color 0.35s ease, color 0.35s ease;
         }
 
         body::before,
@@ -151,7 +151,7 @@
             inset: 0;
             z-index: -1;
             pointer-events: none;
-            transition: opacity 0.75s ease;
+            transition: opacity 0.35s ease;
         }
 
         body::before {
@@ -230,7 +230,7 @@
             gap: 1rem;
             background: color-mix(in srgb, var(--bg) 78%, transparent);
             backdrop-filter: blur(10px);
-            transition: background-color 0.75s ease, border-color 0.75s ease, color 0.75s ease;
+            transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease;
         }
 
         .nav-logo {
@@ -451,8 +451,8 @@
 
         .detail-btn {
             font-size: 0.875rem;
-            font-weight: 500;
-            padding: 0.4rem 0.875rem;
+            font-weight: 400;
+            padding: 0.5rem 0.75rem;
             border-radius: 8px;
             border: 1px solid var(--border-strong);
             background: transparent;
@@ -700,30 +700,8 @@
             color: var(--text-faint);
         }
     </style>
-    <link rel="stylesheet" href="/assets/css/press.css?v=fade2">
-    <style>
-        @media (prefers-reduced-motion: no-preference) {
-            .detail-btn,
-            .external-link,
-            .back-link {
-                transform: scale(1);
-                transform-origin: center;
-                transition-property: transform, opacity, background-color, border-color, color, box-shadow;
-                transition-duration: 0.42s, 0.2s, 0.2s, 0.2s, 0.2s, 0.2s;
-                transition-timing-function:
-                    linear(0, 0.218 2.1%, 0.862 12.3%, 1.114 20.5%, 1.114 22.7%, 1.011 32.6%, 0.977 38.4%, 0.989 44.5%, 1.001 52.3%, 1),
-                    ease, ease, ease, ease, ease;
-            }
-            @media (hover: hover) and (pointer: fine) {
-                .detail-btn:hover,
-                .external-link:hover,
-                .back-link:hover { transform: scale(1.02); }
-            }
-            .detail-btn:active,
-            .external-link:active,
-            .back-link:active { transform: scale(0.96); }
-        }
-    </style>
+    <link rel="stylesheet" href="/assets/css/press.css?v=fade3">
+    <script src="/assets/js/reveal.js" defer></script>
 </head>
 <body>
     <nav class="nav">
@@ -754,7 +732,7 @@
             about 2,000 lines each (30,001 lines / 4.15M characters). One 4,000-character budget. No per-file tuning.
         </p>
 
-        <div class="pipeline" aria-label="How each test ran">
+        <div class="pipeline reveal" aria-label="How each test ran">
             <article class="pipeline-card">
                 <h3>1. Ingest</h3>
                 <p>~2,000 raw lines per file. The suite is 30,001 lines and 4.15M characters.</p>
@@ -773,14 +751,14 @@
             </article>
         </div>
 
-        <div class="stat-grid">
+        <div class="stat-grid reveal">
             <div class="stat"><div class="stat-value">15</div><div class="stat-label">Datasets</div></div>
             <div class="stat"><div class="stat-value">4.15M</div><div class="stat-label">Characters in</div></div>
             <div class="stat"><div class="stat-value">92.2%</div><div class="stat-label">Avg. lines removed</div></div>
             <div class="stat"><div class="stat-value">4K</div><div class="stat-label">Char budget</div></div>
         </div>
 
-        <div class="surface" style="padding:0;margin-bottom:2rem;">
+        <div class="surface reveal" style="padding:0;margin-bottom:2rem;">
             <div class="query-bar">
                 <div>
                     <strong>Same tool on every file</strong>
@@ -793,7 +771,7 @@
             </div>
         </div>
 
-        <section class="proof-section" aria-label="Why these benchmarks matter">
+        <section class="proof-section reveal" aria-label="Why these benchmarks matter">
             <h2>What we did — and why it matters</h2>
             <p class="proof-lead">
                 The table is the same MCP <code>prune_file</code> run published on the homepage and in the research note. Fifteen LogHub files, one budget, no per-file tuning. It measures whether lines — and real errors — survive a 4,000-character pack. It does not measure whether a model then solves the incident.
@@ -1181,7 +1159,7 @@
                 ? "Verified on this file: 2,000 lines, 323,193 characters. The sshd bind-to-port-22 failure sits about 62% through the file. A naive tail of 4,000 characters misses it. prune_file keeps it."
                 : "Same prune_file rules as the other files. The percentage is lines removed after dedup and the 4,000-character pack. It is not a token count.";
             const card = document.createElement('div');
-            card.className = 'dataset-card';
+            card.className = 'dataset-card reveal';
             card.id = 'dataset-' + d.id;
 
             card.innerHTML = `
@@ -1194,7 +1172,7 @@
                         </div>
                     </div>
                     <div class="desktop-stats mono" style="text-align:right;color:var(--success)">${removed} lines removed</div>
-                    <button type="button" class="detail-btn" aria-expanded="false" aria-controls="detail-${d.id}">
+                    <button type="button" class="btn-secondary detail-btn rounded-lg" aria-expanded="false" aria-controls="detail-${d.id}">
                         View details
                     </button>
                 </div>

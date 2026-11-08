@@ -1,4 +1,4 @@
-/* Hover wash is grey, not blue. Theme paint eases across pages. */
+/* Grey hover wash. Theme paint matches the homepage 0.35s ease. */
 :root {
     --hover-fade: rgba(255, 255, 255, 0.08);
 }
@@ -8,17 +8,16 @@ html.light {
 }
 
 html, body {
-    transition: background-color 0.75s ease, color 0.75s ease;
+    transition: background-color 0.35s ease, color 0.35s ease;
 }
 .nav, header, footer, .surface, .card,
 .dataset-card, .stat, .proof-card, .proof-steps,
 .proof-conclusion, .pipeline-card, .cta-terminal,
 .docs-sidebar, .docs-top, .docs-main {
-    transition: background-color 0.75s ease, color 0.75s ease, border-color 0.75s ease, box-shadow 0.75s ease;
+    transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
-/* NativeDelete spring (hover 1.02 / tap 0.98) — no delete chrome.
-   stiffness 400, damping 25, mass 0.8 */
+/* Soft spring — gentle overshoot, like a quiet press on pleep.app */
 @media (prefers-reduced-motion: no-preference) {
     :is(
         .btn-primary,
@@ -32,35 +31,46 @@ html, body {
         .mode-tab,
         .agent-tab,
         .research-link,
+        .detail-btn,
+        .faq-toggle,
+        .cmd-copy,
+        .back-link,
+        .external-link,
         a.btn,
         button.btn
     ):not(:disabled):not([disabled]) {
         transform: scale(1);
         transform-origin: center;
         transition-property: transform, opacity, background-color, border-color, color, box-shadow;
-        transition-duration: 0.38s, 0.2s, 0.2s, 0.2s, 0.2s, 0.2s;
-        transition-timing-function: cubic-bezier(0.22, 1.2, 0.32, 1), ease, ease, ease, ease, ease;
+        transition-duration: 0.5s, 0.28s, 0.28s, 0.28s, 0.28s, 0.28s;
         transition-timing-function:
-            linear(0, 0.218 2.1%, 0.862 12.3%, 1.114 20.5%, 1.114 22.7%, 1.011 32.6%, 0.977 38.4%, 0.989 44.5%, 1.001 52.3%, 1),
+            cubic-bezier(0.22, 1.5, 0.36, 1),
             ease, ease, ease, ease, ease;
     }
 
-    :is(
-        .btn-primary,
-        .btn-secondary,
-        .nav-install-btn,
-        .cta-terminal-btn,
-        .oauth-btn,
-        .pro-tier-cta,
-        .btn-small,
-        .icon-btn,
-        .mode-tab,
-        .agent-tab,
-        .research-link,
-        a.btn,
-        button.btn
-    ):not(:disabled):not([disabled]):hover {
-        transform: scale(1.02);
+    @media (hover: hover) and (pointer: fine) {
+        :is(
+            .btn-primary,
+            .btn-secondary,
+            .nav-install-btn,
+            .cta-terminal-btn,
+            .oauth-btn,
+            .pro-tier-cta,
+            .btn-small,
+            .icon-btn,
+            .mode-tab,
+            .agent-tab,
+            .research-link,
+            .detail-btn,
+            .faq-toggle,
+            .cmd-copy,
+            .back-link,
+            .external-link,
+            a.btn,
+            button.btn
+        ):not(:disabled):not([disabled]):hover {
+            transform: scale(1.03);
+        }
     }
 
     :is(
@@ -75,13 +85,25 @@ html, body {
         .mode-tab,
         .agent-tab,
         .research-link,
+        .detail-btn,
+        .faq-toggle,
+        .cmd-copy,
+        .back-link,
+        .external-link,
         a.btn,
         button.btn
     ):not(:disabled):not([disabled]):active {
-        transform: scale(0.98);
+        transform: scale(0.97);
     }
 }
 
+.btn-secondary,
+.detail-btn,
+.icon-btn {
+    background: transparent;
+    color: var(--btn-secondary-text, var(--text));
+    border: 1px solid var(--border-strong, var(--border));
+}
 .btn-secondary:hover:not(:disabled):not([disabled]),
 .faq-toggle:hover,
 .cmd-copy:hover,
@@ -101,33 +123,48 @@ html, body {
     text-underline-offset: 0.2em;
 }
 .research-link:hover {
-    opacity: 0.55;
+    opacity: 0.7;
 }
 .research-link:active {
-    opacity: 0.38;
+    opacity: 0.5;
 }
 
+/* Soft halo on write fields — no hard black box */
 .lab-input {
     overflow: visible;
-    transition: border-color 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease;
+    border-radius: 6px;
+    transition:
+        border-color 0.45s cubic-bezier(0.22, 1.5, 0.36, 1),
+        box-shadow 0.45s cubic-bezier(0.22, 1.5, 0.36, 1),
+        background-color 0.3s ease;
 }
-.lab-input:hover:not(:focus) {
+.lab-input:hover:not(:focus):not(.is-on) {
     background-color: var(--hover-fade);
 }
 .lab-input:focus,
 .lab-input:focus-visible,
 .lab-input:active,
 .lab-input.is-on {
-    outline: 1px solid var(--text);
-    outline-offset: 0;
-    border-color: var(--text);
-    box-shadow: inset 0 0 0 1px var(--text);
+    outline: none;
+    border-color: color-mix(in srgb, var(--text) 32%, var(--border));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--text) 10%, transparent);
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1.2, 0.36, 1);
+}
+.reveal.visible {
+    opacity: 1;
+    transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
     html, body, .nav, header, footer, .surface, .card,
     .dataset-card, .stat, .proof-card, .proof-steps,
-    .proof-conclusion, .pipeline-card, .lab-input {
+    .proof-conclusion, .pipeline-card, .lab-input, .reveal {
         transition: none !important;
     }
+    .reveal { opacity: 1; transform: none; }
 }
