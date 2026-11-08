@@ -4,8 +4,6 @@
     :is(
         .btn-primary,
         .btn-secondary,
-        .nav-login-btn,
-        .theme-toggle-btn,
         .nav-install-btn,
         .cta-terminal-btn,
         .oauth-btn,
@@ -30,8 +28,6 @@
     :is(
         .btn-primary,
         .btn-secondary,
-        .nav-login-btn,
-        .theme-toggle-btn,
         .nav-install-btn,
         .cta-terminal-btn,
         .oauth-btn,
@@ -49,8 +45,6 @@
     :is(
         .btn-primary,
         .btn-secondary,
-        .nav-login-btn,
-        .theme-toggle-btn,
         .nav-install-btn,
         .cta-terminal-btn,
         .oauth-btn,

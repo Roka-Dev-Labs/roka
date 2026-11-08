@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-mode="login">
+<html lang="en" data-mode="signup">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Roka</title>
-    <meta name="description" content="Sign in or create a Roka account to manage Pro API keys, view token usage, and unlock semantic ranking for log pruning across CLI and MCP agents.">
-    <meta property="og:title" content="Login — Roka">
-    <meta property="og:description" content="Sign in or create a Roka account to manage Pro API keys, view token usage, and unlock semantic ranking for log pruning across CLI and MCP agents.">
+    <title>Sign up — Roka</title>
+    <meta name="description" content="Create a Roka account to manage Pro API keys, view token usage, and unlock semantic ranking for log pruning across CLI and MCP agents.">
+    <meta property="og:title" content="Sign up — Roka">
+    <meta property="og:description" content="Create a Roka account to manage Pro API keys, view token usage, and unlock semantic ranking for log pruning across CLI and MCP agents.">
     <meta property="og:image" content="https://www.roka-prune.com/assets/images/og.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -46,8 +46,8 @@
           "@type": "WebPage",
           "@id": "https://www.roka-prune.com/login.html#webpage",
           "url": "https://www.roka-prune.com/login.html",
-          "name": "Login - Roka",
-          "description": "Sign in or create a Roka account to manage Pro API keys, view token usage, and unlock semantic ranking for log pruning across CLI and MCP agents.",
+          "name": "Sign up — Roka",
+          "description": "Create a Roka account to manage Pro API keys, view token usage, and unlock semantic ranking for log pruning across CLI and MCP agents.",
           "isPartOf": {
             "@id": "https://www.roka-prune.com/#website"
           },
@@ -63,8 +63,8 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Roka">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Login — Roka">
-    <meta name="twitter:description" content="Sign in or create a Roka account to manage Pro API keys, view token usage, and unlock semantic ranking for log pruning across CLI and MCP agents.">
+    <meta name="twitter:title" content="Sign up — Roka">
+    <meta name="twitter:description" content="Create a Roka account to manage Pro API keys, view token usage, and unlock semantic ranking for log pruning across CLI and MCP agents.">
     <meta name="twitter:image" content="https://www.roka-prune.com/assets/images/og.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
@@ -371,8 +371,8 @@
             <a href="/" class="card-logo" aria-label="Roka home">
                 <img src="/assets/logos/logo-roka.png" alt="Roka" width="64" height="64">
             </a>
-            <h1 id="formTitle">Sign in</h1>
-            <p class="subtitle" id="formSubtitle">Welcome back to Roka</p>
+            <h1 id="formTitle">Create your account</h1>
+            <p class="subtitle" id="formSubtitle">Welcome! Please fill in the details to get started.</p>
 
             <div id="error" class="error hidden"></div>
 
@@ -429,26 +429,26 @@
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="password-wrap">
-                        <input type="password" id="password" required autocomplete="current-password" placeholder="Enter your password" minlength="8">
+                        <input type="password" id="password" required autocomplete="new-password" placeholder="Enter your password" minlength="8">
                         <button type="button" class="password-toggle" id="togglePassword" aria-label="Show password">
                             <svg id="eyeOpen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
                             <svg id="eyeClosed" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 19c-6.5 0-10-7-10-7a17.3 17.3 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c6.5 0 10 7 10 7a17.4 17.4 0 0 1-3.16 4.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
                         </button>
                     </div>
                 </div>
-                <button type="submit" class="btn-primary" id="submitBtn">Continue <span class="arrow" aria-hidden="true">▸</span></button>
+                <button type="submit" class="btn-primary" id="submitBtn">Sign up <span class="arrow" aria-hidden="true">▸</span></button>
             </form>
 
             <div class="toggle-link">
-                <span id="toggleText">Don't have an account? </span>
-                <a href="?mode=signup" id="toggleLink">Sign up</a>
+                <span id="toggleText">Already have an account? </span>
+                <a href="?mode=login" id="toggleLink">Sign in</a>
             </div>
         </div>
     </div>
 
     <script>
         const API_BASE = window.ROKA_API_BASE || 'https://api.roka-prune.com';
-        let isLoginMode = true;
+        let isLoginMode = false;
 
         const formTitle = document.getElementById('formTitle');
         const formSubtitle = document.getElementById('formSubtitle');
@@ -495,6 +495,8 @@
             formSubtitle.textContent = isLoginMode
                 ? 'Welcome back to Roka'
                 : 'Welcome! Please fill in the details to get started.';
+            submitBtn.innerHTML = (isLoginMode ? 'Sign in' : 'Sign up') + ' <span class="arrow" aria-hidden="true">▸</span>';
+            document.title = isLoginMode ? 'Sign in — Roka' : 'Sign up — Roka';
             toggleText.textContent = isLoginMode ? "Don't have an account? " : 'Already have an account? ';
             toggleLink.textContent = isLoginMode ? 'Sign up' : 'Sign in';
             toggleLink.setAttribute('href', isLoginMode ? '?mode=signup' : '?mode=login');
@@ -518,14 +520,14 @@
             applyMode(true);
             if (!oauthError) errorDiv.classList.add('hidden');
             const next = new URLSearchParams(window.location.search);
-            if (isLoginMode) next.delete('mode');
-            else next.set('mode', 'signup');
+            if (isLoginMode) next.set('mode', 'login');
+            else next.delete('mode');
             const qs = next.toString();
             history.replaceState(null, '', window.location.pathname + (qs ? `?${qs}` : ''));
         }
 
-        if (params.get('mode') === 'signup') {
-            isLoginMode = false;
+        if (params.get('mode') === 'login') {
+            isLoginMode = true;
         }
         applyMode(false);
 
