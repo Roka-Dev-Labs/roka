@@ -1,0 +1,67 @@
+/* NativeDelete spring (hover 1.02 / tap 0.98) — no delete chrome.
+   stiffness 400, damping 25, mass 0.8 */
+@media (prefers-reduced-motion: no-preference) {
+    :is(
+        .btn-primary,
+        .btn-secondary,
+        .nav-login-btn,
+        .theme-toggle-btn,
+        .nav-install-btn,
+        .cta-terminal-btn,
+        .oauth-btn,
+        .pro-tier-cta,
+        .btn-small,
+        .icon-btn,
+        .mode-tab,
+        .agent-tab,
+        a.btn,
+        button.btn
+    ):not(:disabled):not([disabled]) {
+        transform: scale(1);
+        transform-origin: center;
+        transition-property: transform, opacity, background-color, border-color, color, box-shadow;
+        transition-duration: 0.38s, 0.2s, 0.2s, 0.2s, 0.2s, 0.2s;
+        transition-timing-function: cubic-bezier(0.22, 1.2, 0.32, 1), ease, ease, ease, ease, ease;
+        transition-timing-function:
+            linear(0, 0.218 2.1%, 0.862 12.3%, 1.114 20.5%, 1.114 22.7%, 1.011 32.6%, 0.977 38.4%, 0.989 44.5%, 1.001 52.3%, 1),
+            ease, ease, ease, ease, ease;
+    }
+
+    :is(
+        .btn-primary,
+        .btn-secondary,
+        .nav-login-btn,
+        .theme-toggle-btn,
+        .nav-install-btn,
+        .cta-terminal-btn,
+        .oauth-btn,
+        .pro-tier-cta,
+        .btn-small,
+        .icon-btn,
+        .mode-tab,
+        .agent-tab,
+        a.btn,
+        button.btn
+    ):not(:disabled):not([disabled]):hover {
+        transform: scale(1.02);
+    }
+
+    :is(
+        .btn-primary,
+        .btn-secondary,
+        .nav-login-btn,
+        .theme-toggle-btn,
+        .nav-install-btn,
+        .cta-terminal-btn,
+        .oauth-btn,
+        .pro-tier-cta,
+        .btn-small,
+        .icon-btn,
+        .mode-tab,
+        .agent-tab,
+        a.btn,
+        button.btn
+    ):not(:disabled):not([disabled]):active {
+        transform: scale(0.98);
+    }
+}
