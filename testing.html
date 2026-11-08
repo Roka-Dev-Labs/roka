@@ -193,12 +193,21 @@
         .nav-logo {
             display: flex;
             align-items: center;
-            gap: 0.625rem;
-            font-weight: 500;
-            font-size: 1.05rem;
+            gap: 13.5px;
+            font-weight: 600;
+            font-size: 22.5px;
+            line-height: 1;
             text-decoration: none;
             color: var(--text);
         }
+        .nav-logo img {
+            width: 40.5px;
+            height: 40.5px;
+            object-fit: contain;
+            filter: var(--logo-filter);
+        }
+        html.dark { --logo-filter: invert(1); }
+        html.light { --logo-filter: none; }
 
         .nav-links {
             display: flex;
@@ -251,7 +260,6 @@
             background-color: #2c2c2c;
             color: white;
         }
-        html.light .nav-logo img { filter: brightness(0); }
 
         .back-link {
             display: inline-block;
@@ -368,7 +376,7 @@
 
         @media (min-width: 640px) {
             .dataset-row {
-                grid-template-columns: 160px 1fr auto auto auto auto;
+                grid-template-columns: 1fr auto auto;
                 gap: 0.75rem;
             }
         }
@@ -621,12 +629,12 @@
             color: var(--text-muted);
         }
 
-        .logo-animate { animation: logoSpin 3s ease-in-out; }
+        .logo-animate { animation: logoSpin 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 
         @keyframes logoSpin {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(10deg); }
-            75% { transform: rotate(-10deg); }
+            0% { transform: rotate(0deg) scale(0.5); opacity: 0; }
+            50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
+            100% { transform: rotate(360deg) scale(1); opacity: 1; }
         }
 
         .mobile-stats { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.25rem; }
@@ -695,43 +703,42 @@
 
         <h1>Testing</h1>
         <p class="hero-intro">
-            We validated Roka against all 16 production log datasets from
-            <a href="https://github.com/logpai/loghub" rel="noopener noreferrer">LogHub</a>
-            (<a href="https://github.com/logpai/loghub/tree/master" rel="noopener noreferrer">logpai/loghub</a>)
-            — the standard open benchmark for log parsing research. Each sample is ~2,000 lines of real system telemetry.
+            The numbers below are the shipped MCP <code>prune_file</code> run: 15 LogHub sources,
+            <a href="https://github.com/logpai/loghub" rel="noopener noreferrer">logpai/loghub</a>,
+            about 2,000 lines each (30,001 lines / 4.15M characters). One 4,000-character budget. No per-file tuning.
         </p>
 
         <div class="pipeline" aria-label="How each test ran">
             <article class="pipeline-card">
                 <h3>1. Ingest</h3>
-                <p>~2,000 lines of real system logs per dataset — ~45K–295K tokens each.</p>
+                <p>~2,000 raw lines per file. The suite is 30,001 lines and 4.15M characters.</p>
             </article>
             <article class="pipeline-card">
                 <h3>2. Collapse</h3>
-                <p>Fingerprints UUIDs, IPs, thread names, timestamps — repetitive patterns become one line.</p>
+                <p>Consecutive duplicate lines collapse to one line plus a count.</p>
             </article>
             <article class="pipeline-card">
                 <h3>3. Rank</h3>
-                <p>Whole-word query scoring against “what broke” — failures surface first.</p>
+                <p>Force-keep crash lines. Other lines stay by whole-word query match, neighbor, or recency.</p>
             </article>
             <article class="pipeline-card">
                 <h3>4. Pack</h3>
-                <p>Pack to a character budget — what an agent actually receives.</p>
+                <p>Pack to 4,000 characters. A crash line that does not fit is kept whole and the overage is reported.</p>
             </article>
         </div>
 
         <div class="stat-grid">
-            <div class="stat"><div class="stat-value">16</div><div class="stat-label">Datasets</div></div>
-            <div class="stat"><div class="stat-value">1.7M</div><div class="stat-label">Input tokens</div></div>
-            <div class="stat"><div class="stat-value">94%</div><div class="stat-label">Avg. reduction</div></div>
-            <div class="stat"><div class="stat-value">8K</div><div class="stat-label">Token budget</div></div>
+            <div class="stat"><div class="stat-value">15</div><div class="stat-label">Datasets</div></div>
+            <div class="stat"><div class="stat-value">4.15M</div><div class="stat-label">Characters in</div></div>
+            <div class="stat"><div class="stat-value">92.2%</div><div class="stat-label">Avg. lines removed</div></div>
+            <div class="stat"><div class="stat-value">4K</div><div class="stat-label">Char budget</div></div>
         </div>
 
         <div class="surface" style="padding:0;margin-bottom:2rem;">
             <div class="query-bar">
                 <div>
-                    <strong>Query for every run</strong>
-                    <div><code>cat &lt;dataset&gt;_2k.log | roka prune --query "what broke" --budget 8000</code></div>
+                    <strong>Same tool on every file</strong>
+                    <div><code>prune_file(path, budget=4000)</code> — MCP default, characters not tokens</div>
                 </div>
                 <a href="https://github.com/logpai/loghub/tree/master" class="external-link" rel="noopener noreferrer">LogHub datasets →</a>
             </div>
@@ -743,17 +750,16 @@
         <section class="proof-section" aria-label="Why these benchmarks matter">
             <h2>What we did — and why it matters</h2>
             <p class="proof-lead">
-                Most log tools are demoed on tiny, hand-picked snippets. We didn't. We ran the same real-world command an engineer would use during an incident — <code>roka prune --query "what broke"</code> — against every dataset in the
-                <a href="https://github.com/logpai/loghub" rel="noopener noreferrer">LogHub</a> benchmark suite. These are production logs from Android phones, supercomputers, cloud clusters, and SSH servers — not synthetic toy data.
+                The table is the same MCP <code>prune_file</code> run published on the homepage and in the research note. Fifteen LogHub files, one budget, no per-file tuning. It measures whether lines — and real errors — survive a 4,000-character pack. It does not measure whether a model then solves the incident.
             </p>
 
             <div class="proof-steps">
                 <h3>Same four stages on every dataset</h3>
                 <div class="proof-step-list">
-                    <div class="proof-step"><strong>Ingest</strong> Raw LogHub samples, untouched — no cherry-picked slices.</div>
-                    <div class="proof-step"><strong>Collapse</strong> Identical fingerprints merge so heartbeats stop filling the budget.</div>
-                    <div class="proof-step"><strong>Rank</strong> One query — “what broke” — on all 16 logs, no per-file regex.</div>
-                    <div class="proof-step"><strong>Pack</strong> Output is always ≤ 8,000 tokens, with errors packed first.</div>
+                    <div class="proof-step"><strong>Ingest</strong> LogHub <code>*_2k.log</code> samples, ~2,000 lines, untouched.</div>
+                    <div class="proof-step"><strong>Collapse</strong> Consecutive duplicate lines merge into one line plus a count.</div>
+                    <div class="proof-step"><strong>Keep</strong> Lines matching ERROR, FATAL, CRITICAL, Exception, Traceback, or panic are packed first.</div>
+                    <div class="proof-step"><strong>Pack</strong> Remaining lines fit a 4,000-character budget. Overage is reported, not hidden.</div>
                 </div>
             </div>
 
@@ -763,19 +769,19 @@
                     <p>LogHub is the standard benchmark used in log parsing research (logpai). Each dataset comes from a different system with its own timestamp format, log structure, and failure modes — the same diversity you hit in production.</p>
                 </div>
                 <div class="proof-card">
-                    <h3>Same query, every time</h3>
-                    <p>We didn't tune per dataset. One natural-language query — <em>"what broke"</em> — on all 16 logs. Roka had to auto-detect format, collapse noise, and rank relevance without manual regex rules or per-system config.</p>
+                    <h3>Same rules, every file</h3>
+                    <p>No per-file tuning. Collapse consecutive duplicates, force-keep crash lines, then pack to 4,000 characters. The same <code>prune_file</code> path the MCP server ships.</p>
                 </div>
                 <div class="proof-card">
-                    <h3>Diagnosis, not just compression</h3>
-                    <p>Token reduction alone isn't the goal. Every dataset produced a coherent failure narrative: quorum election loss on Zookeeper, brute-force + breach on OpenSSH, CBS errors on Windows. Zero empty outputs.</p>
+                    <h3>Retention, not a story</h3>
+                    <p>The measured result is lines removed and whether a real error line survived. 11 of 11 sources that contained an error still kept one. That is not a claim that every warning, or a full incident narrative, was reconstructed.</p>
                 </div>
             </div>
 
             <div class="proof-conclusion">
-                <p><strong>Why this proves Roka works:</strong> If pruning only worked on one log format, you'd see failures across the other 15. Instead, all 16 datasets — mobile, web, HPC, cloud, distributed systems — compress to under 8K tokens while preserving the errors an SRE or AI agent needs to root-cause an incident.</p>
-                <p>The hard cases (BGL, HPC, Mac, OpenSSH) fill more of the budget because those logs have genuinely diverse failure modes — not because Roka missed anything. When we found format-specific gaps (Spark returning zero output, Thunderbird hostname bloat, Zookeeper election noise), we fixed the pipeline and re-ran until the diagnostic story was correct.</p>
-                <p>That's the difference between a demo and infrastructure: Roka handles logs you've never seen before, packs them to your token budget, and hands your agent exactly what broke — not 100,000 lines of noise.</p>
+                <p><strong>What held up:</strong> Across the 15 files, 92.2% of lines were removed after dedup and the budget pack. Average compression is about 69× (roughly 276K characters in, 4K out, per file). On the 11 sources that contained a real error, a verbatim error line was still in the output. Checked by hand.</p>
+                <p>BGL (72.7%), HPC (74.4%), and Apache (74.5%) keep more lines because those files are less repetitive. That is the file, not a miss. Thunderbird is the live check: the same 4,000 characters, and <code>sshd: Bind to port 22</code> stays with Roka and is missed by a naive tail.</p>
+                <p>Zookeeper is a LogHub file and is not in this 15-file table. Older write-ups that used an 8,000-token budget, or token totals such as 1.7M, are not this run.</p>
             </div>
         </section>
 
@@ -786,7 +792,7 @@
         </p>
 
         <p class="footer-note">
-            Benchmarks run via the Roka prune API on LogHub <code>*_2k.log</code> samples.
+            Figures are the published MCP <code>prune_file</code> run: 4,000-character budget, 15 LogHub files.
             Datasets © LogHub / logpai — used for research and evaluation.
         </p>
     </div>
@@ -993,7 +999,7 @@
                 reduction: "−100%",
                 tier: "excellent",
                 summary: "Nova warnings from 295K → 415 tokens",
-                about: "OpenStack Nova compute service logs — the largest input in the benchmark suite at ~295K tokens.",
+                about: "OpenStack Nova compute service logs — cloud instance, network, and scheduler warnings.",
                 surfaced: [
                     "Nova WARNING-level unknown base file exceptions",
                     "HTTP client exceptions during instance operations",
@@ -1103,9 +1109,31 @@
             }
         ];
 
+        const LINES_REMOVED = {
+            android: "98.3%",
+            apache: "74.5%",
+            bgl: "72.7%",
+            hdfs: "96.0%",
+            hpc: "74.4%",
+            hadoop: "92.0%",
+            healthapp: "98.0%",
+            linux: "97.2%",
+            mac: "92.4%",
+            openssh: "97.6%",
+            openstack: "99.0%",
+            proxifier: "95.5%",
+            spark: "97.8%",
+            thunderbird: "98.6%",
+            windows: "98.7%"
+        };
+
         const list = document.getElementById('datasetList');
 
-        DATASETS.forEach(d => {
+        DATASETS.filter(d => LINES_REMOVED[d.id]).forEach(d => {
+            const removed = LINES_REMOVED[d.id];
+            const assessment = d.id === "thunderbird"
+                ? "Verified on this file: 2,000 lines, 323,193 characters. The sshd bind-to-port-22 failure sits about 62% through the file. A naive tail of 4,000 characters misses it. prune_file keeps it."
+                : "Same prune_file rules as the other files. The percentage is lines removed after dedup and the 4,000-character pack. It is not a token count.";
             const card = document.createElement('div');
             card.className = 'dataset-card';
             card.id = 'dataset-' + d.id;
@@ -1116,14 +1144,10 @@
                         <div class="dataset-name">${d.name}</div>
                         <div class="dataset-system">${d.system}</div>
                         <div class="mobile-stats mono">
-                            <span>${d.input} → ${d.output}</span>
-                            <span class="badge ${d.tier}">${d.tier}</span>
+                            <span>${removed} lines removed</span>
                         </div>
                     </div>
-                    <div class="desktop-stats mono" style="text-align:right;color:var(--text-muted)">${d.input}</div>
-                    <div class="desktop-stats mono" style="text-align:right">${d.output}</div>
-                    <div class="desktop-stats mono" style="text-align:right;color:var(--success)">${d.reduction}</div>
-                    <div class="desktop-stats"><span class="badge ${d.tier}">${d.tier}</span></div>
+                    <div class="desktop-stats mono" style="text-align:right;color:var(--success)">${removed} lines removed</div>
                     <button type="button" class="detail-btn" aria-expanded="false" aria-controls="detail-${d.id}">
                         View details
                     </button>
@@ -1136,12 +1160,11 @@
                             <h3 style="margin-top:1rem;">About this log</h3>
                             <p>${d.about}</p>
                             <h3 style="margin-top:1rem;">Assessment</h3>
-                            <p>${d.notes}</p>
+                            <p>${assessment}</p>
                         </div>
                         <div class="detail-section">
-                            <h3>What Roka surfaced</h3>
-                            <ul>${d.surfaced.map(s => `<li>${s}</li>`).join('')}</ul>
-                            ${d.sample ? `<h3 style="margin-top:1rem;">Sample pruned output</h3><div class="sample-output">${d.sample}</div>` : ''}
+                            <h3>What was checked</h3>
+                            <p>Line removal is the published per-file figure. Error lines were checked as a set: if the file contained a real error, at least one verbatim error line stayed in the 4,000 characters.</p>
                         </div>
                     </div>
                 </div>
