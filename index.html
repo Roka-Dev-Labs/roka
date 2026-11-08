@@ -1149,18 +1149,6 @@
                 width: max-content;
                 margin-left: auto;
             }
-            .nav-desktop-actions .nav-login-btn,
-            .nav-desktop-actions .theme-toggle-btn,
-            .nav-desktop-actions .nav-install-btn {
-                box-sizing: border-box;
-                height: 2.5rem;
-                min-width: 6.5rem;
-                padding: 0 1rem;
-                font-size: 0.9375rem;
-                font-weight: 600;
-                line-height: 1;
-                border-radius: 0.5rem;
-            }
         }
         @media (max-width: 1100px) {
             .customCheckBoxHolder { display: none; }
@@ -1170,26 +1158,30 @@
             display: flex;
             align-items: center;
             width: auto;
-            max-width: min(30rem, calc(100vw - 18rem));
+            max-width: min(36rem, calc(100vw - 16rem));
             min-width: 0;
-            overflow: hidden;
+            overflow: visible;
             flex-shrink: 0;
         }
         .customCheckBoxWrapper {
-            flex: 1 1 0;
-            min-width: 0;
+            flex: 1 1 auto;
+            min-width: 5rem;
         }
         .customCheckBoxWrapper:first-of-type {
-            flex: 1.22 1 0;
-            min-width: 6.5rem;
+            flex: 1.12 1 auto;
+            min-width: 6.75rem;
+        }
+        .customCheckBoxWrapper:last-of-type {
+            flex: 1.08 1 auto;
+            min-width: 5.85rem;
         }
         .customCheckBox {
             width: 100%;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             cursor: pointer;
             user-select: none;
-            padding: 2px 10px;
+            padding: 2px 14px;
             background-color: rgba(0, 0, 0, 0.16);
             border-radius: 0;
             color: rgba(255, 255, 255, 0.82);
@@ -1202,7 +1194,7 @@
             justify-content: center;
             box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px 1px 1px 0px;
             outline: none;
-            min-width: 0;
+            min-width: 5rem;
         }
         .customCheckBox:hover {
             background-color: #2c2c2c;
@@ -1267,7 +1259,7 @@
         /* Theme toggle — high contrast on both backgrounds */
         .theme-toggle-btn,
         .nav-login-btn {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 0.45rem;
@@ -1284,6 +1276,13 @@
             transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
             text-decoration: none;
             white-space: nowrap;
+            box-sizing: border-box;
+            margin: 0;
+        }
+        .theme-toggle-btn {
+            appearance: none;
+            -webkit-appearance: none;
+            font: inherit;
         }
         .theme-toggle-btn:hover,
         .nav-login-btn:hover {
@@ -1308,6 +1307,54 @@
         [data-theme="light"] .theme-toggle-btn:hover,
         [data-theme="light"] .nav-login-btn:hover {
             border-color: rgba(0, 0, 0, 0.32);
+        }
+
+        /* Desktop nav actions */
+        @media (min-width: 640px) {
+            .nav-desktop .nav-desktop-actions {
+                gap: 6px;
+                align-items: center;
+            }
+            .nav-desktop .nav-desktop-actions > .nav-login-btn,
+            .nav-desktop .nav-desktop-actions > .theme-toggle-btn {
+                height: 40px;
+                min-height: 40px;
+                padding: 2px 14px;
+                font-size: 0.9375rem;
+                font-weight: 600;
+                line-height: 1;
+                gap: 0.35rem;
+                flex-shrink: 0;
+            }
+            .nav-desktop .nav-desktop-actions > .theme-toggle-btn svg {
+                width: 12px;
+                height: 12px;
+            }
+            /* Glossy Install — same outer height as shipped, room for FX layers */
+            .nav-desktop .nav-desktop-actions > .nav-install-btn {
+                height: 40px;
+                min-height: 40px;
+                min-width: 6.5rem;
+                padding: 0 1rem;
+                font-size: 0.8125rem;
+                font-weight: 600;
+                line-height: 1;
+                border-radius: 0.5rem;
+                overflow: hidden;
+                flex-shrink: 0;
+            }
+            .nav-desktop .nav-install-btn > span.absolute.inset-0 {
+                margin-top: 0;
+                border-radius: inherit;
+            }
+            .nav-desktop .nav-install-btn > span.absolute.top-0.right-0 {
+                width: 2.25rem;
+                margin-right: -0.65rem;
+            }
+            .nav-desktop .nav-install-btn > span.absolute.bottom-0.left-0 svg {
+                height: 100%;
+                max-height: 40px;
+            }
         }
 
         /* Mobile Sidebar */
@@ -2465,7 +2512,7 @@
                     </label>
                 </div>
                 <div class="nav-desktop-actions flex items-center gap-2 flex-shrink-0">
-                    <a href="/login.html" id="navLoginBtn" class="nav-login-btn inline-flex">Login</a>
+                    <a href="/login.html" id="navLoginBtn" class="nav-login-btn">Login</a>
                     <button id="themeToggle" type="button"
                         class="theme-toggle-btn"
                         aria-label="Toggle theme">
@@ -2476,7 +2523,7 @@
                         <span id="themeLabel">Light</span>
                     </button>
                     <a href="/install.html"
-                       class="nav-install-btn relative inline-flex items-center justify-center overflow-hidden tracking-tighter text-white bg-gray-800 group no-underline">
+                       class="nav-install-btn relative inline-flex items-center justify-center overflow-hidden tracking-tighter text-white bg-gray-800 rounded-md group text-sm font-semibold no-underline">
                         <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-sky-500 rounded-full group-hover:w-44 group-hover:h-44"></span>
                         <span class="absolute bottom-0 left-0 h-full -ml-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-auto h-full opacity-100" viewBox="0 0 487 487" aria-hidden="true">
