@@ -141,16 +141,16 @@
             --text: #e4e4e7;
             --text-muted: #71717a;
             --text-faint: #52525b;
-            --accent: #e8c547;
-            --accent-glow: rgba(232, 197, 71, 0.08);
-            --signal: #e8c547;
-            --signal-dim: rgba(232, 197, 71, 0.12);
+            --accent: #4d8fff;
+            --accent-glow: rgba(77, 143, 255, 0.10);
+            --signal: #4d8fff;
+            --signal-dim: rgba(77, 143, 255, 0.14);
             --hero-glow: transparent;
             --btn-primary-bg: #fafafa;
             --btn-primary-text: #09090b;
             --btn-secondary-bg: transparent;
             --btn-secondary-text: #fafafa;
-            --success: #e8c547;
+            --success: #4d8fff;
             --term-ok: #3dd68c;
             --danger: #ff6b7a;
             --term-result: #5b9fff;
@@ -172,10 +172,10 @@
             --text: #09090b;
             --text-muted: #52525b;
             --text-faint: #a1a1aa;
-            --accent: #b45309;
-            --accent-glow: rgba(180, 83, 9, 0.08);
-            --signal: #b45309;
-            --signal-dim: rgba(180, 83, 9, 0.1);
+            --accent: #2563eb;
+            --accent-glow: rgba(37, 99, 235, 0.08);
+            --signal: #2563eb;
+            --signal-dim: rgba(37, 99, 235, 0.10);
             --hero-glow: transparent;
             --btn-primary-bg: #09090b;
             --btn-primary-text: #fafafa;
@@ -666,9 +666,9 @@
             }
         }
         .orbit-chip.kept {
-            background: #e8c547;
-            border-color: #e8c547;
-            color: #111111;
+            background: #4d8fff;
+            border-color: #4d8fff;
+            color: #0b1220;
         }
         .orbit-chip.dropped {
             background: #ff6b7a;
@@ -1896,7 +1896,7 @@
             min-height: 11rem;
         }
 
-        /* Agent hub — static hexagon, logos sit on the ring */
+        /* Agent hub — rotate 60°, sharp stop, hold 2s */
         .agent-orbit {
             --orbit-size: min(400px, calc(100vw - 2.5rem));
             --orbit-r: calc(var(--orbit-size) * 0.375);
@@ -1905,20 +1905,6 @@
             width: var(--orbit-size);
             height: var(--orbit-size);
             margin: 0 auto;
-        }
-        .agent-orbit-ring {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            color: var(--border-strong);
-        }
-        .agent-orbit-ring circle {
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 1.25;
-            vector-effect: non-scaling-stroke;
         }
         .agent-orbit-hub {
             position: absolute;
@@ -1934,7 +1920,7 @@
             align-items: center;
             justify-content: center;
             z-index: 2;
-            box-shadow: 0 0 0 8px var(--bg);
+            box-shadow: 0 0 32px var(--signal-dim);
         }
         .agent-orbit-hub img {
             width: 40px;
@@ -1942,12 +1928,26 @@
             object-fit: contain;
             filter: var(--logo-filter);
         }
-        .agent-node {
+        .agent-orbit-wheel {
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+        }
+        .agent-node-slot {
             position: absolute;
             top: calc(50% + sin(var(--a)) * var(--orbit-r) - var(--node) / 2);
             left: calc(50% + cos(var(--a)) * var(--orbit-r) - var(--node) / 2);
             width: var(--node);
             height: var(--node);
+        }
+        .agent-node-level {
+            width: 100%;
+            height: 100%;
+        }
+        .agent-node {
+            position: relative;
+            width: 100%;
+            height: 100%;
             padding: 0;
             border: 1px solid rgba(0, 0, 0, 0.06);
             border-radius: 16px;
@@ -1956,7 +1956,6 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 3;
             box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
             transform: scale(1);
             transform-origin: center;
@@ -1973,8 +1972,8 @@
         .agent-node-name {
             position: absolute;
             left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%) translate(calc(cos(var(--a)) * 46px), calc(sin(var(--a)) * 46px));
+            top: calc(100% + 8px);
+            transform: translateX(-50%);
             white-space: nowrap;
             font-size: 10px;
             font-weight: 500;
@@ -1995,7 +1994,49 @@
         .agent-node:focus-visible .agent-node-name {
             opacity: 1;
         }
+        @keyframes orbit-step {
+            0%, 12.121% { transform: rotate(0deg); }
+            15.576% { transform: rotate(66deg); }
+            16.667%, 28.788% { transform: rotate(60deg); }
+            32.242% { transform: rotate(126deg); }
+            33.333%, 45.455% { transform: rotate(120deg); }
+            48.909% { transform: rotate(186deg); }
+            50%, 62.121% { transform: rotate(180deg); }
+            65.576% { transform: rotate(246deg); }
+            66.667%, 78.788% { transform: rotate(240deg); }
+            82.242% { transform: rotate(306deg); }
+            83.333%, 95.455% { transform: rotate(300deg); }
+            98.909% { transform: rotate(366deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes orbit-unstep {
+            0%, 12.121% { transform: rotate(0deg); }
+            15.576% { transform: rotate(-66deg); }
+            16.667%, 28.788% { transform: rotate(-60deg); }
+            32.242% { transform: rotate(-126deg); }
+            33.333%, 45.455% { transform: rotate(-120deg); }
+            48.909% { transform: rotate(-186deg); }
+            50%, 62.121% { transform: rotate(-180deg); }
+            65.576% { transform: rotate(-246deg); }
+            66.667%, 78.788% { transform: rotate(-240deg); }
+            82.242% { transform: rotate(-306deg); }
+            83.333%, 95.455% { transform: rotate(-300deg); }
+            98.909% { transform: rotate(-366deg); }
+            100% { transform: rotate(-360deg); }
+        }
         @media (prefers-reduced-motion: no-preference) {
+            .agent-orbit-wheel {
+                animation: orbit-step 16.5s linear infinite;
+            }
+            .agent-node-level {
+                animation: orbit-unstep 16.5s linear infinite;
+            }
+            .agent-orbit:hover .agent-orbit-wheel,
+            .agent-orbit:hover .agent-node-level,
+            .agent-orbit:focus-within .agent-orbit-wheel,
+            .agent-orbit:focus-within .agent-node-level {
+                animation-play-state: paused;
+            }
             .agent-node {
                 transition-property: transform, box-shadow;
                 transition-duration: 0.38s, 0.2s;
@@ -2014,9 +2055,6 @@
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
             }
         }
-        [data-theme="light"] .agent-orbit-hub {
-            box-shadow: 0 0 0 8px var(--bg);
-        }
         [data-theme="light"] .agent-node {
             border-color: rgba(0, 0, 0, 0.08);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
@@ -2029,6 +2067,8 @@
             .prune-line { animation: none !important; display: none; }
             .orbit-float { animation: none !important; }
             .orbit-chip { transition: none !important; }
+            .agent-orbit-wheel,
+            .agent-node-level { animation: none !important; }
             .agent-node { transition: none !important; }
             .tl-typing,
             .sc-type {
@@ -2148,6 +2188,89 @@
             font-size: 10px;
             color: var(--text-faint);
             border-top: 1px solid var(--border);
+        }
+
+        .compare {
+            width: min(52rem, calc(100% - 2.5rem));
+            margin: 0 auto;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left;
+        }
+        .compare-head {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem 1.25rem;
+            align-items: baseline;
+            justify-content: space-between;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border);
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.02em;
+        }
+        .compare-head .q { color: var(--text-muted); }
+        .compare-head .q em {
+            font-style: normal;
+            color: var(--signal);
+        }
+        .compare-meta { color: var(--text-faint); }
+        .compare-cols,
+        .compare-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1.45fr) 0.7fr 0.9fr 0.9fr;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            line-height: 1.45;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+        }
+        .compare-cols {
+            color: var(--text-faint);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 10px;
+            background: var(--bg-elevated);
+        }
+        .compare-row:last-child { border-bottom: none; }
+        .compare-feat { color: var(--text-muted); }
+        .compare-yes {
+            color: var(--signal);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            font-size: 10px;
+        }
+        .compare-no { color: var(--text-faint); }
+        .compare-note {
+            color: var(--text-faint);
+            font-size: 10px;
+        }
+        .compare-price {
+            color: var(--text);
+            font-weight: 600;
+        }
+        .compare-row.roka-win {
+            background: var(--signal-dim);
+            box-shadow: inset 2px 0 0 var(--signal);
+        }
+        .compare-foot {
+            padding: 0.7rem 1rem;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-faint);
+            border-top: 1px solid var(--border);
+        }
+        @media (max-width: 640px) {
+            .compare { overflow-x: auto; }
+            .compare-cols,
+            .compare-row {
+                min-width: 36rem;
+            }
         }
         @media (max-width: 640px) {
             .evidence-cols,
@@ -2937,75 +3060,72 @@
     </section>
 
 
-    <!-- Comparison table -->
+    <!-- Comparison -->
     <section id="vs-upload" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-12">
             <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">the slice, not the dump.</h2>
             <p class="text-muted text-sm">What you can inspect. Not a token-savings pitch.</p>
         </div>
-        <div class="max-w-3xl mx-auto surface rounded-2xl overflow-hidden">
-            <table class="w-full text-sm">
-                <thead>
-                    <tr class="border-b border-[var(--border)]">
-                        <th class="text-left p-4 text-xs text-faint uppercase tracking-wider w-1/2">Feature</th>
-                        <th class="text-center p-4 font-bold text-[var(--text)]">
-                            <span class="mono text-base">roka</span>
-                        </th>
-                        <th class="text-center p-4 text-xs text-muted font-normal">Upload to Claude</th>
-                        <th class="text-center p-4 text-xs text-muted font-normal">Semantic Search</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
-                        <td class="p-4 text-muted">No file size limit</td>
-                        <td class="p-4 text-center text-[var(--success)]">✓</td>
-                        <td class="p-4 text-center text-[var(--text-faint)]">— <span class="text-xs">(100MB max)</span></td>
-                        <td class="p-4 text-center text-[var(--success)]">✓</td>
-                    </tr>
-                    <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
-                        <td class="p-4 text-muted">Logs never leave your machine</td>
-                        <td class="p-4 text-center text-[var(--success)]">✓</td>
-                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
-                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
-                    </tr>
-                    <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
-                        <td class="p-4 text-muted">Query-aware keep vs naive tail</td>
-                        <td class="p-4 text-center text-[var(--success)]">✓</td>
-                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
-                        <td class="p-4 text-center text-[var(--text-faint)]">— <span class="text-xs">(partial)</span></td>
-                    </tr>
-                    <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
-                        <td class="p-4 text-muted">Keep / drop reasons you can read</td>
-                        <td class="p-4 text-center text-[var(--success)]">✓</td>
-                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
-                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
-                    </tr>
-                    <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
-                        <td class="p-4 text-muted">Crash lines packed first; overage reported</td>
-                        <td class="p-4 text-center text-[var(--success)]">✓</td>
-                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
-                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
-                    </tr>
-                    <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
-                        <td class="p-4 text-muted">Collapses repeated log patterns</td>
-                        <td class="p-4 text-center text-[var(--success)]">✓</td>
-                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
-                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
-                    </tr>
-                    <tr class="border-b border-[var(--border)] hover:bg-[var(--accent-glow)] transition-colors">
-                        <td class="p-4 text-muted">Works offline</td>
-                        <td class="p-4 text-center text-[var(--success)]">✓</td>
-                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
-                        <td class="p-4 text-center text-[var(--text-faint)]">—</td>
-                    </tr>
-                    <tr class="hover:bg-[var(--accent-glow)] transition-colors">
-                        <td class="p-4 text-muted">Price</td>
-                        <td class="p-4 text-center font-semibold text-[var(--text)]">Free with limits</td>
-                        <td class="p-4 text-center text-[var(--text-muted)]">Pay per token</td>
-                        <td class="p-4 text-center text-[var(--text-muted)]">Complex setup</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="compare">
+            <div class="compare-head">
+                <span class="q">inspect <em>roka</em> vs upload vs search</span>
+                <span class="compare-meta">same question · three ways to feed the agent</span>
+            </div>
+            <div class="compare-cols">
+                <span>Feature</span>
+                <span>Roka</span>
+                <span>Upload to Claude</span>
+                <span>Semantic search</span>
+            </div>
+            <div class="compare-row">
+                <span class="compare-feat">No file size limit</span>
+                <span class="compare-yes">kept</span>
+                <span class="compare-note">100MB max</span>
+                <span class="compare-yes">kept</span>
+            </div>
+            <div class="compare-row roka-win">
+                <span class="compare-feat">Logs never leave your machine</span>
+                <span class="compare-yes">kept</span>
+                <span class="compare-no">dropped</span>
+                <span class="compare-no">dropped</span>
+            </div>
+            <div class="compare-row roka-win">
+                <span class="compare-feat">Query-aware keep vs naive tail</span>
+                <span class="compare-yes">kept</span>
+                <span class="compare-no">dropped</span>
+                <span class="compare-note">partial</span>
+            </div>
+            <div class="compare-row roka-win">
+                <span class="compare-feat">Keep / drop reasons you can read</span>
+                <span class="compare-yes">kept</span>
+                <span class="compare-no">dropped</span>
+                <span class="compare-no">dropped</span>
+            </div>
+            <div class="compare-row roka-win">
+                <span class="compare-feat">Crash lines packed first; overage reported</span>
+                <span class="compare-yes">kept</span>
+                <span class="compare-no">dropped</span>
+                <span class="compare-no">dropped</span>
+            </div>
+            <div class="compare-row roka-win">
+                <span class="compare-feat">Collapses repeated log patterns</span>
+                <span class="compare-yes">kept</span>
+                <span class="compare-no">dropped</span>
+                <span class="compare-no">dropped</span>
+            </div>
+            <div class="compare-row roka-win">
+                <span class="compare-feat">Works offline</span>
+                <span class="compare-yes">kept</span>
+                <span class="compare-no">dropped</span>
+                <span class="compare-no">dropped</span>
+            </div>
+            <div class="compare-row">
+                <span class="compare-feat">Price</span>
+                <span class="compare-price">free with limits</span>
+                <span class="compare-no">pay per token</span>
+                <span class="compare-no">complex setup</span>
+            </div>
+            <div class="compare-foot">Fixture vs-upload · we measure whether the cause line survived. We do not claim the agent then solves the incident.</div>
         </div>
     </section>
 
@@ -3018,39 +3138,62 @@
         </div>
 
         <div class="agent-orbit">
-            <svg class="agent-orbit-ring" viewBox="0 0 400 400" aria-hidden="true">
-                <circle cx="200" cy="200" r="150"/>
-            </svg>
             <div class="agent-orbit-hub">
                 <img src="/assets/logos/logo-roka.png" alt="">
             </div>
-            <button type="button" class="agent-node" style="--a: -90deg" aria-label="Claude Code">
-                <img src="/assets/logos/logo-claude.png" alt="">
-                <span class="agent-node-name">Claude Code</span>
-            </button>
-            <button type="button" class="agent-node" style="--a: -30deg" aria-label="Cursor">
-                <img src="/assets/logos/logo-cursor.png" alt="">
-                <span class="agent-node-name">Cursor</span>
-            </button>
-            <button type="button" class="agent-node" style="--a: 30deg" aria-label="ChatGPT">
-                <img src="/assets/logos/logo-chatgpt.png" alt="">
-                <span class="agent-node-name">ChatGPT</span>
-            </button>
-            <button type="button" class="agent-node" style="--a: 90deg" aria-label="GitHub Copilot">
-                <img src="/assets/logos/logo-copilot.png" alt="">
-                <span class="agent-node-name">GitHub Copilot</span>
-            </button>
-            <button type="button" class="agent-node" style="--a: 150deg" aria-label="Google Gemini">
-                <img src="/assets/logos/logo-gemini.png" alt="">
-                <span class="agent-node-name">Gemini</span>
-            </button>
-            <button type="button" class="agent-node" style="--a: 210deg" aria-label="Any LLM via stdout">
-                <svg viewBox="0 0 40 40" fill="none" stroke="#18181b" stroke-width="2.2" aria-hidden="true">
-                    <polyline points="8,14 15,21 8,28" stroke-linecap="round" stroke-linejoin="round"/>
-                    <line x1="19" y1="27" x2="33" y2="27" stroke-linecap="round"/>
-                </svg>
-                <span class="agent-node-name">stdout</span>
-            </button>
+            <div class="agent-orbit-wheel">
+                <div class="agent-node-slot" style="--a: -90deg">
+                    <div class="agent-node-level">
+                        <button type="button" class="agent-node" aria-label="Claude Code">
+                            <img src="/assets/logos/logo-claude.png" alt="">
+                            <span class="agent-node-name">Claude Code</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="agent-node-slot" style="--a: -30deg">
+                    <div class="agent-node-level">
+                        <button type="button" class="agent-node" aria-label="Cursor">
+                            <img src="/assets/logos/logo-cursor.png" alt="">
+                            <span class="agent-node-name">Cursor</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="agent-node-slot" style="--a: 30deg">
+                    <div class="agent-node-level">
+                        <button type="button" class="agent-node" aria-label="ChatGPT">
+                            <img src="/assets/logos/logo-chatgpt.png" alt="">
+                            <span class="agent-node-name">ChatGPT</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="agent-node-slot" style="--a: 90deg">
+                    <div class="agent-node-level">
+                        <button type="button" class="agent-node" aria-label="GitHub Copilot">
+                            <img src="/assets/logos/logo-copilot.png" alt="">
+                            <span class="agent-node-name">GitHub Copilot</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="agent-node-slot" style="--a: 150deg">
+                    <div class="agent-node-level">
+                        <button type="button" class="agent-node" aria-label="Google Gemini">
+                            <img src="/assets/logos/logo-gemini.png" alt="">
+                            <span class="agent-node-name">Gemini</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="agent-node-slot" style="--a: 210deg">
+                    <div class="agent-node-level">
+                        <button type="button" class="agent-node" aria-label="Any LLM via stdout">
+                            <svg viewBox="0 0 40 40" fill="none" stroke="#18181b" stroke-width="2.2" aria-hidden="true">
+                                <polyline points="8,14 15,21 8,28" stroke-linecap="round" stroke-linejoin="round"/>
+                                <line x1="19" y1="27" x2="33" y2="27" stroke-linecap="round"/>
+                            </svg>
+                            <span class="agent-node-name">stdout</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="text-center mt-12">
