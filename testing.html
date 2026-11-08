@@ -104,13 +104,6 @@
             --bg-card: #161616;
             --accent: #e4e4e7;
             --grid-line: transparent;
-            --illust-blue: #7dd3fc;
-            --illust-amber: #fbbf24;
-            --illust-blue-bg: rgba(125, 211, 252, 0.12);
-            --illust-amber-bg: rgba(251, 191, 36, 0.12);
-            --figure-bg: #f7f4ea;
-            --figure-head: #c5dff0;
-            --figure-ink: #1a1a1a;
             --mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
             --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
         }
@@ -129,13 +122,6 @@
             --bg-elevated: #f4f4f5;
             --bg-card: #ffffff;
             --accent: #18181b;
-            --illust-blue: #0284c7;
-            --illust-amber: #d97706;
-            --illust-blue-bg: rgba(14, 165, 233, 0.12);
-            --illust-amber-bg: rgba(217, 119, 6, 0.12);
-            --figure-bg: #f7f4ea;
-            --figure-head: #c5dff0;
-            --figure-ink: #1a1a1a;
             --mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
             --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
         }
@@ -221,23 +207,51 @@
         }
 
         #themeToggle {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 0.375rem;
-            background: none;
-            border: 1px solid var(--border-strong);
-            color: var(--text-muted);
-            border-radius: 8px;
-            padding: 0.375rem 0.75rem;
+            justify-content: center;
+            height: 40px;
+            min-width: 5rem;
+            padding: 2px 14px;
+            border: 0;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.82);
+            box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px 1px 1px 0px;
+            font-family: inherit;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            line-height: 1;
             cursor: pointer;
-            font-size: 0.875rem;
-            font-weight: 400;
-            font-family: "Montserrat", system-ui, sans-serif;
-            transition: color 0.2s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            transition: color 300ms cubic-bezier(0.25, 0.8, 0.25, 1), background-color 300ms cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 300ms cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        #themeToggle .inner {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            pointer-events: none;
+            transition: transform 300ms cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         #themeToggle:hover {
-            color: var(--text);
+            background-color: #2c2c2c;
+            color: white;
+            box-shadow: rgba(0, 0, 0, 0.23) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.17) 0px 2px 4px 1px;
         }
+        #themeToggle:hover .inner { transform: translateY(-2px); }
+        #themeToggle svg { width: 12px; height: 12px; flex-shrink: 0; }
+        html.light #themeToggle {
+            background-color: rgba(0, 0, 0, 0.08);
+            color: rgba(0, 0, 0, 0.72);
+            box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 1px 0px inset, rgba(255, 255, 255, 0.6) 0px 1px 1px 0px;
+        }
+        html.light #themeToggle:hover {
+            background-color: #2c2c2c;
+            color: white;
+        }
+        html.light .nav-logo img { filter: brightness(0); }
 
         .back-link {
             display: inline-block;
@@ -503,26 +517,10 @@
 
         .proof-card {
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.35rem;
+            border-radius: 8px;
+            padding: 1.15rem 1.2rem;
+            background: var(--bg-card);
         }
-        .proof-card-art {
-            height: 64px;
-            margin: -0.2rem -0.2rem 0.75rem;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .proof-card:nth-child(odd) .proof-card-art {
-            background: var(--illust-blue-bg);
-            color: var(--illust-blue);
-        }
-        .proof-card:nth-child(even) .proof-card-art {
-            background: var(--illust-amber-bg);
-            color: var(--illust-amber);
-        }
-        .proof-card-art svg { width: 64px; height: 44px; }
 
         .proof-card h3 {
             font-size: 0.9rem;
@@ -576,10 +574,10 @@
         }
 
         .proof-conclusion {
-            border-left: 3px solid var(--illust-blue);
+            border-left: 2px solid var(--border-strong);
             padding: 0.9rem 1.1rem;
-            background: var(--illust-blue-bg);
-            border-radius: 0 10px 10px 0;
+            background: var(--bg-card);
+            border-radius: 0 8px 8px 0;
         }
 
         .proof-conclusion p {
@@ -600,28 +598,10 @@
         }
         .pipeline-card {
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 1.15rem 1.15rem 1.25rem;
-            background: var(--bg);
-            overflow: hidden;
+            border-radius: 8px;
+            padding: 1.05rem 1.1rem 1.15rem;
+            background: var(--bg-card);
         }
-        .pipeline-art {
-            height: 72px;
-            margin: -0.25rem -0.25rem 0.75rem;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .pipeline-card:nth-child(odd) .pipeline-art {
-            background: var(--illust-blue-bg);
-            color: var(--illust-blue);
-        }
-        .pipeline-card:nth-child(even) .pipeline-art {
-            background: var(--illust-amber-bg);
-            color: var(--illust-amber);
-        }
-        .pipeline-art svg { width: 64px; height: 44px; }
         .pipeline-card h3 {
             font-size: 0.9rem;
             font-weight: 500;
@@ -667,6 +647,29 @@
         }
     </style>
     <link rel="stylesheet" href="/assets/css/press.css">
+    <style>
+        @media (prefers-reduced-motion: no-preference) {
+            .detail-btn,
+            .external-link,
+            .back-link {
+                transform: scale(1);
+                transform-origin: center;
+                transition-property: transform, opacity, background-color, border-color, color, box-shadow;
+                transition-duration: 0.42s, 0.2s, 0.2s, 0.2s, 0.2s, 0.2s;
+                transition-timing-function:
+                    linear(0, 0.218 2.1%, 0.862 12.3%, 1.114 20.5%, 1.114 22.7%, 1.011 32.6%, 0.977 38.4%, 0.989 44.5%, 1.001 52.3%, 1),
+                    ease, ease, ease, ease, ease;
+            }
+            @media (hover: hover) and (pointer: fine) {
+                .detail-btn:hover,
+                .external-link:hover,
+                .back-link:hover { transform: scale(1.02); }
+            }
+            .detail-btn:active,
+            .external-link:active,
+            .back-link:active { transform: scale(0.96); }
+        }
+    </style>
 </head>
 <body>
     <nav class="nav">
@@ -676,11 +679,13 @@
         </a>
         <div class="nav-links">
             <button id="themeToggle" type="button" aria-label="Toggle theme">
-                <svg id="themeIcon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style="flex-shrink:0">
-                    <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.25"/>
-                    <path id="themeIconFill" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
-                </svg>
-                <span id="themeLabel">Light</span>
+                <span class="inner">
+                    <svg id="themeIcon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                        <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5"/>
+                        <path id="themeIconFill" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
+                    </svg>
+                    <span id="themeLabel">Light</span>
+                </span>
             </button>
         </div>
     </nav>
@@ -698,51 +703,20 @@
 
         <div class="pipeline" aria-label="How each test ran">
             <article class="pipeline-card">
-                <div class="pipeline-art" aria-hidden="true">
-                    <svg viewBox="0 0 72 52" fill="none">
-                        <rect x="8" y="8" width="22" height="36" rx="3" stroke="currentColor" stroke-width="1.5" opacity="0.35"/>
-                        <rect x="18" y="14" width="22" height="30" rx="3" stroke="currentColor" stroke-width="1.5" opacity="0.55"/>
-                        <rect x="28" y="6" width="28" height="40" rx="3" stroke="currentColor" stroke-width="1.6"/>
-                        <path d="M34 16h16M34 22h16M34 28h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    </svg>
-                </div>
                 <h3>1. Ingest</h3>
                 <p>~2,000 lines of real system logs per dataset — ~45K–295K tokens each.</p>
             </article>
             <article class="pipeline-card">
-                <div class="pipeline-art" aria-hidden="true">
-                    <svg viewBox="0 0 72 52" fill="none">
-                        <rect x="10" y="10" width="52" height="8" rx="2" stroke="currentColor" stroke-width="1.5" opacity="0.35"/>
-                        <rect x="10" y="22" width="52" height="8" rx="2" stroke="currentColor" stroke-width="1.5" opacity="0.55"/>
-                        <rect x="10" y="34" width="34" height="8" rx="2" stroke="currentColor" stroke-width="1.6"/>
-                        <path d="M50 38h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                    </svg>
-                </div>
                 <h3>2. Collapse</h3>
                 <p>Fingerprints UUIDs, IPs, thread names, timestamps — repetitive patterns become one line.</p>
             </article>
             <article class="pipeline-card">
-                <div class="pipeline-art" aria-hidden="true">
-                    <svg viewBox="0 0 72 52" fill="none">
-                        <path d="M12 40 L24 22 L36 30 L48 12 L60 18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle cx="48" cy="12" r="3.2" fill="currentColor"/>
-                        <path d="M12 44h48" stroke="currentColor" stroke-width="1.4" opacity="0.35" stroke-linecap="round"/>
-                    </svg>
-                </div>
                 <h3>3. Rank</h3>
-                <p>BM25 + semantic re-ranking against “what broke” — failures surface first.</p>
+                <p>Whole-word query scoring against “what broke” — failures surface first.</p>
             </article>
             <article class="pipeline-card">
-                <div class="pipeline-art" aria-hidden="true">
-                    <svg viewBox="0 0 72 52" fill="none">
-                        <rect x="14" y="10" width="44" height="32" rx="4" stroke="currentColor" stroke-width="1.6"/>
-                        <rect x="20" y="28" width="10" height="8" rx="1.5" fill="currentColor" opacity="0.85"/>
-                        <rect x="33" y="22" width="10" height="14" rx="1.5" fill="currentColor" opacity="0.55"/>
-                        <rect x="46" y="16" width="6" height="20" rx="1.5" fill="currentColor" opacity="0.3"/>
-                    </svg>
-                </div>
                 <h3>4. Pack</h3>
-                <p>Greedy packing to exactly 8,000 tokens — what an agent actually receives.</p>
+                <p>Pack to a character budget — what an agent actually receives.</p>
             </article>
         </div>
 
@@ -785,34 +759,14 @@
 
             <div class="proof-grid">
                 <div class="proof-card">
-                    <div class="proof-card-art" aria-hidden="true">
-                        <svg viewBox="0 0 64 44" fill="none">
-                            <circle cx="18" cy="22" r="8" stroke="currentColor" stroke-width="1.6"/>
-                            <circle cx="32" cy="22" r="8" stroke="currentColor" stroke-width="1.6" opacity="0.55"/>
-                            <circle cx="46" cy="22" r="8" stroke="currentColor" stroke-width="1.6" opacity="0.3"/>
-                        </svg>
-                    </div>
                     <h3>Real logs, not mocks</h3>
                     <p>LogHub is the standard benchmark used in log parsing research (logpai). Each dataset comes from a different system with its own timestamp format, log structure, and failure modes — the same diversity you hit in production.</p>
                 </div>
                 <div class="proof-card">
-                    <div class="proof-card-art" aria-hidden="true">
-                        <svg viewBox="0 0 64 44" fill="none">
-                            <path d="M12 22h40" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                            <circle cx="32" cy="22" r="6" stroke="currentColor" stroke-width="1.6"/>
-                            <path d="M32 10v6M32 28v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
-                    </div>
                     <h3>Same query, every time</h3>
                     <p>We didn't tune per dataset. One natural-language query — <em>"what broke"</em> — on all 16 logs. Roka had to auto-detect format, collapse noise, and rank relevance without manual regex rules or per-system config.</p>
                 </div>
                 <div class="proof-card">
-                    <div class="proof-card-art" aria-hidden="true">
-                        <svg viewBox="0 0 64 44" fill="none">
-                            <path d="M14 30 L26 18 L34 24 L50 12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M42 12h8v8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
                     <h3>Diagnosis, not just compression</h3>
                     <p>Token reduction alone isn't the goal. Every dataset produced a coherent failure narrative: quorum election loss on Zookeeper, brute-force + breach on OpenSSH, CBS errors on Windows. Zero empty outputs.</p>
                 </div>
