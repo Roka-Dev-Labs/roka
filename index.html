@@ -619,9 +619,15 @@
         @media (min-width: 1200px) {
             .hero-orbit { display: block; }
         }
-        .orbit-chip {
+        .orbit-float {
             position: absolute;
             pointer-events: none;
+            animation: orbit-float 8.5s ease-in-out infinite;
+            animation-delay: var(--d, 0s);
+        }
+        .orbit-chip {
+            display: block;
+            margin: 0;
             padding: 0.48rem 0.78rem;
             border: 1px solid transparent;
             border-radius: 6px;
@@ -629,10 +635,35 @@
             font-size: 11px;
             font-weight: 600;
             letter-spacing: 0.01em;
+            line-height: 1.3;
             white-space: nowrap;
+            cursor: pointer;
+            pointer-events: auto;
             box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
-            animation: orbit-float 8.5s ease-in-out infinite;
-            animation-delay: var(--d, 0s);
+            transform: scale(1);
+            transform-origin: center;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+        @media (prefers-reduced-motion: no-preference) {
+            .orbit-chip {
+                transition-property: transform, box-shadow, filter;
+                transition-duration: 0.38s, 0.2s, 0.2s;
+                transition-timing-function:
+                    linear(0, 0.218 2.1%, 0.862 12.3%, 1.114 20.5%, 1.114 22.7%, 1.011 32.6%, 0.977 38.4%, 0.989 44.5%, 1.001 52.3%, 1),
+                    ease, ease;
+            }
+            @media (hover: hover) and (pointer: fine) {
+                .orbit-chip:hover {
+                    transform: scale(1.06);
+                    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+                }
+            }
+            .orbit-chip:active {
+                transform: scale(0.92);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+                filter: brightness(0.94);
+            }
         }
         .orbit-chip.kept {
             background: #e8c547;
@@ -1945,7 +1976,8 @@
             .hero-tagline { opacity: 1 !important; transform: none !important; }
             .roka-letter.wave { animation: none !important; }
             .prune-line { animation: none !important; display: none; }
-            .orbit-chip { animation: none !important; }
+            .orbit-float { animation: none !important; }
+            .orbit-chip { transition: none !important; }
             .tl-typing,
             .sc-type {
                 animation: none !important;
@@ -2659,12 +2691,12 @@
         <div class="hero-atmosphere" aria-hidden="true"></div>
         <div class="hero-glow"></div>
         <div class="prune-stream" id="pruneStream" aria-hidden="true"></div>
-        <aside class="hero-orbit" aria-hidden="true">
-            <span class="orbit-chip kept" style="top: 9%; left: 3%; --rot: -3deg; --d: 0.2s;">kept · Bind to port 22</span>
-            <span class="orbit-chip crash" style="top: 28%; left: 3%; --rot: 3deg; --d: 0.8s;">crash lines packed first</span>
-            <span class="orbit-chip kept" style="top: 8%; right: 4%; --rot: 4deg; --d: 1.1s;">kept · query</span>
-            <span class="orbit-chip dropped" style="top: 22%; right: 3%; --rot: -2deg; --d: 2.4s;">drop · heartbeat ×14</span>
-            <span class="orbit-chip pack" style="bottom: 18%; right: 5%; --rot: -3.5deg; --d: 1.8s;">11 / 11 errors kept</span>
+        <aside class="hero-orbit">
+            <span class="orbit-float" style="top: 9%; left: 3%; --rot: -3deg; --d: 0.2s;"><button type="button" class="orbit-chip kept">kept · Bind to port 22</button></span>
+            <span class="orbit-float" style="top: 28%; left: 3%; --rot: 3deg; --d: 0.8s;"><button type="button" class="orbit-chip crash">crash lines packed first</button></span>
+            <span class="orbit-float" style="top: 8%; right: 4%; --rot: 4deg; --d: 1.1s;"><button type="button" class="orbit-chip kept">kept · query</button></span>
+            <span class="orbit-float" style="top: 22%; right: 3%; --rot: -2deg; --d: 2.4s;"><button type="button" class="orbit-chip dropped">drop · heartbeat ×14</button></span>
+            <span class="orbit-float" style="bottom: 18%; right: 5%; --rot: -3.5deg; --d: 1.8s;"><button type="button" class="orbit-chip pack">11 / 11 errors kept</button></span>
         </aside>
 
         <div class="roka-canvas-wrap mb-5" id="rokaWord" aria-label="roka" hidden style="perspective:900px">
