@@ -527,11 +527,13 @@
     </style>
     <link rel="stylesheet" href="/assets/css/press.css?v=theme4">
     <style>
-        /* Buttons spring on press. Fields stay full width so their edges are not clipped. */
+        /* Buttons and writing fields spring on press, then settle back. */
         @media (prefers-reduced-motion: no-preference) {
             .login-container .oauth-btn,
             .login-container .btn-primary:not(:disabled),
-            .login-container .toggle-link a {
+            .login-container .toggle-link a,
+            .login-container .form-group > input,
+            .login-container .password-wrap {
                 transform: scale(1);
                 transform-origin: center;
                 transition-property: transform, opacity, background-color, border-color, color, box-shadow;
@@ -540,7 +542,7 @@
                     linear(0, 0.218 2.1%, 0.862 12.3%, 1.114 20.5%, 1.114 22.7%, 1.011 32.6%, 0.977 38.4%, 0.989 44.5%, 1.001 52.3%, 1),
                     ease, ease, ease, ease, ease;
             }
-            .login-container .form-group input {
+            .login-container .password-wrap input {
                 transform: none;
                 transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
             }
@@ -553,7 +555,9 @@
             }
             .login-container .oauth-btn:active,
             .login-container .btn-primary:not(:disabled):active,
-            .login-container .toggle-link a:active {
+            .login-container .toggle-link a:active,
+            .login-container .form-group > input:active,
+            .login-container .password-wrap:active {
                 transform: scale(0.96);
             }
             .login-container .form-group input:active {
