@@ -269,35 +269,12 @@
       }
     },
     {
-      "src": "^/$",
-      "missing": [{ "type": "host", "value": "install.roka-prune.com" }],
-      "status": 308,
-      "headers": { "Location": "/home" }
-    },
-    {
-      "src": "^/home/?$",
-      "has": [{ "type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|Facebot|Twitterbot|WhatsApp|Slackbot|Discordbot|Telegram|LinkedInBot|Applebot|Iframely|embedly).*" }],
-      "dest": "/og.html",
+      "src": "^/opengraph-image\\.jpg$",
+      "dest": "/assets/images/opengraph-image.jpg",
       "headers": {
-        "content-type": "text/html; charset=utf-8",
-        "cache-control": "public, max-age=0, must-revalidate",
-        "vary": "Accept, User-Agent"
+        "content-type": "image/jpeg",
+        "cache-control": "public, max-age=0, must-revalidate"
       }
-    },
-    {
-      "src": "^/home/?$",
-      "has": [{ "type": "header", "key": "accept", "value": "^text/markdown" }],
-      "dest": "/index.md",
-      "headers": {
-        "content-type": "text/markdown; charset=utf-8",
-        "content-location": "/index.md",
-        "vary": "Accept",
-        "cache-control": "public, max-age=3600"
-      }
-    },
-    {
-      "src": "^/home/?$",
-      "dest": "/index.html"
     },
     {
       "src": "^/index\\.md$",
