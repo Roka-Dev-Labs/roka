@@ -115,7 +115,7 @@ export function ApiKeys() {
 
   return (
     <>
-      <Nav active="keys" />
+      <Nav active="keys" authed />
       <div className="container">
         <div className="page-header">
           <h1>API Keys</h1>

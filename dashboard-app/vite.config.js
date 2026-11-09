@@ -13,7 +13,6 @@ const repoRoot = path.resolve(appDir, "..");
 const distDir = path.join(appDir, "dist");
 
 const PAGES = [
-  "dashboard.html",
   "dashboard/api-keys.html",
   "dashboard/upgrade.html",
 ];
@@ -58,7 +57,13 @@ function repoStaticPlugin() {
   };
 }
 
-const ALLOWED_SCRIPTS = new Set(["/js/config.js", "/js/console-egg.js"]);
+const ALLOWED_SCRIPTS = new Set([
+  "/js/config.js",
+  "/js/console-egg.js",
+  "/js/back-trigger.js",
+  "/assets/js/theme-boot.js",
+  "/assets/js/reveal.js",
+]);
 
 function assertDashboardOutputOnly() {
   return {
@@ -126,7 +131,6 @@ export default defineConfig({
     assetsDir: "dashboard-assets",
     rollupOptions: {
       input: {
-        dashboard: path.join(appDir, "dashboard.html"),
         apiKeys: path.join(appDir, "dashboard/api-keys.html"),
         upgrade: path.join(appDir, "dashboard/upgrade.html"),
       },

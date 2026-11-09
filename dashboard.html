@@ -1,71 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Roka</title>
-    
-    <meta name="description" content="Your Roka dashboard: see plan tier, trial status, and monthly token usage for Pro API keys used by the CLI, playground, and roka-mcp server.">
-    <meta property="og:title" content="Dashboard — Roka">
-    <meta property="og:description" content="Your Roka dashboard: see plan tier, trial status, and monthly token usage for Pro API keys used by the CLI, playground, and roka-mcp server.">
+    <script src="/assets/js/theme-boot.js"></script>
+    <title>Under the hood — Roka</title>
+    <meta name="description" content="See what Roka keeps and why: the same collapse, crash-keep, query score, and budget pack the MCP tools run locally.">
+    <meta property="og:title" content="Under the hood — Roka">
+    <meta property="og:description" content="See what Roka keeps and why: the same collapse, crash-keep, query score, and budget pack the MCP tools run locally.">
     <meta property="og:image" content="https://www.roka-prune.com/assets/images/og.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:url" content="https://www.roka-prune.com/dashboard.html">
     <link rel="canonical" href="https://www.roka-prune.com/dashboard.html">
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Organization",
-          "@id": "https://www.roka-prune.com/#organization",
-          "name": "Roka Labs",
-          "alternateName": "Roka",
-          "url": "https://www.roka-prune.com/",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://www.roka-prune.com/assets/logos/logo-roka.png"
-          },
-          "sameAs": [
-            "https://github.com/Roka-Dev-Labs",
-            "https://www.instagram.com/roka.app/"
-          ]
-        },
-        {
-          "@type": "WebSite",
-          "@id": "https://www.roka-prune.com/#website",
-          "name": "Roka",
-          "url": "https://www.roka-prune.com/",
-          "description": "Roka prunes noisy production logs into a budgeted slice for AI coding agents.",
-          "inLanguage": "en",
-          "publisher": {
-            "@id": "https://www.roka-prune.com/#organization"
-          }
-        },
-        {
-          "@type": "WebPage",
-          "@id": "https://www.roka-prune.com/dashboard.html#webpage",
-          "url": "https://www.roka-prune.com/dashboard.html",
-          "name": "Dashboard - Roka",
-          "description": "Your Roka dashboard: see plan tier, trial status, and monthly token usage for Pro API keys used by the CLI, playground, and roka-mcp server.",
-          "isPartOf": {
-            "@id": "https://www.roka-prune.com/#website"
-          },
-          "about": {
-            "@id": "https://www.roka-prune.com/#organization"
-          },
-          "inLanguage": "en"
-        }
-      ]
-    }
-    </script>
-
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Roka">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Dashboard — Roka">
-    <meta name="twitter:description" content="Your Roka dashboard: see plan tier, trial status, and monthly token usage for Pro API keys used by the CLI, playground, and roka-mcp server.">
+    <meta name="twitter:title" content="Under the hood — Roka">
+    <meta name="twitter:description" content="See what Roka keeps and why: the same collapse, crash-keep, query score, and budget pack the MCP tools run locally.">
     <meta name="twitter:image" content="https://www.roka-prune.com/assets/images/og.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
@@ -73,469 +25,175 @@
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg" />
     <link rel="shortcut icon" href="/assets/icons/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="Roka" />
     <link rel="manifest" href="/site.webmanifest" />
-
     <script src="/js/config.js"></script>
     <script src="/js/console-egg.js" defer></script>
+    <script src="/js/back-trigger.js" defer></script>
     <link rel="stylesheet" href="/assets/fonts/montserrat.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg: #ffffff;
-            --text: #0a0a0a;
-            --text-muted: #666666;
-            --border: #e5e5e5;
-            --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.1);
-            --surface: #f5f5f5;
-        }
-
-        html.dark {
-            --bg: #0a0a0a;
-            --text: #ededed;
-            --text-muted: #888888;
-            --border: #262626;
-            --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.15);
-            --surface: #171717;
-        }
-
-        body {
-            font-family: "Montserrat", sans-serif;
-            font-optical-sizing: auto;
-            font-weight: 375;
-            font-style: normal;
-            letter-spacing: -0.01em;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-        }
-
-        .nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 2rem;
-            border-bottom: 1px solid var(--border);
-            background: var(--bg);
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.625rem;
-            font-weight: 600;
-            font-size: 1rem;
-            text-decoration: none;
-            color: var(--text);
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.875rem;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: var(--text);
-        }
-
-        .nav-links a.active {
-            color: var(--text);
-            font-weight: 500;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            border-radius: 6px;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            font-size: 0.875rem;
-            transition: all 0.2s;
-        }
-
-        .btn-secondary:hover {
-            color: var(--text);
-            border-color: var(--text);
-        }
-
-        #themeToggle {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.375rem;
-            border-radius: 0.5rem;
-            padding: 0.375rem 0.75rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-            font-family: "Montserrat", system-ui, sans-serif;
-            color: var(--text-muted);
-            background: none;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        #themeToggle:hover {
-            color: var(--text);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .dashboard-header {
-            margin-bottom: 2rem;
-        }
-
-        .dashboard-header h1 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .dashboard-header p {
-            color: var(--text-muted);
-            font-size: 0.875rem;
-        }
-
-        .tier-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            background: var(--accent);
-            color: white;
-        }
-
-        .tier-badge.free {
-            background: var(--border);
-            color: var(--text);
-        }
-
-        .tier-badge.pro {
-            background: var(--accent);
-            color: white;
-        }
-
-        .tier-badge.trial {
-            background: #f59e0b;
-            color: white;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--surface);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid var(--border);
-        }
-
-        .stat-card h3 {
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-card .value {
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .stat-card .subtext {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--border);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 0.5rem;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--accent);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-
-        .trial-countdown {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-        }
-
-        .trial-countdown h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .trial-countdown .days {
-            font-size: 2.5rem;
-            font-weight: 700;
-        }
-
-        .trial-countdown .subtext {
-            font-size: 0.875rem;
-            opacity: 0.9;
-        }
-
-        .quick-actions {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 0.75rem 1.5rem;
-            cursor: pointer;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-primary:hover {
-            opacity: 0.9;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-muted);
-        }
-
-        @keyframes logoSpin {
-            0% { transform: rotate(0deg) scale(1); opacity: 0; }
-            50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
-            100% { transform: rotate(360deg) scale(1); opacity: 1; }
-        }
-
-        .logo-animate {
-            animation: logoSpin 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-    </style>
-    <link rel="stylesheet" href="/assets/css/press.css?v=fade3">
+    <link rel="stylesheet" href="/assets/css/press.css?v=theme4">
+    <link rel="stylesheet" href="/assets/css/dashboard.css?v=hood2">
 </head>
-<body>
-    <nav class="nav">
-        <a href="/index.html" class="nav-logo">
-            <img src="/assets/icons/favicon-32x32.png" alt="Roka" class="logo-animate" width="28" height="28">
+<body class="dash-body">
+    <nav class="dash-nav">
+        <a href="/index.html" class="dash-nav-logo">
+            <img src="/assets/logos/logo-roka.png" alt="Roka" width="28" height="28">
             Roka
         </a>
-        <div class="nav-links">
-            <a href="/dashboard.html" class="active">Dashboard</a>
-            <a href="/dashboard/api-keys.html">API Keys</a>
-            <a href="/dashboard/upgrade.html">Usage limits</a>
-            <button id="themeToggle" type="button" aria-label="Switch to light mode">
-                <svg id="themeIcon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style="flex-shrink:0">
-                    <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.25"/>
-                    <path id="themeIconFill" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
-                </svg>
-                <span id="themeLabel">Light</span>
-            </button>
-            <button id="logoutBtn" class="btn-secondary">Logout</button>
+        <div class="dash-nav-links">
+            <a href="/dashboard.html" class="active">Under the hood</a>
+            <a href="/dashboard/api-keys.html" id="navKeys">API keys</a>
+            <a href="/docs/mcp.html">MCP</a>
+        </div>
+        <div class="dash-nav-actions">
+            <div class="nav-action-pills">
+                <a href="/login.html" id="navLoginBtn" class="nav-login-btn"><span class="inner">Sign up</span></a>
+                <button id="themeToggle" type="button" class="theme-toggle-btn" aria-label="Switch to light mode">
+                    <span class="inner">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                            <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5"/>
+                            <path id="themeIconFill" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
+                        </svg>
+                        <span id="themeLabel">Light</span>
+                    </span>
+                </button>
+            </div>
+            <a href="/install.html" class="nav-install-btn relative btn-primary" style="height:40px;padding:0 14px;border-radius:6px;">Install</a>
         </div>
     </nav>
 
-    <div class="container">
-        <div class="dashboard-header">
-            <h1>Welcome back, <span id="userName">User</span></h1>
-            <p>Current Tier: <span id="tierBadge" class="tier-badge">Loading...</span></p>
-        </div>
-
-        <div id="trialCountdown" class="trial-countdown hidden">
-            <h3>Your trial expires in</h3>
-            <div class="days"><span id="daysRemaining">0</span> days</div>
-            <div class="subtext">Roka is free with usage limits. Check your API key access.</div>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3>Tokens This Month</h3>
-                <div class="value"><span id="tokensUsed">0</span> / <span id="tokensLimit">0</span></div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="tokenProgress" style="width: 0%"></div>
-                </div>
-                <div class="subtext"><span id="tokensRemaining">0</span> remaining</div>
+    <main class="dash-wrap">
+        <section id="accountStrip" class="dash-account" aria-live="polite">
+            <div class="surface dash-stat">
+                <div class="k">Account</div>
+                <div class="v" id="acctName">—</div>
+                <div class="s" id="acctTier">signed in</div>
             </div>
-
-            <div class="stat-card">
-                <h3>API Calls This Month</h3>
-                <div class="value" id="apiCalls">0</div>
-                <div class="subtext">Total requests</div>
+            <div class="surface dash-stat">
+                <div class="k">Tokens this month</div>
+                <div class="v" id="acctUsed">—</div>
+                <div class="s" id="acctLimit"></div>
             </div>
-
-            <div class="stat-card">
-                <h3>Average Compression</h3>
-                <div class="value" id="avgCompression">0%</div>
-                <div class="subtext">Token reduction</div>
+            <div class="surface dash-stat">
+                <div class="k">Remaining</div>
+                <div class="v" id="acctLeft">—</div>
+                <div class="s">hosted API quota</div>
             </div>
-        </div>
+            <div class="surface dash-stat">
+                <div class="k">MCP</div>
+                <div class="v" id="acctMcp">—</div>
+                <div class="s">key status for connect / serve</div>
+            </div>
+        </section>
 
-        <div class="quick-actions">
-            <a href="/dashboard/api-keys.html" class="btn-primary">Manage API Keys</a>
-            <a href="/dashboard/upgrade.html" class="btn-primary" id="upgradeBtn">View usage limits</a>
-        </div>
-    </div>
+        <div id="hood"></div>
 
+        <footer class="dash-foot">
+            <span>© 2026 Roka Labs</span>
+            <span>
+                <a href="/docs/pipeline.html">Pipeline</a>
+                · <a href="/docs/mcp.html">Connect</a>
+                · <a href="/index.html">Home</a>
+            </span>
+        </footer>
+    </main>
+
+    <script type="module">
+        import { mountHood } from "/assets/js/hood-ui.js?v=hood2";
+        mountHood(document.getElementById("hood"));
+        document.querySelectorAll(".reveal").forEach((el) => el.classList.add("visible"));
+    </script>
+    <script src="/assets/js/reveal.js" defer></script>
     <script>
-        const html = document.documentElement;
-        const themeToggle = document.getElementById('themeToggle');
-        const themeLabel = document.getElementById('themeLabel');
-        const themeIconFill = document.getElementById('themeIconFill');
+        (function () {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById("themeToggle");
+            const themeLabel = document.getElementById("themeLabel");
+            const themeIconFill = document.getElementById("themeIconFill");
 
-        function applyTheme(theme) {
-            if (theme === 'dark') {
-                html.classList.add('dark');
-            } else {
-                html.classList.remove('dark');
-            }
-            themeLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
-            if (themeIconFill) {
-                themeIconFill.setAttribute(
-                    'd',
-                    theme === 'dark' ? 'M6 1 A5 5 0 0 0 6 11 Z' : 'M6 1 A5 5 0 0 1 6 11 Z'
+            function applyTheme(theme) {
+                html.dataset.theme = theme;
+                html.classList.toggle("dark", theme === "dark");
+                html.classList.toggle("light", theme === "light");
+                html.style.colorScheme = theme;
+                themeLabel.textContent = theme === "dark" ? "Light" : "Dark";
+                if (themeIconFill) {
+                    themeIconFill.setAttribute(
+                        "d",
+                        theme === "dark" ? "M6 1 A5 5 0 0 0 6 11 Z" : "M6 1 A5 5 0 0 1 6 11 Z"
+                    );
+                }
+                themeToggle.setAttribute(
+                    "aria-label",
+                    theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
                 );
-            }
-            themeToggle.setAttribute(
-                'aria-label',
-                theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
-            );
-            localStorage.setItem('roka-theme', theme);
-        }
-
-        const savedTheme = localStorage.getItem('roka-theme');
-        applyTheme(savedTheme === 'light' ? 'light' : 'dark');
-
-        themeToggle.addEventListener('click', () => {
-            applyTheme(html.classList.contains('dark') ? 'light' : 'dark');
-        });
-
-        const API_BASE = window.ROKA_API_BASE || 'https://api.roka-prune.com';
-        let accessToken = localStorage.getItem('roka_access_token');
-
-        async function loadDashboard() {
-            if (!accessToken) {
-                window.location.href = '/login.html';
-                return;
+                localStorage.setItem("roka-theme", theme);
+                localStorage.setItem("theme", theme);
             }
 
-            try {
-                const response = await fetch(`${API_BASE}/auth/me`, {
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                });
-
-                if (!response.ok) {
-                    window.location.href = '/login.html';
-                    return;
-                }
-
-                const user = await response.json();
-                document.getElementById('userName').textContent = user.email.split('@')[0];
-                
-                const tierBadge = document.getElementById('tierBadge');
-                tierBadge.textContent = user.tier.toUpperCase();
-                tierBadge.className = 'tier-badge ' + user.tier;
-
-                if (user.is_trial_active && user.tier === 'trial' && user.trial_ends_at) {
-                    const trialEnds = new Date(user.trial_ends_at);
-                    const now = new Date();
-                    const daysLeft = Math.ceil((trialEnds - now) / (1000 * 60 * 60 * 24));
-                    
-                    // Only show for feedback-promo trials (90 days), not old auto 7-day trials
-                    if (daysLeft > 14) {
-                        document.getElementById('trialCountdown').classList.remove('hidden');
-                        document.getElementById('daysRemaining').textContent = daysLeft;
-                    }
-                }
-
-                loadTokenUsage();
-
-            } catch (error) {
-                console.error('Error loading dashboard:', error);
-                window.location.href = '/login.html';
-            }
-        }
-
-        async function loadTokenUsage() {
-            const keysResponse = await fetch(`${API_BASE}/api-keys`, {
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
+            applyTheme(localStorage.getItem("roka-theme") === "light" ? "light" : "dark");
+            themeToggle.addEventListener("click", () => {
+                applyTheme(html.dataset.theme === "dark" ? "light" : "dark");
             });
 
-                if (keysResponse.ok) {
-                    const keys = await keysResponse.json();
-                    if (keys.length > 0) {
-                        const statusResponse = await fetch(`${API_BASE}/api/status`, {
-                        headers: {
-                            'Authorization': `Bearer ${keys[0].key}`
-                        }
-                    });
+            const token = localStorage.getItem("roka_access_token");
+            const loginBtn = document.getElementById("navLoginBtn");
+            if (token) {
+                const label = loginBtn.querySelector(".inner");
+                if (label) label.textContent = "Account";
+                loginBtn.href = "/dashboard.html";
+                loginBtn.addEventListener("click", (event) => {
+                    if (event.metaKey || event.ctrlKey) return;
+                    event.preventDefault();
+                    localStorage.removeItem("roka_access_token");
+                    window.location.href = "/index.html";
+                });
+                loginBtn.title = "Log out";
+                label.textContent = "Log out";
+            }
 
-                    if (statusResponse.ok) {
-                        const status = await statusResponse.json();
-                        document.getElementById('tokensUsed').textContent = status.tokens_used_this_month.toLocaleString();
-                        document.getElementById('tokensLimit').textContent = status.tokens_limit.toLocaleString();
-                        document.getElementById('tokensRemaining').textContent = status.tokens_remaining.toLocaleString();
-                        
-                        const progress = (status.tokens_used_this_month / status.tokens_limit) * 100;
-                        document.getElementById('tokenProgress').style.width = `${Math.min(progress, 100)}%`;
+            async function loadAccount() {
+                if (!token) return;
+                const API_BASE = window.ROKA_API_BASE || "https://api.roka-prune.com";
+                try {
+                    const meRes = await fetch(`${API_BASE}/auth/me`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+                    if (!meRes.ok) return;
+                    const user = await meRes.json();
+                    document.getElementById("accountStrip").classList.add("is-on");
+                    document.getElementById("acctName").textContent =
+                        user.first_name || (user.email || "").split("@")[0] || "signed in";
+                    document.getElementById("acctTier").textContent = user.tier || "free";
+
+                    const keysRes = await fetch(`${API_BASE}/api-keys`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+                    if (!keysRes.ok) return;
+                    const keys = await keysRes.json();
+                    if (!keys.length) {
+                        document.getElementById("acctMcp").textContent = "no key";
+                        document.getElementById("acctUsed").textContent = "—";
+                        document.getElementById("acctLeft").textContent = "create a key";
+                        return;
                     }
+                    const statusRes = await fetch(`${API_BASE}/api/status`, {
+                        headers: { Authorization: `Bearer ${keys[0].key}` },
+                    });
+                    if (!statusRes.ok) return;
+                    const status = await statusRes.json();
+                    document.getElementById("acctUsed").textContent =
+                        Number(status.tokens_used_this_month || 0).toLocaleString();
+                    document.getElementById("acctLimit").textContent =
+                        `of ${Number(status.tokens_limit || 0).toLocaleString()}`;
+                    document.getElementById("acctLeft").textContent =
+                        Number(status.tokens_remaining || 0).toLocaleString();
+                    document.getElementById("acctMcp").textContent = status.mcp_allowed ? "allowed" : "locked";
+                } catch (err) {
+                    console.error(err);
                 }
             }
-        }
-
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('roka_access_token');
-            window.location.href = '/index.html';
-        });
-
-        loadDashboard();
+            loadAccount();
+        })();
     </script>
 </body>
 </html>

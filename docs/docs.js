@@ -60,10 +60,11 @@ function renderSidebar() {
       <a class="nav-link" href="/index.html">Home</a>
       <a class="nav-link" href="/install.html">Install page</a>
       <a class="nav-link" href="/research.html">Research</a>
+      <a class="nav-link" href="/dashboard.html">Under the hood</a>
       <a class="nav-link" href="/dashboard/api-keys.html">API keys</a>
     </div>
     <div style="padding:0.55rem">
-      <button type="button" class="icon-btn" id="themeToggle"><span id="themeLabel">Light</span></button>
+      <button type="button" class="theme-toggle-btn" id="themeToggle" aria-label="Toggle theme"><span class="inner"><span id="themeLabel">Light</span></span></button>
     </div>
   `;
 }
@@ -92,8 +93,10 @@ function enhanceCodeBlocks() {
 
 function applyTheme(theme) {
   const html = document.documentElement;
+  html.dataset.theme = theme;
   html.classList.toggle("light", theme === "light");
   html.classList.toggle("dark", theme !== "light");
+  html.style.colorScheme = theme;
   localStorage.setItem("roka-theme", theme);
   localStorage.setItem("theme", theme);
     const label = document.getElementById("themeLabel");

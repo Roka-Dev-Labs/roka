@@ -10,6 +10,7 @@ Prune raw log text already in the conversation or tool arguments.
 | --- | --- | --- |
 | text | string, required | Raw log text to prune |
 | budget | positive int, optional | Target character budget (default 4000) |
+| query | string, optional | Task or question to score lines against |
 
 ## prune_file
 
@@ -19,6 +20,7 @@ Read a log file by path and prune it. Path may be absolute or relative to the se
 | --- | --- | --- |
 | path | string, required | Path to the log file |
 | budget | positive int, optional | Target character budget (default 4000) |
+| query | string, optional | Task or question to score lines against |
 
 ## prune_tail
 
@@ -29,8 +31,9 @@ Read a live log, keep the last N lines, then prune that slice.
 | path | string, required | Path to the log file |
 | lines | positive int, optional | Trailing lines to read (default 200) |
 | budget | positive int, optional | Target character budget (default 4000) |
+| query | string, optional | Task or question to score lines against |
 
-On success the tool returns JSON text with `prunedText`, `originalLines` / `prunedLines`, `originalChars` / `prunedChars`. On failure it returns an error string.
+On success the tool returns JSON text with `prunedText`, `originalLines` / `prunedLines`, `originalChars` / `prunedChars`, and `kept` (each line with `reasons`: query, crash, neighbor, recency). On failure it returns an error string.
 
 Crash / force-keep regex (case-insensitive):
 

@@ -1,9 +1,10 @@
+import { accessToken } from "../api.js";
 import { Nav } from "../components/Nav.jsx";
 
 export function Upgrade() {
   return (
     <>
-      <Nav active="upgrade" />
+      <Nav active="upgrade" authed={Boolean(accessToken())} />
       <main className="limits-wrap">
         <h1>Free, with usage limits</h1>
         <p className="lede">Roka is free. No subscription or payment required.</p>

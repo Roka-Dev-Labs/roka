@@ -170,26 +170,6 @@
             border-color: var(--text);
         }
 
-        #themeToggle {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.375rem;
-            border-radius: 0.5rem;
-            padding: 0.375rem 0.75rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-            font-family: "Montserrat", system-ui, sans-serif;
-            color: var(--text-muted);
-            background: none;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        #themeToggle:hover {
-            color: var(--text);
-        }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -407,7 +387,7 @@
             animation: logoSpin 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
     </style>
-    <link rel="stylesheet" href="/assets/css/press.css?v=fade3">
+    <link rel="stylesheet" href="/assets/css/press.css?v=theme4">
 </head>
 <body>
     <nav class="nav">
@@ -419,12 +399,14 @@
             <a href="/dashboard.html">Dashboard</a>
             <a href="/dashboard/api-keys.html" class="active">API Keys</a>
             <a href="/dashboard/upgrade.html">Usage limits</a>
-            <button id="themeToggle" type="button" aria-label="Switch to light mode">
-                <svg id="themeIcon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style="flex-shrink:0">
-                    <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.25"/>
-                    <path id="themeIconFill" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
-                </svg>
-                <span id="themeLabel">Light</span>
+            <button id="themeToggle" type="button" class="theme-toggle-btn" aria-label="Switch to light mode">
+                <span class="inner">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                        <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5"/>
+                        <path id="themeIconFill" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
+                    </svg>
+                    <span id="themeLabel">Light</span>
+                </span>
             </button>
         </div>
     </nav>
@@ -464,11 +446,10 @@
         const themeIconFill = document.getElementById('themeIconFill');
 
         function applyTheme(theme) {
-            if (theme === 'dark') {
-                html.classList.add('dark');
-            } else {
-                html.classList.remove('dark');
-            }
+            html.dataset.theme = theme;
+            html.classList.toggle('dark', theme === 'dark');
+            html.classList.toggle('light', theme === 'light');
+            html.style.colorScheme = theme;
             themeLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
             if (themeIconFill) {
                 themeIconFill.setAttribute(

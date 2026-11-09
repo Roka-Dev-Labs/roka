@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="dark" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/assets/js/theme-boot.js"></script>
     <title>Welcome — Roka Docs</title>
     <meta name="description" content="Roka docs: install the CLI, connect Claude Code, Cursor, Codex, Copilot, Windsurf, VS Code, or Cline via MCP, and prune logs to a token budget locally.">
     <meta property="og:title" content="Welcome — Roka Docs">
@@ -70,7 +71,7 @@
     <link rel="stylesheet" href="/assets/fonts/montserrat.css">
     <link rel="stylesheet" href="/docs/docs.css">
     <script src="/docs/docs.js" defer></script>
-    <link rel="stylesheet" href="/assets/css/press.css?v=fade3">
+    <link rel="stylesheet" href="/assets/css/press.css?v=theme4">
 </head>
 <body>
     <div class="docs-top">
@@ -80,7 +81,7 @@
         </a>
         <div style="display:flex;gap:0.4rem">
             <button type="button" class="icon-btn" id="navToggle">Menu</button>
-            <button type="button" class="icon-btn" id="themeToggle"><span id="themeLabel">Light</span></button>
+            <button type="button" class="theme-toggle-btn" id="themeToggle" aria-label="Toggle theme"><span class="inner"><span id="themeLabel">Light</span></span></button>
         </div>
     </div>
     <div class="docs-shell" id="docs-root" data-page="welcome">

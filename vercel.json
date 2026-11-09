@@ -26,7 +26,7 @@
       "use": "@vercel/static"
     },
     {
-      "src": "about.html",
+      "src": "dashboard.html",
       "use": "@vercel/static"
     },
     {
@@ -102,6 +102,11 @@
     }
   ],
   "routes": [
+    {
+      "src": "^/about(\\.html)?/?$",
+      "status": 302,
+      "headers": { "Location": "/" }
+    },
     {
       "src": "^/docs/?$",
       "dest": "/docs/index.html"

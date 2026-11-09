@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/assets/js/theme-boot.js"></script>
     <title>Roka — Research: Context Pruning for AI Agents</title>
     <meta name="description" content="How Roka's log-pruning middleware cuts 92%+ of noise while keeping real errors intact — benchmarked on the LogHub corpus from 15 real production systems.">
 
@@ -82,6 +83,7 @@
     <script src="/js/back-trigger.js" defer></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -502,7 +504,7 @@
         }
         .research-hero > * { position: relative; z-index: 1; }
     </style>
-    <link rel="stylesheet" href="/assets/css/press.css?v=fade3">
+    <link rel="stylesheet" href="/assets/css/press.css?v=theme4">
 </head>
 <body class="antialiased">
 
@@ -518,18 +520,16 @@
                 <a href="/index.html#benchmark" style="color:var(--text-muted);text-decoration:none">Benchmark</a>
                 <a href="/index.html#features" style="color:var(--text-muted);text-decoration:none">Features</a>
                 <a href="/index.html#pricing" style="color:var(--text-muted);text-decoration:none">Usage limits</a>
-                <a href="/about.html" style="color:var(--text-muted);text-decoration:none">About</a>
             </div>
             <div class="flex items-center gap-2">
-                <button id="themeToggle" type="button"
-                    class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer"
-                    style="color:var(--text-muted);background:none;border:1px solid var(--border-strong);font-family:'Montserrat',system-ui,sans-serif"
-                    aria-label="Toggle theme">
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                        <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.25"/>
-                        <path id="themeIconFill" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
-                    </svg>
-                    <span id="themeLabel">Light</span>
+                <button id="themeToggle" type="button" class="theme-toggle-btn" aria-label="Toggle theme">
+                    <span class="inner">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                            <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5"/>
+                            <path id="themeIconFill" d="M6 1 A5 5 0 0 0 6 11 Z" fill="currentColor"/>
+                        </svg>
+                        <span id="themeLabel">Light</span>
+                    </span>
                 </button>
                 <a href="/install.html"
                    class="relative inline-flex items-center justify-center px-3 py-1.5 overflow-hidden tracking-tighter text-white bg-gray-800 rounded-md group text-xs font-semibold no-underline">
@@ -952,7 +952,6 @@
             <span>© 2026 Roka Labs · MVP research preview</span>
             <div class="flex items-center gap-4">
                 <a href="/index.html" style="color:var(--text-faint);text-decoration:none">Home</a>
-                <a href="/about.html" style="color:var(--text-faint);text-decoration:none">About</a>
                 <a href="/privacy.html" style="color:var(--text-faint);text-decoration:none">Privacy</a>
                 <a href="/terms.html" style="color:var(--text-faint);text-decoration:none">Terms</a>
             </div>
@@ -969,6 +968,9 @@
 
             function applyTheme(theme) {
                 html.setAttribute('data-theme', theme);
+                html.classList.toggle('dark', theme === 'dark');
+                html.classList.toggle('light', theme === 'light');
+                html.style.colorScheme = theme;
                 themeLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
                 if (themeIconFill) {
                     themeIconFill.setAttribute(
@@ -976,12 +978,16 @@
                         theme === 'dark' ? 'M6 1 A5 5 0 0 0 6 11 Z' : 'M6 1 A5 5 0 0 1 6 11 Z'
                     );
                 }
+                themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+                try {
+                    localStorage.setItem('roka-theme', theme);
+                    localStorage.setItem('theme', theme);
+                } catch (e) {}
             }
-            const saved = localStorage.getItem('theme');
+            const saved = localStorage.getItem('roka-theme') || localStorage.getItem('theme');
             applyTheme(saved === 'light' ? 'light' : 'dark');
             themeToggle.addEventListener('click', () => {
                 const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-                localStorage.setItem('theme', next);
                 applyTheme(next);
             });
 

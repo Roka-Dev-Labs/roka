@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="dark" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/assets/js/theme-boot.js"></script>
     <title>Testing - Roka</title>
     
     <meta name="description" content="Run Roka against real LogHub production logs from Android, HPC, and cloud systems. Inspect pruned context, compression, and whether every error is retained.">
@@ -256,52 +257,6 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-        }
-
-        #themeToggle {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            height: 40px;
-            min-width: 5rem;
-            padding: 2px 14px;
-            border: 0;
-            border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.06);
-            color: rgba(255, 255, 255, 0.82);
-            box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px 1px 1px 0px;
-            font-family: inherit;
-            font-size: 0.9375rem;
-            font-weight: 600;
-            letter-spacing: -0.01em;
-            line-height: 1;
-            cursor: pointer;
-            appearance: none;
-            -webkit-appearance: none;
-            transition: color 300ms cubic-bezier(0.25, 0.8, 0.25, 1), background-color 300ms cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 300ms cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        #themeToggle .inner {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            pointer-events: none;
-            transition: transform 300ms cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        #themeToggle:hover {
-            background-color: #2c2c2c;
-            color: white;
-            box-shadow: rgba(0, 0, 0, 0.23) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.17) 0px 2px 4px 1px;
-        }
-        #themeToggle:hover .inner { transform: translateY(-2px); }
-        #themeToggle svg { width: 12px; height: 12px; flex-shrink: 0; }
-        html.light #themeToggle {
-            background-color: rgba(0, 0, 0, 0.08);
-            color: rgba(0, 0, 0, 0.72);
-            box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 1px 0px inset, rgba(255, 255, 255, 0.6) 0px 1px 1px 0px;
-        }
-        html.light #themeToggle:hover {
-            background-color: #2c2c2c;
-            color: white;
         }
 
         .back-link {
@@ -700,7 +655,7 @@
             color: var(--text-faint);
         }
     </style>
-    <link rel="stylesheet" href="/assets/css/press.css?v=fade3">
+    <link rel="stylesheet" href="/assets/css/press.css?v=theme4">
     <script src="/assets/js/reveal.js" defer></script>
 </head>
 <body>
@@ -710,7 +665,7 @@
             Roka
         </a>
         <div class="nav-links">
-            <button id="themeToggle" type="button" aria-label="Toggle theme">
+            <button id="themeToggle" type="button" class="theme-toggle-btn" aria-label="Toggle theme">
                 <span class="inner">
                     <svg id="themeIcon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                         <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5"/>
@@ -1214,8 +1169,10 @@
         const themeIconFill = document.getElementById('themeIconFill');
 
         function applyTheme(theme) {
+            html.dataset.theme = theme;
             html.classList.toggle('light', theme === 'light');
             html.classList.toggle('dark', theme === 'dark');
+            html.style.colorScheme = theme;
             themeLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
             themeIconFill.setAttribute('d', theme === 'dark'
                 ? 'M6 1 A5 5 0 0 0 6 11 Z'

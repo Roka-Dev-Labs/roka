@@ -76,7 +76,8 @@ export function createServer() {
     "prune_file",
     {
       title: "Prune a log file",
-      description: "Read a log file by path and prune it to a character budget.",
+      description:
+        "Read a log file by path and prune it to a character budget. Optional query scores lines so the task, not only recency, decides what stays.",
       inputSchema: {
         path: z.string().describe("Absolute or relative path to the log file"),
         budget: z
@@ -85,12 +86,18 @@ export function createServer() {
           .positive()
           .optional()
           .describe(`Target character budget (default ${DEFAULT_BUDGET})`),
+        query: z
+          .string()
+          .optional()
+          .describe("Task or question to score lines against (plain English or keywords)"),
       },
     },
-    async ({ path, budget }) => {
+    async ({ path, budget, query }) => {
       try {
         const text = await readFileAsync(path, "utf8");
-        return textResult(pruneText(text, budget ?? DEFAULT_BUDGET));
+        return textResult(
+          pruneText(text, budget ?? DEFAULT_BUDGET, query ? { query } : {})
+        );
       } catch (err) {
         return errorResult(`prune_file failed for "${path}": ${err.message}`);
       }
@@ -102,7 +109,7 @@ export function createServer() {
     {
       title: "Prune the tail of a log file",
       description:
-        "Read the last N lines of a live log file and prune them to a character budget.",
+        "Read the last N lines of a live log file and prune them to a character budget. Optional query scores lines so the task, not only recency, decides what stays.",
       inputSchema: {
         path: z.string().describe("Absolute or relative path to the log file"),
         lines: z
@@ -117,14 +124,20 @@ export function createServer() {
           .positive()
           .optional()
           .describe(`Target character budget (default ${DEFAULT_BUDGET})`),
+        query: z
+          .string()
+          .optional()
+          .describe("Task or question to score lines against (plain English or keywords)"),
       },
     },
-    async ({ path, lines, budget }) => {
+    async ({ path, lines, budget, query }) => {
       try {
         const text = await readFileAsync(path, "utf8");
         const tailLineCount = lines ?? 200;
         const tail = text.split("\n").slice(-tailLineCount).join("\n");
-        return textResult(pruneText(tail, budget ?? DEFAULT_BUDGET));
+        return textResult(
+          pruneText(tail, budget ?? DEFAULT_BUDGET, query ? { query } : {})
+        );
       } catch (err) {
         return errorResult(`prune_tail failed for "${path}": ${err.message}`);
       }

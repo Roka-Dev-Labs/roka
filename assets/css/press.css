@@ -8,7 +8,89 @@ html.light {
 }
 
 html, body {
+    background-color: var(--bg);
+    color: var(--text);
     transition: background-color 0.35s ease, color 0.35s ease;
+}
+html[data-theme="dark"],
+html.dark {
+    color-scheme: dark;
+}
+html[data-theme="light"],
+html.light {
+    color-scheme: light;
+}
+
+/* Homepage inset pills — theme + Sign up, reused on every page */
+.theme-toggle-btn,
+.nav-login-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    min-width: 5rem;
+    padding: 2px 14px;
+    border: 0;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.16);
+    color: rgba(255, 255, 255, 0.82);
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px 1px 1px 0px;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    box-sizing: border-box;
+    margin: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: color 300ms cubic-bezier(0.25, 0.8, 0.25, 1), background-color 300ms cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 300ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.theme-toggle-btn .inner,
+.nav-login-btn .inner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    pointer-events: none;
+    transition: transform 300ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.theme-toggle-btn:hover,
+.nav-login-btn:hover {
+    background-color: #2c2c2c;
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.23) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.17) 0px 2px 4px 1px;
+}
+.theme-toggle-btn:hover .inner,
+.nav-login-btn:hover .inner {
+    transform: translateY(-2px);
+}
+.theme-toggle-btn svg {
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+    color: inherit;
+}
+.theme-toggle-btn svg circle {
+    stroke-width: 1.5;
+}
+html[data-theme="light"] .theme-toggle-btn,
+html[data-theme="light"] .nav-login-btn,
+html.light .theme-toggle-btn,
+html.light .nav-login-btn {
+    background-color: rgba(0, 0, 0, 0.08);
+    color: rgba(0, 0, 0, 0.72);
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 1px 0px inset, rgba(255, 255, 255, 0.6) 0px 1px 1px 0px;
+}
+html[data-theme="light"] .theme-toggle-btn:hover,
+html[data-theme="light"] .nav-login-btn:hover,
+html.light .theme-toggle-btn:hover,
+html.light .nav-login-btn:hover {
+    background-color: #2c2c2c;
+    color: white;
 }
 .nav, header, footer, .surface, .card,
 .dataset-card, .stat, .proof-card, .proof-steps,
@@ -99,7 +181,7 @@ html, body {
 
 .btn-secondary,
 .detail-btn,
-.icon-btn {
+.icon-btn:not(.theme-toggle-btn) {
     background: transparent;
     color: var(--btn-secondary-text, var(--text));
     border: 1px solid var(--border-strong, var(--border));

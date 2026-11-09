@@ -67,7 +67,6 @@ API keys: https://www.roka-prune.com/dashboard/api-keys.html
 
 ## More pages
 
-- About: https://www.roka-prune.com/about.html
 - Privacy: https://www.roka-prune.com/privacy.html
 - Terms: https://www.roka-prune.com/terms.html
 - Security: https://www.roka-prune.com/.well-known/security.txt
@@ -395,27 +394,6 @@ Free: 15K tokens lifetime per device. Pro: 500K / month. Enterprise: unlimited.
 ## Support
 
 mailto:mukhamedjankydyrli@gmail.com · [CLI issues](https://github.com/Roka-Dev-Labs/roka/issues) · npm package `roka-mcp`.
-
-
----
-
-<!-- source: https://www.roka-prune.com/about.html -->
-
-About - Roka← Back
-
-# About
-
-We are Roka. We're a lean team building the context infrastructure layer for AI-driven engineering and operations.
-
-Our first product is Roka Prune — an intelligent context-pruning middleware for LLMs and AI agents.
-
-The biggest bottleneck in AI today isn't the models—it's the context. When you feed raw development logs, system telemetry, or traces into an LLM, you are mostly burning money on noise. 90% of a standard log is repetitive fluff, but somewhere in those 50,000 lines sits a critical Out-of-Memory error or a silent database deadlock.
-
-Until now, developers had to manually write brittle regex rules, hardcode exclusions, or spend hours tweaking prompts just to tell the model what actually matters. We think that is the wrong model. Engineers shouldn't have to babysit their logs or manually rank which error is more important.
-
-Roka solves this natively. Our middleware automatically parses, collapses, and ranks logs based on actual semantic relevance and statistical anomalies—packing the absolute maximum signal into your token budget before the model ever sees it. No manual setup, no "which log is more important" decision-making. It just works out of the box.
-
-We are building the future of how AI understands systems. If you want to help us prune the noise and build the context layer for the next decade of AI engineering, we'd love to hear from you.
 
 
 ---

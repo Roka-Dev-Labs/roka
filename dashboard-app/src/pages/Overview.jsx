@@ -1,149 +1,120 @@
-import { useEffect, useState } from "react";
-import { accessToken, apiBase, redirectToLogin } from "../api.js";
+import { useEffect, useRef, useState } from "react";
+import { accessToken, apiBase } from "../api.js";
 import { Nav } from "../components/Nav.jsx";
 
 export function Overview() {
-  const [name, setName] = useState("User");
-  const [tier, setTier] = useState("");
-  const [trialDays, setTrialDays] = useState(null);
-  const [usage, setUsage] = useState({
-    used: 0,
-    limit: 0,
-    remaining: 0,
-    progress: 0,
-  });
+  const hoodRef = useRef(null);
+  const [account, setAccount] = useState(null);
+  const token = accessToken();
 
   useEffect(() => {
-    const token = accessToken();
-    if (!token) {
-      redirectToLogin();
-      return;
-    }
-
+    let cleanup = () => {};
     let cancelled = false;
-
-    async function loadDashboard() {
-      try {
-        const response = await fetch(`${apiBase()}/auth/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!response.ok) {
-          redirectToLogin();
-          return;
-        }
-        const user = await response.json();
-        if (cancelled) return;
-
-        setName(user.email.split("@")[0]);
-        setTier(user.tier);
-
-        if (user.is_trial_active && user.tier === "trial" && user.trial_ends_at) {
-          const daysLeft = Math.ceil(
-            (new Date(user.trial_ends_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
-          );
-          if (daysLeft > 14) setTrialDays(daysLeft);
-        }
-
-        loadTokenUsage(token);
-      } catch (error) {
-        console.error("Error loading dashboard:", error);
-        redirectToLogin();
-      }
-    }
-
-    loadDashboard();
+    import("/assets/js/hood-ui.js")
+      .then((mod) => {
+        if (!cancelled && hoodRef.current) cleanup = mod.mountHood(hoodRef.current) || (() => {});
+      })
+      .catch((err) => {
+        console.error("Failed to load inspect UI", err);
+      });
     return () => {
       cancelled = true;
+      cleanup();
     };
   }, []);
 
-  async function loadTokenUsage(token) {
-    try {
-      const keysResponse = await fetch(`${apiBase()}/api-keys`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!keysResponse.ok) return;
-      const keys = await keysResponse.json();
-      if (keys.length === 0) return;
+  useEffect(() => {
+    if (!token) return undefined;
+    let cancelled = false;
 
-      const statusResponse = await fetch(`${apiBase()}/api/status`, {
-        headers: { Authorization: `Bearer ${keys[0].key}` },
-      });
-      if (!statusResponse.ok) return;
+    async function loadAccount() {
+      try {
+        const meRes = await fetch(`${apiBase()}/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!meRes.ok || cancelled) return;
+        const user = await meRes.json();
+        const next = {
+          name: user.first_name || (user.email || "").split("@")[0] || "signed in",
+          tier: user.tier || "free",
+          used: null,
+          limit: null,
+          remaining: null,
+          mcp: "no key",
+        };
 
-      const status = await statusResponse.json();
-      const progress = (status.tokens_used_this_month / status.tokens_limit) * 100;
-      setUsage({
-        used: status.tokens_used_this_month,
-        limit: status.tokens_limit,
-        remaining: status.tokens_remaining,
-        progress: Math.min(progress, 100),
-      });
-    } catch (error) {
-      console.error("Error loading token usage:", error);
+        const keysRes = await fetch(`${apiBase()}/api-keys`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (keysRes.ok) {
+          const keys = await keysRes.json();
+          if (Array.isArray(keys) && keys.length > 0) {
+            const statusRes = await fetch(`${apiBase()}/api/status`, {
+              headers: { Authorization: `Bearer ${keys[0].key}` },
+            });
+            if (statusRes.ok) {
+              const status = await statusRes.json();
+              next.used = status.tokens_used_this_month;
+              next.limit = status.tokens_limit;
+              next.remaining = status.tokens_remaining;
+              next.mcp = status.mcp_allowed ? "allowed" : "locked";
+            }
+          }
+        }
+        if (!cancelled) setAccount(next);
+      } catch (err) {
+        console.error("Error loading dashboard:", err);
+      }
     }
-  }
+
+    loadAccount();
+    return () => {
+      cancelled = true;
+    };
+  }, [token]);
 
   return (
     <>
-      <Nav active="dashboard" />
-      <div className="container">
-        <div className="dashboard-header">
-          <h1>
-            Welcome back, <span>{name}</span>
-          </h1>
-          <p>
-            Current Tier:{" "}
-            <span className={tier ? `tier-badge ${tier}` : "tier-badge"}>
-              {tier ? tier.toUpperCase() : "Loading..."}
-            </span>
-          </p>
-        </div>
-
-        {trialDays != null && (
-          <div className="trial-countdown">
-            <h3>Your trial expires in</h3>
-            <div className="days">
-              <span>{trialDays}</span> days
+      <Nav active="dashboard" authed={Boolean(token)} />
+      <main className="dash-wrap">
+        {account && (
+          <section className="dash-account is-on" aria-live="polite">
+            <div className="surface dash-stat">
+              <div className="k">Account</div>
+              <div className="v">{account.name}</div>
+              <div className="s">{account.tier}</div>
             </div>
-            <div className="subtext">Roka is free with usage limits. Check your API key access.</div>
-          </div>
+            <div className="surface dash-stat">
+              <div className="k">Tokens this month</div>
+              <div className="v">{account.used == null ? "—" : Number(account.used).toLocaleString()}</div>
+              <div className="s">{account.limit == null ? "" : `of ${Number(account.limit).toLocaleString()}`}</div>
+            </div>
+            <div className="surface dash-stat">
+              <div className="k">Remaining</div>
+              <div className="v">
+                {account.remaining == null ? "create a key" : Number(account.remaining).toLocaleString()}
+              </div>
+              <div className="s">hosted API quota</div>
+            </div>
+            <div className="surface dash-stat">
+              <div className="k">MCP</div>
+              <div className="v">{account.mcp}</div>
+              <div className="s">key status for connect / serve</div>
+            </div>
+          </section>
         )}
-
-        <div className="stats-grid">
-          <div className="stat-card">
-            <h3>Tokens This Month</h3>
-            <div className="value">
-              <span>{usage.used.toLocaleString()}</span> / <span>{usage.limit.toLocaleString()}</span>
-            </div>
-            <div className="progress-bar">
-              <div className="progress-fill" style={{ width: `${usage.progress}%` }} />
-            </div>
-            <div className="subtext">
-              <span>{usage.remaining.toLocaleString()}</span> remaining
-            </div>
-          </div>
-          <div className="stat-card">
-            <h3>API Calls This Month</h3>
-            <div className="value">0</div>
-            <div className="subtext">Total requests</div>
-          </div>
-          <div className="stat-card">
-            <h3>Average Compression</h3>
-            <div className="value">0%</div>
-            <div className="subtext">Token reduction</div>
-          </div>
-        </div>
-
-        <div className="quick-actions">
-          <a href="/dashboard/api-keys.html" className="btn-primary">
-            Manage API Keys
-          </a>
-          <a href="/dashboard/upgrade.html" className="btn-primary">
-            View usage limits
-          </a>
-        </div>
-      </div>
+        <div ref={hoodRef} />
+        <footer className="dash-foot">
+          <span>© 2026 Roka Labs</span>
+          <span>
+            <a href="/docs/pipeline.html">Pipeline</a>
+            {" · "}
+            <a href="/docs/mcp.html">Connect</a>
+            {" · "}
+            <a href="/index.html">Home</a>
+          </span>
+        </footer>
+      </main>
     </>
   );
 }

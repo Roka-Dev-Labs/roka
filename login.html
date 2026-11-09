@@ -73,6 +73,13 @@
     <link rel="shortcut icon" href="/assets/icons/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
     <script src="/js/config.js"></script>
+    <script>
+        (function () {
+            if (/[#?&]token=/.test(location.href)) {
+                document.documentElement.dataset.auth = 'pending';
+            }
+        })();
+    </script>
     <script src="/js/console-egg.js" defer></script>
     <link rel="stylesheet" href="/assets/fonts/montserrat.css">
     <style>
@@ -229,10 +236,37 @@
             margin-bottom: 0.4rem;
         }
 
+        .form-group label .req {
+            color: #e11d48;
+            font-weight: 600;
+            margin-left: 0.18em;
+        }
+
         .form-group label .optional {
             color: var(--text-muted);
             font-weight: 375;
             font-size: 0.78rem;
+        }
+
+        .field-hint {
+            display: none;
+            color: #b42318;
+            font-size: 0.75rem;
+            font-weight: 450;
+            margin: -0.12rem 0 0.38rem;
+            line-height: 1.35;
+        }
+
+        .form-group.invalid .field-hint { display: block; }
+
+        .form-group.invalid input {
+            border-color: #e8b4ae;
+            background: #fff1f0;
+        }
+
+        .form-group.invalid input:focus {
+            border-color: #e11d48;
+            box-shadow: inset 0 0 0 1px #e11d48;
         }
 
         .form-group input {
@@ -358,9 +392,126 @@
 
         .hidden { display: none; }
 
+        .card {
+            position: relative;
+            overflow: visible;
+            transition: min-height 0.45s cubic-bezier(0.22, 1, 0.36, 1), padding 0.45s ease;
+        }
+
+        .auth-form-body {
+            transform-origin: center top;
+            transition: opacity 0.38s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .card.is-busy {
+            overflow: hidden;
+            min-height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 2.5rem;
+            padding-bottom: 2.5rem;
+        }
+
+        .card.is-busy .auth-form-body {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transform: scale(0.72);
+            pointer-events: none;
+        }
+
+        .auth-result {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.1rem;
+            text-align: center;
+            min-height: 220px;
+            width: 100%;
+        }
+
+        .card.is-busy .auth-result { display: flex; }
+
+        .auth-mark {
+            width: 96px;
+            height: 96px;
+        }
+
+        .auth-track {
+            fill: none;
+            stroke: #ececef;
+            stroke-width: 4;
+        }
+
+        .auth-arc {
+            fill: none;
+            stroke: #1d1d1f;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 70 226;
+            transform-origin: 48px 48px;
+            animation: auth-spin 0.85s linear infinite;
+        }
+
+        .auth-check {
+            fill: none;
+            stroke: #1d1d1f;
+            stroke-width: 4.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 52;
+            stroke-dashoffset: 52;
+        }
+
+        .card.is-done .auth-arc {
+            animation: auth-fill 0.48s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .card.is-done .auth-check {
+            animation: auth-check 0.38s 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .auth-result-label {
+            font-size: 1.05rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            min-height: 1.4em;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        .card.is-done .auth-result-label {
+            opacity: 1;
+            transform: none;
+        }
+
+        @keyframes auth-spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes auth-fill {
+            from { stroke-dasharray: 70 226; }
+            to { stroke-dasharray: 226 226; transform: rotate(0deg); }
+        }
+
+        @keyframes auth-check {
+            to { stroke-dashoffset: 0; }
+        }
+
+        html[data-auth="pending"] .auth-form-body { visibility: hidden; }
+
         @media (prefers-reduced-motion: reduce) {
             .login-container { animation: none; }
             .signup-fields { transition: none; }
+            .auth-form-body, .auth-result-label { transition: none; }
+            .auth-arc, .card.is-done .auth-arc, .card.is-done .auth-check { animation: none; }
+            .auth-arc { stroke-dasharray: 226 226; }
+            .auth-check { stroke-dashoffset: 0; }
+            .card.is-done .auth-result-label { opacity: 1; transform: none; }
         }
 
         @media (max-width: 420px) {
@@ -368,7 +519,7 @@
             .card { padding: 1.5rem 1.15rem 1.25rem; }
         }
     </style>
-    <link rel="stylesheet" href="/assets/css/press.css?v=fade3">
+    <link rel="stylesheet" href="/assets/css/press.css?v=theme4">
     <style>
         /* Buttons spring on press. Fields stay full width so their edges are not clipped. */
         @media (prefers-reduced-motion: no-preference) {
@@ -407,7 +558,8 @@
 </head>
 <body>
     <div class="login-container" id="loginContainer">
-        <div class="card">
+        <div class="card" id="authCard">
+            <div class="auth-form-body" id="authFormBody">
             <a href="/" class="card-logo" aria-label="Roka home">
                 <img src="/assets/logos/logo-roka.png" alt="Roka" width="64" height="64">
             </a>
@@ -433,29 +585,33 @@
             </div>
             <div class="oauth-divider">or</div>
 
-            <form id="authForm">
+            <form id="authForm" novalidate>
                 <div class="signup-fields" id="signupFields">
                     <div class="signup-fields-inner">
                         <div class="name-row">
                             <div class="form-group">
-                                <label for="firstName">First name</label>
+                                <label for="firstName">First name <span class="req" aria-hidden="true">*</span></label>
+                                <p class="field-hint" data-for="firstName">This field is required.</p>
                                 <input type="text" id="firstName" name="first_name" autocomplete="given-name" placeholder="First name">
                             </div>
                             <div class="form-group">
-                                <label for="lastName">Surname</label>
+                                <label for="lastName">Surname <span class="req" aria-hidden="true">*</span></label>
+                                <p class="field-hint" data-for="lastName">This field is required.</p>
                                 <input type="text" id="lastName" name="last_name" autocomplete="family-name" placeholder="Surname">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="username">Username</label>
+                            <label for="username">Username <span class="req" aria-hidden="true">*</span></label>
+                            <p class="field-hint" data-for="username">This field is required.</p>
                             <input type="text" id="username" name="username" autocomplete="username" placeholder="Username">
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email address</label>
-                    <input type="email" id="email" required autocomplete="email" placeholder="Enter your email">
+                    <label for="email">Email address <span class="req" aria-hidden="true">*</span></label>
+                    <p class="field-hint" data-for="email">This field is required.</p>
+                    <input type="email" id="email" autocomplete="email" placeholder="Enter your email">
                 </div>
 
                 <div class="signup-fields">
@@ -467,9 +623,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="password">Password</label>
+                    <label for="password">Password <span class="req" aria-hidden="true">*</span></label>
+                    <p class="field-hint" data-for="password">This field is required.</p>
                     <div class="password-wrap">
-                        <input type="password" id="password" required autocomplete="new-password" placeholder="Enter your password" minlength="8">
+                        <input type="password" id="password" autocomplete="new-password" placeholder="Enter your password" minlength="8">
                         <button type="button" class="password-toggle" id="togglePassword" aria-label="Show password">
                             <svg id="eyeOpen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
                             <svg id="eyeClosed" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 19c-6.5 0-10-7-10-7a17.3 17.3 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c6.5 0 10 7 10 7a17.4 17.4 0 0 1-3.16 4.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
@@ -482,6 +639,15 @@
             <div class="toggle-link">
                 <span id="toggleText">Already have an account? </span>
                 <a href="?mode=login" id="toggleLink">Sign in</a>
+            </div>
+            </div>
+            <div class="auth-result" id="authResult" aria-live="polite">
+                <svg class="auth-mark" viewBox="0 0 96 96" aria-hidden="true">
+                    <circle class="auth-track" cx="48" cy="48" r="36"></circle>
+                    <circle class="auth-arc" cx="48" cy="48" r="36"></circle>
+                    <path class="auth-check" d="M32 50l11 11 21-22"></path>
+                </svg>
+                <p class="auth-result-label" id="authResultLabel"></p>
             </div>
         </div>
     </div>
@@ -496,17 +662,71 @@
         const toggleText = document.getElementById('toggleText');
         const toggleLink = document.getElementById('toggleLink');
         const errorDiv = document.getElementById('error');
+        const authCard = document.getElementById('authCard');
+        const authResultLabel = document.getElementById('authResultLabel');
         const signupInputs = ['firstName', 'lastName', 'username'].map((id) => document.getElementById(id));
         const passwordInput = document.getElementById('password');
         const params = new URLSearchParams(window.location.search);
         const nextParam = params.get('next') || '';
         const safeNext = (nextParam.startsWith('/') && !nextParam.startsWith('//') && !nextParam.includes('\\'))
             ? nextParam
-            : '/dashboard.html';
+            : '/';
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         function showError(message) {
             errorDiv.textContent = message;
             errorDiv.classList.remove('hidden');
+        }
+
+        function hintFor(id) {
+            return document.querySelector('.field-hint[data-for="' + id + '"]');
+        }
+
+        function setFieldInvalid(input, message) {
+            const group = input.closest('.form-group');
+            if (group) group.classList.add('invalid');
+            const hint = hintFor(input.id);
+            if (hint) hint.textContent = message;
+            input.setAttribute('aria-invalid', 'true');
+        }
+
+        function clearFieldInvalid(input) {
+            const group = input.closest('.form-group');
+            if (group) group.classList.remove('invalid');
+            const hint = hintFor(input.id);
+            if (hint) hint.textContent = 'This field is required.';
+            input.removeAttribute('aria-invalid');
+        }
+
+        function sleep(ms) {
+            return new Promise((resolve) => setTimeout(resolve, ms));
+        }
+
+        function showBusy() {
+            document.documentElement.dataset.auth = 'pending';
+            authCard.classList.add('is-busy');
+            authCard.classList.remove('is-done');
+            authResultLabel.textContent = '';
+        }
+
+        async function showSuccess(message) {
+            showBusy();
+            await sleep(reduceMotion ? 80 : 720);
+            authCard.classList.add('is-done');
+            authResultLabel.textContent = message;
+            await sleep(reduceMotion ? 400 : 1400);
+        }
+
+        function hideBusy() {
+            authCard.classList.remove('is-busy', 'is-done');
+            delete document.documentElement.dataset.auth;
+            authResultLabel.textContent = '';
+        }
+
+        async function finishAuth(token, message) {
+            localStorage.setItem('roka_access_token', token);
+            await showSuccess(message);
+            window.location.replace(safeNext);
         }
 
         function oauthUrl(provider) {
@@ -517,16 +737,29 @@
         document.getElementById('githubOAuth').href = oauthUrl('github');
         document.getElementById('googleOAuth').href = oauthUrl('google');
 
+        ['githubOAuth', 'googleOAuth'].forEach((id) => {
+            document.getElementById(id).addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = e.currentTarget.getAttribute('href');
+                showBusy();
+                window.setTimeout(() => {
+                    window.location.href = href;
+                }, reduceMotion ? 0 : 280);
+            });
+        });
+
         const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
         const oauthToken = hashParams.get('token') || params.get('token');
         const oauthError = params.get('error');
         if (oauthError) {
-            showError(oauthError);
+            hideBusy();
+            showError(oauthError.replace(/\+/g, ' '));
             history.replaceState(null, '', window.location.pathname + (nextParam ? `?next=${encodeURIComponent(nextParam)}` : ''));
         }
         if (oauthToken) {
-            localStorage.setItem('roka_access_token', oauthToken);
-            window.location.replace(safeNext);
+            finishAuth(oauthToken, isLoginMode || params.get('mode') === 'login'
+                ? 'Signed in successfully'
+                : 'Registered successfully');
         }
 
         function applyMode(animate) {
@@ -628,13 +861,58 @@
             }
         });
 
+        function validateForm() {
+            const emailInput = document.getElementById('email');
+            const fields = isLoginMode
+                ? [emailInput, passwordInput]
+                : [document.getElementById('firstName'), document.getElementById('lastName'), document.getElementById('username'), emailInput, passwordInput];
+            let firstInvalid = null;
+
+            fields.forEach((input) => clearFieldInvalid(input));
+
+            fields.forEach((input) => {
+                const value = input.value.trim();
+                if (!value) {
+                    setFieldInvalid(input, 'This field is required.');
+                    if (!firstInvalid) firstInvalid = input;
+                }
+            });
+
+            const email = emailInput.value.trim();
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                setFieldInvalid(emailInput, 'Enter a valid email address.');
+                if (!firstInvalid) firstInvalid = emailInput;
+            }
+
+            if (!isLoginMode && passwordInput.value && passwordInput.value.length < 8) {
+                setFieldInvalid(passwordInput, 'Password must be at least 8 characters.');
+                if (!firstInvalid) firstInvalid = passwordInput;
+            }
+
+            if (firstInvalid) {
+                showError('Please fill in every required field.');
+                firstInvalid.focus();
+                return false;
+            }
+            if (!oauthError) errorDiv.classList.add('hidden');
+            return true;
+        }
+
+        ['firstName', 'lastName', 'username', 'email', 'password'].forEach((id) => {
+            document.getElementById(id).addEventListener('input', (e) => {
+                clearFieldInvalid(e.currentTarget);
+            });
+        });
+
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!validateForm()) return;
 
             const email = document.getElementById('email').value.trim();
             const password = passwordInput.value;
             submitBtn.disabled = true;
             errorDiv.classList.add('hidden');
+            showBusy();
 
             try {
                 const endpoint = isLoginMode ? '/auth/login' : '/auth/signup';
@@ -660,16 +938,20 @@
                 }
 
                 if (!response.ok) {
-                    throw new Error(data.detail || data.error || 'Authentication failed');
+                    const detail = data.detail || data.error;
+                    const message = Array.isArray(detail)
+                        ? detail.map((item) => item.msg || item).join(' ')
+                        : (detail || 'Authentication failed');
+                    throw new Error(message);
                 }
 
-                localStorage.setItem('roka_access_token', data.access_token);
-                const next = new URLSearchParams(window.location.search).get('next') || '';
-                window.location.href = (next.startsWith('/') && !next.startsWith('//') && !next.includes('\\'))
-                    ? next
-                    : '/dashboard.html';
+                await finishAuth(
+                    data.access_token,
+                    isLoginMode ? 'Signed in successfully' : 'Registered successfully'
+                );
 
             } catch (error) {
+                hideBusy();
                 errorDiv.textContent = error.message;
                 errorDiv.classList.remove('hidden');
             } finally {

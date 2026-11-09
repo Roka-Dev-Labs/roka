@@ -57,7 +57,6 @@ API keys: https://www.roka-prune.com/dashboard/api-keys.html
 
 ## More pages
 
-- About: https://www.roka-prune.com/about.html
 - Privacy: https://www.roka-prune.com/privacy.html
 - Terms: https://www.roka-prune.com/terms.html
 - Security: https://www.roka-prune.com/.well-known/security.txt

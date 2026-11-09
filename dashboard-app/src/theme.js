@@ -3,7 +3,12 @@ export function currentTheme() {
 }
 
 export function applyTheme(theme) {
-  document.documentElement.classList.toggle("dark", theme === "dark");
+  const html = document.documentElement;
+  html.dataset.theme = theme;
+  html.classList.toggle("dark", theme === "dark");
+  html.classList.toggle("light", theme === "light");
+  html.style.colorScheme = theme;
   localStorage.setItem("roka-theme", theme);
+  localStorage.setItem("theme", theme);
   return theme;
 }

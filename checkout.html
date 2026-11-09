@@ -42,14 +42,13 @@
         .btn { display:inline-block; text-align:center; background:var(--btn); color:var(--btn-text); text-decoration:none; border-radius:8px; padding:.6rem 1rem; font-size:.85rem; font-weight:500; }
         .btn-ghost { background:transparent; color:var(--text); border:1px solid var(--border); }
         .note { margin-top:2rem; font-size:.85rem; color:var(--muted); }
-        #themeToggle { background:none; border:1px solid var(--border); color:var(--muted); border-radius:8px; padding:.35rem .75rem; cursor:pointer; font:inherit; font-size:.75rem; }
     </style>
-    <link rel="stylesheet" href="/assets/css/press.css?v=fade3">
+    <link rel="stylesheet" href="/assets/css/press.css?v=theme4">
 </head>
 <body>
     <nav class="nav">
         <a href="/"><img src="/assets/icons/favicon-32x32.png" alt="Roka" width="28" height="28"> Roka</a>
-        <button id="themeToggle" type="button">Theme</button>
+        <button id="themeToggle" type="button" class="theme-toggle-btn" aria-label="Toggle theme"><span class="inner"><span id="themeLabel">Light</span></span></button>
     </nav>
     <main class="wrap">
         <h1>Free, with usage limits</h1>
@@ -69,8 +68,12 @@
         const html = document.documentElement;
         const btn = document.getElementById('themeToggle');
         function apply(theme) {
+            html.dataset.theme = theme;
             html.classList.toggle('dark', theme === 'dark');
-            btn.textContent = theme === 'dark' ? 'Light' : 'Dark';
+            html.classList.toggle('light', theme === 'light');
+            html.style.colorScheme = theme;
+            const label = document.getElementById('themeLabel') || btn;
+            label.textContent = theme === 'dark' ? 'Light' : 'Dark';
             localStorage.setItem('roka-theme', theme);
         }
         apply((localStorage.getItem('roka-theme') || 'dark') === 'light' ? 'light' : 'dark');
