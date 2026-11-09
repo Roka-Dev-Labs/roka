@@ -15,7 +15,7 @@ roka --input logs.txt --query "auth failures" --budget 8000 --api-key rk_live_..
 | `-b, --budget` | 8000 | Token budget for the output |
 | `-i, --input` | stdin | Input file path |
 | `-o, --output` | stdout | Output file path |
-| `-a, --api-key` | — | API key (Pro). Semantic re-rank path. |
+| `-a, --api-key` | — | API key (Pro). Optional hosted embeddings; not the default ranker. |
 
 Exact flags can vary by release. Check `roka --help` on the binary you installed.
 
@@ -23,4 +23,4 @@ Exact flags can vary by release. Check `roka --help` on the binary you installed
 2. **Rank** — pack query hits, then crash lines, then crash neighbors, then recency. Query outranks an unrelated ERROR.
 3. **Pack** — keep whole lines in a character budget. MCP default is 4000 characters; CLI `--budget` is tokens — see `roka --help`.
 
-Deterministic by default. Semantic re-ranking is Pro/optional. Local prune does not upload log contents. Free hosted quota is 15K tokens lifetime per device; the local binary still runs offline.
+Deterministic by default. Optional hosted embeddings are Pro-only and not the MCP ranker. Local prune does not upload log contents. Free hosted quota is 15K tokens lifetime per device; the local binary still runs offline.

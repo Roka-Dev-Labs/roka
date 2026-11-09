@@ -3400,7 +3400,7 @@
                 </div>
             </div>
 
-            <!-- 03 BM25 + semantic rank -->
+            <!-- 03 Query scoring -->
             <div class="bento-card">
                 <div class="bento-card-bg" aria-hidden="true">
                     <div class="bento-media is-empty" data-video-slot="bm25-semantic-rank"></div>
@@ -3831,7 +3831,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Hosted CLI, measured on a 2021 M1 MacBook Pro: about 312ms for a 50K-token dump. Larger files scale roughly linearly. Semantic rank on the hosted path adds time; MCP query scoring is deterministic whole-word matching, not embeddings.</p>
+                        <p class="text-sm text-muted">The default ranker is deterministic whole-word matching — playground and MCP included. On a 2021 M1 MacBook Pro a hosted 50K-token dump is about 312ms; larger files scale roughly linearly. Optional hosted embeddings exist; they are not the default and MCP does not use them.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -3887,17 +3887,17 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">The hosted CLI streams in chunks so memory stays flat. Benchmarks on a 2021 M1 MacBook Pro:<br><br>• 50K tokens → ~312ms<br>• 500K tokens → ~3–5s (hosted semantic rank on)<br>• 5M tokens → ~25–40s (semantic off)<br><br>For very large files, disable semantic rank or split by time window. MCP prune is character-budgeted and fail-open on binary input. There is no hard size limit on the CLI path.</p>
+                        <p class="text-sm text-muted">MCP prune is character-budgeted and fail-open on binary input. There is no hard size limit on the local CLI path. Split by time window if the file is huge.<br><br>Hosted CLI, 2021 M1 MacBook Pro: about 312ms for a 50K-token dump. Optional hosted embeddings are slower; they are not the default ranker.</p>
                     </div>
                 </div>
 
                 <div class="surface rounded-lg overflow-hidden">
                     <button class="faq-toggle w-full text-left p-5 flex items-center justify-between gap-4 hover:bg-[var(--hover-fade)] transition">
-                        <h4 class="font-medium text-sm">Does semantic ranking use Roka's models or my AI provider's?</h4>
+                        <h4 class="font-medium text-sm">Is the ranker semantic?</h4>
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Two paths. Hosted CLI can optionally run local sentence-transformers (~80MB, open weights) for semantic rank — no API call during prune. MCP <span class="mono">prune_logs</span> / <span class="mono">prune_file</span> use deterministic whole-word query scoring, not embeddings. Reasons are query, crash, neighbor, or recency.<br><br>Local prune tools do not upload logs. Only the slice you send reaches your model, and only when you pipe it there.</p>
+                        <p class="text-sm text-muted">No. The default ranker — this page’s playground and MCP <span class="mono">prune_logs</span> / <span class="mono">prune_file</span> / <span class="mono">prune_tail</span> — is deterministic: collapse, then query, crash, neighbor, recency. Reasons are those four labels, not embeddings.<br><br>Hosted CLI can optionally add local sentence-transformers. That path is not the default, and MCP does not use it. Local prune tools do not upload logs.</p>
                     </div>
                 </div>
             </div>
@@ -3996,7 +3996,7 @@
             <!-- Bottom bar -->
             <div class="border-t pt-6 flex flex-col sm:flex-row justify-between items-center gap-3" style="border-color:var(--border)">
                 <span class="text-xs" style="color:var(--text-faint)">© 2026 Roka Labs. All rights reserved.</span>
-                <span class="mono inline-code" style="color:var(--text-faint)">BM25 · semantic rank · tiktoken · provenance headers</span>
+                <span class="mono inline-code" style="color:var(--text-faint)">query · crash · neighbor · recency</span>
             </div>
         </div>
     </footer>

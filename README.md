@@ -62,7 +62,7 @@ roka --input app.log --query "what broke during last night's deploy" --budget 12
 # Write output to a file
 roka --input big.log --query "OOM" --budget 5000 --output pruned.txt
 
-# Pro: API key for semantic ranking
+# Optional hosted embeddings (not the default prune path)
 roka --input logs.txt --query "auth failures" --budget 8000 --api-key rk_live_...
 ```
 
@@ -86,7 +86,7 @@ Exact flags may vary by release — run `roka --help`.
 2. **Rank** — Pack query hits, then crash lines (`ERROR|FATAL|CRITICAL|Exception|Traceback|panic`), then crash neighbors, then recency. Query outranks an unrelated ERROR.
 3. **Pack** — Keep whole lines in a character budget. MCP default is 4000 characters.
 
-Deterministic by default; semantic re-ranking is a Pro/optional path. Local prune tools do not upload your logs.
+Deterministic by default. Optional hosted embeddings are Pro-only and not the MCP ranker. Local prune tools do not upload your logs.
 
 ---
 

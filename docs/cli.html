@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/assets/js/theme-boot.js"></script>
     <title>CLI usage — Roka Docs</title>
-    <meta name="description" content="Roka CLI usage: pipe stdin or point at a file, set --query and --budget, write pruned context to stdout, and optionally pass a Pro API key for semantic rank.">
+    <meta name="description" content="Roka CLI usage: pipe stdin or point at a file, set --query and --budget, write pruned context to stdout. Default ranker is deterministic.">
     <meta property="og:title" content="CLI usage — Roka Docs">
-    <meta property="og:description" content="Roka CLI usage: pipe stdin or point at a file, set --query and --budget, write pruned context to stdout, and optionally pass a Pro API key for semantic rank.">
+    <meta property="og:description" content="Roka CLI usage: pipe stdin or point at a file, set --query and --budget, write pruned context to stdout. Default ranker is deterministic.">
     <meta property="og:image" content="https://www.roka-prune.com/opengraph-image.jpg?v=20261109">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -48,7 +48,7 @@
           "@id": "https://www.roka-prune.com/docs/cli.html#webpage",
           "url": "https://www.roka-prune.com/docs/cli.html",
           "name": "CLI usage \u2014 Roka Docs",
-          "description": "Roka CLI usage: pipe stdin or point at a file, set --query and --budget, write pruned context to stdout, and optionally pass a Pro API key for semantic rank.",
+          "description": "Roka CLI usage: pipe stdin or point at a file, set --query and --budget, write pruned context to stdout. Default ranker is deterministic.",
           "isPartOf": {
             "@id": "https://www.roka-prune.com/#website"
           },
@@ -65,7 +65,7 @@
     <meta property="og:site_name" content="Roka">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="CLI usage — Roka Docs">
-    <meta name="twitter:description" content="Roka CLI usage: pipe stdin or point at a file, set --query and --budget, write pruned context to stdout, and optionally pass a Pro API key for semantic rank.">
+    <meta name="twitter:description" content="Roka CLI usage: pipe stdin or point at a file, set --query and --budget, write pruned context to stdout. Default ranker is deterministic.">
     <meta name="twitter:image" content="https://www.roka-prune.com/opengraph-image.jpg?v=20261109">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
     <link rel="stylesheet" href="/assets/fonts/montserrat.css">
@@ -101,7 +101,7 @@ roka --input app.log --query "what broke during last night's deploy" --budget 12
 # Write output to a file
 roka --input big.log --query "OOM" --budget 5000 --output pruned.txt
 
-# Pro: API key for semantic ranking
+# Optional hosted embeddings (not the default prune path)
 roka --input logs.txt --query "auth failures" --budget 8000 --api-key rk_live_...</pre>
 
             <h2>Common flags</h2>
@@ -112,7 +112,7 @@ roka --input logs.txt --query "auth failures" --budget 8000 --api-key rk_live_..
                     <tr><td>-b, --budget</td><td>8000</td><td>Token budget for the output</td></tr>
                     <tr><td>-i, --input</td><td>stdin</td><td>Input file path</td></tr>
                     <tr><td>-o, --output</td><td>stdout</td><td>Output file path</td></tr>
-                    <tr><td>-a, --api-key</td><td>—</td><td>API key (Pro). Semantic re-rank path.</td></tr>
+                    <tr><td>-a, --api-key</td><td>—</td><td>API key (Pro). Optional hosted embeddings; not the default ranker.</td></tr>
                 </tbody>
             </table>
             <p>Exact flags can vary by release. Always check <code>roka --help</code> on the binary you installed.</p>
@@ -123,7 +123,7 @@ roka --input logs.txt --query "auth failures" --budget 8000 --api-key rk_live_..
                 <li><strong>Rank</strong> — pack query hits, then crash lines, then crash neighbors, then recency. Query outranks an unrelated ERROR.</li>
                 <li><strong>Pack</strong> — keep whole lines in a character budget. MCP default is 4000 characters; CLI <code>--budget</code> is tokens — see <code>roka --help</code>.</li>
             </ol>
-            <p>Deterministic by default. Semantic re-ranking is Pro/optional. Local prune does not upload log contents.</p>
+            <p>Deterministic by default. Optional hosted embeddings are Pro-only and not the MCP ranker. Local prune does not upload log contents.</p>
 
             <div class="note">Free CLI quota on the hosted side is 15K tokens lifetime per device. The local binary still runs offline for pruning. See <a href="/docs/pricing.html">pricing</a>.</div>
             <div class="docs-foot"><a href="/docs/install.html">← Install CLI</a><a href="/docs/mcp.html">Connect an agent →</a></div>

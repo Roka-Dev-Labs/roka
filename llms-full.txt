@@ -689,51 +689,27 @@ We validated Roka against all 16 production log datasets from
 
 ### 1. Ingest
 
-~2,000 lines of real system logs per dataset — ~45K–295K tokens each.
+~2,000 raw lines per file. The suite is 30,001 lines and 4.15M characters.
 
 ### 2. Collapse
 
-Fingerprints UUIDs, IPs, thread names, timestamps — repetitive patterns become one line.
+Consecutive duplicate lines collapse to one line plus a count.
 
 ### 3. Rank
 
-BM25 + semantic re-ranking against “what broke” — failures surface first.
+Pack order: query hits, then crash lines, then crash neighbors, then recency. Deterministic. Not embeddings.
 
 ### 4. Pack
 
-Greedy packing to exactly 8,000 tokens — what an agent actually receives.
+Pack to 4,000 characters. A crash line that does not fit is kept whole and the overage is reported.
 
-16Datasets1.7MInput tokens94%Avg. reduction8KToken budgetQuery for every runcat <dataset>_2k.log | roka prune --query "what broke" --budget 8000LogHub datasets →
+15 datasets. 4.15M characters in. 92.2% avg. lines removed. 4K character budget. Same tool on every file: `prune_file(path, budget=4000)` — MCP default, characters not tokens.
 
 ## What we did — and why it matters
 
-Most log tools are demoed on tiny, hand-picked snippets. We didn't. We ran the same real-world command an engineer would use during an incident — roka prune --query "what broke" — against every dataset in the
- LogHub benchmark suite. These are production logs from Android phones, supercomputers, cloud clusters, and SSH servers — not synthetic toy data.
+The table is the same MCP `prune_file` run published on the homepage and in the research note. Fifteen LogHub files, one budget, no per-file tuning. It measures whether lines — and real errors — survive a 4,000-character pack. It does not measure whether a model then solves the incident.
 
-### Same four stages on every dataset
+Same four stages: ingest, collapse adjacent duplicates, pack query / crash / neighbor / recency, report overage. Ranker is deterministic. Not embeddings.
 
-Ingest Raw LogHub samples, untouched — no cherry-picked slices.Collapse Identical fingerprints merge so heartbeats stop filling the budget.Rank One query — “what broke” — on all 16 logs, no per-file regex.Pack Output is always ≤ 8,000 tokens, with errors packed first.
-
-### Real logs, not mocks
-
-LogHub is the standard benchmark used in log parsing research (logpai). Each dataset comes from a different system with its own timestamp format, log structure, and failure modes — the same diversity you hit in production.
-
-### Same query, every time
-
-We didn't tune per dataset. One natural-language query — "what broke" — on all 16 logs. Roka had to auto-detect format, collapse noise, and rank relevance without manual regex rules or per-system config.
-
-### Diagnosis, not just compression
-
-Token reduction alone isn't the goal. Every dataset produced a coherent failure narrative: quorum election loss on Zookeeper, brute-force + breach on OpenSSH, CBS errors on Windows. Zero empty outputs.
-
-Why this proves Roka works: If pruning only worked on one log format, you'd see failures across the other 15. Instead, all 16 datasets — mobile, web, HPC, cloud, distributed systems — compress to under 8K tokens while preserving the errors an SRE or AI agent needs to root-cause an incident.
-
-The hard cases (BGL, HPC, Mac, OpenSSH) fill more of the budget because those logs have genuinely diverse failure modes — not because Roka missed anything. When we found format-specific gaps (Spark returning zero output, Thunderbird hostname bloat, Zookeeper election noise), we fixed the pipeline and re-ran until the diagnostic story was correct.
-
-That's the difference between a demo and infrastructure: Roka handles logs you've never seen before, packs them to your token budget, and hands your agent exactly what broke — not 100,000 lines of noise.
-
-Full methodology and Thunderbird write-up:
- Research →
-
-Benchmarks run via the Roka prune API on LogHub *_2k.log samples.
- Datasets © LogHub / logpai — used for research and evaluation.
+Full methodology: https://www.roka-prune.com/research.html
+Datasets © LogHub / logpai — used for research and evaluation.
