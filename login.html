@@ -437,22 +437,30 @@
         .auth-mark {
             width: 96px;
             height: 96px;
+            position: relative;
+        }
+
+        .auth-ring {
+            position: absolute;
+            inset: 12px;
+            border: 4px solid #ececef;
+            border-top-color: #1d1d1f;
+            border-radius: 50%;
+            animation: auth-spin 0.7s linear infinite;
+        }
+
+        .auth-check-svg {
+            position: absolute;
+            inset: 0;
+            width: 96px;
+            height: 96px;
+            opacity: 0;
         }
 
         .auth-track {
             fill: none;
             stroke: #ececef;
             stroke-width: 4;
-        }
-
-        .auth-arc {
-            fill: none;
-            stroke: #1d1d1f;
-            stroke-width: 4;
-            stroke-linecap: round;
-            stroke-dasharray: 70 226;
-            transform-origin: 48px 48px;
-            animation: auth-spin 0.85s linear infinite;
         }
 
         .auth-check {
@@ -465,12 +473,15 @@
             stroke-dashoffset: 52;
         }
 
-        .card.is-done .auth-arc {
-            animation: auth-fill 0.48s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        .card.is-done .auth-ring {
+            animation: none;
+            opacity: 0;
         }
 
+        .card.is-done .auth-check-svg { opacity: 1; }
+
         .card.is-done .auth-check {
-            animation: auth-check 0.38s 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation: auth-check 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
         .auth-result-label {
@@ -493,11 +504,6 @@
             to { transform: rotate(360deg); }
         }
 
-        @keyframes auth-fill {
-            from { stroke-dasharray: 70 226; }
-            to { stroke-dasharray: 226 226; transform: rotate(0deg); }
-        }
-
         @keyframes auth-check {
             to { stroke-dashoffset: 0; }
         }
@@ -508,8 +514,8 @@
             .login-container { animation: none; }
             .signup-fields { transition: none; }
             .auth-form-body, .auth-result-label { transition: none; }
-            .auth-arc, .card.is-done .auth-arc, .card.is-done .auth-check { animation: none; }
-            .auth-arc { stroke-dasharray: 226 226; }
+            .auth-ring, .card.is-done .auth-check { animation: none; }
+            .auth-ring { border-top-color: #ececef; }
             .auth-check { stroke-dashoffset: 0; }
             .card.is-done .auth-result-label { opacity: 1; transform: none; }
         }
@@ -642,11 +648,13 @@
             </div>
             </div>
             <div class="auth-result" id="authResult" aria-live="polite">
-                <svg class="auth-mark" viewBox="0 0 96 96" aria-hidden="true">
-                    <circle class="auth-track" cx="48" cy="48" r="36"></circle>
-                    <circle class="auth-arc" cx="48" cy="48" r="36"></circle>
-                    <path class="auth-check" d="M32 50l11 11 21-22"></path>
-                </svg>
+                <div class="auth-mark" aria-hidden="true">
+                    <span class="auth-ring"></span>
+                    <svg class="auth-check-svg" viewBox="0 0 96 96">
+                        <circle class="auth-track" cx="48" cy="48" r="36"></circle>
+                        <path class="auth-check" d="M32 50l11 11 21-22"></path>
+                    </svg>
+                </div>
                 <p class="auth-result-label" id="authResultLabel"></p>
             </div>
         </div>
@@ -670,8 +678,48 @@
         const nextParam = params.get('next') || '';
         const safeNext = (nextParam.startsWith('/') && !nextParam.startsWith('//') && !nextParam.includes('\\'))
             ? nextParam
-            : '/';
+            : '/dashboard.html';
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        const FORM_STORE = 'roka-auth-form';
+
+        function persistForm() {
+            try {
+                sessionStorage.setItem(FORM_STORE, JSON.stringify({
+                    mode: isLoginMode ? 'login' : 'signup',
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    username: document.getElementById('username').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                }));
+            } catch {
+                /* private mode */
+            }
+        }
+
+        function restoreForm() {
+            try {
+                const raw = sessionStorage.getItem(FORM_STORE);
+                if (!raw) return;
+                const saved = JSON.parse(raw);
+                if (saved.firstName) document.getElementById('firstName').value = saved.firstName;
+                if (saved.lastName) document.getElementById('lastName').value = saved.lastName;
+                if (saved.username) document.getElementById('username').value = saved.username;
+                if (saved.email) document.getElementById('email').value = saved.email;
+                if (saved.phone) document.getElementById('phone').value = saved.phone;
+            } catch {
+                /* ignore */
+            }
+        }
+
+        function friendlyError(error) {
+            const message = String(error && error.message ? error.message : error || '');
+            if (/load failed|failed to fetch|networkerror|network error/i.test(message)) {
+                return 'Could not reach the server. Please try again.';
+            }
+            return message || 'Authentication failed';
+        }
 
         function showError(message) {
             errorDiv.textContent = message;
@@ -738,14 +786,16 @@
         document.getElementById('googleOAuth').href = oauthUrl('google');
 
         ['githubOAuth', 'googleOAuth'].forEach((id) => {
-            document.getElementById(id).addEventListener('click', (e) => {
-                e.preventDefault();
-                const href = e.currentTarget.getAttribute('href');
-                showBusy();
-                window.setTimeout(() => {
-                    window.location.href = href;
-                }, reduceMotion ? 0 : 280);
+            document.getElementById(id).addEventListener('click', () => {
+                persistForm();
             });
+        });
+
+        window.addEventListener('pageshow', () => {
+            if (/(?:[#?&])token=/.test(location.href)) return;
+            hideBusy();
+            submitBtn.disabled = false;
+            restoreForm();
         });
 
         const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
@@ -803,6 +853,8 @@
             isLoginMode = true;
         }
         applyMode(false);
+        restoreForm();
+        if (!oauthToken) hideBusy();
 
         toggleLink.addEventListener('click', (e) => {
             e.preventDefault();
@@ -898,9 +950,10 @@
             return true;
         }
 
-        ['firstName', 'lastName', 'username', 'email', 'password'].forEach((id) => {
+        ['firstName', 'lastName', 'username', 'email', 'password', 'phone'].forEach((id) => {
             document.getElementById(id).addEventListener('input', (e) => {
                 clearFieldInvalid(e.currentTarget);
+                persistForm();
             });
         });
 
@@ -952,7 +1005,7 @@
 
             } catch (error) {
                 hideBusy();
-                errorDiv.textContent = error.message;
+                errorDiv.textContent = friendlyError(error);
                 errorDiv.classList.remove('hidden');
             } finally {
                 submitBtn.disabled = false;
