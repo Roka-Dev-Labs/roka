@@ -10,6 +10,7 @@
 import * as fs from "node:fs/promises";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
+import { reportHeartbeat } from "./report.js";
 import { verifyProAccess, printVerificationError } from "./verify.js";
 
 export const SERVER_KEY = "roka-mcp";
@@ -293,6 +294,7 @@ export async function connectCommand(args) {
     process.exit(1);
   }
   console.error(`[roka-mcp] connect: verified — tier "${verification.tier}", MCP access confirmed.`);
+  void reportHeartbeat(opts.agent);
 
   const filePath = agentConf.describe(process.cwd());
   try {

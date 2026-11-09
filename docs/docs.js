@@ -60,7 +60,7 @@ function renderSidebar() {
       <a class="nav-link" href="/index.html">Home</a>
       <a class="nav-link" href="/install.html">Install page</a>
       <a class="nav-link" href="/research.html">Research</a>
-      <a class="nav-link" href="/dashboard.html">Under the hood</a>
+      <a class="nav-link" href="/dashboard.html">Dashboard</a>
       <a class="nav-link" href="/dashboard/api-keys.html">API keys</a>
     </div>
     <div style="padding:0.55rem">

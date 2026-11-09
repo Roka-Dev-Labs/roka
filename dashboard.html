@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/assets/js/theme-boot.js"></script>
-    <title>Under the hood — Roka</title>
-    <meta name="description" content="See what Roka keeps and why: the same collapse, crash-keep, query score, and budget pack the MCP tools run locally.">
-    <meta property="og:title" content="Under the hood — Roka">
-    <meta property="og:description" content="See what Roka keeps and why: the same collapse, crash-keep, query score, and budget pack the MCP tools run locally.">
+    <title>Dashboard — Roka</title>
+    <meta name="description" content="Your Roka account: live results of the collapse, crash-keep, query score, and budget pack that run when an agent calls roka-mcp.">
+    <meta property="og:title" content="Dashboard — Roka">
+    <meta property="og:description" content="Your Roka account: live results of the collapse, crash-keep, query score, and budget pack that run when an agent calls roka-mcp.">
     <meta property="og:image" content="https://www.roka-prune.com/assets/images/og.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -16,8 +16,8 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Roka">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Under the hood — Roka">
-    <meta name="twitter:description" content="See what Roka keeps and why: the same collapse, crash-keep, query score, and budget pack the MCP tools run locally.">
+    <meta name="twitter:title" content="Dashboard — Roka">
+    <meta name="twitter:description" content="Your Roka account: live results of the collapse, crash-keep, query score, and budget pack that run when an agent calls roka-mcp.">
     <meta name="twitter:image" content="https://www.roka-prune.com/assets/images/og.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
@@ -27,11 +27,16 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <script src="/js/config.js"></script>
+    <script>
+        if (!localStorage.getItem("roka_access_token")) {
+            location.replace("/login.html?next=/dashboard.html");
+        }
+    </script>
     <script src="/js/console-egg.js" defer></script>
     <script src="/js/back-trigger.js" defer></script>
     <link rel="stylesheet" href="/assets/fonts/montserrat.css">
     <link rel="stylesheet" href="/assets/css/press.css?v=theme4">
-    <link rel="stylesheet" href="/assets/css/dashboard.css?v=hood2">
+    <link rel="stylesheet" href="/assets/css/dashboard.css?v=hood4">
 </head>
 <body class="dash-body">
     <nav class="dash-nav">
@@ -40,13 +45,13 @@
             Roka
         </a>
         <div class="dash-nav-links">
-            <a href="/dashboard.html" class="active">Under the hood</a>
+            <a href="/dashboard.html" class="active">Dashboard</a>
             <a href="/dashboard/api-keys.html" id="navKeys">API keys</a>
             <a href="/docs/mcp.html">MCP</a>
         </div>
         <div class="dash-nav-actions">
             <div class="nav-action-pills">
-                <a href="/login.html" id="navLoginBtn" class="nav-login-btn"><span class="inner">Sign up</span></a>
+                <a href="/login.html?next=/dashboard.html" id="navLoginBtn" class="nav-login-btn"><span class="inner">Sign up</span></a>
                 <button id="themeToggle" type="button" class="theme-toggle-btn" aria-label="Switch to light mode">
                     <span class="inner">
                         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -62,6 +67,12 @@
     </nav>
 
     <main class="dash-wrap">
+        <header class="dash-hero">
+            <span class="eyebrow">Account</span>
+            <h1>What Roka did</h1>
+            <p>Every MCP prune from your connected agent lands here: collapse, crash evidence, query score, and the packed budget. Log text never leaves the machine.</p>
+        </header>
+
         <section id="accountStrip" class="dash-account" aria-live="polite">
             <div class="surface dash-stat">
                 <div class="k">Account</div>
@@ -81,11 +92,16 @@
             <div class="surface dash-stat">
                 <div class="k">MCP</div>
                 <div class="v" id="acctMcp">—</div>
-                <div class="s">key status for connect / serve</div>
+                <div class="s" id="acctSeen">not connected</div>
+            </div>
+            <div class="surface dash-stat">
+                <div class="k">Processes</div>
+                <div class="v" id="acctCalls">—</div>
+                <div class="s">prune calls reported</div>
             </div>
         </section>
 
-        <div id="hood"></div>
+        <section id="processFeed" class="process-feed" aria-live="polite"></section>
 
         <footer class="dash-foot">
             <span>© 2026 Roka Labs</span>
@@ -98,11 +114,9 @@
     </main>
 
     <script type="module">
-        import { mountHood } from "/assets/js/hood-ui.js?v=hood2";
-        mountHood(document.getElementById("hood"));
-        document.querySelectorAll(".reveal").forEach((el) => el.classList.add("visible"));
+        import { mountAccountDash } from "/assets/js/account-dash.js?v=hood4";
+        mountAccountDash();
     </script>
-    <script src="/assets/js/reveal.js" defer></script>
     <script>
         (function () {
             const html = document.documentElement;
@@ -134,65 +148,6 @@
             themeToggle.addEventListener("click", () => {
                 applyTheme(html.dataset.theme === "dark" ? "light" : "dark");
             });
-
-            const token = localStorage.getItem("roka_access_token");
-            const loginBtn = document.getElementById("navLoginBtn");
-            if (token) {
-                const label = loginBtn.querySelector(".inner");
-                if (label) label.textContent = "Account";
-                loginBtn.href = "/dashboard.html";
-                loginBtn.addEventListener("click", (event) => {
-                    if (event.metaKey || event.ctrlKey) return;
-                    event.preventDefault();
-                    localStorage.removeItem("roka_access_token");
-                    window.location.href = "/index.html";
-                });
-                loginBtn.title = "Log out";
-                label.textContent = "Log out";
-            }
-
-            async function loadAccount() {
-                if (!token) return;
-                const API_BASE = window.ROKA_API_BASE || "https://api.roka-prune.com";
-                try {
-                    const meRes = await fetch(`${API_BASE}/auth/me`, {
-                        headers: { Authorization: `Bearer ${token}` },
-                    });
-                    if (!meRes.ok) return;
-                    const user = await meRes.json();
-                    document.getElementById("accountStrip").classList.add("is-on");
-                    document.getElementById("acctName").textContent =
-                        user.first_name || (user.email || "").split("@")[0] || "signed in";
-                    document.getElementById("acctTier").textContent = user.tier || "free";
-
-                    const keysRes = await fetch(`${API_BASE}/api-keys`, {
-                        headers: { Authorization: `Bearer ${token}` },
-                    });
-                    if (!keysRes.ok) return;
-                    const keys = await keysRes.json();
-                    if (!keys.length) {
-                        document.getElementById("acctMcp").textContent = "no key";
-                        document.getElementById("acctUsed").textContent = "—";
-                        document.getElementById("acctLeft").textContent = "create a key";
-                        return;
-                    }
-                    const statusRes = await fetch(`${API_BASE}/api/status`, {
-                        headers: { Authorization: `Bearer ${keys[0].key}` },
-                    });
-                    if (!statusRes.ok) return;
-                    const status = await statusRes.json();
-                    document.getElementById("acctUsed").textContent =
-                        Number(status.tokens_used_this_month || 0).toLocaleString();
-                    document.getElementById("acctLimit").textContent =
-                        `of ${Number(status.tokens_limit || 0).toLocaleString()}`;
-                    document.getElementById("acctLeft").textContent =
-                        Number(status.tokens_remaining || 0).toLocaleString();
-                    document.getElementById("acctMcp").textContent = status.mcp_allowed ? "allowed" : "locked";
-                } catch (err) {
-                    console.error(err);
-                }
-            }
-            loadAccount();
         })();
     </script>
 </body>

@@ -20,7 +20,7 @@ export function Nav({ active, authed }) {
       </a>
       <div className="dash-nav-links">
         <a href="/dashboard.html" className={active === "dashboard" ? "active" : undefined}>
-          Under the hood
+          Dashboard
         </a>
         <a href="/dashboard/api-keys.html" className={active === "keys" ? "active" : undefined}>
           API keys
