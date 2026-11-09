@@ -113,7 +113,7 @@
     },
     {
       "src": "^/pricing/?$",
-      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "has": [{ "type": "header", "key": "accept", "value": "^text/markdown" }],
       "dest": "/pricing.md",
       "headers": {
         "content-type": "text/markdown; charset=utf-8",
@@ -128,7 +128,7 @@
     },
     {
       "src": "^/checkout/?$",
-      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "has": [{ "type": "header", "key": "accept", "value": "^text/markdown" }],
       "dest": "/checkout.md",
       "headers": {
         "content-type": "text/markdown; charset=utf-8",
@@ -245,7 +245,17 @@
     },
     {
       "src": "^/$",
-      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "has": [{ "type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|Facebot|Twitterbot|WhatsApp|Slackbot|Discordbot|Telegram|LinkedInBot|Applebot|Iframely|embedly).*" }],
+      "dest": "/index.html",
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "vary": "Accept, User-Agent"
+      }
+    },
+    {
+      "src": "^/$",
+      "has": [{ "type": "header", "key": "accept", "value": "^text/markdown" }],
       "dest": "/index.md",
       "headers": {
         "content-type": "text/markdown; charset=utf-8",
