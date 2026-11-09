@@ -1,5 +1,5 @@
 # Roka
-> Roka prunes noisy production logs into a budgeted slice for AI coding agents.
+> The right logs. Not the whole log. Roka selects the log lines an AI coding agent needs — crash evidence, query matches, and why they stayed. Local, inspectable, budgeted.
 
 Local CLI prune needs no API key and does not upload logs. MCP `connect`, `serve`, and `watch` are Pro and only call the API to verify a key. Prefer these markdown files over HTML.
 

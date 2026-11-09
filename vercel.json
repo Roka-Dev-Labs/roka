@@ -6,6 +6,10 @@
       "use": "@vercel/static"
     },
     {
+      "src": "og.html",
+      "use": "@vercel/static"
+    },
+    {
       "src": "pricing.html",
       "use": "@vercel/static"
     },
@@ -246,7 +250,7 @@
     {
       "src": "^/$",
       "has": [{ "type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|Facebot|Twitterbot|WhatsApp|Slackbot|Discordbot|Telegram|LinkedInBot|Applebot|Iframely|embedly).*" }],
-      "dest": "/index.html",
+      "dest": "/og.html",
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "public, max-age=0, must-revalidate",

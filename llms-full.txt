@@ -10,9 +10,9 @@ Index of links only: https://www.roka-prune.com/llms.txt
 
 # Roka
 
-Prune any log using one command.
+The right logs. Not the whole log.
 
-Designed for AI agents. Collapse noise, rank relevance, pack to a token budget — before the model ever sees it.
+Select the lines an AI agent needs from a noisy dump — crash evidence, query matches, packed to a budget. Local. Inspectable.
 
 - Site: https://www.roka-prune.com/
 - Docs: https://www.roka-prune.com/docs/
