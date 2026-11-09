@@ -1,6 +1,6 @@
 # Welcome to Roka
 
-Roka is a context-pruning layer for AI coding agents. It collapses noisy logs, force-keeps real errors, and packs the result into a token budget — before the model ever sees the dump.
+Roka is a context-pruning layer for AI coding agents. It collapses adjacent duplicate lines, ranks query / crash / neighbor / recency, and packs whole lines into a character budget — before the model ever sees the dump.
 
 Local prune tools do not upload your logs. MCP `connect` / `serve` / `watch` only call the API to verify a Pro key.
 

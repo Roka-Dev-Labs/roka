@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/assets/js/theme-boot.js"></script>
     <title>How pruning works — Roka Docs</title>
-    <meta name="description" content="How Roka pruning works locally: collapse near-duplicate lines, force-keep errors and traces, then pack into a character budget without uploading logs.">
+    <meta name="description" content="How Roka pruning works: collapse adjacent duplicates, rank query then crash then neighbor then recency, and pack whole lines into a character budget.">
     <meta property="og:title" content="How pruning works — Roka Docs">
-    <meta property="og:description" content="How Roka pruning works locally: collapse near-duplicate lines, force-keep errors and traces, then pack into a character budget without uploading logs.">
+    <meta property="og:description" content="How Roka pruning works: collapse adjacent duplicates, rank query then crash then neighbor then recency, and pack whole lines into a character budget.">
     <meta property="og:image" content="https://www.roka-prune.com/opengraph-image.jpg?v=20261109">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -48,7 +48,7 @@
           "@id": "https://www.roka-prune.com/docs/pipeline.html#webpage",
           "url": "https://www.roka-prune.com/docs/pipeline.html",
           "name": "How pruning works \u2014 Roka Docs",
-          "description": "How Roka pruning works locally: collapse near-duplicate lines, force-keep errors and traces, then pack into a character budget without uploading logs.",
+          "description": "How Roka pruning works: collapse adjacent duplicates, rank query then crash then neighbor then recency, and pack whole lines into a character budget.",
           "isPartOf": {
             "@id": "https://www.roka-prune.com/#website"
           },
@@ -65,7 +65,7 @@
     <meta property="og:site_name" content="Roka">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="How pruning works — Roka Docs">
-    <meta name="twitter:description" content="How Roka pruning works locally: collapse near-duplicate lines, force-keep errors and traces, then pack into a character budget without uploading logs.">
+    <meta name="twitter:description" content="How Roka pruning works: collapse adjacent duplicates, rank query then crash then neighbor then recency, and pack whole lines into a character budget.">
     <meta name="twitter:image" content="https://www.roka-prune.com/opengraph-image.jpg?v=20261109">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
     <link rel="stylesheet" href="/assets/fonts/montserrat.css">
@@ -89,19 +89,24 @@
         <main class="docs-main">
             <p class="kicker">Concepts</p>
             <h1>How pruning works</h1>
-            <p class="lede">The pipeline is deterministic on purpose. Agents cannot debug what they cannot inspect. The MCP implementation lives in <code>roka-mcp/lib/prune.js</code> and is reused by tools and watch.</p>
+            <p class="lede">The pipeline is deterministic on purpose. Agents cannot debug what they cannot inspect. The MCP implementation lives in <code>roka-mcp/lib/prune.js</code> and is reused by tools and watch. The homepage playground runs the same file.</p>
 
             <h2>1. Collapse</h2>
             <p>The file is split on newlines. Adjacent identical lines merge. A line seen 128 times in a row becomes one line plus <code>(x128 repeated)</code>. Heartbeats, NTP sync, and retry storms stop filling the budget.</p>
 
-            <h2>2. Force-keep</h2>
-            <p>If the collapsed text still fits the budget, that is the output. If not, lines matching the crash regex are collected first:</p>
-            <pre>ERROR | FATAL | CRITICAL | Exception | Traceback | panic</pre>
-            <p>Those lines are never dropped to make room for chatter.</p>
+            <h2>2. Rank</h2>
+            <p>If the collapsed text still fits the budget, that is the output. If not, lines are packed in this order:</p>
+            <ol>
+                <li><strong>query</strong> — whole-word matches on query terms (length ≥ 3, stopwords stripped)</li>
+                <li><strong>crash</strong> — <code>\b(ERROR|FATAL|CRITICAL|Exception|Traceback|panic)\b</code></li>
+                <li><strong>neighbor</strong> — lines within two rows of a crash line</li>
+                <li><strong>recency</strong> — later lines before earlier ones inside a bucket</li>
+            </ol>
+            <p>Query outranks crash. An unrelated ERROR is omitted when the question has already filled the budget.</p>
 
-            <h2>3. Fit</h2>
-            <p>Remaining budget is filled from the <strong>end</strong> of the file (newest non-error lines), then everything is re-sorted back into original order. If the result is still over budget, it is sliced from the end to the exact character cap.</p>
-            <p>MCP default budget: <strong>4000 characters</strong>. CLI default on the website examples is often <strong>8000 tokens</strong> — check <code>roka --help</code> for the binary you installed. The research write-up used a 4,000-character budget on LogHub.</p>
+            <h2>3. Pack</h2>
+            <p>Selected lines are kept whole and then re-sorted into original order. A line is never character-sliced. If a single protected line is longer than the budget, it is kept whole and the overage is reported. Later protected lines that do not fit are omitted and counted.</p>
+            <p>MCP default budget: <strong>4000 characters</strong>. CLI examples on this site often use <code>--budget 8000</code> in <strong>tokens</strong> — different unit, different binary. Check <code>roka --help</code>. The research write-up used a 4,000-character budget on LogHub.</p>
 
             <h2>What stays local</h2>
             <p>Pruning itself (<code>prune_logs</code> / <code>prune_file</code> / <code>prune_tail</code> / <code>watch --on-crash</code>) runs in-process. Log text does not leave the machine for those tools. MCP still makes a one-time Pro verification request to <code>api.roka-prune.com</code> with the API key only.</p>

@@ -6,7 +6,7 @@ File size: Claude limits uploads; Roka can take a local file of any size the OS 
 
 ## Why not only semantic search / RAG?
 
-Search finds chunks. Roka also force-keeps crash lines and collapses identical repeats. Default MCP tools use regex + dedup + recency, not embeddings. Semantic re-rank is a Pro/optional path on the hosted product.
+Search finds chunks. Roka collapses adjacent identical repeats, then packs query hits, crash lines, crash neighbors, and recency. Default MCP tools use whole-word query scoring + the crash regex, not embeddings. Semantic re-rank is a Pro/optional path on the hosted product, not the MCP default.
 
 ## Does it work offline?
 
@@ -22,7 +22,7 @@ CLI stdout works with any model. MCP connect writes config for Claude Code, Curs
 
 ## Quotas
 
-Free: 15K tokens lifetime per device. Pro: 500K / month. Enterprise: unlimited.
+Free CLI prune: 15K tokens lifetime per device, no MCP. Pro / trial / Enterprise: 500K tokens per month and MCP access. MCP free-tier keys are rejected.
 
 ## Support
 

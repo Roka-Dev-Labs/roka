@@ -38,19 +38,19 @@ Tools after `serve`: `prune_logs`, `prune_file`, `prune_tail`. Log text stays on
 
 ## How it works
 
-1. Collapse adjacent duplicate / near-duplicate lines.
-2. Score remaining lines against an optional query (whole-word terms). Crash lines pack first; a later ERROR that does not match the question can be dropped.
+1. Collapse adjacent identical lines.
+2. Pack remaining lines in order: query hits, crash lines, crash neighbors, recency. Query outranks an unrelated ERROR.
 3. Pack into the requested character budget. If a protected line exceeds the budget it is kept whole and the overage is reported.
 
-Same idea for CLI, MCP, and `POST https://api.roka-prune.com/api/prune`. MCP prune is inspectable: each kept line has a reason (query, crash, neighbor, recency).
+Same idea for CLI and MCP. MCP prune is inspectable: each kept line has a reason (query, crash, neighbor, recency). Hosted `POST /api/prune` can add optional semantic rank; that is not the MCP default.
 
 ## Free usage & limits
 
-Roka is free with usage limits. No subscription or payment is required.
+Local CLI prune is free with a device quota. MCP is not on that free path.
 
-- Local CLI: 15K tokens lifetime per device; works offline without an account.
-- Hosted API: up to 500K tokens per month, depending on your API key.
-- MCP requires a valid API key with the appropriate access.
+- Local CLI prune: 15K tokens lifetime per device; works offline; no API key.
+- Hosted API: up to 500K tokens per month on Pro, trial, or Enterprise keys.
+- MCP `connect` / `serve` / `watch` require a Pro API key. Free-tier keys are rejected.
 
 Check your dashboard for your current quota and remaining usage: https://www.roka-prune.com/dashboard.html
 API keys: https://www.roka-prune.com/dashboard/api-keys.html

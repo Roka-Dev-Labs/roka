@@ -698,7 +698,7 @@
             </article>
             <article class="pipeline-card">
                 <h3>3. Rank</h3>
-                <p>Force-keep crash lines. Other lines stay by whole-word query match, neighbor, or recency.</p>
+                <p>Pack order: query hits, then crash lines, then crash neighbors, then recency.</p>
             </article>
             <article class="pipeline-card">
                 <h3>4. Pack</h3>
@@ -737,7 +737,7 @@
                 <div class="proof-step-list">
                     <div class="proof-step"><strong>Ingest</strong> LogHub <code>*_2k.log</code> samples, ~2,000 lines, untouched.</div>
                     <div class="proof-step"><strong>Collapse</strong> Consecutive duplicate lines merge into one line plus a count.</div>
-                    <div class="proof-step"><strong>Keep</strong> Lines matching ERROR, FATAL, CRITICAL, Exception, Traceback, or panic are packed first.</div>
+                    <div class="proof-step"><strong>Rank</strong> Query hits pack first, then crash lines, then crash neighbors, then recency.</div>
                     <div class="proof-step"><strong>Pack</strong> Remaining lines fit a 4,000-character budget. Overage is reported, not hidden.</div>
                 </div>
             </div>
@@ -749,7 +749,7 @@
                 </div>
                 <div class="proof-card">
                     <h3>Same rules, every file</h3>
-                    <p>No per-file tuning. Collapse consecutive duplicates, force-keep crash lines, then pack to 4,000 characters. The same <code>prune_file</code> path the MCP server ships.</p>
+                    <p>No per-file tuning. Collapse consecutive duplicates, then pack query / crash / neighbor / recency to 4,000 characters. The same <code>prune_file</code> path the MCP server ships.</p>
                 </div>
                 <div class="proof-card">
                     <h3>Retention, not a story</h3>

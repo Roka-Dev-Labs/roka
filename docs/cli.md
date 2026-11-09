@@ -19,8 +19,8 @@ roka --input logs.txt --query "auth failures" --budget 8000 --api-key rk_live_..
 
 Exact flags can vary by release. Check `roka --help` on the binary you installed.
 
-1. **Collapse** — adjacent duplicate / near-duplicate lines merge with counts.
-2. **Rank / force-keep** — ERROR, FATAL, CRITICAL, Exception, Traceback, panic survive.
-3. **Fit** — pack into your character/token budget.
+1. **Collapse** — adjacent identical lines merge with counts.
+2. **Rank** — pack query hits, then crash lines, then crash neighbors, then recency. Query outranks an unrelated ERROR.
+3. **Pack** — keep whole lines in a character budget. MCP default is 4000 characters; CLI `--budget` is tokens — see `roka --help`.
 
 Deterministic by default. Semantic re-ranking is Pro/optional. Local prune does not upload log contents. Free hosted quota is 15K tokens lifetime per device; the local binary still runs offline.

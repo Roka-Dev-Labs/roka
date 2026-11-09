@@ -2906,7 +2906,7 @@
         <section id="evidence" class="evidence" aria-label="Example prune with keep and drop reasons">
             <div class="evidence-head">
                 <span class="q">query <em>why did sshd fail to bind port</em></span>
-                <span class="evidence-meta">budget 280 chars · vs recency and tail</span>
+                <span class="evidence-meta">budget 70 chars · 9 in = 2 kept + 7 dropped · 203 → 59 chars</span>
             </div>
             <div class="evidence-cols" aria-hidden="true">
                 <span>status</span>
@@ -2925,15 +2925,20 @@
             </div>
             <div class="evidence-row dropped">
                 <span class="evidence-tag">dropped</span>
-                <span class="evidence-line">INFO heartbeat ok 14</span>
-                <span class="evidence-why">no query match</span>
+                <span class="evidence-line">INFO heartbeat ok  (x3 repeated)</span>
+                <span class="evidence-why">collapsed · no query match</span>
             </div>
             <div class="evidence-row dropped">
                 <span class="evidence-tag">dropped</span>
                 <span class="evidence-line">ERROR retry connection refused 31</span>
-                <span class="evidence-why">crash keyword, not the question</span>
+                <span class="evidence-why">crash · budget already spent on query</span>
             </div>
-            <div class="evidence-foot">Fixture sshd-bind · recency and naive tail miss the bind line · query keeps it. We do not claim the agent then solves the incident.</div>
+            <div class="evidence-row dropped">
+                <span class="evidence-tag">dropped</span>
+                <span class="evidence-line">INFO ntpd / cache / worker idle</span>
+                <span class="evidence-why">no query match · 3 lines</span>
+            </div>
+            <div class="evidence-foot">Same prune.js the MCP tools ship. 9 original lines, 2 kept, 7 dropped. Query packs first; an unrelated ERROR is omitted when it no longer fits. We do not claim the agent then solves the incident.</div>
         </section>
 
         <!-- Install / Agent panel -->
@@ -2961,7 +2966,7 @@
                 </button>
             </div>
 
-            <!-- AI Agent mode: per-agent connect command (free MCP connection) -->
+            <!-- AI Agent mode: per-agent connect command (Pro API key) -->
             <div class="mode-panel active" data-mode-panel="agent">
                 <div class="agent-tabs" role="tablist">
                     <button type="button" class="agent-tab active" data-agent="claude" role="tab">Claude Code</button>
@@ -3002,7 +3007,7 @@
             <div class="story-copy">
                 <div class="eyebrow mb-3">Log compaction</div>
                 <h3>500 identical errors. One line in context.</h3>
-                <p>Roka fingerprints repetitive patterns across your entire log file — UUIDs, timestamps, and stack frames collapse into provenance headers. The agent sees what happened, not 500 copies of it.</p>
+                <p>Adjacent identical lines collapse to one line plus a count. A heartbeat or retry storm becomes <span class="mono inline-code">line  (x500 repeated)</span>. The budget is spent on evidence, not copies.</p>
             </div>
             <div class="story-viz" data-viz="error500">
                 <div class="terminal-loader" aria-label="Animation: 500 ERROR lines collapsing to one line">
@@ -3205,7 +3210,7 @@
         </div>
 
         <div class="text-center mt-12">
-            <p class="text-xs text-faint mb-3">MCP connect (valid API key required):</p>
+            <p class="text-xs text-faint mb-3">MCP connect (Pro API key required):</p>
             <div class="inline-block bg-[var(--bg)] border border-[var(--border-strong)] rounded-lg px-6 py-3 mono text-sm">
                 npx roka-mcp connect --agent <span style="color:var(--signal)">&lt;claude-code&nbsp;|&nbsp;cursor&nbsp;|&nbsp;…&gt;</span> --api-key rk_live_...
             </div>
@@ -3247,7 +3252,7 @@
         </div>
 
         <div class="text-center flex flex-wrap justify-center gap-2">
-            <a href="#mcp" class="btn-primary rounded-full px-6 py-2.5 text-sm font-medium">Connect your agent — free</a>
+            <a href="#mcp" class="btn-primary rounded-full px-6 py-2.5 text-sm font-medium">Connect your agent — Pro</a>
             <a href="/dashboard.html" class="btn-secondary rounded-full px-6 py-2.5 text-sm font-medium">Under the hood</a>
         </div>
     </section>
@@ -3301,7 +3306,7 @@
             <div class="showcase-card" data-showcase="install">
                 <div class="terminal-loader">
                     <div class="terminal-header">
-                        <div class="terminal-title">Connect your agent — free</div>
+                        <div class="terminal-title">Connect your agent — Pro</div>
                         <div class="terminal-controls">
                             <div class="control close"></div>
                             <div class="control minimize"></div>
@@ -3378,7 +3383,7 @@
                 <div class="bento-card-content">
                     <div class="mono text-xs text-faint">01</div>
                     <h3>Log compaction</h3>
-                    <p>Fingerprints repetitive lines (UUIDs, IPs, timestamps → placeholders) and collapses patterns above a threshold into summary chunks with provenance.</p>
+                    <p>Adjacent identical lines merge into one line plus a count. Heartbeats and retries stop filling the budget. This is exact-line collapse, not a fingerprint of UUIDs or timestamps.</p>
                 </div>
             </div>
 
@@ -3390,8 +3395,8 @@
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
                     <div class="mono text-xs text-faint">02</div>
-                    <h3>Critical preservation</h3>
-                    <p>Panics, exceptions, OOM, auth failures, and stack traces are never collapsed — always packed first regardless of score.</p>
+                    <h3>Crash lines stay whole</h3>
+                    <p>Lines matching ERROR, FATAL, CRITICAL, Exception, Traceback, or panic pack after query hits. They are never sliced. If the budget is already spent on the question, an unrelated ERROR can be omitted.</p>
                 </div>
             </div>
 
@@ -3417,7 +3422,7 @@
                 <div class="bento-card-content">
                     <div class="mono text-xs text-faint">04</div>
                     <h3>Budget packer</h3>
-                    <p>Packs kept lines to a character budget. A crash line that does not fit is kept whole and the overage is reported — never silently exceeded.</p>
+                    <p>Packs whole lines to a character budget, in order: query, crash, neighbor, recency. A protected line longer than the budget is kept whole and the overage is reported.</p>
                 </div>
             </div>
 
@@ -3429,8 +3434,8 @@
                 <div class="bento-card-overlay"></div>
                 <div class="bento-card-content">
                     <div class="mono text-xs text-faint">05</div>
-                    <h3>Multi-format input</h3>
-                    <p>Auto-detects logs, code, or prose. Code can be minified (docstrings/comments stripped) and chunked by function/class scope.</p>
+                    <h3>File, stdin, or MCP</h3>
+                    <p>Same pipeline on CLI stdin, a file path, and MCP <span class="mono inline-code">prune_file</span> / <span class="mono inline-code">prune_logs</span> / <span class="mono inline-code">prune_tail</span>. Character budget. Reasons on every kept line.</p>
                 </div>
             </div>
 
@@ -3478,11 +3483,11 @@
         <div class="grid md:grid-cols-3 gap-6">
             <div class="surface rounded-xl p-6">
                 <h3 class="font-semibold text-lg mb-3">Noisy dump, one question</h3>
-                <p class="text-sm text-muted mb-4">Pass a query. Whole-word matches outrank later heartbeat and misleading ERROR lines.</p>
+                <p class="text-sm text-muted mb-4">Pass a query. Whole-word matches pack first. An unrelated ERROR is dropped only when the question has already filled the budget.</p>
                 <ul class="space-y-2 text-sm text-muted">
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Score each line against the question</li>
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Keep cause lines even when they are not at the tail</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Drop ERROR that does not answer the query</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Pack order: query, then crash, then neighbor, then recency</li>
                 </ul>
             </div>
             <div class="surface rounded-xl p-6">
@@ -3516,7 +3521,7 @@
                 <a href="https://github.com/logpai/loghub" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-[var(--text)]">LogHub</a>.
                 The exact <span class="mono inline-code">prune_file</span> / <span class="mono inline-code">prune_logs</span> tools shipped in Roka's MCP server.
                 One 4,000-character budget. Zero per-file tuning.
-                Roka removes the noise while keeping the failures an agent needs to debug.
+                This measures line removal and whether a real error line survived. It does not measure whether an agent then debugs better.
             </p>
         </div>
 
@@ -3635,7 +3640,7 @@
                 <ul class="text-sm text-muted mt-4 space-y-3">
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Corpus: <span class="text-[var(--text)]">LogHub</span> — 15 real system/production log sources, ~2,000 raw lines each (30,001 lines / 4.15M characters total).</li>
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Same tool, same rules, no per-file tuning: MCP <span class="mono inline-code">prune_file</span>, default 4,000-character budget.</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Rule: collapse consecutive duplicate lines, force-keep lines matching <span class="mono inline-code">ERROR|FATAL|CRITICAL|Exception|Traceback|panic</span>.</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Rule: collapse consecutive duplicate lines, then pack query hits, crash lines, crash neighbors, and recency into 4,000 characters.</li>
                     <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Verified by hand: for every source that contained a real error, at least one verbatim error line survived into the final output.</li>
                 </ul>
                 <div class="border-t border-[var(--border)] my-5"></div>
@@ -3699,29 +3704,20 @@
     <section id="try" class="max-w-6xl mx-auto px-5 py-24 reveal">
         <div class="text-center mb-10">
             <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Try it now</h2>
-            <p class="text-muted text-sm">Paste a log dump, set your query and budget, and run the live pipeline.</p>
+            <p class="text-muted text-sm">Paste a log dump, set a query and character budget, and run the same prune.js the MCP tools ship.</p>
         </div>
 
         <div class="grid lg:grid-cols-12 gap-4">
             <div class="lg:col-span-7 flex flex-col gap-4">
                 <div class="surface rounded-xl p-5">
                     <label class="text-xs text-faint uppercase tracking-wider mb-2 block">Query / intent</label>
-                    <input type="text" id="queryInput" class="lab-input w-full px-3 py-2 text-sm" placeholder="e.g. what broke during last night's deploy?" onfocus="this.classList.add('is-on')" onblur="this.classList.remove('is-on')">
+                    <input type="text" id="queryInput" class="lab-input w-full px-3 py-2 text-sm" placeholder="e.g. why did sshd fail to bind port" onfocus="this.classList.add('is-on')" onblur="this.classList.remove('is-on')">
                     <div class="flex justify-between mt-4 mb-2">
-                        <span class="text-xs text-faint">Token budget</span>
-                        <span class="text-xs font-medium mono" id="budgetValue">8,000</span>
+                        <span class="text-xs text-faint">Character budget</span>
+                        <span class="text-xs font-medium mono" id="budgetValue">4,000</span>
                     </div>
-                    <input type="range" id="tokenBudget" min="100" max="32000" value="8000" step="100">
-                    <div class="flex gap-4 mt-4 text-xs text-muted">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" id="useSemanticCheckbox" class="custom-checkbox" checked>
-                            Semantic rank (hosted)
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" id="useMinificationCheckbox" class="custom-checkbox">
-                            Minify code
-                        </label>
-                    </div>
+                    <input type="range" id="tokenBudget" min="70" max="8000" value="4000" step="10">
+                    <p class="text-xs text-faint mt-3">MCP default is 4,000 characters. Lower it to see query pack before an unrelated ERROR.</p>
                 </div>
 
                 <div class="surface rounded-xl p-5 flex flex-col">
@@ -3746,23 +3742,23 @@
                     <div class="text-xs text-faint uppercase tracking-wider mb-3">Telemetry</div>
                     <div class="grid grid-cols-3 gap-2 text-center mb-4">
                         <div class="rounded-lg p-3 bg-[var(--bg)] border border-[var(--border)]">
-                            <div class="text-[10px] text-faint mb-1">Input</div>
+                            <div class="text-[10px] text-faint mb-1">Lines in</div>
                             <div class="text-sm font-semibold mono" id="statInput">—</div>
                         </div>
                         <div class="rounded-lg p-3 bg-[var(--bg)] border border-[var(--border)]">
-                            <div class="text-[10px] text-faint mb-1">Output</div>
+                            <div class="text-[10px] text-faint mb-1">Lines kept</div>
                             <div class="text-sm font-semibold mono" id="statOutput">—</div>
                         </div>
                         <div class="rounded-lg p-3 bg-[var(--bg)] border border-[var(--border)]">
-                            <div class="text-[10px] text-faint mb-1">Dropped</div>
+                            <div class="text-[10px] text-faint mb-1">Lines dropped</div>
                             <div class="text-sm font-semibold mono text-[var(--term-green)]" id="statCompression">—</div>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-2 text-xs text-muted">
-                        <div>Chunks: <span id="statChunks" class="text-[var(--text)]">—</span></div>
+                        <div>Check: <span id="statLines" class="text-[var(--text)]">in = kept + dropped</span></div>
+                        <div>Chars: <span id="statChunks" class="text-[var(--text)]">—</span></div>
+                        <div>Crash kept: <span id="statCritical" class="text-[var(--text)]">—</span></div>
                         <div>Latency: <span id="statLatency" class="text-[var(--text)]">—</span></div>
-                        <div>Lines: <span id="statLines" class="text-[var(--text)]">—</span></div>
-                        <div>Critical: <span id="statCritical" class="text-[var(--text)]">—</span></div>
                     </div>
                 </div>
 
@@ -3799,7 +3795,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Retrieval finds similar chunks. Roka is a log prune: collapse adjacent duplicates, pack crash lines whole, score remaining lines against a query with whole-word terms. Each kept line reports why (query, crash, neighbor, recency). ERROR is not ground truth — a later ERROR that does not match the question can be dropped.</p>
+                        <p class="text-sm text-muted">Retrieval finds similar chunks. Roka is a log prune: collapse adjacent duplicates, score remaining lines against a query with whole-word terms, then pack crash neighbors and recency into whatever budget is left. Each kept line reports why (query, crash, neighbor, recency). ERROR is not ground truth — a later ERROR that does not match the question is dropped when the query has already filled the budget.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -3808,7 +3804,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Yes. Roka and MCP connection are free, with usage limits. Connect your agent once; it can call prune without you pasting the dump by hand.</p>
+                        <p class="text-sm text-muted">The local CLI prune path is free, with a 15K-token lifetime quota per device. MCP <span class="mono">connect</span>, <span class="mono">serve</span>, and <span class="mono">watch</span> need a Pro API key — free-tier keys are rejected. Hosted API keys on Pro, trial, or Enterprise get 500K tokens/month and MCP access.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -3853,7 +3849,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Local CLI: 15K tokens lifetime per device.<br><br>Hosted API: up to 500K tokens/month, depending on your API key. Check your dashboard for your current quota.</p>
+                        <p class="text-sm text-muted">Local CLI prune: 15K tokens lifetime per device; no API key; no MCP.<br><br>Pro / trial / Enterprise keys: up to 500K tokens/month and MCP access. Check your dashboard for your current quota.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -3913,7 +3909,7 @@
         <div class="cta-terminal">
             <h2 id="cta-heading" class="cta-terminal-title">Install and prune a log.</h2>
             <a href="/install.html" class="cta-terminal-btn">Install</a>
-            <p class="cta-terminal-note">CLI, MCP, or the playground. Same idea: a slice with reasons.</p>
+            <p class="cta-terminal-note">CLI is free to prune. MCP needs a Pro API key. Same pipeline, a slice with reasons.</p>
         </div>
     </section>
 
@@ -4252,15 +4248,10 @@
         }, { threshold: 0.08 });
         reveals.forEach((el) => observer.observe(el));
 
-        const API_BASE = window.ROKA_API_BASE || 'https://api.roka-prune.com';
-        const API_PRUNE = `${API_BASE}/api/prune`;
-
         const els = {
             queryInput: document.getElementById('queryInput'),
             tokenBudget: document.getElementById('tokenBudget'),
             budgetValue: document.getElementById('budgetValue'),
-            useSemanticCheckbox: document.getElementById('useSemanticCheckbox'),
-            useMinificationCheckbox: document.getElementById('useMinificationCheckbox'),
             inputText: document.getElementById('inputText'),
             charCounter: document.getElementById('charCounter'),
             dropZone: document.getElementById('dropZone'),
@@ -4281,49 +4272,13 @@
         };
 
         let currentPrunedText = '';
-        let apiOnline = false;
+        let pruneEngine = null;
 
-        async function readJsonResponse(response) {
-            const text = await response.text();
-            const contentType = response.headers.get('content-type') || '';
-
-            if (!contentType.includes('application/json')) {
-                const hint = text.startsWith('The page') || text.startsWith('<!DOCTYPE')
-                    ? 'API returned HTML instead of JSON — routing may be misconfigured on the server.'
-                    : text.slice(0, 200) || `HTTP ${response.status}`;
-                throw new Error(hint);
-            }
-
-            try {
-                return JSON.parse(text);
-            } catch {
-                throw new Error(`Invalid JSON response: ${text.slice(0, 120)}`);
-            }
+        async function loadPruneEngine() {
+            if (pruneEngine) return pruneEngine;
+            pruneEngine = await import('/assets/js/prune.js');
+            return pruneEngine;
         }
-
-        async function checkApiHealth(attempt = 1) {
-            const MAX_ATTEMPTS = 3;
-            try {
-                // Longer timeout + retries: the backend can cold-start after
-                // idling, and a single quick timeout was falsely reporting
-                // "offline" during that warm-up window.
-                const res = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(8000) });
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await readJsonResponse(res);
-                apiOnline = data.status === 'healthy';
-                if (!apiOnline) logConsole('api error: unexpected response');
-            } catch (err) {
-                if (attempt < MAX_ATTEMPTS) {
-                    logConsole(`api waking up… retrying (${attempt}/${MAX_ATTEMPTS - 1})`);
-                    setTimeout(() => checkApiHealth(attempt + 1), 2000 * attempt);
-                    return;
-                }
-                apiOnline = false;
-                logConsole(`api offline — ${err.message}`);
-            }
-        }
-
-        checkApiHealth();
 
         els.tokenBudget.addEventListener('input', (e) => {
             els.budgetValue.textContent = parseInt(e.target.value, 10).toLocaleString();
@@ -4345,77 +4300,43 @@
             reader.readAsText(file);
         });
 
-        async function fetchWithRetry(url, options, attempt = 1) {
-            const MAX_ATTEMPTS = 2;
-            try {
-                return await fetch(url, options);
-            } catch (err) {
-                // "Failed to fetch" can be a transient cold-start blip on the
-                // Railway backend rather than a real outage — retry once.
-                if (attempt < MAX_ATTEMPTS && err.name === 'TypeError') {
-                    logConsole('backend unreachable, retrying…');
-                    await new Promise((r) => setTimeout(r, 1500));
-                    return fetchWithRetry(url, options, attempt + 1);
-                }
-                throw err;
-            }
-        }
-
         async function handlePrune() {
             const query = els.queryInput.value.trim();
-            const text = els.inputText.value.trim();
+            const text = els.inputText.value;
             const budget = parseInt(els.tokenBudget.value, 10);
 
-            if (!query || !text) {
-                logConsole('query or context empty');
+            if (!text.trim()) {
+                logConsole('context empty');
                 return;
             }
 
             setLoading(true);
             try {
-                const response = await fetchWithRetry(API_PRUNE, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        text,
-                        query,
-                        budget: budget,
-                        use_semantic: els.useSemanticCheckbox.checked,
-                        use_minification: els.useMinificationCheckbox.checked,
-                    }),
-                });
+                const { pruneText } = await loadPruneEngine();
+                const started = performance.now();
+                const data = pruneText(text, budget, { query });
+                const latency = Math.max(1, Math.round(performance.now() - started));
+                const dropped = Math.max(0, data.originalLines - data.prunedLines);
+                const crashKept = data.kept.filter((row) => row.reasons.includes('crash')).length;
 
-                if (!response.ok) {
-                    const detail = await response.text();
-                    logConsole(`error: HTTP ${response.status}`);
-                    els.outputArea.textContent = `// Server returned ${response.status}\n${detail.slice(0, 500)}`;
-                    return;
-                }
+                currentPrunedText = data.prunedText;
+                els.outputArea.textContent = currentPrunedText || '// empty output';
+                els.copyButton.disabled = !currentPrunedText;
 
-                const data = await readJsonResponse(response);
+                els.statInput.textContent = data.originalLines.toLocaleString();
+                els.statOutput.textContent = data.prunedLines.toLocaleString();
+                els.statCompression.textContent = dropped.toLocaleString();
+                els.statLines.textContent = `${data.originalLines} = ${data.prunedLines} + ${dropped}`;
+                els.statChunks.textContent = `${data.originalChars.toLocaleString()} → ${data.prunedChars.toLocaleString()}`;
+                els.statCritical.textContent = String(crashKept);
+                els.statLatency.textContent = `${latency}ms`;
 
-                currentPrunedText = data.output;
-                els.outputArea.textContent = currentPrunedText;
-                els.copyButton.disabled = false;
-
-                els.statInput.textContent = data.input_tokens.toLocaleString();
-                els.statOutput.textContent = data.output_tokens.toLocaleString();
-                els.statCompression.textContent = data.reduction;
-                els.statLatency.textContent = `${data.latency_ms}ms`;
-
-                logConsole('prune complete');
+                const notes = [];
+                if (data.warnings.length) notes.push(data.warnings.join('; '));
+                logConsole(notes[0] || `prune complete · ${data.originalLines} = ${data.prunedLines} kept + ${dropped} dropped`);
             } catch (err) {
-                if (err.name === 'TypeError' && err.message === 'Failed to fetch') {
-                    logConsole('error: backend unreachable');
-                    els.outputArea.textContent = [
-                        '// Cannot reach the API after retrying.',
-                        '// The backend may be waking up from a cold start.',
-                        '// Check https://api.roka-prune.com/health, or try again in a few seconds.',
-                    ].join('\n');
-                } else {
-                    logConsole(`error: ${err.message}`);
-                    els.outputArea.textContent = `// ${err.message}`;
-                }
+                logConsole(`error: ${err.message}`);
+                els.outputArea.textContent = `// ${err.message}`;
             } finally {
                 setLoading(false);
             }
@@ -4423,24 +4344,23 @@
 
         els.pruneButton.addEventListener('click', handlePrune);
         els.loadSampleBtn.addEventListener('click', () => {
-            const sampleLog = `2026-06-21 06:10:00 INFO [Database] Connection pool established
-2026-06-21 06:10:05 INFO [Auth] User logged in from 192.168.1.50
-2026-06-21 06:10:05 INFO [Auth] User logged in from 192.168.1.50
-2026-06-21 06:10:05 INFO [Auth] User logged in from 192.168.1.50
-2026-06-21 06:10:10 INFO [Worker-0] Processing task #12345
-2026-06-21 06:10:15 INFO [Worker-0] Processing task #12346
-2026-06-21 06:10:20 INFO [Worker-0] Processing task #12347
-2026-06-21 06:11:00 ERROR [Database] FATAL: Connection reset by peer - OOM Killer triggered!
-2026-06-21 06:11:05 INFO [System] Attempting database reconnection...
-2026-06-21 06:11:10 WARN [System] Reconnection failed, retry in 5s
-2026-06-21 06:11:15 INFO [Auth] User logged in from 10.0.0.12
-2026-06-21 06:11:20 INFO [Cache] Cache miss for key: user_session_12345`;
-            const sampleQuery = "what broke during last night's deploy?";
+            const sampleLog = `INFO heartbeat ok
+INFO heartbeat ok
+INFO heartbeat ok
+INFO ntpd: synchronized
+ERROR retry connection refused 31
+sshd: Bind to port 22: Address already in use
+sshd: exiting
+INFO cache hit
+INFO worker idle`;
+            const sampleQuery = 'why did sshd fail to bind port';
 
             els.inputText.value = sampleLog;
             els.queryInput.value = sampleQuery;
-            els.charCounter.textContent = `${sampleLog.length} chars`;
-            logConsole('sample loaded');
+            els.tokenBudget.value = '70';
+            els.budgetValue.textContent = '70';
+            els.charCounter.textContent = `${sampleLog.length.toLocaleString()} chars`;
+            logConsole('sample loaded · budget 70 so the hero table is reproducible');
         });
         els.copyButton.addEventListener('click', () => {
             if (!currentPrunedText) return;

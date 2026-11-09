@@ -119,9 +119,9 @@ roka --input logs.txt --query "auth failures" --budget 8000 --api-key rk_live_..
 
             <h2>What you get</h2>
             <ol class="steps">
-                <li><strong>Collapse</strong> — adjacent duplicate / near-duplicate lines merge with counts so heartbeats and retries stop dominating.</li>
-                <li><strong>Rank / force-keep</strong> — lines matching ERROR, FATAL, CRITICAL, Exception, Traceback, panic survive; other lines score by rarity / anomaly.</li>
-                <li><strong>Fit</strong> — pack into your character/token budget.</li>
+                <li><strong>Collapse</strong> — adjacent identical lines merge with counts so heartbeats and retries stop dominating.</li>
+                <li><strong>Rank</strong> — pack query hits, then crash lines, then crash neighbors, then recency. Query outranks an unrelated ERROR.</li>
+                <li><strong>Pack</strong> — keep whole lines in a character budget. MCP default is 4000 characters; CLI <code>--budget</code> is tokens — see <code>roka --help</code>.</li>
             </ol>
             <p>Deterministic by default. Semantic re-ranking is Pro/optional. Local prune does not upload log contents.</p>
 

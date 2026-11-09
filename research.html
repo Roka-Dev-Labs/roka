@@ -660,9 +660,9 @@
 
                 <h3>Three deterministic stages</h3>
                 <ul>
-                    <li><strong>Collapse.</strong> Adjacent duplicate or near-duplicate lines are merged into a single line plus a count. Heartbeats and retries stop dominating the file.</li>
-                    <li><strong>Rank.</strong> Lines matching <code>ERROR|FATAL|CRITICAL|Exception|Traceback|panic</code> are force-kept. Other lines are scored by rarity and by textual anomaly against the surrounding baseline.</li>
-                    <li><strong>Fit.</strong> Ranked lines are packed into a caller-supplied character budget (default: 4,000 chars ≈ ~1,000 tokens), always preserving forced-keep lines first.</li>
+                    <li><strong>Collapse.</strong> Adjacent identical lines are merged into a single line plus a count. Heartbeats and retries stop dominating the file.</li>
+                    <li><strong>Rank.</strong> Pack order is query hits, then crash lines matching <code>ERROR|FATAL|CRITICAL|Exception|Traceback|panic</code>, then crash neighbors, then recency. Query outranks an unrelated ERROR.</li>
+                    <li><strong>Pack.</strong> Whole lines are packed into a caller-supplied character budget (MCP default: 4,000 chars). A protected line longer than the budget is kept whole and the overage is reported.</li>
                 </ul>
                 <p>
                     The whole pipeline runs in-memory in tens of milliseconds for a 50K-line file. No model calls, no external services,
@@ -683,7 +683,7 @@
                     <li><strong>Corpus:</strong> LogHub — 15 real production log sources, ~2,000 raw lines each (30,001 lines / 4.15M characters total).</li>
                     <li><strong>Tool:</strong> The same <code>prune_file</code> shipped in the public MCP server. No per-file tuning.</li>
                     <li><strong>Budget:</strong> A single 4,000-character output budget across every source (≈ 1,000 tokens).</li>
-                    <li><strong>Rules:</strong> Collapse consecutive duplicate lines; force-keep lines matching the error regex above.</li>
+                    <li><strong>Rules:</strong> Collapse consecutive duplicate lines; pack query hits, crash lines, crash neighbors, then recency.</li>
                     <li><strong>Verification:</strong> Every source containing a real error was hand-checked to confirm at least one verbatim error line survived into the final 4,000-character output.</li>
                 </ul>
                 <div class="callout">
@@ -900,7 +900,7 @@
                 <ul>
                     <li>This benchmark measures <strong>retention</strong>, not <strong>downstream task success</strong>. Whether Claude / GPT-5 actually diagnoses the root cause faster with pruned context is our next study.</li>
                     <li>LogHub is <em>real</em> production data, but it is a fixed public corpus. Results may differ on your specific stack, especially for structured-JSON or highly-domain-specific logs.</li>
-                    <li>The <em>ranker</em> today is regex + dedup + rarity. We have not shipped a semantic re-ranker in the default MCP tool yet; when we do, we will re-benchmark.</li>
+                    <li>The MCP ranker today is collapse + whole-word query + crash regex + neighbor + recency. We have not shipped a semantic re-ranker in the default MCP tool; when we do, we will re-benchmark.</li>
                     <li>Everything above was run on-device against local files with the public <code>prune_file</code> tool. No cherry-picked slices, no per-file tuning — but also no adversarial stress-testing against evasive log formats.</li>
                 </ul>
             </section>
@@ -910,7 +910,7 @@
                 <h2>Conclusion</h2>
                 <p>
                     For AI agents to be genuinely useful on real infrastructure, they need something in front of the raw log stream —
-                    a layer that collapses noise, force-keeps the two lines that actually explain the failure, and fits both into whatever
+                    a layer that collapses adjacent duplicates, packs the lines that match the question and the crash pattern, and fits them into whatever
                     budget the caller sets. That is Roka.
                 </p>
                 <p>

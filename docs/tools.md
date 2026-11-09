@@ -35,8 +35,10 @@ Read a live log, keep the last N lines, then prune that slice.
 
 On success the tool returns JSON text with `prunedText`, `originalLines` / `prunedLines`, `originalChars` / `prunedChars`, and `kept` (each line with `reasons`: query, crash, neighbor, recency). On failure it returns an error string.
 
-Crash / force-keep regex (case-insensitive):
+When the collapsed text still exceeds the budget, lines are packed in this order: query hits, then crash lines matching this regex (case-insensitive):
 
 ```
 \b(ERROR|FATAL|CRITICAL|Exception|Traceback|panic)\b
 ```
+
+then crash neighbors (±2 lines), then recency. Query outranks crash. Adjacent duplicate lines are collapsed to `line  (xN repeated)` before ranking.

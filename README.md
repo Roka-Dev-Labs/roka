@@ -82,9 +82,9 @@ Exact flags may vary by release — run `roka --help`.
 
 ## What it does
 
-1. **Collapse** — Adjacent duplicate / near-duplicate lines merge with counts (heartbeats, retries stop dominating).
-2. **Rank / force-keep** — Lines matching `ERROR|FATAL|CRITICAL|Exception|Traceback|panic` survive; other lines score by rarity / anomaly.
-3. **Fit** — Pack into your character/token budget.
+1. **Collapse** — Adjacent identical lines merge with counts (heartbeats, retries stop dominating).
+2. **Rank** — Pack query hits, then crash lines (`ERROR|FATAL|CRITICAL|Exception|Traceback|panic`), then crash neighbors, then recency. Query outranks an unrelated ERROR.
+3. **Pack** — Keep whole lines in a character budget. MCP default is 4000 characters.
 
 Deterministic by default; semantic re-ranking is a Pro/optional path. Local prune tools do not upload your logs.
 
@@ -108,11 +108,11 @@ We're early — the study measures **retention under budget**, not downstream ag
 
 ## Free usage & limits
 
-Roka is free with usage limits. No subscription or payment is required.
+Local CLI prune is free with a device quota. MCP is not on that free path.
 
-- Local CLI: 15K tokens lifetime per device; works offline without an account.
-- Hosted API: up to 500K tokens per month, depending on your API key.
-- MCP requires a valid API key with the appropriate access.
+- Local CLI prune: 15K tokens lifetime per device; works offline; no API key.
+- Hosted API: up to 500K tokens per month on Pro, trial, or Enterprise keys.
+- MCP `connect` / `serve` / `watch` require a Pro API key. Free-tier keys are rejected.
 
 Check your dashboard for your current quota and remaining usage: https://www.roka-prune.com/dashboard.html
 API keys: https://www.roka-prune.com/dashboard/api-keys.html

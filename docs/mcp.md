@@ -2,7 +2,7 @@
 
 MCP is a **Pro** feature. The npm package `roka-mcp` (v0.2.1+) can be installed by anyone, but `connect`, `serve`, and `watch` verify a Pro API key before they do anything.
 
-Get a key from https://www.roka-prune.com/dashboard/api-keys.html or the 3-month feedback promo. Set `ROKA_API_KEY` or pass `--api-key`.
+Get a Pro key from https://www.roka-prune.com/dashboard/api-keys.html. Free-tier keys are rejected. Set `ROKA_API_KEY` or pass `--api-key`.
 
 ```bash
 npm install -g roka-mcp

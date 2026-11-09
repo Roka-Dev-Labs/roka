@@ -135,10 +135,10 @@
             </ul>
             <p>On failure it returns an error string such as <code>prune_file failed for "…": …</code>.</p>
 
-            <h2>Crash / force-keep regex</h2>
-            <p>Lines matching this pattern are kept first when the collapsed text still exceeds the budget:</p>
+            <h2>Pack order and crash regex</h2>
+            <p>When the collapsed text still exceeds the budget, lines are packed in this order: query hits, then crash lines matching:</p>
             <pre>\b(ERROR|FATAL|CRITICAL|Exception|Traceback|panic)\b</pre>
-            <p>Case-insensitive. Adjacent duplicate lines are collapsed to <code>line  (xN repeated)</code> before ranking.</p>
+            <p>then crash neighbors (±2 lines), then recency. Query outranks crash. Case-insensitive. Adjacent duplicate lines are collapsed to <code>line  (xN repeated)</code> before ranking.</p>
             <div class="docs-foot"><a href="/docs/mcp.html">← Connect an agent</a><a href="/docs/watch.html">Watch mode →</a></div>
         </main>
     </div>

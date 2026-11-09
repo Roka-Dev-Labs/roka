@@ -48,19 +48,19 @@ Tools after `serve`: `prune_logs`, `prune_file`, `prune_tail`. Log text stays on
 
 ## How it works
 
-1. Collapse adjacent duplicate / near-duplicate lines.
-2. Force-keep ERROR, FATAL, CRITICAL, Exception, Traceback, panic.
-3. Pack into the requested character/token budget.
+1. Collapse adjacent identical lines.
+2. Pack remaining lines in order: query hits, crash lines, crash neighbors, recency. Query outranks an unrelated ERROR.
+3. Pack into the requested character budget. If a protected line exceeds the budget it is kept whole and the overage is reported.
 
-Same pipeline for CLI, MCP, and `POST https://api.roka-prune.com/api/prune`.
+Same idea for CLI and MCP. Hosted `POST /api/prune` can add optional semantic rank; that is not the MCP default.
 
 ## Free usage & limits
 
-Roka is free with usage limits. No subscription or payment is required.
+Local CLI prune is free with a device quota. MCP is not on that free path.
 
-- Local CLI: 15K tokens lifetime per device; works offline without an account.
-- Hosted API: up to 500K tokens per month, depending on your API key.
-- MCP requires a valid API key with the appropriate access.
+- Local CLI prune: 15K tokens lifetime per device; works offline; no API key.
+- Hosted API: up to 500K tokens per month on Pro, trial, or Enterprise keys.
+- MCP `connect` / `serve` / `watch` require a Pro API key. Free-tier keys are rejected.
 
 Check your dashboard for your current quota and remaining usage: https://www.roka-prune.com/dashboard.html
 API keys: https://www.roka-prune.com/dashboard/api-keys.html
@@ -80,7 +80,7 @@ API keys: https://www.roka-prune.com/dashboard/api-keys.html
 
 # Welcome to Roka
 
-Roka is a context-pruning layer for AI coding agents. It collapses noisy logs, force-keeps real errors, and packs the result into a token budget — before the model ever sees the dump.
+Roka is a context-pruning layer for AI coding agents. It collapses adjacent duplicate lines, ranks query / crash / neighbor / recency, and packs whole lines into a character budget — before the model ever sees the dump.
 
 Local prune tools do not upload your logs. MCP `connect` / `serve` / `watch` only call the API to verify a Pro key.
 
@@ -179,9 +179,9 @@ roka --input logs.txt --query "auth failures" --budget 8000 --api-key rk_live_..
 
 Exact flags can vary by release. Check `roka --help` on the binary you installed.
 
-1. **Collapse** — adjacent duplicate / near-duplicate lines merge with counts.
-2. **Rank / force-keep** — ERROR, FATAL, CRITICAL, Exception, Traceback, panic survive.
-3. **Fit** — pack into your character/token budget.
+1. **Collapse** — adjacent identical lines merge with counts.
+2. **Rank** — pack query hits, then crash lines, then crash neighbors, then recency. Query outranks an unrelated ERROR.
+3. **Pack** — keep whole lines in a character budget. MCP default is 4000 characters; CLI `--budget` is tokens — see `roka --help`.
 
 Deterministic by default. Semantic re-ranking is Pro/optional. Local prune does not upload log contents. Free hosted quota is 15K tokens lifetime per device; the local binary still runs offline.
 
@@ -304,27 +304,28 @@ On crash: a new line matches ERROR, FATAL, CRITICAL, Exception, Traceback, or pa
 
 # How pruning works
 
-The pipeline is deterministic. The MCP implementation lives in `roka-mcp/lib/prune.js` and is reused by tools and watch.
+The pipeline is deterministic. The MCP implementation lives in `roka-mcp/lib/prune.js` and is reused by tools and watch. The homepage playground runs the same file.
 
 ## 1. Collapse
 
 The file is split on newlines. Adjacent identical lines merge. A line seen 128 times in a row becomes one line plus `(x128 repeated)`.
 
-## 2. Force-keep
+## 2. Rank
 
-If the collapsed text still fits the budget, that is the output. If not, lines matching this crash regex are collected first:
+If the collapsed text still fits the budget, that is the output. If not, lines are packed in this order:
 
-```
-ERROR | FATAL | CRITICAL | Exception | Traceback | panic
-```
+1. **query** — whole-word matches on query terms (length ≥ 3, stopwords stripped)
+2. **crash** — `\b(ERROR|FATAL|CRITICAL|Exception|Traceback|panic)\b`
+3. **neighbor** — lines within two rows of a crash line
+4. **recency** — later lines before earlier ones inside a bucket
 
-Those lines are never dropped to make room for chatter.
+Query outranks crash. An unrelated ERROR is omitted when the question has already filled the budget.
 
-## 3. Fit
+## 3. Pack
 
-Remaining budget is filled from the **end** of the file (newest non-error lines), then re-sorted into original order. If still over budget, it is sliced from the end to the exact character cap.
+Selected lines are kept whole and then re-sorted into original order. A line is never character-sliced. If a single protected line is longer than the budget, it is kept whole and the overage is reported. Later protected lines that do not fit are omitted and counted.
 
-MCP default budget: **4000 characters**. CLI examples often use **8000 tokens** — check `roka --help`. The research write-up used a 4,000-character budget on LogHub.
+MCP default budget: **4000 characters**. CLI examples on this site often use `--budget 8000` in **tokens** — different unit, different binary. Check `roka --help`. The research write-up used a 4,000-character budget on LogHub.
 
 Pruning (`prune_logs` / `prune_file` / `prune_tail` / `watch --on-crash`) runs in-process. Log text does not leave the machine for those tools. MCP still makes a one-time Pro verification request to `api.roka-prune.com` with the API key only.
 
@@ -333,13 +334,13 @@ Pruning (`prune_logs` / `prune_file` / `prune_tail` / `watch --on-crash`) runs i
 
 <!-- source: https://www.roka-prune.com/docs/pricing.html -->
 
-# Free usage & limits
+# Free CLI. Pro MCP.
 
-Roka is free with usage limits. No subscription or payment is required.
+Local prune is free with a device quota. Connecting an agent is not.
 
-- Local CLI: 15K tokens lifetime per device; works offline without an account.
-- Hosted API: up to 500K tokens per month, depending on your API key.
-- MCP requires a valid API key with the appropriate access.
+- Local CLI prune: 15K tokens lifetime per device; works offline; no API key.
+- Hosted API: up to 500K tokens per month on Pro, trial, or Enterprise keys.
+- MCP `connect` / `serve` / `watch` require a Pro API key. Free-tier keys are rejected.
 
 Check your dashboard for your current quota and remaining usage: https://www.roka-prune.com/dashboard.html
 API keys: https://www.roka-prune.com/dashboard/api-keys.html
@@ -373,7 +374,7 @@ File size: Claude limits uploads; Roka can take a local file of any size the OS 
 
 ## Why not only semantic search / RAG?
 
-Search finds chunks. Roka also force-keeps crash lines and collapses identical repeats. Default MCP tools use regex + dedup + recency, not embeddings. Semantic re-rank is a Pro/optional path on the hosted product.
+Search finds chunks. Roka collapses adjacent identical repeats, then packs query hits, crash lines, crash neighbors, and recency. Default MCP tools use whole-word query scoring + the crash regex, not embeddings. Semantic re-rank is a Pro/optional path on the hosted product, not the MCP default.
 
 ## Does it work offline?
 
@@ -557,8 +558,8 @@ budget-fit
 ### Three deterministic stages
 
 - Collapse. Adjacent duplicate or near-duplicate lines are merged into a single line plus a count. Heartbeats and retries stop dominating the file.
-- Rank. Lines matching ERROR|FATAL|CRITICAL|Exception|Traceback|panic are force-kept. Other lines are scored by rarity and by textual anomaly against the surrounding baseline.
-- Fit. Ranked lines are packed into a caller-supplied character budget (default: 4,000 chars ≈ ~1,000 tokens), always preserving forced-keep lines first.
+- Rank. Pack order is query hits, then crash lines matching ERROR|FATAL|CRITICAL|Exception|Traceback|panic, then crash neighbors, then recency. Query outranks an unrelated ERROR.
+- Pack. Whole lines are packed into a caller-supplied character budget (MCP default: 4,000 chars). A protected line longer than the budget is kept whole and the overage is reported.
 The whole pipeline runs in-memory in tens of milliseconds for a 50K-line file. No model calls, no external services,
  no fine-tuned classifier that needs retraining.
 
@@ -572,7 +573,7 @@ To measure this honestly, we ran the exact prune_file tool shipped in Roka's MCP
 - Corpus: LogHub — 15 real production log sources, ~2,000 raw lines each (30,001 lines / 4.15M characters total).
 - Tool: The same prune_file shipped in the public MCP server. No per-file tuning.
 - Budget: A single 4,000-character output budget across every source (≈ 1,000 tokens).
-- Rules: Collapse consecutive duplicate lines; force-keep lines matching the error regex above.
+- Rules: Collapse consecutive duplicate lines; pack query hits, crash lines, crash neighbors, then recency.
 - Verification: Every source containing a real error was hand-checked to confirm at least one verbatim error line survived into the final 4,000-character output.
 Note on scope
  This is an MVP benchmark. It measures retention under budget — did the important line survive?
@@ -655,7 +656,7 @@ We are an MVP. We want to be direct about the shape of this evidence:
 
 - This benchmark measures retention, not downstream task success. Whether Claude / GPT-5 actually diagnoses the root cause faster with pruned context is our next study.
 - LogHub is real production data, but it is a fixed public corpus. Results may differ on your specific stack, especially for structured-JSON or highly-domain-specific logs.
-- The ranker today is regex + dedup + rarity. We have not shipped a semantic re-ranker in the default MCP tool yet; when we do, we will re-benchmark.
+- The MCP ranker today is collapse + whole-word query + crash regex + neighbor + recency. We have not shipped a semantic re-ranker in the default MCP tool; when we do, we will re-benchmark.
 - Everything above was run on-device against local files with the public prune_file tool. No cherry-picked slices, no per-file tuning — but also no adversarial stress-testing against evasive log formats.
 ## Conclusion
 

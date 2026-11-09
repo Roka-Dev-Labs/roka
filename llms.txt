@@ -11,8 +11,8 @@ Local CLI prune needs no API key and does not upload logs. MCP `connect`, `serve
 - [Connect an agent](https://www.roka-prune.com/docs/mcp.md): roka-mcp for Claude Code, Cursor, Codex, Copilot, VS Code, Windsurf, Cline
 - [MCP tools](https://www.roka-prune.com/docs/tools.md): prune_logs, prune_file, prune_tail
 - [Watch mode](https://www.roka-prune.com/docs/watch.md): Tail a log and write crash context
-- [How pruning works](https://www.roka-prune.com/docs/pipeline.md): Collapse, force-keep, fit
-- [Pricing](https://www.roka-prune.com/pricing.md): Free usage and quotas
+- [How pruning works](https://www.roka-prune.com/docs/pipeline.md): Collapse, rank (query / crash / neighbor / recency), pack
+- [Pricing](https://www.roka-prune.com/pricing.md): Free CLI prune; MCP needs a Pro API key
 - [Checkout](https://www.roka-prune.com/checkout.md): Paddle checkout for Pro
 - [Pricing (docs)](https://www.roka-prune.com/docs/pricing.md): Quotas and what Free cannot do
 - [Benchmark](https://www.roka-prune.com/docs/benchmark.md): LogHub MVP numbers and limits
