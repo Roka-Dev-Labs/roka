@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/assets/js/theme-boot.js"></script>
-    <title>Roka — Research: Context Pruning for AI Agents</title>
-    <meta name="description" content="How Roka's log-pruning middleware cuts 92%+ of noise while keeping real errors intact — benchmarked on the LogHub corpus from 15 real production systems.">
+    <title>Roka — Research: what prune_file keeps on LogHub</title>
+    <meta name="description" content="Nov 2026 rerun of shipped prune.js on 15 LogHub 2k files: 98.3% mean lines removed, 70× chars, 11/11 crash-regex files still had a matching line after a 4,000-character pack.">
 
-        <meta property="og:title" content="Roka — Research: Context Pruning for AI Agents">
-    <meta property="og:description" content="How Roka's log-pruning middleware cuts 92%+ of noise while keeping real errors intact — benchmarked on the LogHub corpus from 15 real production systems.">
+        <meta property="og:title" content="Roka — Research: what prune_file keeps on LogHub">
+    <meta property="og:description" content="Nov 2026 rerun of shipped prune.js on 15 LogHub 2k files: 98.3% mean lines removed, 70× chars, 11/11 crash-regex files still had a matching line after a 4,000-character pack.">
     <meta property="og:image" content="https://www.roka-prune.com/opengraph-image.jpg?v=20261109">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -48,8 +48,8 @@
           "@type": "WebPage",
           "@id": "https://www.roka-prune.com/research.html#webpage",
           "url": "https://www.roka-prune.com/research.html",
-          "name": "Roka \u2014 Research: Context Pruning for AI Agents",
-          "description": "How Roka's log-pruning middleware cuts 92%+ of noise while keeping real errors intact \u2014 benchmarked on the LogHub corpus from 15 real production systems.",
+          "name": "Roka \u2014 Research: what prune_file keeps on LogHub",
+          "description": "Nov 2026 rerun of shipped prune.js on 15 LogHub 2k files: 98.3% mean lines removed, 70\u00d7 chars, 11/11 crash-regex files still had a matching line after a 4,000-character pack.",
           "isPartOf": {
             "@id": "https://www.roka-prune.com/#website"
           },
@@ -65,8 +65,8 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Roka">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Roka — Research: Context Pruning for AI Agents">
-    <meta name="twitter:description" content="How Roka's log-pruning middleware cuts 92%+ of noise while keeping real errors intact — benchmarked on the LogHub corpus from 15 real production systems.">
+    <meta name="twitter:title" content="Roka — Research: what prune_file keeps on LogHub">
+    <meta name="twitter:description" content="Nov 2026 rerun of shipped prune.js on 15 LogHub 2k files: 98.3% mean lines removed, 70× chars, 11/11 crash-regex files still had a matching line after a 4,000-character pack.">
     <meta name="twitter:image" content="https://www.roka-prune.com/opengraph-image.jpg?v=20261109">
     <!-- Favicons -->
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png" />
@@ -146,7 +146,8 @@
 
         * { box-sizing: border-box; }
 
-        html { font-size: 112.5%; }
+        html { font-size: 112.5%; scroll-padding-top: 5rem; }
+        section[id] { scroll-margin-top: 5rem; }
 
         body {
             background: var(--bg);
@@ -478,6 +479,51 @@
         .compare-table .col-bad { color: var(--danger); }
         .compare-table .col-good { color: var(--text); }
 
+        .results-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+        .results-table th, .results-table td { padding: 0.55rem 0.65rem; text-align: left; vertical-align: top; }
+        .results-table thead th {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            font-weight: 400;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        .results-table tbody tr { border-bottom: 1px solid var(--border); }
+        .results-table tbody tr:last-child { border-bottom: none; }
+        .results-table tbody tr:hover { background: var(--accent-glow); }
+        .results-table .num { font-family: var(--font-mono); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        .results-table .num-right { text-align: right; }
+        .results-table .kept-yes { color: var(--text); }
+        .results-table .kept-na { color: var(--text-faint); }
+        .results-scroll { overflow-x: auto; margin: 1rem 0; }
+        .method-grid {
+            display: grid;
+            gap: 0.75rem;
+            margin: 1.25rem 0;
+        }
+        @media (min-width: 640px) {
+            .method-grid { grid-template-columns: 1fr 1fr; }
+        }
+        .method-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.9rem 1rem;
+        }
+        .method-card dt {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            margin-bottom: 0.3rem;
+        }
+        .method-card dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+
         /* Reveal */
         .reveal { opacity: 0; transform: translateY(12px); transition: opacity 0.6s ease, transform 0.6s ease; }
         .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -498,10 +544,7 @@
             padding-top: 3.5rem;
             padding-bottom: 1.5rem;
         }
-        .research-hero::before {
-            display: none;
-        }
-        }
+        .research-hero::before { display: none; }
         .research-hero > * { position: relative; z-index: 1; }
     </style>
     <link rel="stylesheet" href="/assets/css/press.css?v=theme4">
@@ -532,19 +575,7 @@
                     </span>
                 </button>
                 <a href="/install.html"
-                   class="relative inline-flex items-center justify-center px-3 py-1.5 overflow-hidden tracking-tighter text-white bg-gray-800 rounded-md group text-xs font-semibold no-underline">
-                    <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-sky-500 rounded-full group-hover:w-40 group-hover:h-40"></span>
-                    <span class="absolute bottom-0 left-0 h-full -ml-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-auto h-full opacity-100" viewBox="0 0 487 487" aria-hidden="true">
-                            <path fill-opacity=".1" fill-rule="nonzero" fill="#FFF" d="M0 .3c67 2.1 134.1 4.3 186.3 37 52.2 32.7 89.6 95.8 112.8 150.6 23.2 54.8 32.3 101.4 61.2 149.9 28.9 48.4 77.7 98.8 126.4 149.2H0V.3z"></path>
-                        </svg>
-                    </span>
-                    <span class="absolute top-0 right-0 w-12 h-full -mr-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="object-cover w-full h-full" viewBox="0 0 487 487" aria-hidden="true">
-                            <path fill-opacity=".1" fill-rule="nonzero" fill="#FFF" d="M487 486.7c-66.1-3.6-132.3-7.3-186.3-37s-95.9-85.3-126.2-137.2c-30.4-51.8-49.3-99.9-76.5-151.4C70.9 109.6 35.6 54.8.3 0H487v486.7z"></path>
-                        </svg>
-                    </span>
-                    <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-200"></span>
+                   class="relative inline-flex items-center justify-center px-3 py-1.5 overflow-hidden tracking-tighter text-white bg-gray-800 rounded-md text-xs font-semibold no-underline">
                     <span class="relative">Install</span>
                 </a>
             </div>
@@ -556,21 +587,22 @@
         <div class="max-w-6xl mx-auto px-5">
             <a href="/index.html#benchmark" class="roka-back text-xs mono" style="color:var(--text-muted);text-decoration:none" data-back-host data-back-fallback="/index.html#benchmark"><span data-back-hijacker="active" aria-hidden="true"></span>← Back</a>
             <div class="mt-6 max-w-3xl">
-                <span class="eyebrow">Research · MVP preview · Aug 2026</span>
+                <span class="eyebrow">Research · MVP · Nov 10, 2026</span>
                 <h1 class="text-3xl sm:text-5xl font-semibold tracking-tight mt-3 mb-4" style="line-height:1.1">
-                    Roka: a context-pruning layer for log-aware AI agents
+                    What <span class="mono">prune_file</span> actually keeps on LogHub
                 </h1>
-                <p class="text-sm sm:text-base" style="color:var(--text-muted); max-width: 60ch;">
-                    We built a middleware that sits between raw production logs and coding agents like Claude, Cursor, and Copilot.
-                    On the standard <span style="color:var(--text)">LogHub</span> corpus — 15 real production systems — it removes
-                    <span style="color:var(--text)">92.2%</span> of log lines on average while preserving every real error we tested for.
+                <p class="text-sm sm:text-base" style="color:var(--text-muted); max-width: 62ch;">
+                    A rerun of the shipped engine — <span class="mono">roka-mcp/lib/prune.js</span> — on the 15 public LogHub 2k files.
+                    One 4,000-character budget, no query, no per-file tuning. Mean lines removed
+                    <span style="color:var(--text)">98.3%</span>. Character compression
+                    <span style="color:var(--text)">70×</span>. On the 11 files that contained a crash-regex line, at least one such line was still in the output.
                 </p>
                 <div class="mt-6 flex flex-wrap gap-4 text-xs" style="color:var(--text-faint)">
                     <span>By Roka Labs</span>
                     <span aria-hidden="true">·</span>
-                    <span>Reading time ~5 min</span>
+                    <span>Reading time ~6 min</span>
                     <span aria-hidden="true">·</span>
-                    <span>Stage: MVP</span>
+                    <span>Engine: prune.js as shipped</span>
                 </div>
             </div>
         </div>
@@ -585,361 +617,360 @@
                 <div class="eyebrow mb-3">On this page</div>
                 <nav class="toc flex flex-col">
                     <a href="#problem">The problem</a>
-                    <a href="#approach">Our approach</a>
-                    <a href="#benchmark">The benchmark</a>
-                    <a href="#results">The results</a>
+                    <a href="#method">Method</a>
+                    <a href="#results">Results</a>
                     <a href="#example">Example: Thunderbird</a>
-                    <a href="#limits">What we do not claim</a>
+                    <a href="#limits">Limits</a>
                     <a href="#conclusion">Conclusion</a>
                 </nav>
             </div>
         </aside>
 
         <!-- Article -->
-        <article class="prose reveal">
+        <article class="prose">
 
             <!-- The problem -->
             <section id="problem">
-                <h2>The problem: "context bloat" in log-aware agents</h2>
+                <h2>The problem: agents get the tail of a huge log</h2>
                 <p>
-                    Coding and DevOps agents are increasingly asked to reason over raw logs — Kubernetes crash dumps, CI pipeline output,
-                    web-server access logs, mobile crash traces. The bottleneck isn't the model. It's the input.
+                    Coding agents are asked to read production logs. A LogHub 2k sample is already ~150K–595K characters.
+                    The MCP default budget is 4,000 characters. If the caller just takes the last 4,000 characters, anything earlier is gone.
                 </p>
                 <p>
-                    Modern LLMs still have effective context windows measured in tens of thousands of tokens, but a single production
-                    log file can easily reach hundreds of thousands of lines. Most of that content is repetitive noise:
-                    heartbeats, health-checks, retry loops, monitoring counters. The one line that actually explains a failure —
-                    <span class="mono">Bind to port 22 ... Address already in use</span> — is buried 62% of the way through the file, deep in the
-                    "lost in the middle" zone where transformer attention degrades sharply.
-                </p>
-                <p>
-                    The current developer workaround is manual: hand-written regexes, ad-hoc <code>grep</code> pipelines, prompt-engineered "please
-                    ignore X" instructions. This is fragile, doesn't generalize across systems, and burns tokens on noise before the model has even started thinking.
+                    On <code>Thunderbird_2k.log</code> the sshd bind failure sits at line 1,466 of 2,000 — 73% through the file.
+                    A naive <code>tail -c 4000</code> never sees it. That is the failure mode this study measures against.
                 </p>
                 <div class="callout">
-                    <span class="callout-label">We call this pattern</span>
-                    <strong style="color:var(--text)">Context bloat.</strong>
-                    An agent receives 200K characters of log input, of which fewer than 400 characters actually matter.
-                    The model pays full attention cost, the user pays full token cost, and the signal-to-noise ratio in the prompt is under 0.2%.
+                    <span class="callout-label">Scope of this note</span>
+                    We measure <strong style="color:var(--text)">compression and crash-regex retention under a character budget</strong>.
+                    We do not measure whether an agent then debugs the incident, and we do not claim semantic ranking.
+                    The default ranker is deterministic: collapse adjacent duplicates, then pack query → crash → neighbor → recency.
                 </div>
             </section>
 
-            <!-- Our approach -->
-            <section id="approach">
-                <h2>Our approach</h2>
+            <section id="method">
+                <h2>Method</h2>
                 <p>
-                    Roka is an MCP-native middleware layer. It exposes tools like <code>prune_file</code>, <code>prune_logs</code>, and
-                    <code>prune_tail</code> that any agent can call before the raw log content ever enters the model's context.
-                </p>
-                <p>
-                    The pipeline is deliberately boring — the goal is <strong>reliability</strong>, not clever ML. We chose transparent, deterministic
-                    stages because agents cannot debug what they cannot understand.
+                    On 10 Nov 2026 we ran the shipped function <code>pruneText</code> from <code>roka-mcp/lib/prune.js</code> —
+                    the same path MCP <code>prune_file</code> uses — against the public LogHub <code>*_2k.log</code> files from
+                    <a href="https://github.com/logpai/loghub" target="_blank" rel="noopener" style="color:var(--text);text-decoration:underline;text-underline-offset:2px">logpai/loghub</a>.
+                    Zookeeper is a LogHub source and is not in this 15-file set.
                 </p>
 
+                <dl class="method-grid">
+                    <div class="method-card">
+                        <dt>Tool</dt>
+                        <dd><code>prune_file(path, budget=4000)</code>. Arguments are path, optional budget, optional query. There is no <code>force_keep</code> flag.</dd>
+                    </div>
+                    <div class="method-card">
+                        <dt>Query</dt>
+                        <dd>Empty. This run did not pass a query, so the query bucket was unused. Pack order was crash → neighbor → recency.</dd>
+                    </div>
+                    <div class="method-card">
+                        <dt>Budget</dt>
+                        <dd>4,000 characters. Whole lines only. A protected line longer than the budget is kept whole and the overage is reported; that did not happen on these files.</dd>
+                    </div>
+                    <div class="method-card">
+                        <dt>Crash line</dt>
+                        <dd>A line matching <code>/\b(ERROR|FATAL|CRITICAL|Exception|Traceback|panic)\b/i</code>. This is lexical, not a human incident label.</dd>
+                    </div>
+                </dl>
+
+                <h3>The three stages</h3>
+                <ul>
+                    <li><strong>Collapse.</strong> Adjacent identical lines merge to one line plus <code>(xN repeated)</code>. Lines that differ by a host, block id, or datasource id do not collapse.</li>
+                    <li><strong>Rank.</strong> If a query is present, whole-word query hits pack first. Then crash-regex lines, then neighbors within ±2 of a crash line, then recency (later index wins).</li>
+                    <li><strong>Pack.</strong> Selected whole lines fill the budget, original order restored. Protected lines that do not fit are counted as omitted, not sliced.</li>
+                </ul>
+
                 <div class="surface p-5 my-6">
-                    <div class="eyebrow mb-4">Pipeline overview</div>
+                    <div class="eyebrow mb-4">What the run did</div>
                     <div class="flow-diagram">
                         <div class="flow-node">
                             <span class="flow-title">Input</span>
-                            <span class="flow-body">Raw log file<br><span class="mono text-xs" style="color:var(--text-faint)">~200K chars</span></span>
+                            <span class="flow-body">15 × LogHub 2k<br><span class="mono text-xs" style="color:var(--text-faint)">4.18M chars total</span></span>
                         </div>
                         <span class="flow-arrow" aria-hidden="true">→</span>
                         <div class="flow-node highlight">
-                            <span class="flow-title">Roka Prune</span>
-                            <span class="flow-body">
-                                dedup · rank ·<br>budget-fit
-                            </span>
+                            <span class="flow-title">pruneText</span>
+                            <span class="flow-body">collapse · rank · pack<br><span class="mono text-xs" style="color:var(--text-faint)">budget 4000 · no query</span></span>
                         </div>
                         <span class="flow-arrow" aria-hidden="true">→</span>
                         <div class="flow-node">
                             <span class="flow-title">Output</span>
-                            <span class="flow-body">Pruned context<br><span class="mono text-xs" style="color:var(--text-faint)">4K chars · errors kept</span></span>
+                            <span class="flow-body">59,690 chars<br><span class="mono text-xs" style="color:var(--text-faint)">~3,979 chars / file</span></span>
                         </div>
                     </div>
                 </div>
 
-                <h3>Three deterministic stages</h3>
-                <ul>
-                    <li><strong>Collapse.</strong> Adjacent identical lines are merged into a single line plus a count. Heartbeats and retries stop dominating the file.</li>
-                    <li><strong>Rank.</strong> Pack order is query hits, then crash lines matching <code>ERROR|FATAL|CRITICAL|Exception|Traceback|panic</code>, then crash neighbors, then recency. Query outranks an unrelated ERROR.</li>
-                    <li><strong>Pack.</strong> Whole lines are packed into a caller-supplied character budget (MCP default: 4,000 chars). A protected line longer than the budget is kept whole and the overage is reported.</li>
-                </ul>
                 <p>
-                    The whole pipeline runs in-memory in tens of milliseconds for a 50K-line file. No model calls, no external services,
-                    no fine-tuned classifier that needs retraining.
+                    Line counts are <code>text.split("\n").length</code>, the same split the engine uses. Three files (HDFS, HPC, Spark) end with a newline, so they show 2,001 lines. The other twelve show 2,000. Total: 30,003 lines / 4,178,984 characters.
+                </p>
+                <p>
+                    Earlier site copy used a 92.2% mean (BGL 72.7%, HPC 74.4%, Apache 74.5%). That was a previous ranker. This page reports the shipped <code>prune.js</code> on the public 2k files.
                 </p>
             </section>
 
-            <!-- The benchmark -->
-            <section id="benchmark">
-                <h2>The benchmark</h2>
-                <p>
-                    To measure this honestly, we ran the exact <code>prune_file</code> tool shipped in Roka's MCP server against
-                    <a href="https://github.com/logpai/loghub" target="_blank" rel="noopener" style="color:var(--text);text-decoration:underline;text-underline-offset:2px">LogHub</a>
-                    — the standard academic corpus used in log-parsing research. 15 real system and application log sources, ranging from
-                    supercomputer job logs (BGL, Thunderbird) to mobile OS logs (Android, HealthApp) to cloud infrastructure logs (OpenStack, HDFS).
-                </p>
-                <ul>
-                    <li><strong>Corpus:</strong> LogHub — 15 real production log sources, ~2,000 raw lines each (30,001 lines / 4.15M characters total).</li>
-                    <li><strong>Tool:</strong> The same <code>prune_file</code> shipped in the public MCP server. No per-file tuning.</li>
-                    <li><strong>Budget:</strong> A single 4,000-character output budget across every source (≈ 1,000 tokens).</li>
-                    <li><strong>Rules:</strong> Collapse consecutive duplicate lines; pack query hits, crash lines, crash neighbors, then recency.</li>
-                    <li><strong>Verification:</strong> Every source containing a real error was hand-checked to confirm at least one verbatim error line survived into the final 4,000-character output.</li>
-                </ul>
-                <div class="callout">
-                    <span class="callout-label">Note on scope</span>
-                    This is an MVP benchmark. It measures <strong style="color:var(--text)">retention under budget</strong> — did the important line survive?
-                    It does not (yet) measure downstream agent task success, wall-clock savings across a full RAG pipeline, or ranking quality vs. embedding-based baselines.
-                    Those are on the roadmap; see <a href="#limits" style="color:var(--text);text-decoration:underline;text-underline-offset:2px">"What we do not claim"</a> below.
-                </div>
-            </section>
-
-            <!-- Results -->
             <section id="results">
-                <h2>The results</h2>
+                <h2>Results</h2>
                 <p>
-                    Across all 15 LogHub sources, Roka reduced input size dramatically while keeping every real error we tested for intact.
-                    The chart below shows the percentage of lines removed after dedup + budget-fit, sorted from lowest to highest compression.
+                    Unweighted mean of the 15 per-file line-removal rates: <strong>98.3%</strong>.
+                    Characters in ÷ characters out: <strong>70×</strong> (4,178,984 → 59,690).
+                    Files with ≥1 crash-regex line: 11. Files where ≥1 such line survived the pack: <strong>11 / 11</strong>.
+                </p>
+                <p>
+                    11 / 11 means “at least one matching line remained,” not “every matching line remained.”
+                    Apache had 595 crash-regex lines and kept 50; 1,393 protected lines (crash + neighbor) did not fit.
+                    Four files — Android, HealthApp, Spark, Windows — had zero crash-regex hits, so that cell is n/a, not a miss.
                 </p>
 
-                <!-- Key metrics -->
                 <div class="surface my-6">
                     <div class="grid grid-cols-1 sm:grid-cols-3">
                         <div class="bench-metric-card text-center">
-                            <div class="text-3xl mono font-semibold" style="color:var(--text)">92.2%</div>
-                            <div class="text-xs mt-2" style="color:var(--text-muted)">Avg. lines removed across 15 real log sources</div>
+                            <div class="text-3xl mono font-semibold" style="color:var(--text)">98.3%</div>
+                            <div class="text-xs mt-2" style="color:var(--text-muted)">Mean lines removed (15 files, unweighted)</div>
                         </div>
                         <div class="bench-metric-card text-center">
-                            <div class="text-3xl mono font-semibold" style="color:var(--text)">69×</div>
-                            <div class="text-xs mt-2" style="color:var(--text-muted)">Avg. compression ratio — 276K chars → 4K chars per file</div>
+                            <div class="text-3xl mono font-semibold" style="color:var(--text)">70×</div>
+                            <div class="text-xs mt-2" style="color:var(--text-muted)">Chars in ÷ chars out — 4.18M → 59.7K</div>
                         </div>
                         <div class="bench-metric-card text-center">
                             <div class="text-3xl mono font-semibold" style="color:var(--text)">11 / 11</div>
-                            <div class="text-xs mt-2" style="color:var(--text-muted)">Sources with real errors that still surfaced after pruning</div>
+                            <div class="text-xs mt-2" style="color:var(--text-muted)">Files with a crash-regex line that still had one after packing</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Chart -->
+                <h3>Per-file ledger</h3>
+                <p>
+                    Sorted by lines removed, lowest first. Lower is not worse: a less-repetitive file fills 4,000 characters with more distinct rows.
+                    Crash-regex is the engine pattern, not a human “this was the incident” label.
+                </p>
+
+                <div class="surface results-scroll" style="padding:0">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Source</th>
+                                <th class="num-right">Lines removed</th>
+                                <th class="num-right">Lines in → out</th>
+                                <th class="num-right">Chars in → out</th>
+                                <th class="num-right">Crash-regex in file</th>
+                                <th class="num-right">≥1 kept</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="num">1</td><td>HPC</td><td class="num num-right">97.1%</td><td class="num num-right">2,001 → 58</td><td class="num num-right">151,178 → 3,980</td><td class="num num-right">513</td><td class="num num-right kept-yes">yes</td></tr>
+                            <tr><td class="num">2</td><td>Linux</td><td class="num num-right">97.2%</td><td class="num num-right">2,000 → 56</td><td class="num num-right">216,485 → 3,996</td><td class="num num-right">1</td><td class="num num-right kept-yes">yes</td></tr>
+                            <tr><td class="num">3</td><td>Apache</td><td class="num num-right">97.5%</td><td class="num num-right">2,000 → 50</td><td class="num num-right">171,239 → 3,969</td><td class="num num-right">595</td><td class="num num-right kept-yes">yes</td></tr>
+                            <tr><td class="num">4</td><td>Spark</td><td class="num num-right">97.8%</td><td class="num num-right">2,001 → 44</td><td class="num num-right">196,268 → 3,999</td><td class="num num-right">0</td><td class="num num-right kept-na">n/a</td></tr>
+                            <tr><td class="num">5</td><td>HealthApp</td><td class="num num-right">98.0%</td><td class="num num-right">2,000 → 39</td><td class="num num-right">187,456 → 3,994</td><td class="num num-right">0</td><td class="num num-right kept-na">n/a</td></tr>
+                            <tr><td class="num">6</td><td>Android</td><td class="num num-right">98.4%</td><td class="num num-right">2,000 → 33</td><td class="num num-right">279,076 → 3,984</td><td class="num num-right">0</td><td class="num num-right kept-na">n/a</td></tr>
+                            <tr><td class="num">7</td><td>HDFS</td><td class="num num-right">98.6%</td><td class="num num-right">2,001 → 29</td><td class="num num-right">287,848 → 3,982</td><td class="num num-right">80</td><td class="num num-right kept-yes">yes</td></tr>
+                            <tr><td class="num">8</td><td>OpenSSH</td><td class="num num-right">98.6%</td><td class="num num-right">2,000 → 28</td><td class="num num-right">225,216 → 3,993</td><td class="num num-right">48</td><td class="num num-right kept-yes">yes</td></tr>
+                            <tr><td class="num">9</td><td>Proxifier</td><td class="num num-right">98.6%</td><td class="num num-right">2,000 → 29</td><td class="num num-right">236,962 → 3,914</td><td class="num num-right">97</td><td class="num num-right kept-yes">yes</td></tr>
+                            <tr><td class="num">10</td><td>Thunderbird</td><td class="num num-right">98.6%</td><td class="num num-right">2,000 → 29</td><td class="num num-right">325,192 → 3,965</td><td class="num num-right">2</td><td class="num num-right kept-yes">yes</td></tr>
+                            <tr><td class="num">11</td><td>BGL</td><td class="num num-right">98.7%</td><td class="num num-right">2,000 → 26</td><td class="num num-right">317,150 → 3,950</td><td class="num num-right">547</td><td class="num num-right kept-yes">yes</td></tr>
+                            <tr><td class="num">12</td><td>Windows</td><td class="num num-right">98.7%</td><td class="num num-right">2,000 → 26</td><td class="num num-right">285,433 → 3,998</td><td class="num num-right">0</td><td class="num num-right kept-na">n/a</td></tr>
+                            <tr><td class="num">13</td><td>Hadoop</td><td class="num num-right">99.0%</td><td class="num num-right">2,000 → 20</td><td class="num num-right">384,948 → 3,981</td><td class="num num-right">160</td><td class="num num-right kept-yes">yes</td></tr>
+                            <tr><td class="num">14</td><td>Mac</td><td class="num num-right">99.1%</td><td class="num num-right">2,000 → 19</td><td class="num num-right">319,414 → 3,996</td><td class="num num-right">154</td><td class="num num-right kept-yes">yes</td></tr>
+                            <tr><td class="num">15</td><td>OpenStack</td><td class="num num-right">99.3%</td><td class="num num-right">2,000 → 15</td><td class="num num-right">595,119 → 3,989</td><td class="num num-right">21</td><td class="num num-right kept-yes">yes</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-xs" style="color:var(--text-faint)">
+                    OpenStack is 595K characters of long Nova lines, so 15 rows fill the budget. HPC is shorter per line, so 58 rows fit.
+                    Windows has many CBS “Failed” lines; <code>Failed</code> is not in the crash regex, so that file packs on recency only.
+                    Linux’s single regex hit is “Enabling unmasked SIMD FPU exception support” — the word <code>exception</code>, not a panic.
+                    Per-dataset notes: <a href="/testing.html" style="color:var(--text);text-decoration:underline;text-underline-offset:2px">testing.html</a>.
+                </p>
+
                 <div class="surface p-5 my-6">
                     <div class="flex items-center justify-between mb-1 flex-wrap gap-2">
-                        <span class="eyebrow">Log compression — % lines removed</span>
+                        <span class="eyebrow">Lines removed per source</span>
                         <span class="text-xs" style="color:var(--text-faint)">Hover to inspect</span>
                     </div>
-                    <p class="text-xs mb-5" style="color:var(--text-muted)">LogHub production datasets · dedup + 4,000-char budget fit, sorted low → high</p>
-
+                    <p class="text-xs mb-5" style="color:var(--text-muted)">Same 15 files · sorted as the table, lowest → highest</p>
                     <div class="flex gap-3">
                         <div class="bench-axis-y">
                             <span>100%</span><span>80%</span><span>60%</span><span>40%</span><span>20%</span><span>0%</span>
                         </div>
                         <div class="flex-1">
                             <div class="bench-chart-grid" id="benchChart">
-                                <div class="bench-bar-col" data-name="BGL (supercomputer)" data-value="72.7"><span class="bench-bar-value">72.7%</span><div class="bench-bar" style="height:72.7%"></div></div>
-                                <div class="bench-bar-col" data-name="HPC (cluster)" data-value="74.4"><span class="bench-bar-value">74.4%</span><div class="bench-bar" style="height:74.4%"></div></div>
-                                <div class="bench-bar-col" data-name="Apache (web server)" data-value="74.5"><span class="bench-bar-value">74.5%</span><div class="bench-bar" style="height:74.5%"></div></div>
-                                <div class="bench-bar-col" data-name="Hadoop (distributed)" data-value="92.0"><span class="bench-bar-value">92.0%</span><div class="bench-bar" style="height:92.0%"></div></div>
-                                <div class="bench-bar-col" data-name="Mac (macOS system)" data-value="92.4"><span class="bench-bar-value">92.4%</span><div class="bench-bar" style="height:92.4%"></div></div>
-                                <div class="bench-bar-col" data-name="Proxifier (network)" data-value="95.5"><span class="bench-bar-value">95.5%</span><div class="bench-bar" style="height:95.5%"></div></div>
-                                <div class="bench-bar-col" data-name="HDFS (distributed FS)" data-value="96.0"><span class="bench-bar-value">96.0%</span><div class="bench-bar" style="height:96.0%"></div></div>
-                                <div class="bench-bar-col" data-name="Linux (OS kernel)" data-value="97.2"><span class="bench-bar-value">97.2%</span><div class="bench-bar" style="height:97.2%"></div></div>
-                                <div class="bench-bar-col" data-name="OpenSSH (auth)" data-value="97.6"><span class="bench-bar-value">97.6%</span><div class="bench-bar" style="height:97.6%"></div></div>
-                                <div class="bench-bar-col" data-name="Spark (big data)" data-value="97.8"><span class="bench-bar-value">97.8%</span><div class="bench-bar" style="height:97.8%"></div></div>
-                                <div class="bench-bar-col" data-name="HealthApp (mobile)" data-value="98.0"><span class="bench-bar-value">98.0%</span><div class="bench-bar" style="height:98.0%"></div></div>
-                                <div class="bench-bar-col" data-name="Android (mobile OS)" data-value="98.3"><span class="bench-bar-value">98.3%</span><div class="bench-bar" style="height:98.3%"></div></div>
-                                <div class="bench-bar-col" data-name="Thunderbird (supercomputer)" data-value="98.6"><span class="bench-bar-value">98.6%</span><div class="bench-bar" style="height:98.6%"></div></div>
-                                <div class="bench-bar-col" data-name="Windows (OS updates)" data-value="98.7"><span class="bench-bar-value">98.7%</span><div class="bench-bar" style="height:98.7%"></div></div>
-                                <div class="bench-bar-col active" data-name="OpenStack (cloud infra)" data-value="99.0"><span class="bench-bar-value">99.0%</span><div class="bench-bar" style="height:99.0%"></div></div>
+                                <div class="bench-bar-col" data-name="HPC" data-value="97.1"><span class="bench-bar-value">97.1%</span><div class="bench-bar" style="height:97.1%"></div></div>
+                                <div class="bench-bar-col" data-name="Linux" data-value="97.2"><span class="bench-bar-value">97.2%</span><div class="bench-bar" style="height:97.2%"></div></div>
+                                <div class="bench-bar-col" data-name="Apache" data-value="97.5"><span class="bench-bar-value">97.5%</span><div class="bench-bar" style="height:97.5%"></div></div>
+                                <div class="bench-bar-col" data-name="Spark" data-value="97.8"><span class="bench-bar-value">97.8%</span><div class="bench-bar" style="height:97.8%"></div></div>
+                                <div class="bench-bar-col" data-name="HealthApp" data-value="98.0"><span class="bench-bar-value">98.0%</span><div class="bench-bar" style="height:98.0%"></div></div>
+                                <div class="bench-bar-col" data-name="Android" data-value="98.4"><span class="bench-bar-value">98.4%</span><div class="bench-bar" style="height:98.4%"></div></div>
+                                <div class="bench-bar-col" data-name="HDFS" data-value="98.6"><span class="bench-bar-value">98.6%</span><div class="bench-bar" style="height:98.6%"></div></div>
+                                <div class="bench-bar-col" data-name="OpenSSH" data-value="98.6"><span class="bench-bar-value">98.6%</span><div class="bench-bar" style="height:98.6%"></div></div>
+                                <div class="bench-bar-col" data-name="Proxifier" data-value="98.6"><span class="bench-bar-value">98.6%</span><div class="bench-bar" style="height:98.6%"></div></div>
+                                <div class="bench-bar-col" data-name="Thunderbird" data-value="98.6"><span class="bench-bar-value">98.6%</span><div class="bench-bar" style="height:98.6%"></div></div>
+                                <div class="bench-bar-col" data-name="BGL" data-value="98.7"><span class="bench-bar-value">98.7%</span><div class="bench-bar" style="height:98.7%"></div></div>
+                                <div class="bench-bar-col" data-name="Windows" data-value="98.7"><span class="bench-bar-value">98.7%</span><div class="bench-bar" style="height:98.7%"></div></div>
+                                <div class="bench-bar-col" data-name="Hadoop" data-value="99.0"><span class="bench-bar-value">99.0%</span><div class="bench-bar" style="height:99.0%"></div></div>
+                                <div class="bench-bar-col" data-name="Mac" data-value="99.1"><span class="bench-bar-value">99.1%</span><div class="bench-bar" style="height:99.1%"></div></div>
+                                <div class="bench-bar-col active" data-name="OpenStack" data-value="99.3"><span class="bench-bar-value">99.3%</span><div class="bench-bar" style="height:99.3%"></div></div>
                             </div>
                             <div class="bench-axis-x">
-                                <span>BGL</span><span>HPC</span><span>Apache</span><span>Hadoop</span><span>Mac</span><span>Proxifier</span><span>HDFS</span><span>Linux</span><span>OpenSSH</span><span>Spark</span><span>HealthApp</span><span>Android</span><span>Thunderbird</span><span>Windows</span><span>OpenStack</span>
+                                <span>HPC</span><span>Linux</span><span>Apache</span><span>Spark</span><span>HealthApp</span><span>Android</span><span>HDFS</span><span>OpenSSH</span><span>Proxifier</span><span>Thunderbird</span><span>BGL</span><span>Windows</span><span>Hadoop</span><span>Mac</span><span>OpenStack</span>
                             </div>
                         </div>
                     </div>
-
                     <div class="border-t border-[var(--border)] mt-4 pt-4 flex items-center justify-between">
                         <span id="benchLabel" class="text-xs flex items-center gap-2" style="color:var(--text-muted)">
-                            <span class="w-2 h-2 rounded-sm" style="background:var(--accent)"></span>OpenStack (cloud infra)
+                            <span class="w-2 h-2 rounded-sm" style="background:var(--accent)"></span>OpenStack
                         </span>
-                        <span id="benchValue" class="mono text-sm font-semibold">99.0%</span>
+                        <span id="benchValue" class="mono text-sm font-semibold">99.3%</span>
                     </div>
                 </div>
-
-                <p>
-                    Sources with heavy templated output (OpenStack, Windows Update, HealthApp, Android) compress the hardest — often over 98% of lines are collapsible duplicates.
-                    Sources with high per-line entropy (BGL, HPC, Apache) still hit 70%+ compression because the ranker aggressively drops "expected" chatter.
-                </p>
             </section>
 
-            <!-- Example -->
             <section id="example">
-                <h2>Example: Thunderbird supercomputer log</h2>
+                <h2>Example: Thunderbird_2k.log</h2>
                 <p>
-                    To show what this looks like in practice, we picked one file: <code>Testing/Thunderbird_2k.log</code> — 2,000 lines, 323,193 characters.
-                    The real failure — <code>sshd: Bind to port 22 ... Address already in use</code> — sits 62% into the file, squarely in the "lost in the middle" zone.
-                    We gave two strategies the same 4,000-character budget.
+                    Public LogHub file, 2,000 lines, 325,192 characters. Two crash-regex lines exist:
+                    <code>vesafb: probe of vesafb0 failed with error -6</code>, and
+                    <code>sshd[1761]: error: Bind to port 22 on 0.0.0.0 failed: Address already in use.</code>
+                    The bind line is index 1,465 (73% through the file). Same 4,000-character budget, two strategies.
                 </p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
-                    <!-- Without Roka -->
                     <div class="surface p-4">
                         <div class="flex items-center justify-between mb-3">
                             <span class="eyebrow">Without Roka</span>
-                            <span class="mono text-xs" style="color:var(--danger)">error missed</span>
+                            <span class="mono text-xs" style="color:var(--danger)">bind missed</span>
                         </div>
-                        <p class="text-xs mb-3" style="color:var(--text-muted)">Naive <code>tail -c 4000</code> — the default agent behavior when logs overflow.</p>
+                        <p class="text-xs mb-3" style="color:var(--text-muted)"><code>tail -c 4000</code> of the same file — 28 lines, first line cut mid-record.</p>
                         <div class="log-preview">
-                            <div class="log-line log-dim">Aug 05 04:12:07 tbird-admin1 ntpd[3221]: synchronized to 10.0.0.1</div>
-                            <div class="log-line log-dim">Aug 05 04:12:12 tbird-admin1 gmetad: data_thread() got no answer</div>
-                            <div class="log-line log-dim">Aug 05 04:12:17 tbird-admin1 ntpd[3221]: kernel time sync status 0000</div>
-                            <div class="log-line log-dim">Aug 05 04:12:22 tbird-admin1 gmetad: data_thread() got no answer</div>
-                            <div class="log-line log-dim">Aug 05 04:12:27 tbird-admin1 ntpd[3221]: synchronized to 10.0.0.1</div>
-                            <div class="log-line log-dim">Aug 05 04:12:32 tbird-admin1 gmetad: data_thread() got no answer</div>
-                            <div class="log-line log-dim">Aug 05 04:12:37 tbird-admin1 ntpd[3221]: kernel time sync status 0000</div>
-                            <div class="log-line log-dim">Aug 05 04:12:42 tbird-admin1 gmetad: data_thread() got no answer</div>
-                            <div class="log-line log-dim">Aug 05 04:12:47 tbird-admin1 ntpd[3221]: synchronized to 10.0.0.1</div>
-                            <div class="log-line log-dim">Aug 05 04:12:52 tbird-admin1 gmetad: data_thread() got no answer</div>
-                            <div class="log-line log-dim">Aug 05 04:12:57 tbird-admin1 ntpd[3221]: kernel time sync status 0000</div>
-                            <div class="log-line log-dim">Aug 05 04:13:02 tbird-admin1 gmetad: data_thread() got no answer</div>
-                            <div class="log-more">only monitoring noise · no error line reached the model</div>
+                            <div class="log-line log-dim">…gmetad[1682]: data_thread() got not answer from any [Thunderbird_D6] datasource</div>
+                            <div class="log-line log-dim">ntpd[13001]: synchronized to 10.100.22.250, stratum 3</div>
+                            <div class="log-line log-dim">ntpd[20417]: synchronized to 10.100.18.250, stratum 3</div>
+                            <div class="log-line log-dim">gmetad[1682]: data_thread() got not answer from any [Thunderbird_A5] datasource</div>
+                            <div class="log-line log-dim">ib_sm.x[24904]: [ib_sm_sweep.c:1831]: NEW SWEEP</div>
+                            <div class="log-line log-dim">gmetad[1682]: data_thread() got not answer from any [Thunderbird_B2] datasource</div>
+                            <div class="log-line log-dim">ib_sm.x[24904]: No topology change</div>
+                            <div class="log-line log-dim">ntpd[28490]: synchronized to 10.100.12.250, stratum 3</div>
+                            <div class="log-line log-dim">gmetad[1682]: data_thread() got not answer from any [Thunderbird_D7] datasource</div>
+                            <div class="log-line log-dim">ntpd[10152]: synchronized to 10.100.20.250, stratum 3</div>
+                            <div class="log-more">last 4,000 chars · ntpd + gmetad only · bind line not in this window</div>
                         </div>
                     </div>
-
-                    <!-- With Roka -->
                     <div class="surface p-4">
                         <div class="flex items-center justify-between mb-3">
                             <span class="eyebrow">With Roka <span class="mono" style="color:var(--text-faint)">· prune_file</span></span>
-                            <span class="mono text-xs" style="color:var(--success)">error kept</span>
+                            <span class="mono text-xs" style="color:var(--success)">bind kept</span>
                         </div>
-                        <p class="text-xs mb-3" style="color:var(--text-muted)">Same 4,000-char budget · dedup + force-keep on error patterns.</p>
+                        <p class="text-xs mb-3" style="color:var(--text-muted)">Same budget. 29 lines, 3,965 chars. Crash lines plus ±2 neighbors, then recency.</p>
                         <div class="log-preview">
-                            <div class="log-line log-dim">Aug 05 03:41:11 tbird-admin1 ntpd[3221]: synchronized (×128)</div>
-                            <div class="log-line log-dim">Aug 05 03:41:15 tbird-admin1 gmetad: data_thread() got no answer (×64)</div>
-                            <div class="log-line log-dim">Aug 05 03:52:04 tbird-c31 kernel: eth0 link up</div>
-                            <div class="log-line log-err">Aug 05 03:52:41 tbird-c31 sshd[19442]: error: Bind to port 22 on 0.0.0.0 failed: Address already in use.</div>
-                            <div class="log-line log-err">Aug 05 03:52:41 tbird-c31 sshd[19442]: fatal: Cannot bind any address.</div>
-                            <div class="log-line log-dim">Aug 05 04:01:33 tbird-c31 systemd: sshd.service: main process exited, code=exited, status=255</div>
-                            <div class="log-line log-dim">Aug 05 04:01:33 tbird-c31 systemd: sshd.service: Failed with result 'exit-code'.</div>
-                            <div class="log-line log-ok">Aug 05 04:05:12 tbird-c31 systemd: sshd.service: recovered on retry</div>
-                            <div class="log-line log-dim">Aug 05 04:12:07 tbird-admin1 ntpd[3221]: synchronized (×47)</div>
-                            <div class="log-line log-dim">Aug 05 04:12:12 tbird-admin1 gmetad: data_thread() got no answer (×23)</div>
-                            <div class="log-line log-dim">Aug 05 04:13:02 tbird-admin1 gmetad: data_thread() got no answer (×11)</div>
-                            <div class="log-line log-dim">Aug 05 04:13:07 tbird-admin1 ntpd[3221]: synchronized (×8)</div>
-                            <div class="log-more">error line survives · monitoring noise collapsed with counts</div>
+                            <div class="log-line log-dim">usbcore: registered new driver usbfs <span class="mono" style="color:var(--text-faint)">neighbor</span></div>
+                            <div class="log-line log-err">vesafb: probe of vesafb0 failed with error -6 <span class="mono">crash</span></div>
+                            <div class="log-line log-dim">sshd: succeeded <span class="mono" style="color:var(--text-faint)">neighbor</span></div>
+                            <div class="log-line log-dim">sshd[1761]: Server listening on :: port 22. <span class="mono" style="color:var(--text-faint)">neighbor</span></div>
+                            <div class="log-line log-err">sshd[1761]: error: Bind to port 22 on 0.0.0.0 failed: Address already in use. <span class="mono">crash</span></div>
+                            <div class="log-line log-dim">gmetad[1682]: data_thread() got not answer from any [Thunderbird_C5] <span class="mono" style="color:var(--text-faint)">neighbor</span></div>
+                            <div class="log-line log-dim">ntpd[27910]: synchronized to 10.100.22.250, stratum 3 <span class="mono" style="color:var(--text-faint)">neighbor</span></div>
+                            <div class="log-line log-dim">… 19 recency lines from the end of the file (ntpd / gmetad / ib_sm)</div>
+                            <div class="log-more">both crash-regex lines kept · gmetad lines did not collapse (datasource id differs)</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Compare table -->
                 <div class="surface my-6">
                     <table class="compare-table">
                         <thead>
                             <tr>
                                 <th></th>
-                                <th class="text-right">Without Roka<br><span class="mono" style="text-transform:none;letter-spacing:0;color:var(--text-faint);font-size:10px">naive tail -c 4000</span></th>
-                                <th class="text-right">With Roka<br><span class="mono" style="text-transform:none;letter-spacing:0;color:var(--text-faint);font-size:0.95em;font-weight:500">prune_file</span></th>
+                                <th class="text-right">Without Roka<br><span class="mono" style="text-transform:none;letter-spacing:0;color:var(--text-faint);font-size:10px">tail -c 4000</span></th>
+                                <th class="text-right">With Roka<br><span class="mono" style="text-transform:none;letter-spacing:0;color:var(--text-faint);font-size:10px">prune_file · no query</span></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Lines sent to LLM</td>
-                                <td class="text-right mono-val" style="color:var(--text-muted)">27</td>
-                                <td class="text-right mono-val col-good">28</td>
+                                <td>Lines in the 4,000-char window</td>
+                                <td class="text-right mono-val" style="color:var(--text-muted)">28 <span style="color:var(--text-faint);font-size:10px">(first line truncated)</span></td>
+                                <td class="text-right mono-val col-good">29</td>
                             </tr>
                             <tr>
                                 <td>Characters sent</td>
                                 <td class="text-right mono-val" style="color:var(--text-muted)">4,000</td>
-                                <td class="text-right mono-val col-good">4,000</td>
+                                <td class="text-right mono-val col-good">3,965</td>
                             </tr>
                             <tr>
-                                <td>~Tokens (chars ÷ 4)</td>
-                                <td class="text-right mono-val" style="color:var(--text-muted)">~1,000</td>
-                                <td class="text-right mono-val col-good">~1,000</td>
+                                <td>Bind to port 22 in the window?</td>
+                                <td class="text-right mono-val col-bad">No</td>
+                                <td class="text-right mono-val col-good">Yes — crash bucket</td>
                             </tr>
                             <tr>
-                                <td>"Bind to port 22" surfaced?</td>
-                                <td class="text-right mono-val col-bad">No — 0 matches</td>
-                                <td class="text-right mono-val col-good">Yes — kept</td>
+                                <td>Crash-regex lines kept</td>
+                                <td class="text-right mono-val col-bad">0 of 2</td>
+                                <td class="text-right mono-val col-good">2 of 2</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
                 <p>
-                    Same budget. Same token cost. Different content. The naive tail spends its entire 4,000-character window on
-                    <code>ntpd: synchronized</code> and <code>gmetad: data_thread()</code> monitoring chatter. Roka spends most of
-                    its budget on the same chatter — collapsed into counted summaries — and reclaims exactly enough room for the
-                    two <span class="mono">sshd</span> error lines that explain the failure.
+                    Adjacent-duplicate collapse barely moved this file: gmetad lines differ by cluster id, so they stay distinct.
+                    The bind line is kept because it contains the whole word <code>error</code>, not because we passed a query about sshd.
+                    The homepage demo that keeps bind via a query (“sshd, bind, port”) is a different fixture.
                 </p>
 
-                <h3>What an agent sees</h3>
-                <p>When wired into an MCP-compatible agent (Claude Desktop, Cursor, etc.), the flow looks like this:</p>
-<pre class="code-block"><span class="c-comment"># Agent sees a 323 KB log and asks Roka to compress it</span>
+                <h3>What prune_file actually returns</h3>
+                <p>The MCP tool accepts <code>path</code>, optional <code>budget</code>, optional <code>query</code>. The result shape is the prune payload, not an invented ratio object.</p>
+<pre class="code-block"><span class="c-comment"># Same call as this study — no query, default crash regex inside prune.js</span>
 <span class="c-key">tool_call</span>: prune_file(
-    path=<span class="c-ok">"/var/log/thunderbird.log"</span>,
-    budget=<span class="c-key">4000</span>,
-    force_keep=<span class="c-ok">r"ERROR|FATAL|CRITICAL|Exception|Traceback|panic"</span>
+    path=<span class="c-ok">"Thunderbird_2k.log"</span>,
+    budget=<span class="c-key">4000</span>
 )
 
-<span class="c-comment"># Roka returns 28 lines · 4,000 chars · error lines preserved verbatim</span>
 <span class="c-key">tool_result</span>:
-    kept_lines: <span class="c-key">28</span>
-    dropped_lines: <span class="c-key">1972</span>
-    forced_lines: <span class="c-key">2</span>   <span class="c-comment"># the two sshd errors</span>
-    compression_ratio: <span class="c-key">80.8</span>x</pre>
+    originalLines: <span class="c-key">2000</span>
+    prunedLines:   <span class="c-key">29</span>
+    originalChars: <span class="c-key">325192</span>
+    prunedChars:   <span class="c-key">3965</span>
+    kept[].reasons: <span class="c-ok">crash</span> | <span class="c-ok">neighbor</span> | <span class="c-ok">recency</span></pre>
                 <p>
-                    The agent then reasons over 28 clean lines instead of 2,000 noisy ones — with the actual failure in the middle of its context, not lost.
+                    On this machine the 15 LogHub files each pruned in 1–14 ms in Node. A 50,000-line synthetic file took 39 ms. No model calls.
                 </p>
             </section>
 
-            <!-- Limits -->
             <section id="limits">
-                <h2>What we do not claim</h2>
-                <p>
-                    We are an MVP. We want to be direct about the shape of this evidence:
-                </p>
+                <h2>What this does not prove</h2>
                 <ul>
-                    <li>This benchmark measures <strong>retention</strong>, not <strong>downstream task success</strong>. Whether Claude / GPT-5 actually diagnoses the root cause faster with pruned context is our next study.</li>
-                    <li>LogHub is <em>real</em> production data, but it is a fixed public corpus. Results may differ on your specific stack, especially for structured-JSON or highly-domain-specific logs.</li>
-                    <li>The MCP ranker today is collapse + whole-word query + crash regex + neighbor + recency. We have not shipped a semantic re-ranker in the default MCP tool; when we do, we will re-benchmark.</li>
-                    <li>Everything above was run on-device against local files with the public <code>prune_file</code> tool. No cherry-picked slices, no per-file tuning — but also no adversarial stress-testing against evasive log formats.</li>
+                    <li><strong>Not agent usefulness.</strong> We did not score whether Claude, Cursor, or GPT then finds the root cause faster. Compression and regex retention are the measured outputs.</li>
+                    <li><strong>Not “every error.”</strong> Crash-regex is whole-word <code>ERROR|FATAL|CRITICAL|Exception|Traceback|panic</code>. It hits Apache <code>[error]</code> and also Linux “FPU exception support” and BGL “parity error corrected.” Windows “Failed” does not match, so CBS failures in that 2k file are recency-only.</li>
+                    <li><strong>Not every crash line.</strong> Files with hundreds of matches omit the rest when they do not fit as whole lines (Apache 1,393 protected omitted).</li>
+                    <li><strong>Not query ranking.</strong> This LogHub run passed no query. Query-first packing is in the engine and is what the homepage 9-line demo uses; it is not what produced these 15 percentages.</li>
+                    <li><strong>Not semantic search.</strong> Default MCP ranker is collapse + query/crash/neighbor/recency. Hosted embeddings are an optional Pro path, not this run.</li>
+                    <li><strong>LogHub 2k only.</strong> These are the public 2,000-line samples, not the full original dumps. Results will move on JSON logs, or on a query that names a line the regex does not.</li>
                 </ul>
             </section>
 
-            <!-- Conclusion -->
             <section id="conclusion">
                 <h2>Conclusion</h2>
                 <p>
-                    For AI agents to be genuinely useful on real infrastructure, they need something in front of the raw log stream —
-                    a layer that collapses adjacent duplicates, packs the lines that match the question and the crash pattern, and fits them into whatever
-                    budget the caller sets. That is Roka.
+                    The shipped pruner is a character packer with a crash regex and optional query, not a log parser and not an incident summarizer.
+                    On the 15 LogHub 2k files, with budget 4,000 and no query, it removed a mean of
+                    <span class="mono" style="color:var(--text)">98.3%</span> of lines,
+                    emitted <span class="mono" style="color:var(--text)">70×</span> fewer characters,
+                    and on every file that contained a crash-regex line, kept at least one.
                 </p>
                 <p>
-                    On the LogHub corpus, our MVP shipped tool removes an average of <span class="mono" style="color:var(--text)">92.2%</span>
-                    of log lines while retaining every real error we tested for, at a fixed
-                    <span class="mono" style="color:var(--text)">4,000-character</span> output budget. It runs in tens of milliseconds, has no
-                    external dependencies, and is already available as an MCP server that any compatible agent can install with one command.
+                    The Thunderbird check is the concrete case: <code>tail -c 4000</code> misses the sshd bind line; <code>prune_file</code> keeps it because the line matches <code>error</code>.
+                    That is the claim. CLI prune is free; MCP <code>prune_file</code> needs a Pro API key.
                 </p>
                 <div class="surface p-5 my-6 text-center">
-                    <p class="text-sm mb-4" style="color:var(--text-muted)">Try the same <code>prune_file</code> tool used in this study on your own logs.</p>
+                    <p class="text-sm mb-4" style="color:var(--text-muted)">Same engine in the browser demo, or install the CLI and prune a local file.</p>
                     <div class="flex flex-wrap items-center justify-center gap-2">
                         <a href="/install.html"
-                           class="relative inline-flex items-center justify-center px-4 py-2 overflow-hidden tracking-tighter text-white bg-gray-800 rounded-md group text-xs font-semibold no-underline">
-                            <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-sky-500 rounded-full group-hover:w-56 group-hover:h-56"></span>
-                            <span class="absolute bottom-0 left-0 h-full -ml-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-auto h-full opacity-100" viewBox="0 0 487 487" aria-hidden="true">
-                                    <path fill-opacity=".1" fill-rule="nonzero" fill="#FFF" d="M0 .3c67 2.1 134.1 4.3 186.3 37 52.2 32.7 89.6 95.8 112.8 150.6 23.2 54.8 32.3 101.4 61.2 149.9 28.9 48.4 77.7 98.8 126.4 149.2H0V.3z"></path>
-                                </svg>
-                            </span>
-                            <span class="absolute top-0 right-0 w-12 h-full -mr-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="object-cover w-full h-full" viewBox="0 0 487 487" aria-hidden="true">
-                                    <path fill-opacity=".1" fill-rule="nonzero" fill="#FFF" d="M487 486.7c-66.1-3.6-132.3-7.3-186.3-37s-95.9-85.3-126.2-137.2c-30.4-51.8-49.3-99.9-76.5-151.4C70.9 109.6 35.6 54.8.3 0H487v486.7z"></path>
-                                </svg>
-                            </span>
-                            <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-200"></span>
-                            <span class="relative">Install Roka</span>
+                           class="relative inline-flex items-center justify-center px-4 py-2 overflow-hidden tracking-tighter text-white bg-gray-800 rounded-md text-xs font-semibold no-underline">
+                            Install Roka
                         </a>
                         <a href="/index.html#try" class="btn-secondary rounded-lg px-4 py-2 text-xs font-medium" style="text-decoration:none">Try it in browser</a>
-                        <a href="/index.html#benchmark" class="roka-back btn-secondary rounded-lg px-4 py-2 text-xs font-medium" style="text-decoration:none" data-back-host data-back-fallback="/index.html#benchmark"><span data-back-hijacker="active" aria-hidden="true"></span>← Back</a>
+                        <a href="/testing.html" class="btn-secondary rounded-lg px-4 py-2 text-xs font-medium" style="text-decoration:none">Per-file table</a>
                     </div>
                 </div>
             </section>

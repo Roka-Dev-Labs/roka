@@ -349,15 +349,15 @@ API keys: https://www.roka-prune.com/dashboard/api-keys.html
 
 # Benchmark
 
-MVP study: the shipped MCP `prune_file` tool on the [LogHub](https://github.com/logpai/loghub) corpus. 15 real production log sources, one 4,000-character budget, no per-file tuning.
+10 Nov 2026 rerun of shipped `pruneText` (`prune_file(path, budget=4000)`, no query) on 15 public LogHub 2k files. 30,003 lines / 4,178,984 characters. Zookeeper excluded.
 
 | Metric | Result |
 | --- | --- |
-| Avg. lines removed | 92.2% |
-| Avg. compression | ~69× (chars in → 4K out) |
-| Sources with real errors still surfaced | 11 / 11 |
+| Mean lines removed | 98.3% |
+| Character compression | 70× (4.18M → 59.7K) |
+| Files with a crash-regex line that still had one | 11 / 11 |
 
-This measures **retention under budget** — did the important line survive? It does not measure downstream agent task success, wall-clock RAG savings, or ranking quality vs embedding baselines.
+This measures **retention under budget** — line removal, and whether a crash-regex line survived a 4,000-character pack. It does not measure downstream agent task success. This run passed no query.
 
 Methodology: https://www.roka-prune.com/research.html — per-dataset table: https://www.roka-prune.com/testing.html
 
@@ -512,13 +512,11 @@ For questions about these Terms, contact us at mukhamedjankydyrli@gmail.com.
 
 <!-- source: https://www.roka-prune.com/research.html -->
 
-Roka — Research: Context Pruning for AI Agents← BackResearch · MVP preview · Aug 2026
+Roka — Research: what prune_file keeps on LogHub← BackResearch · MVP · Nov 10, 2026
 
-# Roka: a context-pruning layer for log-aware AI agents
+# What prune_file actually keeps on LogHub
 
-We built a middleware that sits between raw production logs and coding agents like Claude, Cursor, and Copilot.
- On the standard LogHub corpus — 15 real production systems — it removes
- 92.2% of log lines on average while preserving every real error we tested for.
+A rerun of shipped prune.js on 15 public LogHub 2k files. One 4,000-character budget, no query, no per-file tuning. Mean lines removed 98.3%. Character compression 70×. On the 11 files that contained a crash-regex line, at least one such line was still in the output.
 
 By Roka Labs·Reading time ~5 min·Stage: MVPOn this page
 
@@ -585,7 +583,7 @@ Note on scope
 Across all 15 LogHub sources, Roka reduced input size dramatically while keeping every real error we tested for intact.
  The chart below shows the percentage of lines removed after dedup + budget-fit, sorted from lowest to highest compression.
 
-92.2%Avg. lines removed across 15 real log sources69×Avg. compression ratio — 276K chars → 4K chars per file11 / 11Sources with real errors that still surfaced after pruningLog compression — % lines removedHover to inspect
+98.3%Mean lines removed across 15 LogHub 2k files70×Chars in ÷ chars out — 4.18M → 59.7K11 / 11Files with a crash-regex line that still had one after packing
 
 LogHub production datasets · dedup + 4,000-char budget fit, sorted low → high
 
@@ -633,19 +631,17 @@ Same budget. Same token cost. Different content. The naive tail spends its entir
 When wired into an MCP-compatible agent (Claude Desktop, Cursor, etc.), the flow looks like this:
 
 ```
-# Agent sees a 323 KB log and asks Roka to compress it
 tool_call: prune_file(
-    path="/var/log/thunderbird.log",
-    budget=4000,
-    force_keep=r"ERROR|FATAL|CRITICAL|Exception|Traceback|panic"
+    path="Thunderbird_2k.log",
+    budget=4000
 )
 
-# Roka returns 28 lines · 4,000 chars · error lines preserved verbatim
 tool_result:
-    kept_lines: 28
-    dropped_lines: 1972
-    forced_lines: 2   # the two sshd errors
-    compression_ratio: 80.8x
+    originalLines: 2000
+    prunedLines:   29
+    originalChars: 325192
+    prunedChars:   3965
+    kept[].reasons: crash | neighbor | recency
 ```
 
 The agent then reasons over 28 clean lines instead of 2,000 noisy ones — with the actual failure in the middle of its context, not lost.
@@ -664,10 +660,8 @@ For AI agents to be genuinely useful on real infrastructure, they need something
  a layer that collapses noise, force-keeps the two lines that actually explain the failure, and fits both into whatever
  budget the caller sets. That is Roka.
 
-On the LogHub corpus, our MVP shipped tool removes an average of 92.2%
- of log lines while retaining every real error we tested for, at a fixed
- 4,000-character output budget. It runs in tens of milliseconds, has no
- external dependencies, and is already available as an MCP server that any compatible agent can install with one command.
+On the 15 LogHub 2k files, with budget 4,000 and no query, shipped prune.js removed a mean of 98.3%
+ of log lines, emitted 70× fewer characters, and on every file that contained a crash-regex line, kept at least one.
 
 Try the same prune_file tool used in this study on your own logs.
 
@@ -703,7 +697,7 @@ Pack order: query hits, then crash lines, then crash neighbors, then recency. De
 
 Pack to 4,000 characters. A crash line that does not fit is kept whole and the overage is reported.
 
-15 datasets. 4.15M characters in. 92.2% avg. lines removed. 4K character budget. Same tool on every file: `prune_file(path, budget=4000)` — MCP default, characters not tokens.
+15 datasets. 4.18M characters in. 98.3% mean lines removed. 4K character budget. Same call on every file: `prune_file(path, budget=4000)` with no query.
 
 ## What we did — and why it matters
 

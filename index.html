@@ -2893,7 +2893,7 @@
             <span class="orbit-float" style="top: 28%; left: 3%; --rot: 3deg; --d: 0.8s;"><button type="button" class="orbit-chip crash">crash lines packed first</button></span>
             <span class="orbit-float" style="top: 8%; right: 4%; --rot: 4deg; --d: 1.1s;"><button type="button" class="orbit-chip kept">kept · query</button></span>
             <span class="orbit-float" style="top: 22%; right: 3%; --rot: -2deg; --d: 2.4s;"><button type="button" class="orbit-chip dropped">drop · heartbeat ×14</button></span>
-            <span class="orbit-float" style="bottom: 42%; right: 5%; --rot: -3.5deg; --d: 1.8s;"><button type="button" class="orbit-chip pack">11 / 11 errors kept</button></span>
+            <span class="orbit-float" style="bottom: 42%; right: 5%; --rot: -3.5deg; --d: 1.8s;"><button type="button" class="orbit-chip pack">11 / 11 crash lines kept</button></span>
         </aside>
 
         <div class="roka-canvas-wrap mb-5" id="rokaWord" aria-label="roka" hidden style="perspective:900px">
@@ -3530,16 +3530,16 @@
             <span class="eyebrow absolute -top-2.5 left-6 px-2" style="background:var(--bg-card)">Key Metrics</span>
             <div class="grid sm:grid-cols-3">
                 <div class="bench-metric-card text-center">
-                    <div class="text-3xl sm:text-4xl font-semibold mono">92.2%</div>
-                    <div class="text-xs text-muted mt-2">Avg. lines removed (dedup + budget-fit) across 15 real log sources</div>
+                    <div class="text-3xl sm:text-4xl font-semibold mono">98.3%</div>
+                    <div class="text-xs text-muted mt-2">Mean lines removed across 15 LogHub 2k files (shipped prune.js, no query)</div>
                 </div>
                 <div class="bench-metric-card text-center">
-                    <div class="text-3xl sm:text-4xl font-semibold mono">69×</div>
-                    <div class="text-xs text-muted mt-2">Avg. compression ratio — 276K chars in → 4K chars out, per file</div>
+                    <div class="text-3xl sm:text-4xl font-semibold mono">70×</div>
+                    <div class="text-xs text-muted mt-2">Chars in ÷ chars out — 4.18M → 59.7K</div>
                 </div>
                 <div class="bench-metric-card text-center">
                     <div class="text-3xl sm:text-4xl font-semibold mono">11 / 11</div>
-                    <div class="text-xs text-muted mt-2">Log sources with real errors that still surfaced after pruning</div>
+                    <div class="text-xs text-muted mt-2">Files with a crash-regex line that still had one after the 4,000-char pack</div>
                 </div>
             </div>
         </div>
@@ -3551,7 +3551,7 @@
                     <span class="eyebrow">Log Compression — % lines removed</span>
                     <span class="text-xs text-faint">Hover to inspect</span>
                 </div>
-                <p class="text-xs text-muted mb-6">LogHub production datasets · dedup + 4,000-char budget fit, sorted low → high</p>
+                <p class="text-xs text-muted mb-6">LogHub 2k · shipped prune.js · no query · 4,000-char pack · sorted low → high</p>
 
                 <div class="flex gap-3">
                     <div class="bench-axis-y text-[10px] text-faint mono">
@@ -3559,78 +3559,33 @@
                     </div>
                     <div class="flex-1">
                         <div class="bench-chart-grid" id="benchChart">
-                            <div class="bench-bar-col" data-name="BGL (supercomputer)" data-value="72.7">
-                                <span class="bench-bar-value">72.7%</span>
-                                <div class="bench-bar" style="height:72.7%"></div>
-                            </div>
-                            <div class="bench-bar-col" data-name="HPC (cluster)" data-value="74.4">
-                                <span class="bench-bar-value">74.4%</span>
-                                <div class="bench-bar" style="height:74.4%"></div>
-                            </div>
-                            <div class="bench-bar-col" data-name="Apache (web server)" data-value="74.5">
-                                <span class="bench-bar-value">74.5%</span>
-                                <div class="bench-bar" style="height:74.5%"></div>
-                            </div>
-                            <div class="bench-bar-col" data-name="Hadoop (distributed)" data-value="92.0">
-                                <span class="bench-bar-value">92.0%</span>
-                                <div class="bench-bar" style="height:92.0%"></div>
-                            </div>
-                            <div class="bench-bar-col" data-name="Mac (macOS system)" data-value="92.4">
-                                <span class="bench-bar-value">92.4%</span>
-                                <div class="bench-bar" style="height:92.4%"></div>
-                            </div>
-                            <div class="bench-bar-col" data-name="Proxifier (network)" data-value="95.5">
-                                <span class="bench-bar-value">95.5%</span>
-                                <div class="bench-bar" style="height:95.5%"></div>
-                            </div>
-                            <div class="bench-bar-col" data-name="HDFS (distributed FS)" data-value="96.0">
-                                <span class="bench-bar-value">96.0%</span>
-                                <div class="bench-bar" style="height:96.0%"></div>
-                            </div>
-                            <div class="bench-bar-col" data-name="Linux (OS kernel)" data-value="97.2">
-                                <span class="bench-bar-value">97.2%</span>
-                                <div class="bench-bar" style="height:97.2%"></div>
-                            </div>
-                            <div class="bench-bar-col" data-name="OpenSSH (auth)" data-value="97.6">
-                                <span class="bench-bar-value">97.6%</span>
-                                <div class="bench-bar" style="height:97.6%"></div>
-                            </div>
-                            <div class="bench-bar-col" data-name="Spark (big data)" data-value="97.8">
-                                <span class="bench-bar-value">97.8%</span>
-                                <div class="bench-bar" style="height:97.8%"></div>
-                            </div>
-                            <div class="bench-bar-col" data-name="HealthApp (mobile)" data-value="98.0">
-                                <span class="bench-bar-value">98.0%</span>
-                                <div class="bench-bar" style="height:98.0%"></div>
-                            </div>
-                            <div class="bench-bar-col" data-name="Android (mobile OS)" data-value="98.3">
-                                <span class="bench-bar-value">98.3%</span>
-                                <div class="bench-bar" style="height:98.3%"></div>
-                            </div>
-                            <div class="bench-bar-col" data-name="Thunderbird (supercomputer)" data-value="98.6">
-                                <span class="bench-bar-value">98.6%</span>
-                                <div class="bench-bar" style="height:98.6%"></div>
-                            </div>
-                            <div class="bench-bar-col" data-name="Windows (OS updates)" data-value="98.7">
-                                <span class="bench-bar-value">98.7%</span>
-                                <div class="bench-bar" style="height:98.7%"></div>
-                            </div>
-                            <div class="bench-bar-col active" data-name="OpenStack (cloud infra)" data-value="99.0">
-                                <span class="bench-bar-value">99.0%</span>
-                                <div class="bench-bar" style="height:99.0%"></div>
-                            </div>
+                            <div class="bench-bar-col" data-name="HPC" data-value="97.1"><span class="bench-bar-value">97.1%</span><div class="bench-bar" style="height:97.1%"></div></div>
+                            <div class="bench-bar-col" data-name="Linux" data-value="97.2"><span class="bench-bar-value">97.2%</span><div class="bench-bar" style="height:97.2%"></div></div>
+                            <div class="bench-bar-col" data-name="Apache" data-value="97.5"><span class="bench-bar-value">97.5%</span><div class="bench-bar" style="height:97.5%"></div></div>
+                            <div class="bench-bar-col" data-name="Spark" data-value="97.8"><span class="bench-bar-value">97.8%</span><div class="bench-bar" style="height:97.8%"></div></div>
+                            <div class="bench-bar-col" data-name="HealthApp" data-value="98.0"><span class="bench-bar-value">98.0%</span><div class="bench-bar" style="height:98.0%"></div></div>
+                            <div class="bench-bar-col" data-name="Android" data-value="98.4"><span class="bench-bar-value">98.4%</span><div class="bench-bar" style="height:98.4%"></div></div>
+                            <div class="bench-bar-col" data-name="HDFS" data-value="98.6"><span class="bench-bar-value">98.6%</span><div class="bench-bar" style="height:98.6%"></div></div>
+                            <div class="bench-bar-col" data-name="OpenSSH" data-value="98.6"><span class="bench-bar-value">98.6%</span><div class="bench-bar" style="height:98.6%"></div></div>
+                            <div class="bench-bar-col" data-name="Proxifier" data-value="98.6"><span class="bench-bar-value">98.6%</span><div class="bench-bar" style="height:98.6%"></div></div>
+                            <div class="bench-bar-col" data-name="Thunderbird" data-value="98.6"><span class="bench-bar-value">98.6%</span><div class="bench-bar" style="height:98.6%"></div></div>
+                            <div class="bench-bar-col" data-name="BGL" data-value="98.7"><span class="bench-bar-value">98.7%</span><div class="bench-bar" style="height:98.7%"></div></div>
+                            <div class="bench-bar-col" data-name="Windows" data-value="98.7"><span class="bench-bar-value">98.7%</span><div class="bench-bar" style="height:98.7%"></div></div>
+                            <div class="bench-bar-col" data-name="Hadoop" data-value="99.0"><span class="bench-bar-value">99.0%</span><div class="bench-bar" style="height:99.0%"></div></div>
+                            <div class="bench-bar-col" data-name="Mac" data-value="99.1"><span class="bench-bar-value">99.1%</span><div class="bench-bar" style="height:99.1%"></div></div>
+                            <div class="bench-bar-col active" data-name="OpenStack" data-value="99.3"><span class="bench-bar-value">99.3%</span><div class="bench-bar" style="height:99.3%"></div></div>
                         </div>
                         <div class="bench-axis-x">
-                            <span>BGL</span><span>HPC</span><span>Apache</span><span>Hadoop</span><span>Mac</span><span>Proxifier</span><span>HDFS</span><span>Linux</span><span>OpenSSH</span><span>Spark</span><span>HealthApp</span><span>Android</span><span>Thunderbird</span><span>Windows</span><span>OpenStack</span>
+                            <span>HPC</span><span>Linux</span><span>Apache</span><span>Spark</span><span>HealthApp</span><span>Android</span><span>HDFS</span><span>OpenSSH</span><span>Proxifier</span><span>Thunderbird</span><span>BGL</span><span>Windows</span><span>Hadoop</span><span>Mac</span><span>OpenStack</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="border-t border-[var(--border)] mt-4 pt-4 flex items-center justify-between">
                     <span id="benchLabel" class="text-xs text-muted flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-sm" style="background:var(--accent)"></span>OpenStack (cloud infra)
+                        <span class="w-2 h-2 rounded-sm" style="background:var(--accent)"></span>OpenStack
                     </span>
-                    <span id="benchValue" class="mono text-sm font-semibold">99.0%</span>
+                    <span id="benchValue" class="mono text-sm font-semibold">99.3%</span>
                 </div>
             </div>
 
@@ -3638,18 +3593,17 @@
             <div class="surface rounded-xl p-6">
                 <span class="eyebrow">Methodology</span>
                 <ul class="text-sm text-muted mt-4 space-y-3">
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Corpus: <span class="text-[var(--text)]">LogHub</span> — 15 real system/production log sources, ~2,000 raw lines each (30,001 lines / 4.15M characters total).</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Same tool, same rules, no per-file tuning: MCP <span class="mono inline-code">prune_file</span>, default 4,000-character budget.</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Rule: collapse consecutive duplicate lines, then pack query hits, crash lines, crash neighbors, and recency into 4,000 characters.</li>
-                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Verified by hand: for every source that contained a real error, at least one verbatim error line survived into the final output.</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Corpus: <span class="text-[var(--text)]">LogHub</span> 2k samples — 15 sources, 30,003 lines / 4,178,984 characters. Zookeeper excluded.</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Same call, no per-file tuning: MCP <span class="mono inline-code">prune_file(path, budget=4000)</span> with no query.</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> This run packed crash-regex lines, then ±2 neighbors, then recency. Query-first packing is in the engine; it was not used on these 15 files.</li>
+                    <li class="flex gap-2"><span class="text-[var(--success)]">→</span> Crash-regex = whole-word ERROR|FATAL|CRITICAL|Exception|Traceback|panic. 11 files had a hit; all 11 still had one after packing.</li>
                 </ul>
                 <div class="border-t border-[var(--border)] my-5"></div>
                 <span class="eyebrow">Live test — Without Roka vs. With Roka</span>
                 <p class="text-xs text-muted mt-3 leading-relaxed">
-                    Same file, same 4,000-character budget, two strategies. <span class="mono inline-code" style="color:var(--text)">Testing/Thunderbird_2k.log</span>
-                    — 2,000 lines, 323,193 characters. The real failure —
-                    <span class="mono inline-code" style="color:var(--text)">sshd: Bind to port 22 ... Address already in use</span>
-                    — sits 62% into the file, so a tail cut misses it.
+                    Same file, same 4,000-character budget, two strategies. LogHub <span class="mono inline-code" style="color:var(--text)">Thunderbird_2k.log</span>
+                    — 2,000 lines, 325,192 characters. The sshd bind line sits 73% into the file
+                    (line 1,466), so a tail cut misses it.
                 </p>
                 <div class="mt-4 rounded-lg overflow-hidden border border-[var(--border)]">
                     <table class="w-full text-xs">
@@ -3663,13 +3617,13 @@
                         <tbody class="text-muted">
                             <tr class="border-t border-[var(--border)]">
                                 <td class="px-3 py-2">Lines sent to LLM</td>
-                                <td class="text-right px-3 py-2 mono">27</td>
-                                <td class="text-right px-3 py-2 mono text-[var(--text)]">28</td>
+                                <td class="text-right px-3 py-2 mono">28</td>
+                                <td class="text-right px-3 py-2 mono text-[var(--text)]">29</td>
                             </tr>
                             <tr class="border-t border-[var(--border)]">
                                 <td class="px-3 py-2">Characters sent</td>
                                 <td class="text-right px-3 py-2 mono">4,000</td>
-                                <td class="text-right px-3 py-2 mono text-[var(--text)]">4,000</td>
+                                <td class="text-right px-3 py-2 mono text-[var(--text)]">3,965</td>
                             </tr>
                             <tr class="border-t border-[var(--border)]">
                                 <td class="px-3 py-2">~Tokens (chars ÷ 4)</td>
@@ -3685,8 +3639,7 @@
                     </table>
                 </div>
                 <p class="text-xs text-muted mt-3 leading-relaxed">
-                    Same budget, same token cost — but the naive tail only carries <span class="mono inline-code">ntpd: synchronized</span> and
-                    <span class="mono inline-code">gmetad: data_thread()</span> monitoring noise. Verified live via the MCP <span class="mono inline-code">prune_file</span> tool, not simulated.
+                    Same budget. The tail is ntpd / gmetad chatter. <span class="mono inline-code">prune_file</span> keeps both crash-regex lines (vesafb error -6 and the sshd bind) because they match <span class="mono inline-code">error</span>. Ledger: <a href="/testing.html" class="underline underline-offset-2">testing</a> · write-up: <a href="/research.html" class="underline underline-offset-2">research</a>.
                 </p>
             </div>
         </div>

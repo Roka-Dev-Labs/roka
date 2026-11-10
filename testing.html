@@ -6,9 +6,9 @@
     <script src="/assets/js/theme-boot.js"></script>
     <title>Testing - Roka</title>
     
-    <meta name="description" content="Run Roka against real LogHub production logs from Android, HPC, and cloud systems. Inspect pruned context, compression, and whether every error is retained.">
+    <meta name="description" content="LogHub 2k ledger for shipped prune.js: 15 files, 4,000-character budget, no query. 98.3% mean lines removed. 11/11 crash-regex files still had a matching line.">
     <meta property="og:title" content="Testing — Roka">
-    <meta property="og:description" content="Run Roka against real LogHub production logs from Android, HPC, and cloud systems. Inspect pruned context, compression, and whether every error is retained.">
+    <meta property="og:description" content="LogHub 2k ledger for shipped prune.js: 15 files, 4,000-character budget, no query. 98.3% mean lines removed. 11/11 crash-regex files still had a matching line.">
     <meta property="og:image" content="https://www.roka-prune.com/opengraph-image.jpg?v=20261109">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -49,7 +49,7 @@
           "@id": "https://www.roka-prune.com/testing.html#webpage",
           "url": "https://www.roka-prune.com/testing.html",
           "name": "Testing - Roka",
-          "description": "Run Roka against real LogHub production logs from Android, HPC, and cloud systems. Inspect pruned context, compression, and whether every error is retained.",
+          "description": "LogHub 2k ledger for shipped prune.js: 15 files, 4,000-character budget, no query. 98.3% mean lines removed. 11/11 crash-regex files still had a matching line.",
           "isPartOf": {
             "@id": "https://www.roka-prune.com/#website"
           },
@@ -66,7 +66,7 @@
     <meta property="og:site_name" content="Roka">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Testing — Roka">
-    <meta name="twitter:description" content="Run Roka against real LogHub production logs from Android, HPC, and cloud systems. Inspect pruned context, compression, and whether every error is retained.">
+    <meta name="twitter:description" content="LogHub 2k ledger for shipped prune.js: 15 files, 4,000-character budget, no query. 98.3% mean lines removed. 11/11 crash-regex files still had a matching line.">
     <meta name="twitter:image" content="https://www.roka-prune.com/opengraph-image.jpg?v=20261109">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
@@ -188,7 +188,7 @@
         h1, h2, h3 { font-weight: 500; letter-spacing: -0.02em; }
 
         .container {
-            max-width: 52rem;
+            max-width: 58rem;
             margin: 0 auto;
             padding: 2rem 1.25rem 4rem;
         }
@@ -654,9 +654,45 @@
             text-transform: uppercase;
             color: var(--text-faint);
         }
+
+        .results-scroll { overflow-x: auto; }
+        .results-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+        .results-table th, .results-table td {
+            padding: 0.55rem 0.65rem;
+            text-align: left;
+            vertical-align: top;
+        }
+        .results-table thead th {
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            font-weight: 500;
+            background: color-mix(in srgb, var(--bg-elevated) 88%, transparent);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        .results-table tbody tr { border-bottom: 1px solid var(--border); }
+        .results-table tbody tr:last-child { border-bottom: none; }
+        .results-table tbody tr:hover { background: var(--accent-glow); }
+        .results-table .num {
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+            font-size: 0.78rem;
+        }
+        .results-table .num-right { text-align: right; }
+        .results-table .kept-yes { color: var(--text); }
+        .results-table .kept-na { color: var(--text-faint); }
+        .results-caption {
+            font-size: 0.75rem;
+            color: var(--text-faint);
+            padding: 0.85rem 1.15rem 1.1rem;
+            line-height: 1.55;
+        }
     </style>
     <link rel="stylesheet" href="/assets/css/press.css?v=theme4">
     <script src="/assets/js/reveal.js" defer></script>
+    <script src="/assets/js/loghub-run.js"></script>
 </head>
 <body>
     <nav class="nav">
@@ -680,87 +716,112 @@
     <div class="container">
         <a href="/index.html" class="back-link roka-back" data-back-host><span data-back-hijacker="active" aria-hidden="true"></span>← Back</a>
 
+        <p class="eyebrow">LogHub 2k · 10 Nov 2026 rerun</p>
         <h1>Testing</h1>
         <p class="hero-intro">
-            The numbers below are the shipped MCP <code>prune_file</code> run: 15 LogHub sources,
-            <a href="https://github.com/logpai/loghub" rel="noopener noreferrer">logpai/loghub</a>,
-            about 2,000 lines each (30,001 lines / 4.15M characters). One 4,000-character budget. No per-file tuning.
+            Ledger for the shipped engine, <code>roka-mcp/lib/prune.js</code>, on 15 public
+            <a href="https://github.com/logpai/loghub" rel="noopener noreferrer">logpai/loghub</a>
+            <code>*_2k.log</code> files. Call: <code>prune_file(path, budget=4000)</code> with no query.
+            30,003 lines / 4,178,984 characters in. Mean lines removed 98.3%. Character compression 70×.
+            Write-up: <a href="/research.html">research</a>.
         </p>
 
         <div class="pipeline reveal" aria-label="How each test ran">
             <article class="pipeline-card">
                 <h3>1. Ingest</h3>
-                <p>~2,000 raw lines per file. The suite is 30,001 lines and 4.15M characters.</p>
+                <p>Public 2k samples, untouched. Three files end with a newline, so the engine counts 2,001 lines on those.</p>
             </article>
             <article class="pipeline-card">
                 <h3>2. Collapse</h3>
-                <p>Consecutive duplicate lines collapse to one line plus a count.</p>
+                <p>Only adjacent identical lines merge to one line plus <code>(xN repeated)</code>. Differing host or id stays distinct.</p>
             </article>
             <article class="pipeline-card">
                 <h3>3. Rank</h3>
-                <p>Pack order: query hits, then crash lines, then crash neighbors, then recency.</p>
+                <p>This run: no query, so crash-regex, then ±2 neighbors, then recency. Query-first packing exists in the engine; it was not used here.</p>
             </article>
             <article class="pipeline-card">
                 <h3>4. Pack</h3>
-                <p>Pack to 4,000 characters. A crash line that does not fit is kept whole and the overage is reported.</p>
+                <p>Whole lines into 4,000 characters. Protected lines that do not fit are omitted, not sliced. No file here exceeded the budget.</p>
             </article>
         </div>
 
         <div class="stat-grid reveal">
             <div class="stat"><div class="stat-value">15</div><div class="stat-label">Datasets</div></div>
-            <div class="stat"><div class="stat-value">4.15M</div><div class="stat-label">Characters in</div></div>
-            <div class="stat"><div class="stat-value">92.2%</div><div class="stat-label">Avg. lines removed</div></div>
-            <div class="stat"><div class="stat-value">4K</div><div class="stat-label">Char budget</div></div>
+            <div class="stat"><div class="stat-value">4.18M</div><div class="stat-label">Characters in</div></div>
+            <div class="stat"><div class="stat-value">98.3%</div><div class="stat-label">Mean lines removed</div></div>
+            <div class="stat"><div class="stat-value">11 / 11</div><div class="stat-label">Crash-regex files kept ≥1</div></div>
         </div>
 
         <div class="surface reveal" style="padding:0;margin-bottom:2rem;">
             <div class="query-bar">
                 <div>
-                    <strong>Same tool on every file</strong>
-                    <div><code>prune_file(path, budget=4000)</code> — MCP default, characters not tokens</div>
+                    <strong>Same call on every file</strong>
+                    <div><code>prune_file(path, budget=4000)</code> — no query, characters not tokens</div>
                 </div>
                 <a href="https://github.com/logpai/loghub/tree/master" class="external-link" rel="noopener noreferrer">LogHub datasets →</a>
+            </div>
+            <div class="results-scroll">
+                <table class="results-table" id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Source</th>
+                            <th class="num-right">Lines removed</th>
+                            <th class="num-right">Lines in → out</th>
+                            <th class="num-right">Chars in → out</th>
+                            <th class="num-right">Crash-regex in file</th>
+                            <th class="num-right">≥1 kept</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsBody"></tbody>
+                </table>
+            </div>
+            <p class="results-caption">
+                Sorted by lines removed, lowest first. Lower is not worse: shorter, less-repetitive lines fill the budget with more rows.
+                Crash-regex is <code>ERROR|FATAL|CRITICAL|Exception|Traceback|panic</code> as whole words — not a human incident label.
+                11 / 11 means at least one matching line survived, not that every matching line did (Apache omitted 1,393 protected lines).
+                Four files had zero matches (Android, HealthApp, Spark, Windows).
+            </p>
+        </div>
+
+        <div class="surface reveal" style="padding:0;margin-bottom:2rem;">
+            <div class="query-bar">
+                <div>
+                    <strong>File notes</strong>
+                    <div>What the 2k sample is, and what the engine actually did on it.</div>
+                </div>
             </div>
             <div style="padding:1rem;">
                 <div class="dataset-list" id="datasetList"></div>
             </div>
         </div>
 
-        <section class="proof-section reveal" aria-label="Why these benchmarks matter">
-            <h2>What we did — and why it matters</h2>
+        <section class="proof-section reveal" aria-label="How to read these numbers">
+            <h2>How to read this</h2>
             <p class="proof-lead">
-                The table is the same MCP <code>prune_file</code> run published on the homepage and in the research note. Fifteen LogHub files, one budget, no per-file tuning. It measures whether lines — and real errors — survive a 4,000-character pack. It does not measure whether a model then solves the incident.
+                The table is a 10 Nov 2026 rerun of shipped <code>pruneText</code> on the public 2k files.
+                It measures line removal and whether a crash-regex line survived a 4,000-character pack.
+                It does not measure whether a model then solves the incident.
             </p>
-
-            <div class="proof-steps">
-                <h3>Same four stages on every dataset</h3>
-                <div class="proof-step-list">
-                    <div class="proof-step"><strong>Ingest</strong> LogHub <code>*_2k.log</code> samples, ~2,000 lines, untouched.</div>
-                    <div class="proof-step"><strong>Collapse</strong> Consecutive duplicate lines merge into one line plus a count.</div>
-                    <div class="proof-step"><strong>Rank</strong> Query hits pack first, then crash lines, then crash neighbors, then recency.</div>
-                    <div class="proof-step"><strong>Pack</strong> Remaining lines fit a 4,000-character budget. Overage is reported, not hidden.</div>
-                </div>
-            </div>
 
             <div class="proof-grid">
                 <div class="proof-card">
-                    <h3>Real logs, not mocks</h3>
-                    <p>LogHub is the standard benchmark used in log parsing research (logpai). Each dataset comes from a different system with its own timestamp format, log structure, and failure modes — the same diversity you hit in production.</p>
+                    <h3>Public files, one call</h3>
+                    <p>LogHub 2k samples from logpai. Same function the MCP server ships. No per-file knobs. Zookeeper is a LogHub source and is not in this 15.</p>
                 </div>
                 <div class="proof-card">
-                    <h3>Same rules, every file</h3>
-                    <p>No per-file tuning. Collapse consecutive duplicates, then pack query / crash / neighbor / recency to 4,000 characters. The same <code>prune_file</code> path the MCP server ships.</p>
+                    <h3>Crash-regex, not “the incident”</h3>
+                    <p>A hit is a whole-word match on ERROR / FATAL / CRITICAL / Exception / Traceback / panic. Linux’s only hit is “FPU exception support.” Windows “Failed” does not match.</p>
                 </div>
                 <div class="proof-card">
-                    <h3>Retention, not a story</h3>
-                    <p>The measured result is lines removed and whether a real error line survived. 11 of 11 sources that contained an error still kept one. That is not a claim that every warning, or a full incident narrative, was reconstructed.</p>
+                    <h3>At least one, not every one</h3>
+                    <p>11 / 11 = each of the 11 files with a match still had one after packing. Apache kept 50 of 595. BGL kept 26 of 547. The rest were omitted as whole lines.</p>
                 </div>
             </div>
 
             <div class="proof-conclusion">
-                <p><strong>What held up:</strong> Across the 15 files, 92.2% of lines were removed after dedup and the budget pack. Average compression is about 69× (roughly 276K characters in, 4K out, per file). On the 11 sources that contained a real error, a verbatim error line was still in the output. Checked by hand.</p>
-                <p>BGL (72.7%), HPC (74.4%), and Apache (74.5%) keep more lines because those files are less repetitive. That is the file, not a miss. Thunderbird is the live check: the same 4,000 characters, and <code>sshd: Bind to port 22</code> stays with Roka and is missed by a naive tail.</p>
-                <p>Zookeeper is a LogHub file and is not in this 15-file table. Older write-ups that used an 8,000-token budget, or token totals such as 1.7M, are not this run.</p>
+                <p><strong>Thunderbird check:</strong> 2,000 lines, 325,192 characters. Bind-to-port-22 is line 1,466 (73%). <code>tail -c 4000</code> is 28 lines and misses it. <code>prune_file</code> returns 29 lines / 3,965 characters and keeps both crash-regex lines (vesafb error -6 and the sshd bind), plus their ±2 neighbors. gmetad lines did not collapse — the datasource id differs per line.</p>
+                <p>Older site figures (92.2% mean, BGL 72.7%, 323,193 Thunderbird chars, bind “62% through”) were a previous ranker or a rounded file. This page is the shipped engine on the public 2k files. Token budgets of 8,000 and totals such as 1.7M are not this run.</p>
             </div>
         </section>
 
@@ -771,362 +832,52 @@
         </p>
 
         <p class="footer-note">
-            Figures are the published MCP <code>prune_file</code> run: 4,000-character budget, 15 LogHub files.
-            Datasets © LogHub / logpai — used for research and evaluation.
+            Figures are the 10 Nov 2026 <code>pruneText</code> rerun: budget 4,000 characters, no query, 15 LogHub 2k files.
+            Datasets © LogHub / logpai — used for evaluation.
         </p>
     </div>
 
     <script>
-        const DATASETS = [
-            {
-                id: "android",
-                name: "Android",
-                file: "Android_2k.log",
-                system: "Mobile app (Android)",
-                input: "100,021",
-                output: "1,308",
-                reduction: "−99%",
-                tier: "excellent",
-                summary: "App crashes and ANR events surfaced",
-                about: "Android system and application logs from a mobile device — ActivityManager, Dalvik/ART runtime, and app-level exceptions.",
-                surfaced: [
-                    "ActivityManager crash and force-close events",
-                    "ANR (Application Not Responding) warnings",
-                    "Java stack traces and process death notifications",
-                    "Repetitive lifecycle noise collapsed to provenance headers"
-                ],
-                notes: "Strong compression with all critical mobile failure modes preserved for agent triage."
-            },
-            {
-                id: "apache",
-                name: "Apache",
-                file: "Apache_2k.log",
-                system: "Web server",
-                input: "65,360",
-                output: "2,503",
-                reduction: "−96%",
-                tier: "good",
-                summary: "HTTP errors and access anomalies ranked first",
-                about: "Apache HTTP Server access and error logs — combined request/response patterns with mod_* module messages.",
-                surfaced: [
-                    "HTTP 4xx and 5xx error responses",
-                    "Client connection resets and timeout anomalies",
-                    "Module-level warnings ranked above routine access lines",
-                    "Repeated identical errors collapsed by fingerprint"
-                ],
-                notes: "Output stays well under budget while preserving the error story an SRE would need."
-            },
-            {
-                id: "bgl",
-                name: "BGL",
-                file: "BGL_2k.log",
-                system: "Blue Gene/L supercomputer",
-                input: "143,497",
-                output: "7,981",
-                reduction: "−94%",
-                tier: "heavy",
-                summary: "Correct RAS diagnostics; fills most of budget",
-                about: "IBM Blue Gene/L RAS (Reliability, Availability, Serviceability) event logs from large-scale HPC operations.",
-                surfaced: [
-                    "MMCS and RAS kernel event notifications",
-                    "Hardware error and recovery advisories",
-                    "High-cardinality event types spread across many hosts",
-                    "All diagnostic categories represented despite near-budget output"
-                ],
-                notes: "Diagnostically correct but verbose — many unique RAS event types resist further collapse without losing signal."
-            },
-            {
-                id: "hdfs",
-                name: "HDFS",
-                file: "HDFS_2k.log",
-                system: "Hadoop distributed filesystem",
-                input: "96,789",
-                output: "4,141",
-                reduction: "−96%",
-                tier: "good",
-                summary: "Block reports, datanode, and namenode failures preserved",
-                about: "Hadoop HDFS namenode and datanode logs — block replication, heartbeat, and filesystem metadata events.",
-                surfaced: [
-                    "Block report and replication failures",
-                    "Datanode decommission and heartbeat timeouts",
-                    "Namenode safemode and edit-log warnings",
-                    "Repeated block-transfer retries collapsed"
-                ],
-                notes: "Distributed filesystem failures surfaced with enough context for cluster-level root cause analysis."
-            },
-            {
-                id: "hpc",
-                name: "HPC",
-                file: "HPC_2k.log",
-                system: "High-performance computing",
-                input: "45,240",
-                output: "8,096",
-                reduction: "−82%",
-                tier: "heavy",
-                summary: "Interconnect and RAS events correct; near budget cap",
-                about: "HPC cluster logs with interconnect (gige), RAS, and job scheduler telemetry from supercomputer operations.",
-                surfaced: [
-                    "Interconnect link and interface errors (gige7, Interconnect-0N00)",
-                    "RAS advisories and hardware fault notifications",
-                    "Job and node state transitions",
-                    "Format-specific fingerprinting for HPC host naming"
-                ],
-                notes: "Correct content but output slightly exceeds 8K budget due to diverse interconnect failure modes."
-            },
-            {
-                id: "hadoop",
-                name: "Hadoop",
-                file: "Hadoop_2k.log",
-                system: "MapReduce cluster",
-                input: "132,034",
-                output: "2,799",
-                reduction: "−98%",
-                tier: "excellent",
-                summary: "Job failures and task tracker errors collapsed cleanly",
-                about: "Apache Hadoop MapReduce job tracker and task tracker logs from a production cluster.",
-                surfaced: [
-                    "Job and task failure notifications",
-                    "TaskTracker heartbeat and shuffle errors",
-                    "JobTracker scheduling warnings",
-                    "Massive repetitive task retry lines collapsed"
-                ],
-                notes: "Excellent signal-to-noise — job failure timeline clear in under 3K tokens."
-            },
-            {
-                id: "healthapp",
-                name: "HealthApp",
-                file: "HealthApp_2k.log",
-                system: "Mobile health app",
-                input: "73,834",
-                output: "220",
-                reduction: "−100%",
-                tier: "excellent",
-                summary: "Component errors distilled to a tight incident slice",
-                about: "Logs from a health monitoring mobile application — component lifecycle and sensor pipeline events.",
-                surfaced: [
-                    "Component initialization and runtime errors",
-                    "Sensor and service binding failures",
-                    "Critical exceptions ranked first",
-                    "Routine INFO traffic fully collapsed"
-                ],
-                notes: "One of the tightest compressions — 74K tokens down to 220 while keeping the failure narrative intact."
-            },
-            {
-                id: "linux",
-                name: "Linux",
-                file: "Linux_2k.log",
-                system: "Linux system",
-                input: "85,452",
-                output: "4,256",
-                reduction: "−95%",
-                tier: "good",
-                summary: "Kernel and service failures ranked by relevance",
-                about: "Linux syslog-style system logs — kernel, cron, authentication, and daemon messages.",
-                surfaced: [
-                    "Kernel warnings and OOM-adjacent events",
-                    "Service start/stop failures",
-                    "Authentication and permission errors",
-                    "Cron and routine daemon noise collapsed"
-                ],
-                notes: "Standard syslog. Same prune_file rules: collapse, then query / crash / neighbor / recency."
-            },
-            {
-                id: "mac",
-                name: "Mac",
-                file: "Mac_2k.log",
-                system: "macOS system",
-                input: "110,462",
-                output: "8,015",
-                reduction: "−93%",
-                tier: "heavy",
-                summary: "Diagnostic content correct; high unique-event diversity",
-                about: "macOS unified logging system output — subsystem/process identifiers with varied message formats.",
-                surfaced: [
-                    "System diagnostic errors and fault reports",
-                    "Application crash and assertion failures",
-                    "Security and sandbox violations",
-                    "High diversity of unique subsystems fills budget"
-                ],
-                notes: "Correct diagnosis but macOS log diversity means many distinct events each get a representative sample."
-            },
-            {
-                id: "openssh",
-                name: "OpenSSH",
-                file: "OpenSSH_2k.log",
-                system: "SSH daemon",
-                input: "84,121",
-                output: "8,043",
-                reduction: "−90%",
-                tier: "heavy",
-                summary: "Brute-force storm + successful login both surfaced",
-                about: "OpenSSH auth logs — failed login attempts, invalid users, and session events from a production server.",
-                surfaced: [
-                    "Mass Invalid user brute-force attempts (collapsed by fingerprint)",
-                    "Accepted password authentication for compromised account",
-                    "Session opened/closed events preserved as critical auth signals",
-                    "PAM and connection failure patterns ranked"
-                ],
-                notes: "Security-critical: both the attack volume AND the successful breach login are retained — essential for incident response."
-            },
-            {
-                id: "openstack",
-                name: "OpenStack",
-                file: "OpenStack_2k.log",
-                system: "Cloud (Nova)",
-                input: "295,240",
-                output: "415",
-                reduction: "−100%",
-                tier: "excellent",
-                summary: "Nova warnings from 295K → 415 tokens",
-                about: "OpenStack Nova compute service logs — cloud instance, network, and scheduler warnings.",
-                surfaced: [
-                    "Nova WARNING-level unknown base file exceptions",
-                    "HTTP client exceptions during instance operations",
-                    "Power sync and hypervisor warnings",
-                    "Routine INFO/DEBUG fully stripped"
-                ],
-                notes: "Best compression ratio in the suite — 295K tokens to 415 while keeping all WARNING-level cloud failures."
-            },
-            {
-                id: "proxifier",
-                name: "Proxifier",
-                file: "Proxifier_2k.log",
-                system: "Network proxy",
-                input: "90,678",
-                output: "4,032",
-                reduction: "−96%",
-                tier: "good",
-                summary: "Connection failures and tunnel errors preserved",
-                about: "Proxifier Windows proxy client logs — connection routing, tunnel setup, and DNS resolution events.",
-                surfaced: [
-                    "Connection refused and timeout errors",
-                    "Proxy chain and tunnel failures",
-                    "SSH auth events retained in proxy context",
-                    "Repeated connection retry patterns collapsed"
-                ],
-                notes: "Format-specific patterns added for Proxifier timestamp and connection string fingerprinting."
-            },
-            {
-                id: "spark",
-                name: "Spark",
-                file: "Spark_2k.log",
-                system: "Apache Spark",
-                input: "70,490",
-                output: "332",
-                reduction: "−100%",
-                tier: "excellent",
-                summary: "Spark format support + clean-failure fallback",
-                about: "Apache Spark cluster driver and executor logs — job scheduling, shuffle, and executor lifecycle.",
-                surfaced: [
-                    "Executor lost and task failure events",
-                    "Driver application errors",
-                    "Spark-specific timestamp format recognized",
-                    "Clean-failure fallback when no hard ERROR lines exist"
-                ],
-                notes: "Initially returned 0 tokens — fixed by adding Spark timestamp patterns and a fallback path for warning-only failure queries.",
-                sample: `<span class="warn">WARN</span> Executor lost on worker node\n<span class="err">ERROR</span> Job aborted due to stage failure\n<span class="ok">[847x collapsed]</span> INFO BlockManager heartbeat`
-            },
-            {
-                id: "thunderbird",
-                name: "Thunderbird",
-                file: "Thunderbird_2k.log",
-                system: "Supercomputer (Ganglia)",
-                input: "130,014",
-                output: "481",
-                reduction: "−100%",
-                tier: "excellent",
-                summary: "gmetad warnings collapsed from ~8K → 481 tokens",
-                about: "Ganglia gmetad monitoring daemon logs from the Thunderbird supercomputer — cluster hostname resolution warnings.",
-                surfaced: [
-                    "gmetad trusted hostname resolution failures",
-                    "Massive hostname-list bloat compressed for display",
-                    "Thunderbird cluster ID patterns fingerprinted",
-                    "Monitoring noise collapsed while keeping resolution failures"
-                ],
-                notes: "Previously bloated to ~8K tokens due to long hostname lists — fixed with display compression patterns.",
-                sample: `<span class="warn">WARN</span> gmetad: failed to resolve trusted host name &lt;HOST_LIST&gt;\n<span class="ok">[2,400x collapsed]</span> identical gmetad warnings`
-            },
-            {
-                id: "windows",
-                name: "Windows",
-                file: "Windows_2k.log",
-                system: "Windows CBS",
-                input: "87,722",
-                output: "818",
-                reduction: "−99%",
-                tier: "excellent",
-                summary: "CBS manifest and package install errors surfaced",
-                about: "Windows Component-Based Servicing (CBS) logs — package installation, manifest parsing, and update failures.",
-                surfaced: [
-                    "CBS manifest parsing and hash mismatch errors",
-                    "Package install/uninstall failure codes",
-                    "Servicing stack transaction rollbacks",
-                    "Routine servicing progress lines collapsed"
-                ],
-                notes: "Windows CBS error codes and HRESULT values preserved for accurate Windows troubleshooting context."
-            },
-            {
-                id: "zookeeper",
-                name: "Zookeeper",
-                file: "Zookeeper_2k.log",
-                system: "Apache ZooKeeper quorum",
-                input: "108,915",
-                output: "2,174",
-                reduction: "−98%",
-                tier: "excellent",
-                summary: "Quorum election failures, learner disconnects, server-down",
-                about: "Apache ZooKeeper quorum peer logs — Java log4j format with election, learner sync, and client connection events.",
-                surfaced: [
-                    "Cannot open channel to peer 2 / 3 at election address (keyed by peer ID)",
-                    "SendWorker / RecvWorker thread churn (262× → 1 line each)",
-                    "LearnerHandler GOODBYE disconnects and ERROR shutdowns",
-                    "ZooKeeperServer not running — clients hitting dead server",
-                    "CommitProcessor unexpected exception preserved"
-                ],
-                notes: "Previously ~6K tokens due to IP×hour diversity on election retries — fixed with peer-ID diversity keys and log4j thread compression.",
-                sample: `<span class="warn">WARN</span> [QuorumPeer] Cannot open channel to 2 at /10.10.34.12:3888\n<span class="warn">WARN</span> [SendWorker] Send worker leaving thread <span class="ok">[262x → 1]</span>\n<span class="err">ERROR</span> [LearnerHandler] Unexpected exception causing shutdown\n<span class="warn">WARN</span> [NIOServerCxn] ZooKeeperServer not running`
-            }
-        ];
+        const run = window.ROKA_LOGHUB_RUN;
+        if (!run) throw new Error("loghub-run.js failed to load");
+        const fmt = (n) => n.toLocaleString("en-US");
+        const body = document.getElementById("resultsBody");
+        const list = document.getElementById("datasetList");
 
-        const LINES_REMOVED = {
-            android: "98.3%",
-            apache: "74.5%",
-            bgl: "72.7%",
-            hdfs: "96.0%",
-            hpc: "74.4%",
-            hadoop: "92.0%",
-            healthapp: "98.0%",
-            linux: "97.2%",
-            mac: "92.4%",
-            openssh: "97.6%",
-            openstack: "99.0%",
-            proxifier: "95.5%",
-            spark: "97.8%",
-            thunderbird: "98.6%",
-            windows: "98.7%"
-        };
+        run.datasets.forEach((d, i) => {
+            const tr = document.createElement("tr");
+            const keptClass = d.crashKept === "yes" ? "kept-yes" : "kept-na";
+            tr.innerHTML = `
+                <td class="num">${i + 1}</td>
+                <td>${d.name}</td>
+                <td class="num num-right">${d.linesRemoved.toFixed(1)}%</td>
+                <td class="num num-right">${fmt(d.linesIn)} → ${fmt(d.linesOut)}</td>
+                <td class="num num-right">${fmt(d.charsIn)} → ${fmt(d.charsOut)}</td>
+                <td class="num num-right">${fmt(d.crashIn)}</td>
+                <td class="num num-right ${keptClass}">${d.crashKept}</td>
+            `;
+            body.appendChild(tr);
 
-        const list = document.getElementById('datasetList');
-
-        DATASETS.filter(d => LINES_REMOVED[d.id]).forEach(d => {
-            const removed = LINES_REMOVED[d.id];
-            const assessment = d.id === "thunderbird"
-                ? "Verified on this file: 2,000 lines, 323,193 characters. The sshd bind-to-port-22 failure sits about 62% through the file. A naive tail of 4,000 characters misses it. prune_file keeps it."
-                : "Same prune_file rules as the other files. The percentage is lines removed after dedup and the 4,000-character pack. It is not a token count.";
-            const card = document.createElement('div');
-            card.className = 'dataset-card reveal';
-            card.id = 'dataset-' + d.id;
-
+            const card = document.createElement("div");
+            card.className = "dataset-card reveal";
+            card.id = "dataset-" + d.id;
+            const omitted = d.omittedProtected
+                ? `${fmt(d.omittedProtected)} protected lines omitted (did not fit as whole lines).`
+                : "No protected line was omitted.";
+            const kept = d.crashKept === "yes"
+                ? `${fmt(d.crashOut)} of ${fmt(d.crashIn)} crash-regex lines stayed in the 4,000-character pack.`
+                : "No crash-regex line in this sample. The pack is recency only.";
+            const extra = d.crashNote ? `<p>${d.crashNote}</p>` : "";
             card.innerHTML = `
                 <div class="dataset-row">
                     <div>
                         <div class="dataset-name">${d.name}</div>
                         <div class="dataset-system">${d.system}</div>
-                        <div class="mobile-stats mono">
-                            <span>${removed} lines removed</span>
+                        <div class="mobile-stats">
+                            <span>${d.linesRemoved.toFixed(1)}% lines removed · crash ${d.crashKept}</span>
                         </div>
                     </div>
-                    <div class="desktop-stats mono" style="text-align:right;color:var(--success)">${removed} lines removed</div>
+                    <div class="desktop-stats" style="text-align:right;color:var(--text-muted)">${d.linesRemoved.toFixed(1)}% lines removed</div>
                     <button type="button" class="btn-secondary detail-btn rounded-lg" aria-expanded="false" aria-controls="detail-${d.id}">
                         View details
                     </button>
@@ -1138,27 +889,25 @@
                             <p><code>${d.file}</code> from <a href="https://github.com/logpai/loghub/tree/master/${d.name}" rel="noopener noreferrer">logpai/loghub</a></p>
                             <h3 style="margin-top:1rem;">About this log</h3>
                             <p>${d.about}</p>
-                            <h3 style="margin-top:1rem;">Assessment</h3>
-                            <p>${assessment}</p>
                         </div>
                         <div class="detail-section">
-                            <h3>What was checked</h3>
-                            <p>Line removal is the published per-file figure. Error lines were checked as a set: if the file contained a real error, at least one verbatim error line stayed in the 4,000 characters.</p>
+                            <h3>What was measured</h3>
+                            <p>${fmt(d.linesIn)} lines / ${fmt(d.charsIn)} chars in → ${fmt(d.linesOut)} lines / ${fmt(d.charsOut)} chars out.</p>
+                            <p>${kept}</p>
+                            <p>${omitted}</p>
+                            ${extra}
                         </div>
                     </div>
                 </div>
             `;
-
-            const btn = card.querySelector('.detail-btn');
-            const detail = card.querySelector('.dataset-detail');
-
-            btn.addEventListener('click', () => {
-                const isOpen = detail.classList.toggle('open');
-                card.classList.toggle('open', isOpen);
-                btn.setAttribute('aria-expanded', isOpen);
-                btn.textContent = isOpen ? 'Hide details' : 'View details';
+            const btn = card.querySelector(".detail-btn");
+            const detail = card.querySelector(".dataset-detail");
+            btn.addEventListener("click", () => {
+                const isOpen = detail.classList.toggle("open");
+                card.classList.toggle("open", isOpen);
+                btn.setAttribute("aria-expanded", isOpen);
+                btn.textContent = isOpen ? "Hide details" : "View details";
             });
-
             list.appendChild(card);
         });
 

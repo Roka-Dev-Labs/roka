@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/assets/js/theme-boot.js"></script>
     <title>Benchmark — Roka Docs</title>
-    <meta name="description" content="LogHub MVP benchmark for Roka: 92.2% of lines removed and 11/11 real errors retained. Compression and retention, not agent task success.">
+    <meta name="description" content="LogHub 2k rerun of shipped prune.js: 98.3% mean lines removed, 70× chars, 11/11 crash-regex files still had a matching line. Compression and retention, not agent task success.">
     <meta property="og:title" content="Benchmark — Roka Docs">
-    <meta property="og:description" content="LogHub MVP benchmark for Roka: 92.2% of lines removed and 11/11 real errors retained. Compression and retention, not agent task success.">
+    <meta property="og:description" content="LogHub 2k rerun of shipped prune.js: 98.3% mean lines removed, 70× chars, 11/11 crash-regex files still had a matching line. Compression and retention, not agent task success.">
     <meta property="og:image" content="https://www.roka-prune.com/opengraph-image.jpg?v=20261109">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -48,7 +48,7 @@
           "@id": "https://www.roka-prune.com/docs/benchmark.html#webpage",
           "url": "https://www.roka-prune.com/docs/benchmark.html",
           "name": "Benchmark \u2014 Roka Docs",
-          "description": "LogHub MVP benchmark for Roka: 92.2% of lines removed and 11/11 real errors retained. Compression and retention, not agent task success.",
+          "description": "LogHub 2k rerun of shipped prune.js: 98.3% mean lines removed, 70\u00d7 chars, 11/11 crash-regex files still had a matching line. Compression and retention, not agent task success.",
           "isPartOf": {
             "@id": "https://www.roka-prune.com/#website"
           },
@@ -65,7 +65,7 @@
     <meta property="og:site_name" content="Roka">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Benchmark — Roka Docs">
-    <meta name="twitter:description" content="LogHub MVP benchmark for Roka: 92.2% of lines removed and 11/11 real errors retained. Compression and retention, not agent task success.">
+    <meta name="twitter:description" content="LogHub 2k rerun of shipped prune.js: 98.3% mean lines removed, 70× chars, 11/11 crash-regex files still had a matching line. Compression and retention, not agent task success.">
     <meta name="twitter:image" content="https://www.roka-prune.com/opengraph-image.jpg?v=20261109">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
     <link rel="stylesheet" href="/assets/fonts/montserrat.css">
@@ -89,19 +89,19 @@
         <main class="docs-main">
             <p class="kicker">Concepts</p>
             <h1>Benchmark</h1>
-            <p class="lede">MVP study: the shipped MCP <code>prune_file</code> tool on the <a href="https://github.com/logpai/loghub">LogHub</a> corpus. 15 real production log sources, one 4,000-character budget, no per-file tuning.</p>
+            <p class="lede">10 Nov 2026 rerun of shipped <code>pruneText</code> (<code>prune_file(path, budget=4000)</code>, no query) on 15 public LogHub 2k files. 30,003 lines / 4,178,984 characters. Zookeeper excluded.</p>
 
             <table>
                 <thead><tr><th>Metric</th><th>Result</th></tr></thead>
                 <tbody>
-                    <tr><td>Avg. lines removed</td><td>92.2%</td></tr>
-                    <tr><td>Avg. compression</td><td>~69× (chars in → 4K out)</td></tr>
-                    <tr><td>Sources with real errors still surfaced</td><td>11 / 11</td></tr>
+                    <tr><td>Mean lines removed</td><td>98.3%</td></tr>
+                    <tr><td>Character compression</td><td>70× (4.18M → 59.7K)</td></tr>
+                    <tr><td>Files with a crash-regex line that still had one</td><td>11 / 11</td></tr>
                 </tbody>
             </table>
 
             <h2>What this measures</h2>
-            <p><strong>Retention under budget</strong> — did a real error line survive a 4,000-character pack? It proves compression and error retention. It does not prove the tool finds the right evidence for arbitrary questions, or that agents debug better with the slice.</p>
+            <p><strong>Retention under budget</strong> — line removal, and whether a line matching <code>ERROR|FATAL|CRITICAL|Exception|Traceback|panic</code> survived a 4,000-character pack. It does not prove the tool finds the right evidence for an arbitrary question, or that agents debug better with the slice. This run passed no query.</p>
             <p>Full methodology, Thunderbird before/after, and explicit non-claims: <a href="/research.html">research.html</a>. Per-dataset table: <a href="/testing.html">testing.html</a>.</p>
             <div class="docs-foot"><a href="/docs/pricing.html">← Pricing</a><a href="/docs/faq.html">FAQ →</a></div>
         </main>

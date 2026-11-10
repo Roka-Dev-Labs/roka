@@ -92,13 +92,13 @@ Deterministic by default. Optional hosted embeddings are Pro-only and not the MC
 
 ## Benchmark (MVP)
 
-We ran the shipped MCP `prune_file` tool against the [LogHub](https://github.com/logpai/loghub) corpus (15 real production log sources, fixed 4,000-character budget, no per-file tuning):
+We reran shipped `pruneText` (`prune_file(path, budget=4000)`, no query) against the [LogHub](https://github.com/logpai/loghub) 2k samples (15 sources, 30,003 lines / 4.18M characters):
 
 | Metric | Result |
 |--------|--------|
-| Avg. lines removed | **92.2%** |
-| Avg. compression | **~69×** (chars in → 4K out) |
-| Sources with real errors still surfaced | **11 / 11** |
+| Mean lines removed | **98.3%** |
+| Character compression | **70×** (4.18M → 59.7K) |
+| Files with a crash-regex line that still had one | **11 / 11** |
 
 Full write-up (methodology, Thunderbird before/after, limits): [roka-prune.com/research.html](https://roka-prune.com/research.html).
 
