@@ -29,7 +29,7 @@ writes it to .roka/crash-context.txt.
 Options:
   --on-crash             Enable crash-triggered context pruning
   --budget <n>           Character budget for pruned output (default ${DEFAULT_BUDGET})
-  --api-key, -k <key>    Roka Pro API key (or set ROKA_API_KEY)
+  --api-key, -k <key>    Optional API key (or set ROKA_API_KEY)
   --help, -h             Show this help
 
 Example:
@@ -81,16 +81,12 @@ export async function watchCommand(args) {
   }
 
   const apiKey = opts.apiKey || process.env.ROKA_API_KEY || null;
-  if (!apiKey) {
-    console.error("[roka-mcp] watch: MCP is a Pro feature and requires an API key.");
-    console.error(`  Set ROKA_API_KEY or pass --api-key <key>. Get one at ${API_KEY_DASHBOARD_URL}`);
-    process.exit(1);
-  }
-
-  const verification = await verifyProAccess(apiKey);
-  if (!verification.ok) {
-    printVerificationError("watch", verification);
-    process.exit(1);
+  if (apiKey) {
+    const verification = await verifyProAccess(apiKey);
+    if (!verification.ok) {
+      printVerificationError("watch", verification);
+      process.exit(1);
+    }
   }
 
   const targetPath = opts.path;

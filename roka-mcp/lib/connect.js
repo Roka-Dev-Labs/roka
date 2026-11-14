@@ -230,7 +230,7 @@ Agents:
 
 Options:
   --agent, -a <name>     Agent to configure (required)
-  --api-key, -k <key>    Roka Pro API key (or set ROKA_API_KEY)
+  --api-key, -k <key>    Optional API key for dashboard telemetry (or ROKA_API_KEY)
   --help, -h             Show this help
 
 Examples:
@@ -281,19 +281,17 @@ export async function connectCommand(args) {
   }
 
   const apiKey = opts.apiKey || process.env.ROKA_API_KEY || null;
-  if (!apiKey) {
-    console.error("[roka-mcp] connect: MCP is a Pro feature and requires an API key.");
-    console.error(`  Set ROKA_API_KEY or pass --api-key <key>. Get one at ${API_KEY_DASHBOARD_URL}`);
-    process.exit(1);
+  if (apiKey) {
+    console.error("[roka-mcp] connect: verifying API key…");
+    const verification = await verifyProAccess(apiKey);
+    if (!verification.ok) {
+      printVerificationError("connect", verification);
+      process.exit(1);
+    }
+    console.error(`[roka-mcp] connect: verified — tier "${verification.tier}".`);
+  } else {
+    console.error("[roka-mcp] connect: no API key — pruning stays local; set ROKA_API_KEY for dashboard telemetry.");
   }
-
-  console.error("[roka-mcp] connect: verifying API key…");
-  const verification = await verifyProAccess(apiKey);
-  if (!verification.ok) {
-    printVerificationError("connect", verification);
-    process.exit(1);
-  }
-  console.error(`[roka-mcp] connect: verified — tier "${verification.tier}", MCP access confirmed.`);
   void reportHeartbeat(opts.agent);
 
   const filePath = agentConf.describe(process.cwd());

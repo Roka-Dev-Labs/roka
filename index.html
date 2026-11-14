@@ -2966,7 +2966,7 @@
                 </button>
             </div>
 
-            <!-- AI Agent mode: per-agent connect command (Pro API key) -->
+            <!-- AI Agent mode: per-agent connect command -->
             <div class="mode-panel active" data-mode-panel="agent">
                 <div class="agent-tabs" role="tablist">
                     <button type="button" class="agent-tab active" data-agent="claude" role="tab">Claude Code</button>
@@ -2974,20 +2974,20 @@
                     <button type="button" class="agent-tab" data-agent="codex" role="tab">Codex</button>
                     <button type="button" class="agent-tab" data-agent="copilot" role="tab">Copilot</button>
                 </div>
-                <button type="button" class="cmd-btn active" data-agent-panel="claude" data-copy="npx roka-mcp connect --agent claude-code --api-key rk_live_..." aria-label="Copy command">
-                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent claude-code --api-key rk_live_...</span>
+                <button type="button" class="cmd-btn active" data-agent-panel="claude" data-copy="npx roka-mcp connect --agent claude-code" aria-label="Copy command">
+                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent claude-code</span>
                     <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
                 </button>
-                <button type="button" class="cmd-btn" data-agent-panel="cursor" data-copy="npx roka-mcp connect --agent cursor --api-key rk_live_..." aria-label="Copy command">
-                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent cursor --api-key rk_live_...</span>
+                <button type="button" class="cmd-btn" data-agent-panel="cursor" data-copy="npx roka-mcp connect --agent cursor" aria-label="Copy command">
+                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent cursor</span>
                     <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
                 </button>
-                <button type="button" class="cmd-btn" data-agent-panel="codex" data-copy="npx roka-mcp connect --agent codex --api-key rk_live_..." aria-label="Copy command">
-                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent codex --api-key rk_live_...</span>
+                <button type="button" class="cmd-btn" data-agent-panel="codex" data-copy="npx roka-mcp connect --agent codex" aria-label="Copy command">
+                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent codex</span>
                     <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
                 </button>
-                <button type="button" class="cmd-btn" data-agent-panel="copilot" data-copy="npx roka-mcp connect --agent copilot --api-key rk_live_..." aria-label="Copy command">
-                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent copilot --api-key rk_live_...</span>
+                <button type="button" class="cmd-btn" data-agent-panel="copilot" data-copy="npx roka-mcp connect --agent copilot" aria-label="Copy command">
+                    <span class="cmd-btn-cmd"><span class="cmd-btn-prompt">$</span>npx roka-mcp connect --agent copilot</span>
                     <span class="cmd-btn-icon"><svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
                 </button>
             </div>
@@ -3210,9 +3210,9 @@
         </div>
 
         <div class="text-center mt-12">
-            <p class="text-xs text-faint mb-3">MCP connect (Pro API key required):</p>
+            <p class="text-xs text-faint mb-3">MCP connect:</p>
             <div class="inline-block bg-[var(--bg)] border border-[var(--border-strong)] rounded-lg px-6 py-3 mono text-sm">
-                npx roka-mcp connect --agent <span style="color:var(--signal)">&lt;claude-code&nbsp;|&nbsp;cursor&nbsp;|&nbsp;…&gt;</span> --api-key rk_live_...
+                npx roka-mcp connect --agent <span style="color:var(--signal)">&lt;claude-code&nbsp;|&nbsp;cursor&nbsp;|&nbsp;…&gt;</span>
             </div>
             <p class="text-xs text-faint mt-3">Connect once. The agent calls prune; you can inspect what stayed.</p>
         </div>
@@ -3252,7 +3252,7 @@
         </div>
 
         <div class="text-center flex flex-wrap justify-center gap-2">
-            <a href="#mcp" class="btn-primary rounded-full px-6 py-2.5 text-sm font-medium">Connect your agent — Pro</a>
+            <a href="#mcp" class="btn-primary rounded-full px-6 py-2.5 text-sm font-medium">Connect your agent</a>
             <a href="/dashboard.html" class="btn-secondary rounded-full px-6 py-2.5 text-sm font-medium">Under the hood</a>
         </div>
     </section>
@@ -3306,7 +3306,7 @@
             <div class="showcase-card" data-showcase="install">
                 <div class="terminal-loader">
                     <div class="terminal-header">
-                        <div class="terminal-title">Connect your agent — Pro</div>
+                        <div class="terminal-title">Connect your agent</div>
                         <div class="terminal-controls">
                             <div class="control close"></div>
                             <div class="control minimize"></div>
@@ -3757,7 +3757,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">The local CLI prune path is free, with a 15K-token lifetime quota per device. MCP <span class="mono">connect</span>, <span class="mono">serve</span>, and <span class="mono">watch</span> need a Pro API key — free-tier keys are rejected. Hosted API keys on Pro, trial, or Enterprise get 500K tokens/month and MCP access.</p>
+                        <p class="text-sm text-muted">Yes. Local CLI and MCP prune run on your machine with a 15K-token lifetime quota per device — no paid plan. An optional API key links usage to your dashboard; it is not required to connect or prune.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -3802,7 +3802,7 @@
                         <span class="faq-icon text-[var(--text-muted)] text-lg transition-transform">+</span>
                     </button>
                     <div class="faq-content px-5">
-                        <p class="text-sm text-muted">Local CLI prune: 15K tokens lifetime per device; no API key; no MCP.<br><br>Pro / trial / Enterprise keys: up to 500K tokens/month and MCP access. Check your dashboard for your current quota.</p>
+                        <p class="text-sm text-muted">Local CLI and MCP: 15K tokens lifetime per device by default. Optional hosted API keys use monthly quotas shown in your dashboard.</p>
                     </div>
                 </div>
                 <div class="surface rounded-lg overflow-hidden">
@@ -3862,7 +3862,7 @@
         <div class="cta-terminal">
             <h2 id="cta-heading" class="cta-terminal-title">Install and prune a log.</h2>
             <a href="/install.html" class="cta-terminal-btn">Install</a>
-            <p class="cta-terminal-note">CLI is free to prune. MCP needs a Pro API key. Same pipeline, a slice with reasons.</p>
+            <p class="cta-terminal-note">CLI and MCP use the same pipeline — a slice with reasons.</p>
         </div>
     </section>
 

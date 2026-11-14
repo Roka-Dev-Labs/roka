@@ -1,11 +1,8 @@
 /**
- * Server-side Pro verification for roka-mcp.
+ * Optional API key check for roka-mcp (dashboard telemetry / hosted quota).
  *
- * MCP is a Pro feature. Without this check, `connect`/`serve` only ever
- * checked that *some* string was passed as an API key — never that it was
- * real or still on a paying tier. This calls the hosted /api/status
- * endpoint (same one the dashboard uses) so an invalid, expired, or
- * free-tier key is actually rejected instead of silently working.
+ * When ROKA_API_KEY is set, this calls the hosted /api/status endpoint so
+ * invalid or expired keys fail fast instead of failing mid-prune.
  */
 
 const API_BASE = (process.env.ROKA_API_URL_BASE || "https://api.roka-prune.com").replace(/\/+$/, "");
@@ -48,15 +45,6 @@ export async function verifyProAccess(apiKey) {
     return { ok: false, reason: "error", message: "verification response was not valid JSON" };
   }
 
-  if (!data.mcp_allowed) {
-    return {
-      ok: false,
-      reason: "not_pro",
-      tier: data.tier,
-      message: `this key is on the "${data.tier || "free"}" tier — MCP requires Pro`,
-    };
-  }
-
   return { ok: true, tier: data.tier, tokensRemaining: data.tokens_remaining };
 }
 
@@ -65,6 +53,6 @@ export function printVerificationError(context, result) {
   if (result.reason === "network") {
     console.error(`  If this is a transient issue, try again — MCP fails closed on purpose.`);
   } else {
-    console.error(`  MCP is a Pro feature. Get/upgrade an API key at ${API_KEY_DASHBOARD_URL}`);
+    console.error(`  Create or rotate a key at ${API_KEY_DASHBOARD_URL}`);
   }
 }

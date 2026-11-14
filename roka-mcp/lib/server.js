@@ -149,15 +149,18 @@ export function createServer() {
 }
 
 export async function serve() {
-  const verification = await verifyProAccess(process.env.ROKA_API_KEY);
-  if (!verification.ok) {
-    printVerificationError("serve", verification);
-    console.error(
-      "[roka-mcp] refusing to start: MCP tools are a Pro feature and require a verified API key."
-    );
-    process.exit(1);
+  const apiKey = process.env.ROKA_API_KEY;
+  if (apiKey) {
+    const verification = await verifyProAccess(apiKey);
+    if (!verification.ok) {
+      printVerificationError("serve", verification);
+      console.error("[roka-mcp] refusing to start: ROKA_API_KEY is set but could not be verified.");
+      process.exit(1);
+    }
+    console.error(`[roka-mcp] verified API key (tier "${verification.tier}") — starting tools.`);
+  } else {
+    console.error("[roka-mcp] no ROKA_API_KEY — starting tools (local prune only).");
   }
-  console.error(`[roka-mcp] verified Pro access (tier "${verification.tier}") — starting tools.`);
   void reportHeartbeat("serve");
 
   if (process.stdin.isTTY) {
