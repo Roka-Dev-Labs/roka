@@ -1,4 +1,4 @@
-import { CRASH_PATTERN, pruneText, tokenizeQuery } from "./prune.js";
+import { CRASH_PATTERN, collapseAdjacentLines, pruneText, tokenizeQuery, renderCollapsedLine } from "./prune.js";
 
 const SAMPLE_QUERY = "why did sshd fail to bind port";
 const SAMPLE_BUDGET = 160;
@@ -24,16 +24,11 @@ function escapeHtml(value) {
 
 function collapseRows(text) {
   const rawLines = text === "" ? [] : text.split("\n");
-  const collapsed = [];
-  for (const line of rawLines) {
-    const prev = collapsed[collapsed.length - 1];
-    if (prev && prev.raw === line) prev.count += 1;
-    else collapsed.push({ raw: line, count: 1 });
-  }
+  const collapsed = collapseAdjacentLines(rawLines);
   return {
     original: rawLines.length,
     rows: collapsed.map((row, idx) => {
-      const line = row.count > 1 ? `${row.raw}  (x${row.count} repeated)` : row.raw;
+      const line = renderCollapsedLine(row.line, row.count);
       return { idx, line, crash: CRASH_PATTERN.test(line) };
     }),
   };
@@ -85,7 +80,7 @@ export function mountHood(root) {
     </div>
 
     <div class="hood-stages reveal" id="hoodStages">
-      <div class="surface hood-stage" data-stage="collapse"><div class="k">Collapse</div><div class="v" id="stCollapse">—</div><div class="s">adjacent repeats</div></div>
+      <div class="surface hood-stage" data-stage="collapse"><div class="k">Collapse</div><div class="v" id="stCollapse">—</div><div class="s">adjacent near-duplicates</div></div>
       <div class="surface hood-stage" data-stage="crash"><div class="k">Crash keep</div><div class="v" id="stCrash">—</div><div class="s">ERROR / FATAL / panic</div></div>
       <div class="surface hood-stage" data-stage="query"><div class="k">Query score</div><div class="v" id="stQuery">—</div><div class="s">whole-word terms</div></div>
       <div class="surface hood-stage" data-stage="pack"><div class="k">Pack</div><div class="v" id="stPack">—</div><div class="s">budget, never sliced</div></div>

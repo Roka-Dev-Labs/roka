@@ -2,8 +2,9 @@
  * roka-mcp — MCP server over stdio.
  *
  * Registers the three tools documented in README.md (prune_logs, prune_file,
- * prune_tail), which locally prune noisy logs: collapse repeats, keep
- * error/exception lines, and pack the result into a character budget.
+ * prune_tail), which locally prune noisy logs: collapse repeats and
+ * near-duplicates, keep error/exception lines, and pack the result into a
+ * character budget without one storm filling it.
  */
 
 import { readFileSync } from "node:fs";
@@ -47,7 +48,7 @@ export function createServer() {
     {
       title: "Prune log text",
       description:
-        "Prune raw log text: collapse repeated lines, keep crash/query evidence, pack to a character budget. Optional query scores lines so the task, not only recency, decides what stays.",
+        "Prune raw log text: collapse repeated and near-duplicate lines, keep crash/query evidence, pack to a character budget without letting one storm fill it. Optional query scores lines so the task, not only recency, decides what stays.",
       inputSchema: {
         text: z.string().describe("Raw log text to prune"),
         budget: z
@@ -78,7 +79,7 @@ export function createServer() {
     {
       title: "Prune a log file",
       description:
-        "Read a log file by path and prune it to a character budget. Optional query scores lines so the task, not only recency, decides what stays.",
+        "Read a log file by path and prune it to a character budget. Collapses near-duplicate crashes and keeps other failures in the budget. Optional query scores lines so the task, not only recency, decides what stays.",
       inputSchema: {
         path: z.string().describe("Absolute or relative path to the log file"),
         budget: z
@@ -110,7 +111,7 @@ export function createServer() {
     {
       title: "Prune the tail of a log file",
       description:
-        "Read the last N lines of a live log file and prune them to a character budget. Optional query scores lines so the task, not only recency, decides what stays.",
+        "Read the last N lines of a live log file and prune them to a character budget. Collapses near-duplicate crashes and keeps other failures in the budget. Optional query scores lines so the task, not only recency, decides what stays.",
       inputSchema: {
         path: z.string().describe("Absolute or relative path to the log file"),
         lines: z

@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- Adjacent collapse now treats timestamped, hex-id, and IP variants of the same
+  line as repeats, so a 60-line `FATAL` storm becomes `line  (x60 repeated)`
+  instead of sixty budget-filling copies.
+- Budget packing keeps one representative per message template before extra
+  copies of a storm, so other failures (APP FATAL, storage interrupts, MMCS)
+  still fit when a query matches a noisy crash.
+
 ## [0.2.1] - 2026-08-11
 
 ### Changed

@@ -3,6 +3,8 @@ import { describe, test } from "node:test";
 import {
   CRASH_PATTERN,
   DEFAULT_BUDGET,
+  adjacentKey,
+  diversityKey,
   pruneText,
   scoreLine,
   tokenizeQuery,
@@ -35,6 +37,30 @@ describe("pruneText collapse and passthrough", () => {
     assert.match(out.prunedText, /INFO ok {2}\(x3 repeated\)/);
     assert.match(out.prunedText, /WARN once/);
     assert.equal(out.budgetExceeded, false);
+  });
+
+  test("collapses adjacent timestamped copies of the same crash", () => {
+    const text = lines(
+      "ERROR 2024-01-02T03:04:05.000Z boom id=0xabc",
+      "ERROR 2024-01-02T03:04:06.111Z boom id=0xabc",
+      "ERROR 2024-01-02T03:04:07.222Z boom id=0xabc",
+      "INFO ok"
+    );
+    const out = pruneText(text, 400);
+    assert.match(out.prunedText, /x3 repeated/);
+    assert.equal(out.prunedText.split("\n").filter((row) => row.includes("boom")).length, 1);
+    assert.equal(
+      adjacentKey("ERROR 2024-01-02T03:04:05.000Z boom id=0xabc"),
+      adjacentKey("ERROR 2024-01-02T03:04:06.111Z boom id=0xabc")
+    );
+  });
+
+  test("does not collapse adjacent heartbeats that only differ by a small counter", () => {
+    const text = lines("INFO heartbeat 0", "INFO heartbeat 1", "INFO heartbeat 2");
+    const out = pruneText(text, 400);
+    assert.equal(out.prunedText.includes("x3 repeated"), false);
+    assert.match(out.prunedText, /heartbeat 0/);
+    assert.match(out.prunedText, /heartbeat 1/);
   });
 
   test("passes binary input through unchanged", () => {
@@ -179,5 +205,88 @@ describe("query scoring is inspectable and beats recency", () => {
   test("CRASH_PATTERN does not fire on the gold sshd line", () => {
     assert.equal(CRASH_PATTERN.test("sshd: Bind to port 22: Address already in use"), false);
     assert.equal(CRASH_PATTERN.test("ERROR retry connection refused"), true);
+  });
+});
+
+describe("repeated crash storms leave room for other failures", () => {
+  test("timestamped TLB copies collapse and do not starve a later APP FATAL", () => {
+    const node = "R30-M0-N9-C:J16-U01";
+    const tlb = Array.from({ length: 60 }, (_, i) => {
+      const unix = 1118536327 + i * 10;
+      const sec = String(i).padStart(2, "0");
+      const frac = String(100000 + i).slice(1);
+      return `KERNDTLB ${unix} 2005.06.11 ${node} 2005-06-11-17.32.${sec}.${frac} ${node} RAS KERNEL FATAL data TLB error interrupt`;
+    });
+    const other = [
+      "APPREAD 1117869872 2005.06.04 R04-M1-N4-I:J18-U11 2005-06-04-00.24.32.432192 R04-M1-N4-I:J18-U11 RAS APP FATAL ciod: failed to read message prefix on control stream",
+      "KERNSTOR 1118709403 2005.06.13 R10-M1-N5-C:J15-U11 2005-06-13-17.36.43.927885 R10-M1-N5-C:J15-U11 RAS KERNEL FATAL data storage interrupt",
+    ];
+    const filler = Array.from(
+      { length: 80 },
+      (_, i) =>
+        `- 1117950000 2005.06.05 R24-M1-N8-C:J09-U11 2005-06-05-00.09.${String(i).padStart(2, "0")}.000000 R24-M1-N8-C:J09-U11 RAS KERNEL INFO generating core.${i}`
+    );
+    const text = lines(...tlb, ...filler, ...other);
+    const out = pruneText(text, 6000, {
+      query: "what broke FATAL error failure crash kernel app",
+    });
+
+    assert.match(out.prunedText, /data TLB error interrupt/);
+    assert.match(out.prunedText, /x60 repeated/);
+    assert.match(out.prunedText, /failed to read message prefix/);
+    assert.match(out.prunedText, /data storage interrupt/);
+    const tlbCopies = out.prunedText.split("\n").filter((row) =>
+      row.includes("data TLB error interrupt")
+    );
+    assert.equal(tlbCopies.length, 1);
+  });
+
+  test("same crash on many hosts does not starve a different interrupt", () => {
+    const loads = Array.from({ length: 15 }, (_, i) => {
+      const host = `R${40 + i}-M0-N${i}-I:J18-U01`;
+      const unix = 1123914312 + i;
+      return `- ${unix} 2005.08.12 ${host} 2005-08-12-23.25.${String(i).padStart(2, "0")}.135766 ${host} RAS APP FATAL ciod: Error loading /bgl/apps/scaletest/performance/MINIBEN/mb_243_0810/allreduce.rts: invalid or missing program image, Exec format error`;
+    });
+    const storage =
+      "KERNSTOR 1118709403 2005.06.13 R10-M1-N5-C:J15-U11 2005-06-13-17.36.43.927885 R10-M1-N5-C:J15-U11 RAS KERNEL FATAL data storage interrupt";
+    const mmcs =
+      "MMCS 1123051862 2005.08.03 NULL 2005-08-03-16.11.02.839771 NULL RAS MMCS ERROR idoproxydb hit ASSERT condition: ASSERT expression=0 Source file=idotransportmgr.cpp Source line=1229 Function=int IdoTransportMgr::SendPacket(IdoUdpMgr*, BglCtlPavTrace*)";
+    const text = lines(...loads, storage, mmcs);
+    const out = pruneText(text, 1200, { query: "what broke FATAL error failure crash kernel app" });
+    assert.match(out.prunedText, /allreduce\.rts/);
+    assert.match(out.prunedText, /data storage interrupt/);
+    assert.match(out.prunedText, /idoproxydb hit ASSERT/);
+    const loadCopies = out.prunedText.split("\n").filter((row) => row.includes("allreduce.rts"));
+    assert.ok(loadCopies.length <= 3, `kept ${loadCopies.length} allreduce copies`);
+  });
+
+  test("diversityKey folds digits glued to letters so host variants match", () => {
+    const a =
+      "- 1123914312 2005.08.12 R44-M0-N8-I:J18-U01 2005-08-12-23.25.12.135766 R44-M0-N8-I:J18-U01 RAS APP FATAL ciod: Error loading /bgl/apps/scaletest/performance/MINIBEN/mb_243_0810/allreduce.rts: invalid or missing program image, Exec format error";
+    const b =
+      "- 1123914469 2005.08.12 R46-M0-N0-I:J18-U01 2005-08-12-23.27.49.807991 R46-M0-N0-I:J18-U01 RAS APP FATAL ciod: Error loading /bgl/apps/scaletest/performance/MINIBEN/mb_243_0810/allreduce.rts: invalid or missing program image, Exec format error";
+    assert.equal(diversityKey(a), diversityKey(b));
+    assert.notEqual(adjacentKey(a), adjacentKey(b));
+  });
+
+  test("interleaved copies of one crash still keep a different failure", () => {
+    const rows = [];
+    for (let i = 0; i < 40; i += 1) {
+      rows.push(`FATAL disk full on /var/log/app ts=${1000 + i} node=${i}`);
+      rows.push(`INFO heartbeat ${i}`);
+    }
+    rows.push("FATAL database connection refused");
+    const diskLine = "FATAL disk full on /var/log/app ts=1000 node=0";
+    const otherLine = "FATAL database connection refused";
+    assert.equal(diversityKey(diskLine) === diversityKey(otherLine), false);
+
+    const out = pruneText(lines(...rows), 800, { query: "what FATAL error" });
+    assert.match(out.prunedText, /database connection refused/);
+    const diskCopies = out.prunedText.split("\n").filter((row) => row.includes("disk full"));
+    assert.ok(diskCopies.length >= 1);
+    assert.ok(
+      diskCopies.length < 40,
+      `expected the disk-full storm not to fill the budget, kept ${diskCopies.length}`
+    );
   });
 });

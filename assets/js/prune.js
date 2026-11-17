@@ -6,6 +6,8 @@
 export const DEFAULT_BUDGET = 4000;
 export const DEFAULT_RADIUS = 2;
 export const CRASH_PATTERN = /\b(ERROR|FATAL|CRITICAL|Exception|Traceback|panic)\b/i;
+/** First packing pass keeps this many lines per template so one storm cannot fill the budget. */
+export const TEMPLATE_PACK_CAP = 1;
 
 const STOPWORDS = new Set([
   "a",
@@ -145,10 +147,67 @@ function nextLength(currentLen, line) {
 }
 
 /**
- * Collapse adjacent duplicate lines, keep crash/query evidence, pack to a
- * character budget. Never character-slices a selected line. If a single
- * protected line is longer than the budget it is kept whole and the overage
- * is reported. Unknown/binary/unusable input is returned unchanged.
+ * Strip timestamps, IPs, hex ids, and unix epochs so two copies of the same
+ * event still match when only the clock moved.
+ */
+export function adjacentKey(line) {
+  return String(line)
+    .replace(/\r/g, "")
+    .replace(/\b\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?\b/g, "#")
+    .replace(/\b\d{4}-\d{2}-\d{2}-\d{2}\.\d{2}\.\d{2}(?:\.\d+)?\b/g, "#")
+    .replace(
+      /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}\b/g,
+      "#"
+    )
+    .replace(/\b\d{4}\.\d{2}\.\d{2}\b/g, "#")
+    .replace(/\b\d{4}-\d{2}-\d{2}\b/g, "#")
+    .replace(/\b\d{2}:\d{2}:\d{2}(?:[.,]\d+)?\b/g, "#")
+    .replace(/\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b/g, "#")
+    .replace(/\b\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?\b/g, "#")
+    .replace(/\b0x[0-9a-fA-F]+\b/gi, "#")
+    .replace(/\b\d{10,16}\b/g, "#")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Stronger fingerprint used only while packing: remaining numbers (node ids,
+ * pids) are folded so 30 hosts with the same interrupt share a template.
+ */
+export function diversityKey(line) {
+  return adjacentKey(line)
+    .replace(/\d+/g, "#")
+    .replace(/(?:#\s*)+#/g, "#")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function renderCollapsedLine(line, count) {
+  if (count <= 1) return line;
+  return `${String(line).replace(/\r$/, "")}  (x${count} repeated)`;
+}
+
+export function collapseAdjacentLines(rawLines) {
+  const collapsed = [];
+  for (const line of rawLines) {
+    const key = adjacentKey(line);
+    const prev = collapsed[collapsed.length - 1];
+    if (prev && prev.key === key) {
+      prev.count += 1;
+    } else {
+      collapsed.push({ line, key, count: 1 });
+    }
+  }
+  return collapsed;
+}
+
+/**
+ * Collapse adjacent duplicate and near-duplicate lines, keep crash/query
+ * evidence, pack to a character budget. One template cannot fill the budget
+ * until every other template has had a representative. Never character-slices
+ * a selected line. If a single protected line is longer than the budget it is
+ * kept whole and the overage is reported. Unknown/binary/unusable input is
+ * returned unchanged.
  *
  * @param {string} text
  * @param {number} [budget]
@@ -213,20 +272,8 @@ function pruneSafe(text, budget, queryTerms, radius) {
   }
 
   const rawLines = text.split("\n");
-  const collapsed = [];
-
-  for (const line of rawLines) {
-    const prev = collapsed[collapsed.length - 1];
-    if (prev && prev.line === line) {
-      prev.count += 1;
-    } else {
-      collapsed.push({ line, count: 1 });
-    }
-  }
-
-  const rendered = collapsed.map(({ line, count }) =>
-    count > 1 ? `${line}  (x${count} repeated)` : line
-  );
+  const collapsed = collapseAdjacentLines(rawLines);
+  const rendered = collapsed.map(({ line, count }) => renderCollapsedLine(line, count));
 
   const scored = rendered.map((line, idx) => {
     const { score, matchedTerms } = scoreLine(line, queryTerms);
@@ -298,15 +345,17 @@ function pruneSafe(text, budget, queryTerms, radius) {
   let protectedOmittedLines = 0;
   let protectedOmittedChars = 0;
   const warnings = [];
+  const copies = new Map();
+  let extrasHeldBack = 0;
 
-  for (const row of candidates) {
-    if (selectedIdx.has(row.idx)) continue;
+  function trySelect(row, { countOmitted }) {
+    if (selectedIdx.has(row.idx)) return false;
     const protectedLine = row.crash || row.queryHit || row.neighbor;
     if (wouldFit(used, row.line, budget)) {
       used = nextLength(used, row.line);
       selected.push(row);
       selectedIdx.add(row.idx);
-      continue;
+      return true;
     }
 
     const lineOverBudget = row.line.length > budget;
@@ -319,13 +368,32 @@ function pruneSafe(text, budget, queryTerms, radius) {
       warnings.push(
         `budget exceeded by ${budgetOverageChars} chars: kept one protected line longer than the budget rather than slicing it`
       );
-      continue;
+      return true;
     }
 
-    if (protectedLine) {
+    if (countOmitted && protectedLine) {
       protectedOmittedLines += 1;
       protectedOmittedChars += row.line.length;
     }
+    return false;
+  }
+
+  for (const row of candidates) {
+    const protectedLine = row.crash || row.queryHit || row.neighbor;
+    if (!protectedLine) continue;
+    const key = diversityKey(row.line);
+    const taken = copies.get(key) || 0;
+    if (taken >= TEMPLATE_PACK_CAP) {
+      extrasHeldBack += 1;
+      continue;
+    }
+    if (trySelect(row, { countOmitted: false })) {
+      copies.set(key, taken + 1);
+    }
+  }
+
+  for (const row of candidates) {
+    trySelect(row, { countOmitted: true });
   }
 
   selected.sort((a, b) => a.idx - b.idx);
@@ -347,6 +415,14 @@ function pruneSafe(text, budget, queryTerms, radius) {
   if (protectedOmittedLines > 0) {
     warnings.push(
       `omitted ${protectedOmittedLines} protected line(s) (${protectedOmittedChars} chars) that would not fit the budget as whole lines`
+    );
+  }
+
+  const keptTemplates = new Set(selected.map((row) => diversityKey(row.line)));
+  const extrasStillOut = candidates.some((row) => !selectedIdx.has(row.idx));
+  if (extrasHeldBack > 0 && extrasStillOut && keptTemplates.size > 1) {
+    warnings.push(
+      "skipped extra copies of repeated templates to keep other failures in budget"
     );
   }
 

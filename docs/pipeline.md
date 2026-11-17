@@ -4,7 +4,7 @@ The pipeline is deterministic. The MCP implementation lives in `roka-mcp/lib/pru
 
 ## 1. Collapse
 
-The file is split on newlines. Adjacent identical lines merge. A line seen 128 times in a row becomes one line plus `(x128 repeated)`.
+The file is split on newlines. Adjacent identical *or near-duplicate* lines merge. Timestamps, IPs, hex ids, and unix epochs are ignored when deciding whether two neighbors are the same event, so a crash that repeats every few seconds with a new clock value becomes one line plus `(x128 repeated)`. Heartbeats that only differ by a small counter stay separate.
 
 ## 2. Rank
 
@@ -20,6 +20,8 @@ Query outranks crash. An unrelated ERROR is omitted when the question has alread
 ## 3. Pack
 
 Selected lines are kept whole and then re-sorted into original order. A line is never character-sliced. If a single protected line is longer than the budget, it is kept whole and the overage is reported. Later protected lines that do not fit are omitted and counted.
+
+Packing is two-pass. The first pass keeps one representative per query/crash/neighbor template (node ids and remaining numbers folded) so a 60-line interrupt storm cannot consume the whole budget. The second pass fills leftover space in rank order: extra copies of those storms, then recency.
 
 MCP default budget: **4000 characters**. CLI examples on this site often use `--budget 8000` in **tokens** — different unit, different binary. Check `roka --help`. The research write-up used a 4,000-character budget on LogHub.
 

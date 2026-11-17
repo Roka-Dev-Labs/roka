@@ -41,4 +41,4 @@ When the collapsed text still exceeds the budget, lines are packed in this order
 \b(ERROR|FATAL|CRITICAL|Exception|Traceback|panic)\b
 ```
 
-then crash neighbors (±2 lines), then recency. Query outranks crash. Adjacent duplicate lines are collapsed to `line  (xN repeated)` before ranking.
+then crash neighbors (±2 lines), then recency. Query outranks crash. Adjacent duplicate and near-duplicate lines (same event, new timestamp/id) are collapsed to `line  (xN repeated)` before ranking. When packing, one representative of each template is kept before extra copies of a storm.
