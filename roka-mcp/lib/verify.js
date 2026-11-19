@@ -6,7 +6,7 @@
  */
 
 const API_BASE = (process.env.ROKA_API_URL_BASE || "https://api.roka-prune.com").replace(/\/+$/, "");
-const API_KEY_DASHBOARD_URL = "https://roka-prune.com/dashboard/api-keys.html";
+const API_KEY_DASHBOARD_URL = "https://trysoup.dev/dashboard/api-keys.html";
 
 /**
  * @param {string | null | undefined} apiKey

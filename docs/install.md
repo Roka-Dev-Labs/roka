@@ -1,11 +1,11 @@
 # Install the CLI
 
-The CLI is the Free cold start: prune locally, no API key. MCP agent connect is a separate Pro step.
+The CLI prunes locally with no API key. MCP agent connect is free too.
 
 ## One-line install (recommended)
 
 ```bash
-curl -fsSL https://install.roka-prune.com | bash
+curl -fsSL https://install.trysoup.dev | bash
 roka --version
 ```
 

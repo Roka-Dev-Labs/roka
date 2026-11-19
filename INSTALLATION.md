@@ -1,11 +1,11 @@
 # Roka — Installation Guide
 
-Matches the flows on [roka-prune.com/install.html](https://roka-prune.com/install.html).
+Matches the flows on [roka-prune.com/install.html](https://trysoup.dev/install.html).
 
 ## One-line CLI install (recommended)
 
 ```bash
-curl -fsSL https://install.roka-prune.com | bash
+curl -fsSL https://install.trysoup.dev | bash
 ```
 
 Auto-detects OS and architecture, downloads the latest binary, verifies checksum, and installs to `~/.local/bin` (no sudo).
@@ -60,20 +60,13 @@ cat your-log.log | roka prune --query "what broke" --budget 8000
 
 ## Connect MCP to your AI agent
 
-MCP is **Pro-only**. The `roka-mcp` package is published on npm; `connect` / `watch` refuse to run without a Pro API key. Get a key via the [3-month feedback promo](https://roka-prune.com/#pricing) or the [dashboard](https://roka-prune.com/dashboard/api-keys.html), then:
+MCP is free. The `roka-mcp` package is published on npm; `connect` / `serve` / `watch` need no API key.
 
 ```bash
-npx roka-mcp connect --agent claude-code --api-key rk_live_...
-npx roka-mcp connect --agent cursor --api-key rk_live_...
-npx roka-mcp connect --agent codex --api-key rk_live_...
-npx roka-mcp connect --agent copilot --api-key rk_live_...
-```
-
-Or:
-
-```bash
-export ROKA_API_KEY=rk_live_...
+npx roka-mcp connect --agent claude-code
 npx roka-mcp connect --agent cursor
+npx roka-mcp connect --agent codex
+npx roka-mcp connect --agent copilot
 ```
 
 Restart the IDE after connect.
@@ -81,7 +74,7 @@ Restart the IDE after connect.
 Watch mode:
 
 ```bash
-npx roka-mcp watch ./logs/dev.log --on-crash --api-key rk_live_...
+npx roka-mcp watch ./logs/dev.log --on-crash
 ```
 
-Free cold start (no key): use the CLI install above. Docs: [roka-prune.com/docs](https://roka-prune.com/docs/) · [Install page MCP section](https://roka-prune.com/install.html#mcp).
+Docs: [trysoup.dev/docs](https://trysoup.dev/docs/) · [Install page MCP section](https://trysoup.dev/install.html#mcp).

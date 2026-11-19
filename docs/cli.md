@@ -6,7 +6,6 @@ The CLI reads logs from stdin or a file and writes pruned context to stdout or a
 cat deploy.log | roka prune --query "connection errors" --budget 8000
 roka --input app.log --query "what broke during last night's deploy" --budget 12000
 roka --input big.log --query "OOM" --budget 5000 --output pruned.txt
-roka --input logs.txt --query "auth failures" --budget 8000 --api-key rk_live_...
 ```
 
 | Flag | Default | Description |
@@ -15,7 +14,6 @@ roka --input logs.txt --query "auth failures" --budget 8000 --api-key rk_live_..
 | `-b, --budget` | 8000 | Token budget for the output |
 | `-i, --input` | stdin | Input file path |
 | `-o, --output` | stdout | Output file path |
-| `-a, --api-key` | — | API key (Pro). Optional hosted embeddings; not the default ranker. |
 
 Exact flags can vary by release. Check `roka --help` on the binary you installed.
 
@@ -23,4 +21,4 @@ Exact flags can vary by release. Check `roka --help` on the binary you installed
 2. **Rank** — pack query hits, then crash lines, then crash neighbors, then recency. Query outranks an unrelated ERROR.
 3. **Pack** — keep whole lines in a character budget. MCP default is 4000 characters; CLI `--budget` is tokens — see `roka --help`.
 
-Deterministic by default. Optional hosted embeddings are Pro-only and not the MCP ranker. Local prune does not upload log contents. Free hosted quota is 15K tokens lifetime per device; the local binary still runs offline.
+Deterministic by default. Local prune does not upload log contents. Soup is free: no device quota and no API key.

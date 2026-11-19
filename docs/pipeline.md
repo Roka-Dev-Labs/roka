@@ -25,4 +25,4 @@ Packing is two-pass. The first pass keeps one representative per query/crash/nei
 
 MCP default budget: **4000 characters**. CLI examples on this site often use `--budget 8000` in **tokens** — different unit, different binary. Check `roka --help`. The research write-up used a 4,000-character budget on LogHub.
 
-Pruning (`prune_logs` / `prune_file` / `prune_tail` / `watch --on-crash`) runs in-process. Log text does not leave the machine for those tools. MCP still makes a one-time Pro verification request to `api.roka-prune.com` with the API key only.
+Pruning (`prune_logs` / `prune_file` / `prune_tail` / `watch --on-crash`) runs in-process. Log text does not leave the machine for those tools. No API key is required.

@@ -4,28 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/assets/js/theme-boot.js"></script>
-    <title>How pruning works — Roka Docs</title>
+    <title>How pruning works — Soup Docs</title>
     <meta name="description" content="How Roka pruning works: collapse adjacent duplicates, rank query then crash then neighbor then recency, and pack whole lines into a character budget.">
-    <meta property="og:title" content="How pruning works — Roka Docs">
+    <meta property="og:title" content="How pruning works — Soup Docs">
     <meta property="og:description" content="How Roka pruning works: collapse adjacent duplicates, rank query then crash then neighbor then recency, and pack whole lines into a character budget.">
-    <meta property="og:image" content="https://www.roka-prune.com/opengraph-image.jpg?v=20261109">
+    <meta property="og:image" content="https://trysoup.dev/opengraph-image.jpg?v=20261109">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:url" content="https://www.roka-prune.com/docs/pipeline.html">
-    <link rel="canonical" href="https://www.roka-prune.com/docs/pipeline.html">
+    <meta property="og:url" content="https://trysoup.dev/docs/pipeline.html">
+    <link rel="canonical" href="https://trysoup.dev/docs/pipeline.html">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@graph": [
         {
           "@type": "Organization",
-          "@id": "https://www.roka-prune.com/#organization",
+          "@id": "https://trysoup.dev/#organization",
           "name": "Roka Labs",
           "alternateName": "Roka",
-          "url": "https://www.roka-prune.com/",
+          "url": "https://trysoup.dev/",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://www.roka-prune.com/assets/logos/logo-roka.png"
+            "url": "https://trysoup.dev/assets/logos/logo-roka.png"
           },
           "sameAs": [
             "https://github.com/Roka-Dev-Labs",
@@ -34,26 +34,26 @@
         },
         {
           "@type": "WebSite",
-          "@id": "https://www.roka-prune.com/#website",
+          "@id": "https://trysoup.dev/#website",
           "name": "Roka",
-          "url": "https://www.roka-prune.com/",
+          "url": "https://trysoup.dev/",
           "description": "Roka prunes noisy production logs into a budgeted slice for AI coding agents.",
           "inLanguage": "en",
           "publisher": {
-            "@id": "https://www.roka-prune.com/#organization"
+            "@id": "https://trysoup.dev/#organization"
           }
         },
         {
           "@type": "WebPage",
-          "@id": "https://www.roka-prune.com/docs/pipeline.html#webpage",
-          "url": "https://www.roka-prune.com/docs/pipeline.html",
-          "name": "How pruning works \u2014 Roka Docs",
+          "@id": "https://trysoup.dev/docs/pipeline.html#webpage",
+          "url": "https://trysoup.dev/docs/pipeline.html",
+          "name": "How pruning works \u2014 Soup Docs",
           "description": "How Roka pruning works: collapse adjacent duplicates, rank query then crash then neighbor then recency, and pack whole lines into a character budget.",
           "isPartOf": {
-            "@id": "https://www.roka-prune.com/#website"
+            "@id": "https://trysoup.dev/#website"
           },
           "about": {
-            "@id": "https://www.roka-prune.com/#organization"
+            "@id": "https://trysoup.dev/#organization"
           },
           "inLanguage": "en"
         }
@@ -62,11 +62,11 @@
     </script>
 
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Roka">
+    <meta property="og:site_name" content="Soup">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="How pruning works — Roka Docs">
+    <meta name="twitter:title" content="How pruning works — Soup Docs">
     <meta name="twitter:description" content="How Roka pruning works: collapse adjacent duplicates, rank query then crash then neighbor then recency, and pack whole lines into a character budget.">
-    <meta name="twitter:image" content="https://www.roka-prune.com/opengraph-image.jpg?v=20261109">
+    <meta name="twitter:image" content="https://trysoup.dev/opengraph-image.jpg?v=20261109">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
     <link rel="stylesheet" href="/assets/fonts/montserrat.css">
     <link rel="stylesheet" href="/docs/docs.css">
@@ -77,7 +77,7 @@
     <div class="docs-top">
         <a class="docs-brand" href="/docs/" style="padding:0">
             <img src="/assets/logos/logo-roka.png" alt="Roka" width="22" height="22">
-            Roka Docs
+            Soup Docs
         </a>
         <div style="display:flex;gap:0.4rem">
             <button type="button" class="icon-btn" id="navToggle">Menu</button>
@@ -109,7 +109,7 @@
             <p>MCP default budget: <strong>4000 characters</strong>. CLI examples on this site often use <code>--budget 8000</code> in <strong>tokens</strong> — different unit, different binary. Check <code>roka --help</code>. The research write-up used a 4,000-character budget on LogHub.</p>
 
             <h2>What stays local</h2>
-            <p>Pruning itself (<code>prune_logs</code> / <code>prune_file</code> / <code>prune_tail</code> / <code>watch --on-crash</code>) runs in-process. Log text does not leave the machine for those tools. MCP still makes a one-time Pro verification request to <code>api.roka-prune.com</code> with the API key only.</p>
+            <p>Pruning itself (<code>prune_logs</code> / <code>prune_file</code> / <code>prune_tail</code> / <code>watch --on-crash</code>) runs in-process. Log text does not leave the machine for those tools. No API key is required. Log text stays on the machine.</p>
             <p>The hosted pruning engine (Rust) and backend are proprietary. This public docs site plus the <code>roka-mcp</code> npm package are what you configure as an agent.</p>
             <div class="docs-foot"><a href="/docs/watch.html">← Watch mode</a><a href="/docs/pricing.html">Pricing →</a></div>
         </main>

@@ -14,7 +14,7 @@ import { reportHeartbeat } from "./report.js";
 import { verifyProAccess, printVerificationError } from "./verify.js";
 
 export const SERVER_KEY = "roka-mcp";
-const API_KEY_DASHBOARD_URL = "https://roka-prune.com/dashboard/api-keys.html";
+const API_KEY_DASHBOARD_URL = "https://trysoup.dev/dashboard/api-keys.html";
 
 function isPlainObject(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -290,7 +290,7 @@ export async function connectCommand(args) {
     }
     console.error(`[roka-mcp] connect: verified — tier "${verification.tier}".`);
   } else {
-    console.error("[roka-mcp] connect: no API key — pruning stays local; set ROKA_API_KEY for dashboard telemetry.");
+    console.error("[roka-mcp] connect: no API key — pruning stays local (that's the default).");
   }
   void reportHeartbeat(opts.agent);
 

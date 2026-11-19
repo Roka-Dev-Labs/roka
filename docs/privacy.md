@@ -4,4 +4,4 @@ Account data may include email and usage metadata. Roka processes log files in-m
 
 Request deletion: mailto:mukhamedjankydyrli@gmail.com
 
-HTML: https://www.roka-prune.com/privacy.html
+HTML: https://trysoup.dev/privacy.html

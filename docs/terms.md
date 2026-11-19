@@ -4,4 +4,4 @@ Use Roka only for lawful purposes. Do not process data you lack rights to, rever
 
 Open-source CLI and MCP packages are MIT-licensed under https://github.com/Roka-Dev-Labs. Hosted services are governed by these terms.
 
-HTML: https://www.roka-prune.com/terms.html
+HTML: https://trysoup.dev/terms.html

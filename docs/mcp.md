@@ -1,18 +1,16 @@
 # Connect an agent
 
-MCP is a **Pro** feature. The npm package `roka-mcp` (v0.2.1+) can be installed by anyone, but `connect`, `serve`, and `watch` verify a Pro API key before they do anything.
-
-Get a Pro key from https://www.roka-prune.com/dashboard/api-keys.html. Free-tier keys are rejected. Set `ROKA_API_KEY` or pass `--api-key`.
+Soup MCP is free. The npm package `roka-mcp` needs no API key.
 
 ```bash
 npm install -g roka-mcp
-npx roka-mcp connect --agent cursor --api-key rk_live_...
+npx roka-mcp connect --agent cursor
 ```
 
 Requires Node.js 18+.
 
 ```bash
-npx roka-mcp connect --agent <name> [--api-key <key>]
+npx roka-mcp connect --agent <name>
 ```
 
 `--agent` / `-a` is required: `claude-code`, `cursor`, `codex`, `copilot`, `vscode`, `windsurf`, `cline`.
@@ -31,9 +29,6 @@ The entry launched by the agent:
 ```
 command: npx
 args: ["-y", "roka-mcp", "serve"]
-env.ROKA_API_KEY: <your key, if provided>
 ```
 
-Restart the IDE after connect. `serve` is stdio JSON-RPC; missing/invalid/expired/free-tier keys are rejected.
-
-The only network call for MCP is `GET https://api.roka-prune.com/api/status` with the key in Authorization. Override host with `ROKA_API_URL_BASE`. Log text used by the tools stays on the machine.
+Restart the IDE after connect. `serve` is stdio JSON-RPC. Pruning runs locally; log text stays on the machine. An API key is optional telemetry only — never required to connect or prune.

@@ -160,7 +160,7 @@ export async function serve() {
     }
     console.error(`[roka-mcp] verified API key (tier "${verification.tier}") — starting tools.`);
   } else {
-    console.error("[roka-mcp] no ROKA_API_KEY — starting tools (local prune only).");
+    console.error("[roka-mcp] starting tools (local prune, no API key required).");
   }
   void reportHeartbeat("serve");
 

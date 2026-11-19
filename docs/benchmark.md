@@ -10,4 +10,4 @@
 
 This measures **retention under budget** — line removal, and whether a line matching `ERROR|FATAL|CRITICAL|Exception|Traceback|panic` survived a 4,000-character pack. It does not prove the tool finds the right evidence for arbitrary questions, or that agents debug better with the slice. This run passed no query.
 
-Methodology: https://www.roka-prune.com/research.html — per-dataset table: https://www.roka-prune.com/testing.html
+Methodology: https://trysoup.dev/research.html — per-dataset table: https://trysoup.dev/testing.html

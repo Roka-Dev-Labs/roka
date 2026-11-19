@@ -1,12 +1,12 @@
 # Roka — full site dump
 > Concatenated markdown of all indexable pages for one-shot agent fetch.
-Canonical: https://www.roka-prune.com/llms-full.txt
-Index of links only: https://www.roka-prune.com/llms.txt
+Canonical: https://trysoup.dev/llms-full.txt
+Index of links only: https://trysoup.dev/llms.txt
 
 
 ---
 
-<!-- source: https://www.roka-prune.com/ -->
+<!-- source: https://trysoup.dev/ -->
 
 # Roka
 
@@ -14,22 +14,22 @@ The right logs. Not the whole log.
 
 Select the lines an AI agent needs from a noisy dump — crash evidence, query matches, packed to a budget. Local. Inspectable.
 
-- Site: https://www.roka-prune.com/
-- Docs: https://www.roka-prune.com/docs/
-- Install: https://www.roka-prune.com/install.html
-- Research: https://www.roka-prune.com/research.html
-- Testing: https://www.roka-prune.com/testing.html
-- OpenAPI: https://www.roka-prune.com/openapi.json
-- MCP: https://www.roka-prune.com/.well-known/mcp-server
-- Index: https://www.roka-prune.com/llms.txt
-- Full dump: https://www.roka-prune.com/llms-full.txt
+- Site: https://trysoup.dev/
+- Docs: https://trysoup.dev/docs/
+- Install: https://trysoup.dev/install.html
+- Research: https://trysoup.dev/research.html
+- Testing: https://trysoup.dev/testing.html
+- OpenAPI: https://trysoup.dev/openapi.json
+- MCP: https://trysoup.dev/.well-known/mcp-server
+- Index: https://trysoup.dev/llms.txt
+- Full dump: https://trysoup.dev/llms-full.txt
 
 This URL also serves HTML. Agents should send `Accept: text/markdown` (this representation) to skip markup.
 
 ## Install CLI
 
 ```bash
-curl -fsSL https://install.roka-prune.com | bash
+curl -fsSL https://install.trysoup.dev | bash
 ```
 
 Then prune stdin or a file:
@@ -44,7 +44,7 @@ cat deploy.log | roka prune --query "connection errors" --budget 8000
 npx roka-mcp connect --agent <claude-code|cursor|codex|copilot|vscode|windsurf|cline> --api-key rk_live_...
 ```
 
-Tools after `serve`: `prune_logs`, `prune_file`, `prune_tail`. Log text stays on the machine. Docs: https://www.roka-prune.com/docs/mcp.html
+Tools after `serve`: `prune_logs`, `prune_file`, `prune_tail`. Log text stays on the machine. Docs: https://trysoup.dev/docs/mcp.html
 
 ## How it works
 
@@ -58,25 +58,25 @@ Same idea for CLI and MCP. Hosted `POST /api/prune` can add optional semantic ra
 
 Local CLI prune is free with a device quota. MCP is not on that free path.
 
-- Local CLI prune: 15K tokens lifetime per device; works offline; no API key.
-- Hosted API: up to 500K tokens per month on Pro, trial, or Enterprise keys.
-- MCP `connect` / `serve` / `watch` require a Pro API key. Free-tier keys are rejected.
+- Local CLI prune: unlimited on your machine; works offline; no API key.
+- MCP connect / serve / watch: free. No API key.
+- MCP `connect` / `serve` / `watch` are free. No API key.
 
-Check your dashboard for your current quota and remaining usage: https://www.roka-prune.com/dashboard.html
-API keys: https://www.roka-prune.com/dashboard/api-keys.html
+Check your dashboard for your current quota and remaining usage: https://trysoup.dev/dashboard.html
+API keys: https://trysoup.dev/dashboard/api-keys.html
 
 ## More pages
 
-- Privacy: https://www.roka-prune.com/privacy.html
-- Terms: https://www.roka-prune.com/terms.html
-- Security: https://www.roka-prune.com/.well-known/security.txt
+- Privacy: https://trysoup.dev/privacy.html
+- Terms: https://trysoup.dev/terms.html
+- Security: https://trysoup.dev/.well-known/security.txt
 - CLI repo: https://github.com/Roka-Dev-Labs/roka
 - MCP package: https://www.npmjs.com/package/roka-mcp
 
 
 ---
 
-<!-- source: https://www.roka-prune.com/docs/ -->
+<!-- source: https://trysoup.dev/docs/ -->
 
 # Welcome to Roka
 
@@ -90,20 +90,20 @@ Point the CLI at a file or pipe stdin. Or connect an MCP-compatible agent so it 
 cat deploy.log | roka prune --query "what broke" --budget 8000
 ```
 
-- [Install the CLI](https://www.roka-prune.com/docs/install.md)
-- [Connect an agent](https://www.roka-prune.com/docs/mcp.md)
-- [CLI usage](https://www.roka-prune.com/docs/cli.md)
-- [MCP tools](https://www.roka-prune.com/docs/tools.md)
-- [How pruning works](https://www.roka-prune.com/docs/pipeline.md)
-- [FAQ](https://www.roka-prune.com/docs/faq.md)
-- [Pricing](https://www.roka-prune.com/docs/pricing.md)
-- [Benchmark](https://www.roka-prune.com/docs/benchmark.md)
-- [Watch mode](https://www.roka-prune.com/docs/watch.md)
+- [Install the CLI](https://trysoup.dev/docs/install.md)
+- [Connect an agent](https://trysoup.dev/docs/mcp.md)
+- [CLI usage](https://trysoup.dev/docs/cli.md)
+- [MCP tools](https://trysoup.dev/docs/tools.md)
+- [How pruning works](https://trysoup.dev/docs/pipeline.md)
+- [FAQ](https://trysoup.dev/docs/faq.md)
+- [Pricing](https://trysoup.dev/docs/pricing.md)
+- [Benchmark](https://trysoup.dev/docs/benchmark.md)
+- [Watch mode](https://trysoup.dev/docs/watch.md)
 
 
 ---
 
-<!-- source: https://www.roka-prune.com/docs/install.html -->
+<!-- source: https://trysoup.dev/docs/install.html -->
 
 # Install the CLI
 
@@ -112,7 +112,7 @@ The CLI is the Free cold start: prune locally, no API key. MCP agent connect is 
 ## One-line install (recommended)
 
 ```bash
-curl -fsSL https://install.roka-prune.com | bash
+curl -fsSL https://install.trysoup.dev | bash
 roka --version
 ```
 
@@ -156,7 +156,7 @@ cat your-log.log | roka prune --query "what broke" --budget 8000
 
 ---
 
-<!-- source: https://www.roka-prune.com/docs/cli.html -->
+<!-- source: https://trysoup.dev/docs/cli.html -->
 
 # CLI usage
 
@@ -183,18 +183,18 @@ Exact flags can vary by release. Check `roka --help` on the binary you installed
 2. **Rank** — pack query hits, then crash lines, then crash neighbors, then recency. Query outranks an unrelated ERROR.
 3. **Pack** — keep whole lines in a character budget. MCP default is 4000 characters; CLI `--budget` is tokens — see `roka --help`.
 
-Deterministic by default. Semantic re-ranking is Pro/optional. Local prune does not upload log contents. Free hosted quota is 15K tokens lifetime per device; the local binary still runs offline.
+Deterministic by default. Local prune does not upload log contents. Soup is free: no device quota and no API key.
 
 
 ---
 
-<!-- source: https://www.roka-prune.com/docs/mcp.html -->
+<!-- source: https://trysoup.dev/docs/mcp.html -->
 
 # Connect an agent
 
 MCP is a **Pro** feature. The npm package `roka-mcp` (v0.2.1+) can be installed by anyone, but `connect`, `serve`, and `watch` verify a Pro API key before they do anything.
 
-Get a key from https://www.roka-prune.com/dashboard/api-keys.html or the 3-month feedback promo. Set `ROKA_API_KEY` or pass `--api-key`.
+Get a key from https://trysoup.dev/dashboard/api-keys.html or the 3-month feedback promo. Set `ROKA_API_KEY` or pass `--api-key`.
 
 ```bash
 npm install -g roka-mcp
@@ -233,7 +233,7 @@ The only network call for MCP is `GET https://api.roka-prune.com/api/status` wit
 
 ---
 
-<!-- source: https://www.roka-prune.com/docs/tools.html -->
+<!-- source: https://trysoup.dev/docs/tools.html -->
 
 # MCP tools
 
@@ -274,11 +274,11 @@ Crash / force-keep: ERROR, FATAL, CRITICAL, Exception, Traceback, panic, ANR, ca
 
 ---
 
-<!-- source: https://www.roka-prune.com/docs/watch.html -->
+<!-- source: https://trysoup.dev/docs/watch.html -->
 
 # Watch mode
 
-`roka-mcp watch` tails a log file. With `--on-crash`, a new line matching the crash pattern triggers the same prune pipeline used by the MCP tools. Pro API key required.
+`roka-mcp watch` tails a log file. With `--on-crash`, a new line matching the crash pattern triggers the same prune pipeline used by the MCP tools. No API key required.
 
 ```bash
 npx roka-mcp watch ./logs/dev.log --on-crash --api-key rk_live_...
@@ -291,12 +291,12 @@ npx roka-mcp watch ./logs/dev.log --on-crash --api-key rk_live_...
 | `--budget <n>` | Character budget (default 4000) |
 | `--api-key`, `-k` | Pro API key, or `ROKA_API_KEY` |
 
-On crash: a new line matches ERROR, FATAL, CRITICAL, Exception, Traceback, or panic; watch prunes recent buffered context; result is written to `.roka/crash-context.txt` with a timestamp header. Runs until Ctrl+C / SIGTERM. Without a verified Pro key, watch refuses to start.
+On crash: a new line matches ERROR, FATAL, CRITICAL, Exception, Traceback, or panic; watch prunes recent buffered context; result is written to `.roka/crash-context.txt` with a timestamp header. Runs until Ctrl+C / SIGTERM. Watch starts without an API key.
 
 
 ---
 
-<!-- source: https://www.roka-prune.com/docs/pipeline.html -->
+<!-- source: https://trysoup.dev/docs/pipeline.html -->
 
 # How pruning works
 
@@ -328,20 +328,20 @@ Pruning (`prune_logs` / `prune_file` / `prune_tail` / `watch --on-crash`) runs i
 
 ---
 
-<!-- source: https://www.roka-prune.com/docs/pricing.html -->
+<!-- source: https://trysoup.dev/docs/pricing.html -->
 
-# Free CLI. Pro MCP.
+# Free and open source.
 
-Local prune is free with a device quota. Connecting an agent is not.
+Soup is MIT-licensed. CLI and MCP need no API key.
 
-- Local CLI prune: 15K tokens lifetime per device; works offline; no API key.
-- Hosted API: up to 500K tokens per month on Pro, trial, or Enterprise keys.
-- MCP `connect` / `serve` / `watch` require a Pro API key. Free-tier keys are rejected.
+- Local CLI prune: unlimited on your machine; works offline; no API key.
+- MCP connect / serve / watch: free. No API key.
+- MCP `connect` / `serve` / `watch` are free. No API key.
 
-Check your dashboard for your current quota and remaining usage: https://www.roka-prune.com/dashboard.html
-API keys: https://www.roka-prune.com/dashboard/api-keys.html
+Check your dashboard for your current quota and remaining usage: https://trysoup.dev/dashboard.html
+API keys: https://trysoup.dev/dashboard/api-keys.html
 
-<!-- source: https://www.roka-prune.com/docs/benchmark.html -->
+<!-- source: https://trysoup.dev/docs/benchmark.html -->
 
 # Benchmark
 
@@ -355,12 +355,12 @@ API keys: https://www.roka-prune.com/dashboard/api-keys.html
 
 This measures **retention under budget** — line removal, and whether a crash-regex line survived a 4,000-character pack. It does not measure downstream agent task success. This run passed no query.
 
-Methodology: https://www.roka-prune.com/research.html — per-dataset table: https://www.roka-prune.com/testing.html
+Methodology: https://trysoup.dev/research.html — per-dataset table: https://trysoup.dev/testing.html
 
 
 ---
 
-<!-- source: https://www.roka-prune.com/docs/faq.html -->
+<!-- source: https://trysoup.dev/docs/faq.html -->
 
 # FAQ
 
@@ -374,11 +374,11 @@ Search finds chunks. Roka collapses adjacent identical repeats, then packs query
 
 ## Does it work offline?
 
-Yes for the Free CLI prune path. Pro API and MCP verification need the network.
+Yes. CLI and MCP prune run on your machine. No account and no API key.
 
 ## Do you store my logs?
 
-Local CLI: logs stay on your machine. MCP tools prune in-process. We do not store, read, or transmit log file contents as a product feature. Account/usage metadata is separate — see [Privacy](https://www.roka-prune.com/docs/privacy.md).
+Local CLI: logs stay on your machine. MCP tools prune in-process. We do not store, read, or transmit log file contents as a product feature. Account/usage metadata is separate — see [Privacy](https://trysoup.dev/docs/privacy.md).
 
 ## Which agents?
 
@@ -386,7 +386,7 @@ CLI stdout works with any model. MCP connect writes config for Claude Code, Curs
 
 ## Quotas
 
-Free: 15K tokens lifetime per device. Pro: 500K / month. Enterprise: unlimited.
+Free and open source. No quota.
 
 ## Support
 
@@ -395,7 +395,7 @@ mailto:mukhamedjankydyrli@gmail.com · [CLI issues](https://github.com/Roka-Dev-
 
 ---
 
-<!-- source: https://www.roka-prune.com/privacy.html -->
+<!-- source: https://trysoup.dev/privacy.html -->
 
 Privacy Policy — Roka
 
@@ -453,7 +453,7 @@ Questions? Reach us at mukhamedjankydyrli@gmail.com.
 
 ---
 
-<!-- source: https://www.roka-prune.com/terms.html -->
+<!-- source: https://trysoup.dev/terms.html -->
 
 Terms of Use — Roka
 
@@ -506,7 +506,7 @@ For questions about these Terms, contact us at mukhamedjankydyrli@gmail.com.
 
 ---
 
-<!-- source: https://www.roka-prune.com/research.html -->
+<!-- source: https://trysoup.dev/research.html -->
 
 Roka — Research: what prune_file keeps on LogHub← BackResearch · MVP · Nov 10, 2026
 
@@ -666,7 +666,7 @@ Install RokaTry it in browser← Back
 
 ---
 
-<!-- source: https://www.roka-prune.com/testing.html -->
+<!-- source: https://trysoup.dev/testing.html -->
 
 Testing - Roka← Back
 
@@ -701,5 +701,5 @@ The table is the same MCP `prune_file` run published on the homepage and in the 
 
 Same four stages: ingest, collapse adjacent duplicates, pack query / crash / neighbor / recency, report overage. Ranker is deterministic. Not embeddings.
 
-Full methodology: https://www.roka-prune.com/research.html
+Full methodology: https://trysoup.dev/research.html
 Datasets © LogHub / logpai — used for research and evaluation.

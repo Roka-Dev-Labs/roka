@@ -18,7 +18,7 @@ const COMMANDS = ["serve", "connect", "watch"];
 
 function printHelp() {
   console.log(`
-roka-mcp v${SERVER_VERSION} — MCP server for Roka log pruning
+roka-mcp v${SERVER_VERSION} — MCP server for Soup log pruning (free, no API key)
 
 Usage:
   roka-mcp [serve]                          Start the MCP server on stdio (default)
@@ -32,11 +32,11 @@ Agents supported by connect:
 
 Examples:
   npx roka-mcp@latest
-  npx roka-mcp connect --agent cursor --api-key rk_live_...
+  npx roka-mcp connect --agent cursor
   npx roka-mcp watch ./logs/dev.log --on-crash
 
 Run "roka-mcp <command> --help" for command-specific options.
-Docs: https://roka-prune.com/docs/
+Docs: https://trysoup.dev/docs/
 `);
 }
 

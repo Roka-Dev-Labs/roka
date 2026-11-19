@@ -1,28 +1,28 @@
 # FAQ
 
-## Why Roka instead of uploading to Claude?
+## Why Soup instead of uploading to Claude?
 
-File size: Claude limits uploads; Roka can take a local file of any size the OS can read. Cost: a huge log billed as LLM tokens is expensive; prune locally and send only the slice. Speed: local prune is typically hundreds of milliseconds. Local CLI keeps logs on the machine.
+File size: Claude limits uploads; Soup can take a local file of any size the OS can read. Cost: a huge log billed as LLM tokens is expensive; prune locally and send only the slice. Speed: local prune is typically hundreds of milliseconds. Local CLI keeps logs on the machine.
 
 ## Why not only semantic search / RAG?
 
-Search finds chunks. Roka collapses adjacent identical and near-duplicate repeats, then packs query hits, crash lines, crash neighbors, and recency — keeping one representative of each template before extra copies of a storm. Default MCP tools use query scoring (stems, failure synonyms, logcat levels) plus crash detection (`ERROR`/`Exception` plus Android/Java forms), not embeddings. Semantic re-rank is a Pro/optional path on the hosted product, not the MCP default.
+Search finds chunks. Soup collapses adjacent identical and near-duplicate repeats, then packs query hits, crash lines, crash neighbors, and recency — keeping one representative of each template before extra copies of a storm. Default MCP tools use query scoring (stems, failure synonyms, logcat levels) plus crash detection (`ERROR`/`Exception` plus Android/Java forms), not embeddings.
 
 ## Does it work offline?
 
-Yes for the Free CLI prune path. Pro API and MCP verification need the network.
+Yes. CLI and MCP prune run on your machine. No account and no API key.
 
 ## Do you store my logs?
 
-Local CLI: logs stay on your machine. MCP tools prune in-process. We do not store, read, or transmit log file contents as a product feature. Account/usage metadata is separate — see [Privacy](https://www.roka-prune.com/docs/privacy.md).
+Local CLI: logs stay on your machine. MCP tools prune in-process. We do not store, read, or transmit log file contents as a product feature. Account/usage metadata is separate — see [Privacy](https://trysoup.dev/docs/privacy.md).
 
 ## Which agents?
 
-CLI stdout works with any model. MCP connect writes config for Claude Code, Cursor, Codex, Copilot, VS Code, Windsurf, and Cline.
+CLI stdout works with any model. MCP connect writes config for Claude Code, Cursor, Codex, Copilot, VS Code, Windsurf, and Cline. No API key required.
 
-## Quotas
+## Cost
 
-Free CLI prune: 15K tokens lifetime per device, no MCP. Pro / trial / Enterprise: 500K tokens per month and MCP access. MCP free-tier keys are rejected.
+Soup is free and open source (MIT). CLI and MCP have no device quota and no paid plan.
 
 ## Support
 

@@ -1,38 +1,27 @@
 # roka-mcp
 
-[![Website](https://img.shields.io/badge/Website-roka--prune.com-blue)](https://roka-prune.com)
+[![Website](https://img.shields.io/badge/Website-trysoup.dev-blue)](https://trysoup.dev)
 [![License](https://img.shields.io/badge/License-MIT-green)](https://opensource.org/licenses/MIT)
 
-> **MCP integration for [Roka](https://roka-prune.com) — connect Cursor, Claude Code, Codex, or Copilot to prune logs inside your agent.**
+> **MCP for [Soup](https://trysoup.dev) — connect Cursor, Claude Code, Codex, or Copilot to prune logs inside your agent.**
 
-Part of [Roka Dev Labs](https://github.com/Roka-Dev-Labs). Install the [CLI](https://github.com/Roka-Dev-Labs/roka) separately for local pruning.
+Free and open source. No API key. Install the [CLI](https://github.com/Roka-Dev-Labs/roka) separately for local pruning.
 
-## Pro required
-
-MCP is a **Pro** feature. Sign up at [roka-prune.com](https://roka-prune.com), create an API key in the [dashboard](https://roka-prune.com/dashboard/api-keys.html), then:
+## Install
 
 ```bash
-export ROKA_API_KEY=rk_live_...
 npx roka-mcp connect --agent cursor
 ```
 
 Supported agents: **Claude Code**, **Cursor**, **Codex**, **Copilot**, **Windsurf**, **VS Code**, **Cline**.
 
-`connect`, `serve`, and `watch` all verify `ROKA_API_KEY` (env var or `--api-key`) against the hosted
-API before doing anything else. Missing, invalid, expired, or free-tier keys are rejected — `connect`
-won't write the agent config, `serve` won't start any tools, `watch` won't start tailing.
-
-## Install
-
 ```bash
 npm install -g roka-mcp
-# or one-shot:
-npx roka-mcp connect --agent cursor --api-key rk_live_...
 ```
 
 ## What it does
 
-Roka runs as an MCP server next to your dev environment, watching logs in real time. On crash patterns (ERROR, FATAL, panic, Android `E`, `ClassCastException`, process death, …) it runs the same prune pipeline — collapse repetition and timestamped near-duplicates, preserve the exception, rank, pack to budget without one storm filling it — and hands your agent exactly the slice of context needed to debug.
+Soup runs as an MCP server next to your dev environment. On crash patterns (ERROR, FATAL, panic, Android `E`, `ClassCastException`, process death, …) it runs the same prune pipeline — collapse repetition and timestamped near-duplicates, preserve the exception, rank, pack to budget without one storm filling it — and hands your agent exactly the slice of context needed to debug.
 
 ## Tools
 
@@ -46,29 +35,25 @@ Roka runs as an MCP server next to your dev environment, watching logs in real t
 
 ### `serve` (default)
 
-Starts the MCP server on stdio. This is what your agent launches under the hood after `connect` —
-you normally don't run it by hand. If you do run it directly in a terminal, it prints a short banner
-to stderr explaining that it's waiting for JSON-RPC on stdin (stdout stays clean for the MCP protocol).
+Starts the MCP server on stdio. This is what your agent launches under the hood after `connect`.
 
 ```bash
 npx roka-mcp@latest
-# equivalent to:
 npx roka-mcp serve
 ```
 
 ### `connect`
 
-Registers roka-mcp as an MCP server in your agent's config file, using each agent's real config
-format/location. Idempotent — running it again just updates the existing entry in place.
+Registers roka-mcp as an MCP server in your agent's config file. Idempotent.
 
 ```bash
-npx roka-mcp connect --agent <name> [--api-key <key>]
+npx roka-mcp connect --agent <name>
 ```
 
 | Flag | Description |
 |------|-------------|
 | `--agent, -a <name>` | Required. One of: `claude-code`, `cursor`, `codex`, `copilot`, `vscode`, `windsurf`, `cline` |
-| `--api-key, -k <key>` | Roka Pro API key (or set `ROKA_API_KEY`) |
+| `--api-key, -k <key>` | Optional. Unused for prune; only if you still have a hosted dashboard key |
 
 | Agent | Config file written |
 |-------|----------------------|
@@ -77,59 +62,34 @@ npx roka-mcp connect --agent <name> [--api-key <key>]
 | `codex` | `~/.codex/config.toml` (`[mcp_servers.roka-mcp]`) |
 | `copilot` / `vscode` | `.vscode/mcp.json` (project) |
 | `windsurf` | `~/.codeium/windsurf/mcp_config.json` |
-| `cline` | Cline's VS Code global storage settings file (path varies by host editor/OS — logged on run) |
+| `cline` | Cline's VS Code global storage settings file |
 
 Examples:
 
 ```bash
 npx roka-mcp connect --agent claude-code
-npx roka-mcp connect --agent cursor --api-key rk_live_...
+npx roka-mcp connect --agent cursor
 npx roka-mcp connect --agent codex
 npx roka-mcp connect --agent copilot
 ```
 
 ### `watch`
 
-Tails a log file. When `--on-crash` is set and a new line matches the crash pattern (`ERROR`,
-`FATAL`, `CRITICAL`, `Exception`, `Traceback`, `panic`), it runs the same prune pipeline used by the
-tools above over the recently buffered context and writes the result to `.roka/crash-context.txt`
-(created if needed). Runs in the foreground until `Ctrl+C`/`SIGTERM`.
+Tails a log file. When `--on-crash` is set and a new line matches the crash pattern, it prunes recent buffered context and writes `.roka/crash-context.txt`.
 
 ```bash
 npx roka-mcp watch ./logs/dev.log --on-crash
 ```
 
-| Flag | Description |
-|------|-------------|
-| `--on-crash` | Enable crash-triggered context pruning |
-| `--budget <n>` | Character budget for pruned output (default `4000`) |
-| `--api-key, -k <key>` | Roka Pro API key (or set `ROKA_API_KEY`) |
-
-On crash, Roka writes pruned context to `.roka/crash-context.txt`.
-
 ## API
 
-Pruning itself (`prune_logs`/`prune_file`/`prune_tail`, and the `watch --on-crash` pipeline) runs
-**locally** in this package — your log text never leaves your machine. The only network call this
-package makes is a one-time check against `https://api.roka-prune.com/api/status` (with your API key
-in the `Authorization` header) to confirm the key is real and on a Pro-eligible tier before `connect`,
-`serve`, or `watch` will do anything — see [Pro required](#pro-required). Set `ROKA_API_URL_BASE` to
-point that check at a different host (e.g. for local development).
-
-## Other Roka projects
-
-| Repo | Description |
-|------|-------------|
-| [roka](https://github.com/Roka-Dev-Labs/roka) | CLI — prune logs, code, docs locally |
-| [roka-mcp](https://github.com/Roka-Dev-Labs/roka-mcp) | MCP server — this repository |
-| [Roka Dev Labs](https://github.com/Roka-Dev-Labs) | Org profile — website, dashboard, API |
+Pruning (`prune_logs` / `prune_file` / `prune_tail`, and `watch --on-crash`) runs **locally**. Log text never leaves your machine. An API key is not required.
 
 ## Links
 
-- [Website](https://roka-prune.com)
-- [Docs](https://roka-prune.com/docs/)
-- [Research (LogHub)](https://roka-prune.com/research.html)
-- [Pricing](https://roka-prune.com/#pricing)
+- [Website](https://trysoup.dev)
+- [Docs](https://trysoup.dev/docs/)
+- [Research (LogHub)](https://trysoup.dev/research.html)
 - [CLI install](https://github.com/Roka-Dev-Labs/roka#install)
 - [Support](mailto:mukhamedjankydyrli@gmail.com)
 

@@ -27,5 +27,5 @@ This repository contains the **public website**, **CLI docs**, and **issue track
 ## Getting help
 
 - [GitHub Issues](https://github.com/Roka-Dev-Labs/roka/issues)
-- [Website](https://roka-prune.com)
+- [Website](https://trysoup.dev)
 - [mukhamedjankydyrli@gmail.com](mailto:mukhamedjankydyrli@gmail.com)

@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usage limits — Roka</title>
-    <meta name="description" content="Roka is free with usage limits. No subscription or payment required.">
-    <meta property="og:title" content="Usage limits — Roka">
-    <meta property="og:description" content="Roka is free with usage limits. No subscription or payment required.">
-    <meta property="og:image" content="https://www.roka-prune.com/opengraph-image.jpg?v=20261109">
+    <title>Free and open source — Soup</title>
+    <meta name="description" content="Soup is free MIT open source. No subscription, no API key, no quota.">
+    <meta property="og:title" content="Free and open source — Soup">
+    <meta property="og:description" content="Soup is free MIT open source. No subscription, no API key, no quota.">
+    <meta property="og:image" content="https://trysoup.dev/opengraph-image.jpg?v=20261109">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:url" content="https://www.roka-prune.com/pricing">
-    <link rel="canonical" href="https://www.roka-prune.com/pricing">
-    <link rel="alternate" type="text/markdown" href="https://www.roka-prune.com/pricing.md">
+    <meta property="og:url" content="https://trysoup.dev/pricing">
+    <link rel="canonical" href="https://trysoup.dev/pricing">
+    <link rel="alternate" type="text/markdown" href="https://trysoup.dev/pricing.md">
 
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Roka">
+    <meta property="og:site_name" content="Soup">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Usage limits — Roka">
-    <meta name="twitter:description" content="Roka is free with usage limits. No subscription or payment required.">
-    <meta name="twitter:image" content="https://www.roka-prune.com/opengraph-image.jpg?v=20261109">
+    <meta name="twitter:title" content="Free and open source — Soup">
+    <meta name="twitter:description" content="Soup is free MIT open source. No subscription, no API key, no quota.">
+    <meta name="twitter:image" content="https://trysoup.dev/opengraph-image.jpg?v=20261109">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
     <link rel="stylesheet" href="/assets/fonts/montserrat.css">
     <style>
@@ -32,36 +32,31 @@
         .wrap { max-width:960px; margin:0 auto; padding:2.5rem 1.5rem 4rem; }
         h1 { font-weight:400; letter-spacing:-.03em; font-size:2.25rem; margin-bottom:.5rem; }
         .lede { color:var(--muted); margin-bottom:2rem; }
-        .grid { display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
-        .card { border:1px solid var(--border); border-radius:12px; padding:1.5rem; display:flex; flex-direction:column; }
-        .card.pro { border-color:var(--text); }
+        .card { border:1px solid var(--border); border-radius:12px; padding:1.5rem; }
         h2 { font-size:1.15rem; font-weight:500; margin-bottom:.25rem; }
-        .price { font-size:1.75rem; margin:1rem 0; }
-        .price span { font-size:.9rem; color:var(--muted); }
-        ul { color:var(--muted); font-size:.9rem; margin:0 0 1.25rem; padding-left:1.1rem; flex:1; }
+        ul { color:var(--muted); font-size:.9rem; margin:0 0 1.25rem; padding-left:1.1rem; }
         .btn { display:inline-block; text-align:center; background:var(--btn); color:var(--btn-text); text-decoration:none; border-radius:8px; padding:.6rem 1rem; font-size:.85rem; font-weight:500; }
-        .btn-ghost { background:transparent; color:var(--text); border:1px solid var(--border); }
-        .note { margin-top:2rem; font-size:.85rem; color:var(--muted); }
+        .btn-ghost { background:transparent; color:var(--text); border:1px solid var(--border); margin-left:.5rem; }
     </style>
     <link rel="stylesheet" href="/assets/css/press.css?v=theme4">
 </head>
 <body>
     <nav class="nav">
-        <a href="/"><img src="/assets/icons/favicon-32x32.png" alt="Roka" width="28" height="28"> Roka</a>
+        <a href="/"><img src="/assets/icons/favicon-32x32.png" alt="Soup" width="28" height="28"> Soup</a>
         <button id="themeToggle" type="button" class="theme-toggle-btn" aria-label="Toggle theme"><span class="inner"><span id="themeLabel">Light</span></span></button>
     </nav>
     <main class="wrap">
-        <h1>Free CLI. Pro MCP.</h1>
-        <p class="lede">Local prune is free with a device quota. Connecting an agent is not.</p>
+        <h1>Free. Open source. MIT.</h1>
+        <p class="lede">Soup has no paid plan. CLI and MCP prune locally with no API key and no quota.</p>
         <article class="card">
-            <h2>Usage limits</h2>
+            <h2>What you get</h2>
             <ul>
-                <li>Local CLI prune: 15K tokens lifetime per device; works offline; no API key.</li>
-                <li>Hosted API: up to 500K tokens/month on Pro, trial, or Enterprise keys.</li>
-                <li>MCP connect / serve / watch require a Pro API key. Free-tier keys are rejected.</li>
+                <li>Local CLI prune: unlimited on your machine; works offline.</li>
+                <li>MCP connect / serve / watch: free. <code>npx roka-mcp connect --agent cursor</code></li>
+                <li>Log text used by MCP tools stays on the machine.</li>
             </ul>
-            <a class="btn" href="/install.html">Get started free</a>
-            <a class="btn btn-ghost" href="/dashboard.html">View your usage</a>
+            <a class="btn" href="/install.html">Install</a>
+            <a class="btn btn-ghost" href="https://github.com/Roka-Dev-Labs/roka">GitHub</a>
         </article>
     </main>
     <script>

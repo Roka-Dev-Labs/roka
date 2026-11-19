@@ -16,7 +16,7 @@ import { verifyProAccess, printVerificationError } from "./verify.js";
 const MAX_BUFFER_LINES = 2000;
 const POLL_INTERVAL_MS = 300;
 const CRASH_COOLDOWN_MS = 1500;
-const API_KEY_DASHBOARD_URL = "https://roka-prune.com/dashboard/api-keys.html";
+const API_KEY_DASHBOARD_URL = "https://trysoup.dev/dashboard/api-keys.html";
 
 function printWatchHelp() {
   console.error(`

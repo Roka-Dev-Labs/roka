@@ -4,28 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/assets/js/theme-boot.js"></script>
-    <title>Welcome — Roka Docs</title>
+    <title>Welcome — Soup Docs</title>
     <meta name="description" content="Roka docs: install the CLI, connect Claude Code, Cursor, Codex, Copilot, Windsurf, VS Code, or Cline via MCP, and prune logs to a token budget locally.">
-    <meta property="og:title" content="Welcome — Roka Docs">
+    <meta property="og:title" content="Welcome — Soup Docs">
     <meta property="og:description" content="Roka docs: install the CLI, connect Claude Code, Cursor, Codex, Copilot, Windsurf, VS Code, or Cline via MCP, and prune logs to a token budget locally.">
-    <meta property="og:image" content="https://www.roka-prune.com/opengraph-image.jpg?v=20261109">
+    <meta property="og:image" content="https://trysoup.dev/opengraph-image.jpg?v=20261109">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:url" content="https://www.roka-prune.com/docs/">
-    <link rel="canonical" href="https://www.roka-prune.com/docs/">
+    <meta property="og:url" content="https://trysoup.dev/docs/">
+    <link rel="canonical" href="https://trysoup.dev/docs/">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@graph": [
         {
           "@type": "Organization",
-          "@id": "https://www.roka-prune.com/#organization",
+          "@id": "https://trysoup.dev/#organization",
           "name": "Roka Labs",
           "alternateName": "Roka",
-          "url": "https://www.roka-prune.com/",
+          "url": "https://trysoup.dev/",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://www.roka-prune.com/assets/logos/logo-roka.png"
+            "url": "https://trysoup.dev/assets/logos/logo-roka.png"
           },
           "sameAs": [
             "https://github.com/Roka-Dev-Labs",
@@ -34,26 +34,26 @@
         },
         {
           "@type": "WebSite",
-          "@id": "https://www.roka-prune.com/#website",
+          "@id": "https://trysoup.dev/#website",
           "name": "Roka",
-          "url": "https://www.roka-prune.com/",
+          "url": "https://trysoup.dev/",
           "description": "Roka prunes noisy production logs into a budgeted slice for AI coding agents.",
           "inLanguage": "en",
           "publisher": {
-            "@id": "https://www.roka-prune.com/#organization"
+            "@id": "https://trysoup.dev/#organization"
           }
         },
         {
           "@type": "WebPage",
-          "@id": "https://www.roka-prune.com/docs/#webpage",
-          "url": "https://www.roka-prune.com/docs/",
-          "name": "Welcome \u2014 Roka Docs",
+          "@id": "https://trysoup.dev/docs/#webpage",
+          "url": "https://trysoup.dev/docs/",
+          "name": "Welcome \u2014 Soup Docs",
           "description": "Roka docs: install the CLI, connect Claude Code, Cursor, Codex, Copilot, Windsurf, VS Code, or Cline via MCP, and prune logs to a token budget locally.",
           "isPartOf": {
-            "@id": "https://www.roka-prune.com/#website"
+            "@id": "https://trysoup.dev/#website"
           },
           "about": {
-            "@id": "https://www.roka-prune.com/#organization"
+            "@id": "https://trysoup.dev/#organization"
           },
           "inLanguage": "en"
         }
@@ -62,11 +62,11 @@
     </script>
 
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Roka">
+    <meta property="og:site_name" content="Soup">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Welcome — Roka Docs">
+    <meta name="twitter:title" content="Welcome — Soup Docs">
     <meta name="twitter:description" content="Roka docs: install the CLI, connect Claude Code, Cursor, Codex, Copilot, Windsurf, VS Code, or Cline via MCP, and prune logs to a token budget locally.">
-    <meta name="twitter:image" content="https://www.roka-prune.com/opengraph-image.jpg?v=20261109">
+    <meta name="twitter:image" content="https://trysoup.dev/opengraph-image.jpg?v=20261109">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
     <link rel="stylesheet" href="/assets/fonts/montserrat.css">
     <link rel="stylesheet" href="/docs/docs.css">
@@ -77,7 +77,7 @@
     <div class="docs-top">
         <a class="docs-brand" href="/docs/" style="padding:0">
             <img src="/assets/logos/logo-roka.png" alt="Roka" width="22" height="22">
-            Roka Docs
+            Soup Docs
         </a>
         <div style="display:flex;gap:0.4rem">
             <button type="button" class="icon-btn" id="navToggle">Menu</button>
@@ -88,7 +88,7 @@
         <aside class="docs-sidebar" id="docs-sidebar"></aside>
         <main class="docs-main">
             <p class="kicker">Documentation</p>
-            <h1>Welcome to Roka</h1>
+            <h1>Welcome to Soup</h1>
             <p class="lede">Roka is a context-pruning layer for AI coding agents. It collapses adjacent duplicate lines, ranks query / crash / neighbor / recency, and packs whole lines into a character budget — before the model ever sees the dump.</p>
 
             <div class="note blue">Local prune tools do not upload your logs. MCP <code>connect</code> / <code>serve</code> / <code>watch</code> only call the API to verify a Pro key.</div>
@@ -121,13 +121,13 @@
                 </a>
                 <a class="card" href="/docs/faq.html">
                     <h3>FAQ</h3>
-                    <p>Offline use, quotas, Claude uploads vs Roka, RAG, data retention.</p>
+                    <p>Offline use, Claude uploads vs Soup, RAG, data retention.</p>
                 </a>
             </div>
 
             <h2>Quick links</h2>
             <ul>
-                <li><a href="/docs/pricing.html">Pricing &amp; quotas</a> — Free CLI prune; MCP needs a Pro API key</li>
+                <li><a href="/docs/pricing.html">Free &amp; open source</a> — MIT, no API key, no quota</li>
                 <li><a href="/docs/benchmark.html">Benchmark</a> — LogHub MVP numbers and limits of the claim</li>
                 <li><a href="/docs/watch.html">Watch mode</a> — tail a log, prune on crash into <code>.roka/crash-context.txt</code></li>
                 <li><a href="/docs/privacy.html">Privacy</a> and <a href="/docs/terms.html">Terms</a></li>

@@ -6,7 +6,7 @@
     "description": "Prune noisy logs into a budgeted slice for AI coding agents. Hosted prune and account APIs live on api.roka-prune.com. Site-local routes (feedback) are served from www.roka-prune.com.",
     "contact": {
       "name": "Roka Dev Labs",
-      "url": "https://www.roka-prune.com/"
+      "url": "https://trysoup.dev/"
     }
   },
   "servers": [
@@ -15,7 +15,7 @@
       "description": "Hosted prune and account API"
     },
     {
-      "url": "https://www.roka-prune.com",
+      "url": "https://trysoup.dev",
       "description": "Marketing site and local route handlers"
     }
   ],
@@ -91,7 +91,7 @@
     },
     "/api/feedback": {
       "post": {
-        "servers": [{ "url": "https://www.roka-prune.com" }],
+        "servers": [{ "url": "https://trysoup.dev" }],
         "tags": ["site"],
         "summary": "Submit Pro feedback from the marketing site",
         "operationId": "submitFeedback",

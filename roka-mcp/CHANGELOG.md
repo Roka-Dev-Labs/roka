@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Soup is free and open source at [trysoup.dev](https://trysoup.dev). MCP
+  `connect` / `serve` / `watch` need no API key. Docs no longer describe a
+  Pro plan or device quota.
+
 ### Fixed
 
 - Query scoring understands failure language instead of only exact whole words.

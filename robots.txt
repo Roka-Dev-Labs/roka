@@ -17,4 +17,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Sitemap: https://www.roka-prune.com/sitemap.xml
+Sitemap: https://trysoup.dev/sitemap.xml

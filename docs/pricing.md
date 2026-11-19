@@ -1,10 +1,9 @@
-# Free usage & limits
+# Free and open source
 
-Local CLI prune is free with a device quota. MCP is not on that free path.
+Soup is MIT-licensed. There is no paid plan.
 
-- Local CLI prune: 15K tokens lifetime per device; works offline; no API key.
-- Hosted API: up to 500K tokens per month on Pro, trial, or Enterprise keys.
-- MCP `connect` / `serve` / `watch` require a Pro API key. Free-tier keys are rejected.
+- Local CLI prune: unlimited on your machine; works offline; no API key.
+- MCP `connect` / `serve` / `watch`: free. No key required.
+- Hosted extras (dashboard, embeddings) are optional and unused by the default prune path.
 
-Check your dashboard for your current quota and remaining usage: https://www.roka-prune.com/dashboard.html
-API keys: https://www.roka-prune.com/dashboard/api-keys.html
+Install: https://trysoup.dev/install.html
