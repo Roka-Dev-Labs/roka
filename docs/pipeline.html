@@ -97,8 +97,8 @@
             <h2>2. Rank</h2>
             <p>If the collapsed text still fits the budget, that is the output. If not, lines are packed in this order:</p>
             <ol>
-                <li><strong>query</strong> — whole-word matches on query terms (length ≥ 3, stopwords stripped)</li>
-                <li><strong>crash</strong> — <code>\b(ERROR|FATAL|CRITICAL|Exception|Traceback|panic)\b</code></li>
+                <li><strong>query</strong> — query terms (length ≥ 3, stopwords stripped) matched as whole words, stems/synonyms (<code>errors</code> → <code>error</code>, <code>crashes</code> → <code>died</code>), Java <code>*Exception</code>/<code>*Error</code> names, and Android logcat <code>E</code>/<code>F</code>/<code>W</code> levels. A generic failure question (<code>what broke</code>, <code>errors crashes exceptions</code>) also treats crash lines as query hits.</li>
+                <li><strong>crash</strong> — <code>ERROR|FATAL|CRITICAL|Exception|Traceback|panic|ANR</code>, camelCase <code>*Exception</code>/<code>*Error</code>, <code>has died</code> / <code>Force finishing</code> / <code>crashed service</code>, and Android logcat <code>E</code>/<code>F</code> levels</li>
                 <li><strong>neighbor</strong> — lines within two rows of a crash line</li>
                 <li><strong>recency</strong> — later lines before earlier ones inside a bucket</li>
             </ol>

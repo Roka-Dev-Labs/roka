@@ -13,4 +13,4 @@ npx roka-mcp watch ./logs/dev.log --on-crash --api-key rk_live_...
 | `--budget <n>` | Character budget (default 4000) |
 | `--api-key`, `-k` | Pro API key, or `ROKA_API_KEY` |
 
-On crash: a new line matches ERROR, FATAL, CRITICAL, Exception, Traceback, or panic; watch prunes recent buffered context; result is written to `.roka/crash-context.txt` with a timestamp header. Runs until Ctrl+C / SIGTERM. Without a verified Pro key, watch refuses to start.
+On crash: a new line matches ERROR, FATAL, CRITICAL, Exception, Traceback, panic, ANR, camelCase `*Exception`/`*Error`, `has died` / `crashed service` / `Force finishing`, or Android logcat `E`/`F`; watch prunes recent buffered context; result is written to `.roka/crash-context.txt` with a timestamp header. Runs until Ctrl+C / SIGTERM. Without a verified Pro key, watch refuses to start.

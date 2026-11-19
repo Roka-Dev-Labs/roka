@@ -6,7 +6,7 @@ File size: Claude limits uploads; Roka can take a local file of any size the OS 
 
 ## Why not only semantic search / RAG?
 
-Search finds chunks. Roka collapses adjacent identical and near-duplicate repeats, then packs query hits, crash lines, crash neighbors, and recency — keeping one representative of each template before extra copies of a storm. Default MCP tools use whole-word query scoring + the crash regex, not embeddings. Semantic re-rank is a Pro/optional path on the hosted product, not the MCP default.
+Search finds chunks. Roka collapses adjacent identical and near-duplicate repeats, then packs query hits, crash lines, crash neighbors, and recency — keeping one representative of each template before extra copies of a storm. Default MCP tools use query scoring (stems, failure synonyms, logcat levels) plus crash detection (`ERROR`/`Exception` plus Android/Java forms), not embeddings. Semantic re-rank is a Pro/optional path on the hosted product, not the MCP default.
 
 ## Does it work offline?
 

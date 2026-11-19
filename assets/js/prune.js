@@ -5,9 +5,39 @@
 
 export const DEFAULT_BUDGET = 4000;
 export const DEFAULT_RADIUS = 2;
-export const CRASH_PATTERN = /\b(ERROR|FATAL|CRITICAL|Exception|Traceback|panic)\b/i;
 /** First packing pass keeps this many lines per template so one storm cannot fill the budget. */
 export const TEMPLATE_PACK_CAP = 1;
+
+const CRASH_KEYWORD_RE = /\b(?:ERROR|FATAL|CRITICAL|Exception|Traceback|panic|ANR)\b/i;
+const CRASH_JAVA_RE = /[A-Z][A-Za-z0-9]*(?:Exception|Error)\b/;
+const CRASH_LIFECYCLE_RE = /\b(?:has died|Force finishing|crashed service|Fatal exception)\b/i;
+const CRASH_LOGCAT_RE = /(?:^|\s)[EF]\s+[A-Za-z][\w./$]*:/;
+const LOGCAT_LEVEL_RE = /(?:^|\s)([VDIWEFS])\s+[A-Za-z][\w./$]*:/;
+
+export const CRASH_PATTERN = {
+  source:
+    String.raw`\b(ERROR|FATAL|CRITICAL|Exception|Traceback|panic|ANR)\b` +
+    String.raw`|[A-Z][A-Za-z0-9]*(Exception|Error)\b` +
+    String.raw`|\bhas died\b|\bForce finishing\b|\bcrashed service\b` +
+    String.raw`|(?:^|\s)[EF]\s+[A-Za-z][\w./$]*:`,
+  test(line) {
+    return isCrashLine(line);
+  },
+};
+
+export function isCrashLine(line) {
+  const text = String(line);
+  CRASH_KEYWORD_RE.lastIndex = 0;
+  CRASH_JAVA_RE.lastIndex = 0;
+  CRASH_LIFECYCLE_RE.lastIndex = 0;
+  CRASH_LOGCAT_RE.lastIndex = 0;
+  return (
+    CRASH_KEYWORD_RE.test(text) ||
+    CRASH_JAVA_RE.test(text) ||
+    CRASH_LIFECYCLE_RE.test(text) ||
+    CRASH_LOGCAT_RE.test(text)
+  );
+}
 
 const STOPWORDS = new Set([
   "a",
@@ -26,6 +56,9 @@ const STOPWORDS = new Set([
   "during",
   "for",
   "from",
+  "had",
+  "has",
+  "have",
   "how",
   "in",
   "into",
@@ -47,6 +80,7 @@ const STOPWORDS = new Set([
   "those",
   "to",
   "was",
+  "went",
   "were",
   "what",
   "when",
@@ -56,6 +90,23 @@ const STOPWORDS = new Set([
   "why",
   "with",
 ]);
+
+const SYNONYM_GROUPS = [
+  ["error", "errors", "err"],
+  ["exception", "exceptions"],
+  ["crash", "crashes", "crashed", "crashing", "died"],
+  ["fatal"],
+  ["warn", "warning", "warnings"],
+  ["fail", "fails", "failed", "failure", "failures"],
+  ["broke", "broken", "break"],
+  ["anr"],
+  ["panic", "panicked"],
+  ["issue", "issues"],
+  ["bug", "bugs"],
+  ["wrong"],
+];
+
+const FAILURE_INTENT = new Set(SYNONYM_GROUPS.flat());
 
 function escapeRegex(term) {
   return term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -125,14 +176,82 @@ export function tokenizeQuery(query) {
   return terms;
 }
 
+function stemVariants(term) {
+  const variants = new Set([term]);
+  if (term.endsWith("ies") && term.length > 4) variants.add(`${term.slice(0, -3)}y`);
+  if (term.endsWith("es") && term.length > 4) variants.add(term.slice(0, -2));
+  if (term.endsWith("s") && !term.endsWith("ss") && term.length > 3) {
+    variants.add(term.slice(0, -1));
+  }
+  if (term.endsWith("ed") && term.length > 4) variants.add(term.slice(0, -2));
+  if (term.endsWith("ing") && term.length > 5) variants.add(term.slice(0, -3));
+  return variants;
+}
+
+function synonymVariants(term) {
+  const variants = stemVariants(term);
+  for (const group of SYNONYM_GROUPS) {
+    if (group.some((item) => variants.has(item))) {
+      for (const item of group) variants.add(item);
+    }
+  }
+  return variants;
+}
+
+function logcatLevel(line) {
+  LOGCAT_LEVEL_RE.lastIndex = 0;
+  const match = LOGCAT_LEVEL_RE.exec(String(line));
+  return match ? match[1] : null;
+}
+
+function logcatLevelsFor(variants) {
+  const levels = new Set();
+  for (const variant of variants) {
+    if (
+      variant === "error" ||
+      variant === "errors" ||
+      variant === "err" ||
+      variant === "crash" ||
+      variant === "crashes" ||
+      variant === "crashed" ||
+      variant === "fatal"
+    ) {
+      levels.add("E");
+      levels.add("F");
+    }
+    if (variant === "warn" || variant === "warning" || variant === "warnings") {
+      levels.add("W");
+    }
+  }
+  return levels;
+}
+
+function termMatchesLine(term, line) {
+  const variants = synonymVariants(term);
+  const wordRe = new RegExp(`\\b(?:${[...variants].map(escapeRegex).join("|")})\\b`, "i");
+  if (wordRe.test(line)) return true;
+  if (variants.has("exception") || variants.has("exceptions")) {
+    if (/Exception\b/i.test(line)) return true;
+  }
+  if (variants.has("error") || variants.has("errors")) {
+    if (/[A-Z][A-Za-z0-9]*Error\b/.test(line)) return true;
+  }
+  const level = logcatLevel(line);
+  if (level && logcatLevelsFor(variants).has(level)) return true;
+  return false;
+}
+
+export function queryHasFailureIntent(terms) {
+  return terms.some((term) => FAILURE_INTENT.has(term));
+}
+
 export function scoreLine(line, terms) {
-  if (terms.length === 0) {
+  if (!terms || terms.length === 0) {
     return { score: 0, matchedTerms: [] };
   }
   const matchedTerms = [];
   for (const term of terms) {
-    const re = new RegExp(`\\b${escapeRegex(term)}\\b`, "i");
-    if (re.test(line)) matchedTerms.push(term);
+    if (termMatchesLine(term, line)) matchedTerms.push(term);
   }
   return { score: matchedTerms.length, matchedTerms };
 }
@@ -275,9 +394,10 @@ function pruneSafe(text, budget, queryTerms, radius) {
   const collapsed = collapseAdjacentLines(rawLines);
   const rendered = collapsed.map(({ line, count }) => renderCollapsedLine(line, count));
 
+  const failureIntent = queryHasFailureIntent(queryTerms);
   const scored = rendered.map((line, idx) => {
     const { score, matchedTerms } = scoreLine(line, queryTerms);
-    const crash = CRASH_PATTERN.test(line);
+    const crash = isCrashLine(line);
     return { line, idx, score, matchedTerms, crash };
   });
 
@@ -314,7 +434,7 @@ function pruneSafe(text, budget, queryTerms, radius) {
   }
 
   const candidates = scored.map((row) => {
-    const queryHit = row.score > 0;
+    const queryHit = row.score > 0 || (failureIntent && row.crash);
     const crash = crashIdx.has(row.idx);
     const neighbor = neighborIdx.has(row.idx);
     const recency = row.idx;

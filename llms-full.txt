@@ -269,11 +269,7 @@ Read a live log, keep the last N lines, then prune that slice.
 
 On success the tool returns JSON text with `prunedText`, `originalLines` / `prunedLines`, `originalChars` / `prunedChars`. On failure it returns an error string.
 
-Crash / force-keep regex (case-insensitive):
-
-```
-\b(ERROR|FATAL|CRITICAL|Exception|Traceback|panic)\b
-```
+Crash / force-keep: ERROR, FATAL, CRITICAL, Exception, Traceback, panic, ANR, camelCase *Exception/*Error, has died / crashed service / Force finishing, and Android logcat E/F levels. Query scoring also matches stems, failure synonyms, and logcat levels so `exceptions` keeps `ClassCastException` and `what broke` promotes crash lines.
 
 
 ---
@@ -314,8 +310,8 @@ The file is split on newlines. Adjacent identical lines merge. A line seen 128 t
 
 If the collapsed text still fits the budget, that is the output. If not, lines are packed in this order:
 
-1. **query** — whole-word matches on query terms (length ≥ 3, stopwords stripped)
-2. **crash** — `\b(ERROR|FATAL|CRITICAL|Exception|Traceback|panic)\b`
+1. **query** — query terms (stems, failure synonyms, Java *Exception names, Android logcat levels). Generic failure questions also promote crash lines.
+2. **crash** — ERROR|FATAL|CRITICAL|Exception|Traceback|panic|ANR, *Exception/*Error, has died / crashed service, Android logcat E/F
 3. **neighbor** — lines within two rows of a crash line
 4. **recency** — later lines before earlier ones inside a bucket
 
@@ -556,7 +552,7 @@ budget-fit
 ### Three deterministic stages
 
 - Collapse. Adjacent duplicate or near-duplicate lines are merged into a single line plus a count. Heartbeats and retries stop dominating the file.
-- Rank. Pack order is query hits, then crash lines matching ERROR|FATAL|CRITICAL|Exception|Traceback|panic, then crash neighbors, then recency. Query outranks an unrelated ERROR.
+- Rank. Pack order is query hits (stems, failure synonyms, Java *Exception names, Android logcat levels), then crash lines (ERROR|FATAL|CRITICAL|Exception|Traceback|panic|ANR, *Exception/*Error, has died, logcat E/F), then crash neighbors, then recency. Query outranks an unrelated ERROR.
 - Pack. Whole lines are packed into a caller-supplied character budget (MCP default: 4,000 chars). A protected line longer than the budget is kept whole and the overage is reported.
 The whole pipeline runs in-memory in tens of milliseconds for a 50K-line file. No model calls, no external services,
  no fine-tuned classifier that needs retraining.

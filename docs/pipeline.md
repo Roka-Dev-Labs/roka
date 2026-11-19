@@ -10,8 +10,8 @@ The file is split on newlines. Adjacent identical *or near-duplicate* lines merg
 
 If the collapsed text still fits the budget, that is the output. If not, lines are packed in this order:
 
-1. **query** — whole-word matches on query terms (length ≥ 3, stopwords stripped)
-2. **crash** — `\b(ERROR|FATAL|CRITICAL|Exception|Traceback|panic)\b`
+1. **query** — query terms (length ≥ 3, stopwords stripped) matched as whole words, stems/synonyms (`errors` → `error`, `crashes` → `died`), Java `*Exception`/`*Error` names, and Android logcat `E`/`F`/`W` levels. A generic failure question (`what broke`, `errors crashes exceptions`) also treats crash lines as query hits so the agent does not have to invent log-specific keywords.
+2. **crash** — `ERROR|FATAL|CRITICAL|Exception|Traceback|panic|ANR`, camelCase `*Exception`/`*Error`, `has died` / `Force finishing` / `crashed service`, and Android logcat `E`/`F` levels. Whole-word `Exception` still matches; `ClassCastException` now matches too.
 3. **neighbor** — lines within two rows of a crash line
 4. **recency** — later lines before earlier ones inside a bucket
 

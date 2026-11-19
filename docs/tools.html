@@ -136,9 +136,9 @@
             <p>On failure it returns an error string such as <code>prune_file failed for "…": …</code>.</p>
 
             <h2>Pack order and crash regex</h2>
-            <p>When the collapsed text still exceeds the budget, lines are packed in this order: query hits, then crash lines matching:</p>
-            <pre>\b(ERROR|FATAL|CRITICAL|Exception|Traceback|panic)\b</pre>
-            <p>then crash neighbors (±2 lines), then recency. Query outranks crash. Case-insensitive. Adjacent duplicate lines are collapsed to <code>line  (xN repeated)</code> before ranking.</p>
+            <p>When the collapsed text still exceeds the budget, lines are packed in this order: query hits, then crash lines, then crash neighbors (±2 lines), then recency. Query outranks crash.</p>
+            <p>Query scoring understands failure language, not only exact tokens: <code>exceptions</code> matches <code>ClassCastException</code>, <code>errors</code> matches Android logcat <code>E Tag:</code>, <code>crashes</code> matches <code>has died</code>. A generic question like <code>what broke</code> promotes crash lines so the agent does not need a second, log-specific query.</p>
+            <p>Crash evidence keeps <code>ERROR|FATAL|CRITICAL|Exception|Traceback|panic|ANR</code>, camelCase <code>*Exception</code>/<code>*Error</code> names, <code>has died</code> / <code>Force finishing</code> / <code>crashed service</code>, and Android logcat <code>E</code>/<code>F</code> lines. It does not treat every <code>W</code> warning as a crash. Adjacent duplicate lines are collapsed to <code>line  (xN repeated)</code> before ranking.</p>
             <div class="docs-foot"><a href="/docs/mcp.html">← Connect an agent</a><a href="/docs/watch.html">Watch mode →</a></div>
         </main>
     </div>

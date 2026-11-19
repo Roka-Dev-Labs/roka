@@ -83,7 +83,7 @@ Exact flags may vary by release — run `roka --help`.
 ## What it does
 
 1. **Collapse** — Adjacent identical and near-duplicate lines merge with counts (timestamped retries stop dominating; small heartbeat counters stay separate).
-2. **Rank** — Pack query hits, then crash lines (`ERROR|FATAL|CRITICAL|Exception|Traceback|panic`), then crash neighbors, then recency. Query outranks an unrelated ERROR.
+2. **Rank** — Pack query hits (stems, failure synonyms, Java `*Exception` names, Android logcat levels), then crash lines (`ERROR|FATAL|CRITICAL|Exception|Traceback|panic|ANR`, `*Exception`/`*Error`, `has died`, logcat `E`/`F`), then crash neighbors, then recency. Query outranks an unrelated ERROR.
 3. **Pack** — Keep whole lines in a character budget. One template gets a representative before extra copies of a storm. MCP default is 4000 characters.
 
 Deterministic by default. Optional hosted embeddings are Pro-only and not the MCP ranker. Local prune tools do not upload your logs.

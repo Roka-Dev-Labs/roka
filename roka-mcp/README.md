@@ -32,7 +32,7 @@ npx roka-mcp connect --agent cursor --api-key rk_live_...
 
 ## What it does
 
-Roka runs as an MCP server next to your dev environment, watching logs in real time. On crash patterns (ERROR, FATAL, panic, …) it runs the same prune pipeline — collapse repetition and timestamped near-duplicates, preserve the exception, rank, pack to budget without one storm filling it — and hands your agent exactly the slice of context needed to debug.
+Roka runs as an MCP server next to your dev environment, watching logs in real time. On crash patterns (ERROR, FATAL, panic, Android `E`, `ClassCastException`, process death, …) it runs the same prune pipeline — collapse repetition and timestamped near-duplicates, preserve the exception, rank, pack to budget without one storm filling it — and hands your agent exactly the slice of context needed to debug.
 
 ## Tools
 

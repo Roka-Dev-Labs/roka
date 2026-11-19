@@ -5,6 +5,7 @@ import {
   DEFAULT_BUDGET,
   adjacentKey,
   diversityKey,
+  isCrashLine,
   pruneText,
   scoreLine,
   tokenizeQuery,
@@ -26,6 +27,11 @@ describe("tokenizeQuery", () => {
     assert.deepEqual(tokenizeQuery(""), []);
     assert.deepEqual(tokenizeQuery("   "), []);
     assert.deepEqual(tokenizeQuery(undefined), []);
+  });
+
+  test("drops generic verbs that over-match log lines", () => {
+    assert.deepEqual(tokenizeQuery("Process has died"), ["died", "process"]);
+    assert.ok(!tokenizeQuery("what went wrong").includes("went"));
   });
 });
 
@@ -205,6 +211,118 @@ describe("query scoring is inspectable and beats recency", () => {
   test("CRASH_PATTERN does not fire on the gold sshd line", () => {
     assert.equal(CRASH_PATTERN.test("sshd: Bind to port 22: Address already in use"), false);
     assert.equal(CRASH_PATTERN.test("ERROR retry connection refused"), true);
+  });
+
+  test("exceptions matches ClassCastException and errors match Android E-level", () => {
+    const terms = tokenizeQuery("errors crashes exceptions ANR failures fatal warnings");
+    const exceptionLine =
+      "03-17 16:13:45.466  1702 17632 W ActivityManager: java.lang.ClassCastException: android.os.BinderProxy cannot be cast to Token";
+    const errorLine =
+      "03-17 16:13:46.764  2227  2794 E KeyguardUpdateMonitor: isSimPinSecure mSimDatas is null or empty";
+    const diedLine =
+      "03-17 16:15:19.992  1702  2644 I ActivityManager: Process com.tencent.mobileqq:qzone (pid 12236) has died";
+    const brightness =
+      "03-17 16:16:09.141  1702  1820 D DisplayPowerController: Animating brightness: target=38, rate=200";
+
+    const exceptionHit = scoreLine(exceptionLine, terms);
+    const errorHit = scoreLine(errorLine, terms);
+    const diedHit = scoreLine(diedLine, terms);
+    const miss = scoreLine(brightness, terms);
+
+    assert.ok(exceptionHit.matchedTerms.includes("exceptions"));
+    assert.ok(errorHit.matchedTerms.includes("errors"));
+    assert.ok(diedHit.matchedTerms.includes("crashes"));
+    assert.equal(miss.score, 0);
+  });
+});
+
+describe("crash detection covers Android logcat and Java names", () => {
+  test("keeps compound Exception names, logcat E/F, and process death", () => {
+    assert.equal(isCrashLine("java.lang.ClassCastException: BinderProxy"), true);
+    assert.equal(isCrashLine("android.util.AndroidRuntimeException: Must execute in UI"), true);
+    assert.equal(
+      isCrashLine("03-17 16:13:46.764  2227  2794 E KeyguardUpdateMonitor: isSimPinSecure mSimDatas is null"),
+      true
+    );
+    assert.equal(
+      isCrashLine("03-17 16:13:47.150  1702 17633 E ActivityManager: applyOptionsLocked: Unknown animationType=0"),
+      true
+    );
+    assert.equal(
+      isCrashLine("I ActivityManager: Process com.tencent.mobileqq:qzone (pid 12236) has died"),
+      true
+    );
+    assert.equal(
+      isCrashLine(
+        "W ActivityManager: Scheduling restart of crashed service com.tencent.mobileqq/cooperation.qzone.remote.logic.QzoneWebPluginProxyService in 1000ms"
+      ),
+      true
+    );
+  });
+
+  test("does not treat debug heartbeats or Terror as crashes", () => {
+    assert.equal(isCrashLine("INFO heartbeat 12"), false);
+    assert.equal(isCrashLine("D DisplayPowerController: Animating brightness: target=38"), false);
+    assert.equal(isCrashLine("INFO Terror alert level"), false);
+    assert.equal(isCrashLine("sshd: Bind to port 22: Address already in use"), false);
+  });
+});
+
+describe("generic failure queries keep Android evidence over recency", () => {
+  const exceptionLine =
+    "03-17 16:13:45.466  1702 17632 W ActivityManager: java.lang.ClassCastException: android.os.BinderProxy cannot be cast to com.android.server.am.ActivityRecord$Token";
+  const errorLine =
+    "03-17 16:13:46.764  2227  2794 E KeyguardUpdateMonitor: isSimPinSecure mSimDatas is null or empty";
+  const diedLine =
+    "03-17 16:15:19.992  1702  2644 I ActivityManager: Process com.tencent.mobileqq:qzone (pid 12236) has died";
+  const crashedService =
+    "03-17 16:15:19.993  1702  2644 W ActivityManager: Scheduling restart of crashed service com.tencent.mobileqq/cooperation.qzone.remote.logic.QzoneWebPluginProxyService in 1000ms";
+
+  function androidDump() {
+    const recency = Array.from(
+      { length: 80 },
+      (_, i) =>
+        `03-17 16:16:09.${String(100 + i).slice(-3)}  1702  1820 D DisplayPowerController: Animating brightness: target=38, rate=${200 + i}`
+    );
+    return lines(exceptionLine, errorLine, diedLine, crashedService, ...recency);
+  }
+
+  test("errors/crashes/exceptions query keeps the failures and not the brightness tail", () => {
+    const text = androidDump();
+    const budget = 1500;
+    const out = pruneText(text, budget, {
+      query: "errors crashes exceptions ANR failures fatal warnings",
+    });
+    const recency = pruneText(text, budget);
+    const tail = text.slice(-budget);
+
+    assert.equal(out.prunedText.includes("ClassCastException"), true);
+    assert.equal(out.prunedText.includes("KeyguardUpdateMonitor"), true);
+    assert.equal(out.prunedText.includes("has died"), true);
+    assert.equal(out.prunedText.includes("crashed service"), true);
+    assert.equal(tail.includes("ClassCastException"), false);
+    assert.equal(recency.prunedText.includes("Animating brightness"), true);
+
+    const exceptionKept = out.kept.find((row) => row.matchedTerms.includes("exceptions"));
+    assert.ok(exceptionKept);
+    assert.ok(exceptionKept.reasons.includes("query"));
+  });
+
+  test("what broke keeps Android failures without an Android-specific query", () => {
+    const text = androidDump();
+    const out = pruneText(text, 900, { query: "what broke" });
+    assert.equal(out.prunedText.includes("ClassCastException"), true);
+    assert.equal(out.prunedText.includes("has died"), true);
+    assert.equal(out.prunedText.includes("KeyguardUpdateMonitor"), true);
+    const crashKept = out.kept.filter((row) => row.reasons.includes("crash") || row.reasons.includes("query"));
+    assert.ok(crashKept.length >= 3);
+  });
+
+  test("no query still protects Android crash lines instead of returning only the tail", () => {
+    const text = androidDump();
+    const out = pruneText(text, 900);
+    assert.equal(out.prunedText.includes("ClassCastException"), true);
+    assert.equal(out.prunedText.includes("has died"), true);
   });
 });
 

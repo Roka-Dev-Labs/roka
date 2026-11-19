@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- Query scoring understands failure language instead of only exact whole words.
+  `exceptions` matches `ClassCastException`, `errors` matches Android logcat
+  `E` lines, `crashes` matches `has died` / `crashed service`, and a generic
+  question like `what broke` promotes crash evidence. Agents no longer need a
+  second, log-specific query to surface Android/Java failures.
+- Crash detection now keeps camelCase `*Exception`/`*Error` names, `ANR`,
+  process death (`has died`, `crashed service`, `Force finishing`), and
+  Android logcat `E`/`F` levels. Whole-word `Exception` missed those lines, so
+  a 4,000-character pack fell through to recency (brightness, SystemUI).
 - Adjacent collapse now treats timestamped, hex-id, and IP variants of the same
   line as repeats, so a 60-line `FATAL` storm becomes `line  (x60 repeated)`
   instead of sixty budget-filling copies.

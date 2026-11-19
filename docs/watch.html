@@ -106,7 +106,7 @@
 
             <h2>What happens on crash</h2>
             <ol class="steps">
-                <li>A new line matches ERROR, FATAL, CRITICAL, Exception, Traceback, or panic.</li>
+                <li>A new line matches ERROR, FATAL, CRITICAL, Exception, Traceback, panic, ANR, camelCase *Exception/*Error, has died / crashed service / Force finishing, or Android logcat E/F.</li>
                 <li>Watch prunes the recently buffered context with the same local engine as the tools.</li>
                 <li>Result is written to <code>.roka/crash-context.txt</code> (directory created if needed), with a timestamp header.</li>
             </ol>
